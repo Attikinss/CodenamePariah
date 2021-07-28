@@ -60,7 +60,7 @@ public class DebugUIHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        InputManager.OnDebugToggle += Toggle;
+        //InputManager.OnDebugToggle += Toggle;
     }
 
     // Update is called once per frame

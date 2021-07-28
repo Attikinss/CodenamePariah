@@ -34,9 +34,9 @@ public class AbilityController : MonoBehaviour
         m_Ability3.SetIcon(m_AbilityIcon3);
 
         // Initializing InputManager.
-        InputManager.OnAbility1 += m_Ability1.Invoke;
-        InputManager.OnAbility2 += m_Ability2.Invoke;
-        InputManager.OnAbility3 += m_Ability3.Invoke;
+        //InputManager.OnAbility1 += m_Ability1.Invoke;
+        //InputManager.OnAbility2 += m_Ability2.Invoke;
+        //InputManager.OnAbility3 += m_Ability3.Invoke;
 
     }
 

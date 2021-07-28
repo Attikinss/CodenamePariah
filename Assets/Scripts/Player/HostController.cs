@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.InputSystem;
 
 
 [RequireComponent(typeof(Rigidbody))]
@@ -93,7 +93,7 @@ public class HostController : MonoBehaviour
     // ==================================================================== //
 
 
-
+    public InputActionAsset test;
 
     // Start is called before the first frame update
     void Start()
@@ -117,7 +117,7 @@ public class HostController : MonoBehaviour
 	// Update is called once per frame
 	void Update()
     {
-        
+        UpdateCameraPos();
 
         if (m_hasFired)
         {
@@ -159,7 +159,7 @@ public class HostController : MonoBehaviour
 
         m_currentMoveSpeed = m_Rigidbody.velocity.magnitude;
 
-        WeaponBob();
+        //WeaponBob();
 
 
 
@@ -174,13 +174,35 @@ public class HostController : MonoBehaviour
 
 
 
+        // =========================== NEW INPUT SYSTEM EXPERIMENTING =========================== //
+
+        // Because the new input system has no easy way of just polling all the time, I'm going to put Move() in Update that way we can
+        // still receive inputs of 0, 0.
+        InputActionMap hostMap = test.FindActionMap("Host");
+        
+        InputAction movement = hostMap.FindAction("Movement");
+        Vector2 receivedInput = movement.ReadValue<Vector2>();
+        Move(receivedInput);
+
+
+        // Trying the same for Look()
+        InputAction look = hostMap.FindAction("Look");
+        Vector2 receivedLookInput = look.ReadValue<Vector2>();
+        Look(receivedLookInput.x, receivedLookInput.y);
+
     }
 
-
+    private void UpdateCameraPos()
+    {
+        m_mainCamera.transform.position = transform.position;
+    }
     public void Look(float xDelta, float yDelta)
     {
-        float mouseX = Input.GetAxis("Mouse X") * m_sensitivity * Time.fixedDeltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * m_sensitivity * Time.fixedDeltaTime;
+        //float mouseX = Input.GetAxis("Mouse X") * m_sensitivity * Time.fixedDeltaTime;
+        //float mouseY = Input.GetAxis("Mouse Y") * m_sensitivity * Time.fixedDeltaTime;
+
+        float mouseX = xDelta * m_sensitivity * Time.fixedDeltaTime;
+        float mouseY = yDelta * m_sensitivity * Time.fixedDeltaTime;
 
         // Finding current look rotation
         Vector3 rot = m_mainCamera.transform.localRotation.eulerAngles;
@@ -196,19 +218,24 @@ public class HostController : MonoBehaviour
 
     }
 
-    public void Move(float x, float z)
+    public void Move(Vector2 input)
     {
+        Debug.Log("Move called.");
+        
+        float x = input.x;
+        float z = input.y;
+
         m_isMoving = false;
         if (x != 0 || z != 0)
             m_isMoving = true;
 
-
+        
         if (!IsGrounded)
         {
             // Slightly weaker movement.
 
             Vector3 currentVel = CacheMovDir;
-            Vector3 desiredVel = CalculateMoveDirection(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), m_moveSpeed);
+            Vector3 desiredVel = CalculateMoveDirection(x, z, m_moveSpeed);
 
             Vector3 requiredChange = desiredVel - currentVel;
 
@@ -220,7 +247,7 @@ public class HostController : MonoBehaviour
             // Full on movement.
             
             Vector3 currentVel = CacheMovDir;
-            Vector3 desiredVel = CalculateMoveDirection(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), m_moveSpeed);
+            Vector3 desiredVel = CalculateMoveDirection(x, z, m_moveSpeed);
 
             Vector3 requiredChange = desiredVel - currentVel;
 
@@ -280,8 +307,9 @@ public class HostController : MonoBehaviour
         
     }
 
-    public void Jump(bool active)
+    public void Jump(InputAction.CallbackContext context)
     {
+        bool active = context.action.triggered;
         if (active && IsGrounded)
         {
             CacheMovDir = Vector3.up * ControllerMaths.CalculateJumpForce(m_JumpHeight, m_Rigidbody.mass, m_Gravity);

@@ -29,9 +29,9 @@ public class AbilityController : MonoBehaviour
 
         Debug.Assert(m_Rigidbody); // Make sure it's set to something now.
 
-        m_Ability1.SetIcon(m_AbilityIcon1);
-        m_Ability2.SetIcon(m_AbilityIcon2);
-        m_Ability3.SetIcon(m_AbilityIcon3);
+        //m_Ability1.SetIcon(m_AbilityIcon1);
+        //m_Ability2.SetIcon(m_AbilityIcon2);
+        //m_Ability3.SetIcon(m_AbilityIcon3);
 
         // Initializing InputManager.
         //InputManager.OnAbility1 += m_Ability1.Invoke;
@@ -43,8 +43,8 @@ public class AbilityController : MonoBehaviour
     // Update is called once per frame
     public void Update()
     {
-        m_Ability1.Update();
-        m_Ability2.Update();
-        m_Ability3.Update();
+        //m_Ability1.Update();
+        //m_Ability2.Update();
+        //m_Ability3.Update();
     }
 }

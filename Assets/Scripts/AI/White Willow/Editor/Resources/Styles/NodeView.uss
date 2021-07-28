@@ -1,0 +1,23 @@
+#node-border {
+    background-color: rgba(48, 48, 48, 255);
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+#selection-border {
+    background-color: rgba(255, 195, 0, 255);
+}
+
+#input {
+    align-items: center;
+}
+
+#output {
+    align-items: center;
+}

@@ -113,6 +113,14 @@ public class HostController : InputController
 
 
 
+
+    public Vector3 m_GunOriginalPos;
+    public Quaternion m_GunOriginalRot;
+    public Transform m_Gun;
+
+
+    private Vector3 lookInput = Vector3.zero;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -128,6 +136,9 @@ public class HostController : InputController
         m_Rigidbody = GetComponent<Rigidbody>();
 
         Cursor.lockState = CursorLockMode.Locked;
+
+        m_GunOriginalPos = m_Gun.localPosition;
+        m_GunOriginalRot = transform.localRotation;
     }
 
 	
@@ -175,17 +186,21 @@ public class HostController : InputController
             m_AdditionalVerticalRecoil = Mathf.Clamp(m_AdditionalVerticalRecoil, 0, 85f);
 
         }
+
+        UpdateSway(lookInput.x, lookInput.y);
     }
 
 	public override void OnLook(InputAction.CallbackContext value)
 	{
-        Vector2 lookInput = value.ReadValue<Vector2>();
+        lookInput = value.ReadValue<Vector2>();
         Look(lookInput.x, lookInput.y);
 	}
 	public void Look(float xDelta, float yDelta)
     {
         //float mouseX = Input.GetAxis("Mouse X") * m_sensitivity * Time.fixedDeltaTime;
         //float mouseY = Input.GetAxis("Mouse Y") * m_sensitivity * Time.fixedDeltaTime;
+
+        
 
         float mouseX = xDelta * m_LookSensitivity * Time.fixedDeltaTime;
         float mouseY = yDelta * m_LookSensitivity * Time.fixedDeltaTime;
@@ -215,6 +230,7 @@ public class HostController : InputController
 	}
 	public void Move(Vector2 input)
     {
+
         // Making sure angular velocity isn't a problem.
         m_Rigidbody.velocity = new Vector3(CacheMovDir.x, m_Rigidbody.velocity.y, CacheMovDir.z) + new Vector3(m_CacheSlideMove.x, 0, m_CacheSlideMove.z);
         m_Rigidbody.angularVelocity = Vector3.zero;
@@ -235,6 +251,7 @@ public class HostController : InputController
         
         float x = input.x;
         float z = input.y;
+   
 
         m_isMoving = false;
         if (x != 0 || z != 0)
@@ -486,6 +503,12 @@ public class HostController : InputController
        
         obj.localPosition += requiredChange * t;
         
+    }
+
+    private void UpdateSway(float x, float y)
+    {
+        Vector3 finalPosition = new Vector3(-x * 0.02f, -y * 0.02f, 0);
+        m_Gun.localPosition = Vector3.Lerp(m_Gun.localPosition, finalPosition + m_GunOriginalPos, Time.deltaTime * 6);
     }
 
 }

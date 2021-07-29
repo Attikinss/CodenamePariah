@@ -455,7 +455,7 @@ public class HostController : InputController
 		if (m_Sliding)
 		{
 			// smoothly rotate backwards. todo
-			SmoothMove(m_Camera.transform, new Vector3(0, -0.5f, 0), 0.45f);
+			SmoothMove(m_Camera.transform, new Vector3(0, -0.5f, 0), 0.25f);
 
 			m_SlideCounter += Time.deltaTime;
 			if (m_SlideCounter >= m_SlideDuration)
@@ -468,7 +468,7 @@ public class HostController : InputController
 
 		else
 		{
-			SmoothMove(m_Camera.transform, new Vector3(0, 0.5f, 0), 0.45f);
+			SmoothMove(m_Camera.transform, new Vector3(0, 0.5f, 0), 0.25f);
 		}
 
 		//elseif(slideRecovery)
@@ -485,6 +485,7 @@ public class HostController : InputController
 
        
         obj.localPosition += requiredChange * t;
+        
     }
 
 }

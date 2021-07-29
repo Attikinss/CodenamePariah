@@ -108,7 +108,10 @@ public class HostController : InputController
     [HideInInspector]
     public float m_SlideCounter = 0.0f;
 
-    
+
+    public float m_CameraCrouchHeight = -0.5f;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -442,41 +445,46 @@ public class HostController : InputController
     }
     private void Slide()
     {
-        // do slide code.
-        Vector3 currentVelocity = m_CacheSlideMove;
-        Vector3 desiredVelocity = m_SlideDir * m_SlideSpeed * Time.deltaTime;
+		// do slide code.
+		Vector3 currentVelocity = m_CacheSlideMove;
+		Vector3 desiredVelocity = m_SlideDir * m_SlideSpeed * Time.deltaTime;
 
-        Vector3 requiredChange = desiredVelocity - currentVelocity;
-        m_CacheSlideMove += requiredChange * 0.5f;
+		Vector3 requiredChange = desiredVelocity - currentVelocity;
+		m_CacheSlideMove += requiredChange * 0.5f;
 
-        if (m_Sliding)
-        { 
-            // smoothly rotate backwards. todo
+		if (m_Sliding)
+		{
+			// smoothly rotate backwards. todo
+			SmoothMove(m_Camera.transform, new Vector3(0, -0.5f, 0), 0.45f);
 
+			m_SlideCounter += Time.deltaTime;
+			if (m_SlideCounter >= m_SlideDuration)
+			{
+				m_Sliding = false;
+				m_SlideCounter = 0.0f;
+				m_SlideDir = Vector3.zero;
+			}
+		}
 
-            m_SlideCounter += Time.deltaTime;
-            if (m_SlideCounter >= m_SlideDuration)
-            {
-                m_Sliding = false;
-                m_SlideCounter = 0.0f;
-                m_SlideDir = Vector3.zero;
-            }
-        }
+		else
+		{
+			SmoothMove(m_Camera.transform, new Vector3(0, 0.5f, 0), 0.45f);
+		}
 
-        //elseif(slideRecovery)
-            // smoothly rotate back to normal.
-        
-    }
+		//elseif(slideRecovery)
+		// smoothly rotate back to normal.
 
-    private void SmoothRotate(Vector3 wantedRot, float t)
+	}
+
+	private void SmoothMove(Transform obj, Vector3 wantedLocalPos, float t)
     {
-        Quaternion currentRotation = transform.rotation;
-        Quaternion desiredRotation = Quaternion.Euler(wantedRot);
+        Vector3 currentPos = obj.localPosition;
+        Vector3 desiredPos = wantedLocalPos;
 
-        Quaternion requiredChange = Quaternion.Euler(desiredRotation.eulerAngles - currentRotation.eulerAngles);
+        Vector3 requiredChange = desiredPos - currentPos;
 
        
-        transform.eulerAngles = currentRotation * requiredChange.eulerAngles * t;
+        obj.localPosition += requiredChange * t;
     }
 
 }

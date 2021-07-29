@@ -25,8 +25,8 @@ public class HostController : InputController
     public float m_AirAcceleration = 0.1f;
     public float m_JumpFallModifier = 2.0f;
 
-
-    private Vector2 m_MovementInput = Vector2.zero;
+    [HideInInspector]
+    public Vector2 m_MovementInput = Vector2.zero;
 
 
     
@@ -95,8 +95,12 @@ public class HostController : InputController
 
     // ==================================================================== //
 
-
     public InputActionAsset test;
+
+
+    private bool m_Sliding = false;
+    private Vector2 m_SlideDir = Vector2.zero;
+    private Vector3 m_CacheSlideMove = Vector3.zero;
 
     // Start is called before the first frame update
     void Start()
@@ -120,8 +124,6 @@ public class HostController : InputController
 	// Update is called once per frame
 	void Update()
     {
-        UpdateCameraPos();
-
         if (m_hasFired)
         {
             m_fireCounter += Time.deltaTime;
@@ -164,11 +166,6 @@ public class HostController : InputController
         }
     }
 
-    private void UpdateCameraPos()
-    {
-        //m_Camera.transform.position = transform.position;
-    }
-
 	public override void OnLook(InputAction.CallbackContext value)
 	{
         Vector2 lookInput = value.ReadValue<Vector2>();
@@ -198,7 +195,7 @@ public class HostController : InputController
 	private void FixedUpdate()
 	{
         Move(m_MovementInput);
-
+        Slide();
 
 	}
 	public override void OnMovement(InputAction.CallbackContext value)
@@ -312,7 +309,7 @@ public class HostController : InputController
 
     public void Jump(InputAction.CallbackContext context)
     {
-        bool active = context.action.triggered;
+        bool active = context.performed;
         if (active && IsGrounded)
         {
             CacheMovDir = Vector3.up * ControllerMaths.CalculateJumpForce(m_JumpHeight, m_Rigidbody.mass, m_Gravity);
@@ -425,10 +422,28 @@ public class HostController : InputController
 
     }
 
+    public void OnSlide(InputAction.CallbackContext value)
+    {
+        Debug.Log("OnSlide called.");
+        m_SlideDir = value.performed ? transform.forward : Vector3.zero;
+        if (value.performed)
+        {
+            m_Sliding = true;
+        }
+        
+    }
     private void Slide()
-    { 
+    {
         // do slide code.
 
+        if (m_Sliding)
+        {
+            Vector3 currentVelocity = m_CacheSlideMove;
+            Vector3 desiredVelocity = m_SlideDir * m_MovementSpeed * 2;
+
+            Vector3 requiredChange = desiredVelocity - currentVelocity;
+            m_CacheSlideMove += requiredChange * 0.5f; 
+        }
     }
 
 }

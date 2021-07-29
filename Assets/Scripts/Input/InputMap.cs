@@ -264,7 +264,7 @@ public class @InputMap : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""34b954f0-161d-4dec-960b-dfa789a39853"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Controller"",
@@ -338,6 +338,14 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""e119e84c-d294-4a5a-afb7-7cf29ab71709"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Slide"",
+                    ""type"": ""Button"",
+                    ""id"": ""93a55832-59b9-416a-87c6-b8f78d496127"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -622,7 +630,7 @@ public class @InputMap : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""a2b87edc-4e45-466f-bd41-9b228d93808f"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Controller"",
@@ -649,6 +657,28 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Controller"",
                     ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ddb31c03-aafc-41dc-9146-b181bb57af18"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Slide"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c52b96ba-281a-4f8c-be1d-22fa59d42267"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Controller"",
+                    ""action"": ""Slide"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -706,6 +736,7 @@ public class @InputMap : IInputActionCollection, IDisposable
         m_Host_ADS = m_Host.FindAction("ADS", throwIfNotFound: true);
         m_Host_Fire = m_Host.FindAction("Fire", throwIfNotFound: true);
         m_Host_Jump = m_Host.FindAction("Jump", throwIfNotFound: true);
+        m_Host_Slide = m_Host.FindAction("Slide", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -820,6 +851,7 @@ public class @InputMap : IInputActionCollection, IDisposable
     private readonly InputAction m_Host_ADS;
     private readonly InputAction m_Host_Fire;
     private readonly InputAction m_Host_Jump;
+    private readonly InputAction m_Host_Slide;
     public struct HostActions
     {
         private @InputMap m_Wrapper;
@@ -832,6 +864,7 @@ public class @InputMap : IInputActionCollection, IDisposable
         public InputAction @ADS => m_Wrapper.m_Host_ADS;
         public InputAction @Fire => m_Wrapper.m_Host_Fire;
         public InputAction @Jump => m_Wrapper.m_Host_Jump;
+        public InputAction @Slide => m_Wrapper.m_Host_Slide;
         public InputActionMap Get() { return m_Wrapper.m_Host; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -865,6 +898,9 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Jump.started -= m_Wrapper.m_HostActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnJump;
+                @Slide.started -= m_Wrapper.m_HostActionsCallbackInterface.OnSlide;
+                @Slide.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnSlide;
+                @Slide.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnSlide;
             }
             m_Wrapper.m_HostActionsCallbackInterface = instance;
             if (instance != null)
@@ -893,6 +929,9 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @Slide.started += instance.OnSlide;
+                @Slide.performed += instance.OnSlide;
+                @Slide.canceled += instance.OnSlide;
             }
         }
     }
@@ -932,5 +971,6 @@ public class @InputMap : IInputActionCollection, IDisposable
         void OnADS(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnSlide(InputAction.CallbackContext context);
     }
 }

@@ -251,7 +251,7 @@
                 {
                     "name": "",
                     "id": "34b954f0-161d-4dec-960b-dfa789a39853",
-                    "path": "<Gamepad>/buttonNorth",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "Controller",
@@ -325,6 +325,14 @@
                     "name": "Jump",
                     "type": "Button",
                     "id": "e119e84c-d294-4a5a-afb7-7cf29ab71709",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Slide",
+                    "type": "Button",
+                    "id": "93a55832-59b9-416a-87c6-b8f78d496127",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -609,7 +617,7 @@
                 {
                     "name": "",
                     "id": "a2b87edc-4e45-466f-bd41-9b228d93808f",
-                    "path": "<Gamepad>/buttonNorth",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "Controller",
@@ -636,6 +644,28 @@
                     "processors": "",
                     "groups": "Controller",
                     "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ddb31c03-aafc-41dc-9146-b181bb57af18",
+                    "path": "<Keyboard>/leftCtrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KBM",
+                    "action": "Slide",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c52b96ba-281a-4f8c-be1d-22fa59d42267",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Controller",
+                    "action": "Slide",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

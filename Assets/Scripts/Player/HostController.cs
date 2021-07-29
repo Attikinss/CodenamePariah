@@ -5,12 +5,12 @@ using UnityEngine.InputSystem;
 
 
 [RequireComponent(typeof(Rigidbody))]
-public class HostController : MonoBehaviour
+public class HostController : InputController
 {
     [Header("Settings")]
-    public float m_sensitivity = 1000.0f;
+    //public float m_sensitivity = 1000.0f;
     public float m_verticalLookLock = 75.0f;
-    public float m_moveSpeed = 1;
+    //public float m_moveSpeed = 1;
     public float m_fireRate = 0.5f;
     public float m_bulletForce = 5;
     public float m_JumpHeight = 5;
@@ -26,6 +26,9 @@ public class HostController : MonoBehaviour
     public float m_JumpFallModifier = 2.0f;
 
 
+    private Vector2 m_MovementInput = Vector2.zero;
+
+
     
 
     [Header("Weapons")]                    // ================ NOTE ================ //
@@ -34,7 +37,7 @@ public class HostController : MonoBehaviour
                                            // ====================================== //
     [Header("Other References")]
     public PlayerManager m_PlayerManager;
-    public Camera m_mainCamera;
+    //public Camera m_mainCamera;
     public Transform m_orientation;
     public Rigidbody m_Rigidbody;
 
@@ -143,19 +146,7 @@ public class HostController : MonoBehaviour
         if (IsGrounded)
             m_HasDoubleJumped = false;
 
-        // Making sure angular velocity isn't a problem.
-        m_Rigidbody.velocity = new Vector3(CacheMovDir.x, m_Rigidbody.velocity.y, CacheMovDir.z);
-        m_Rigidbody.angularVelocity = Vector3.zero;
-
-
-        // ============================ FASTER FALLING ============================ //
-
-        if (m_Rigidbody.velocity.y < 0)
-        {
-            m_Rigidbody.velocity += Vector3.up * Physics.gravity.y * m_JumpFallModifier * Time.deltaTime;
-        }
-
-        // ======================================================================== //
+        
 
         m_currentMoveSpeed = m_Rigidbody.velocity.magnitude;
 
@@ -171,41 +162,28 @@ public class HostController : MonoBehaviour
             m_AdditionalVerticalRecoil = Mathf.Clamp(m_AdditionalVerticalRecoil, 0, 85f);
 
         }
-
-
-
-        // =========================== NEW INPUT SYSTEM EXPERIMENTING =========================== //
-
-        // Because the new input system has no easy way of just polling all the time, I'm going to put Move() in Update that way we can
-        // still receive inputs of 0, 0.
-        InputActionMap hostMap = test.FindActionMap("Host");
-        
-        InputAction movement = hostMap.FindAction("Movement");
-        Vector2 receivedInput = movement.ReadValue<Vector2>();
-        Move(receivedInput);
-
-
-        // Trying the same for Look()
-        InputAction look = hostMap.FindAction("Look");
-        Vector2 receivedLookInput = look.ReadValue<Vector2>();
-        Look(receivedLookInput.x, receivedLookInput.y);
-
     }
 
     private void UpdateCameraPos()
     {
-        m_mainCamera.transform.position = transform.position;
+        //m_Camera.transform.position = transform.position;
     }
-    public void Look(float xDelta, float yDelta)
+
+	public override void OnLook(InputAction.CallbackContext value)
+	{
+        Vector2 lookInput = value.ReadValue<Vector2>();
+        Look(lookInput.x, lookInput.y);
+	}
+	public void Look(float xDelta, float yDelta)
     {
         //float mouseX = Input.GetAxis("Mouse X") * m_sensitivity * Time.fixedDeltaTime;
         //float mouseY = Input.GetAxis("Mouse Y") * m_sensitivity * Time.fixedDeltaTime;
 
-        float mouseX = xDelta * m_sensitivity * Time.fixedDeltaTime;
-        float mouseY = yDelta * m_sensitivity * Time.fixedDeltaTime;
+        float mouseX = xDelta * m_LookSensitivity * Time.fixedDeltaTime;
+        float mouseY = yDelta * m_LookSensitivity * Time.fixedDeltaTime;
 
         // Finding current look rotation
-        Vector3 rot = m_mainCamera.transform.localRotation.eulerAngles;
+        Vector3 rot = m_Camera.transform.localRotation.eulerAngles;
         float desiredX = rot.y + mouseX;
 
         // Rotate
@@ -213,13 +191,38 @@ public class HostController : MonoBehaviour
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
         // Perform the rotations
-        m_mainCamera.transform.localRotation = Quaternion.Euler(Mathf.Clamp(xRotation - m_AdditionalVerticalRecoil, -90f, 90f), desiredX, 0);
+        m_Camera.transform.localRotation = Quaternion.Euler(Mathf.Clamp(xRotation - m_AdditionalVerticalRecoil, -90f, 90f), desiredX, 0);
         m_orientation.transform.localRotation = Quaternion.Euler(0, desiredX, 0);
 
     }
+	private void FixedUpdate()
+	{
+        Move(m_MovementInput);
 
-    public void Move(Vector2 input)
+
+	}
+	public override void OnMovement(InputAction.CallbackContext value)
+	{
+        m_MovementInput = value.performed ? value.ReadValue<Vector2>() : Vector2.zero;
+	}
+	public void Move(Vector2 input)
     {
+        // Making sure angular velocity isn't a problem.
+        m_Rigidbody.velocity = new Vector3(CacheMovDir.x, m_Rigidbody.velocity.y, CacheMovDir.z);
+        m_Rigidbody.angularVelocity = Vector3.zero;
+
+
+        // ============================ FASTER FALLING ============================ //
+
+        if (m_Rigidbody.velocity.y < 0)
+        {
+            m_Rigidbody.velocity += Vector3.up * Physics.gravity.y * m_JumpFallModifier * Time.deltaTime;
+        }
+
+        // ======================================================================== //
+
+
+
         Debug.Log("Move called.");
         
         float x = input.x;
@@ -235,7 +238,7 @@ public class HostController : MonoBehaviour
             // Slightly weaker movement.
 
             Vector3 currentVel = CacheMovDir;
-            Vector3 desiredVel = CalculateMoveDirection(x, z, m_moveSpeed);
+            Vector3 desiredVel = CalculateMoveDirection(x, z, m_MovementSpeed);
 
             Vector3 requiredChange = desiredVel - currentVel;
 
@@ -247,7 +250,7 @@ public class HostController : MonoBehaviour
             // Full on movement.
             
             Vector3 currentVel = CacheMovDir;
-            Vector3 desiredVel = CalculateMoveDirection(x, z, m_moveSpeed);
+            Vector3 desiredVel = CalculateMoveDirection(x, z, m_MovementSpeed);
 
             Vector3 requiredChange = desiredVel - currentVel;
 
@@ -276,12 +279,12 @@ public class HostController : MonoBehaviour
         {
             m_HoldingFire = true; // ----------- To keep track of a continuous fire sequence. It's just here for testing reasons right now.
 
-            Ray ray = new Ray(m_mainCamera.transform.position, m_mainCamera.transform.forward);
+            Ray ray = new Ray(m_Camera.transform.position, m_Camera.transform.forward);
             RaycastHit hit;
             Weapon currentWeapon = PlayerManager.GetCurrentWeapon();
 
             // =========== TESTING =========== //
-            m_AdditionalVerticalRecoil += currentWeapon.ShootRecoil(m_mainCamera.transform, m_HeldCounter);
+            m_AdditionalVerticalRecoil += currentWeapon.ShootRecoil(m_Camera.transform, m_HeldCounter);
             // =============================== //
 
             m_hasFired = true;
@@ -297,7 +300,7 @@ public class HostController : MonoBehaviour
                     // Adding a force to the hit object.
                     if (hit.rigidbody != null)
                     {
-                        hit.rigidbody.AddForce(m_mainCamera.transform.forward * m_bulletForce, ForceMode.Impulse);
+                        hit.rigidbody.AddForce(m_Camera.transform.forward * m_bulletForce, ForceMode.Impulse);
                     }
                 }
             }
@@ -419,6 +422,12 @@ public class HostController : MonoBehaviour
 
         Gizmos.color = Color.green;
         Gizmos.DrawLine(transform.position, transform.position + new Vector3(CacheMovDir.x, CacheMovDir.y, CacheMovDir.z));
+
+    }
+
+    private void Slide()
+    { 
+        // do slide code.
 
     }
 

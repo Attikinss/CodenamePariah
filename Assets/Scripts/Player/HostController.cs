@@ -24,6 +24,8 @@ public class HostController : InputController
     public float m_GroundAcceleration = 0.3f;
     public float m_AirAcceleration = 0.1f;
     public float m_JumpFallModifier = 2.0f;
+    public float m_SlideSpeed = 700;
+    public float m_SlideDuration = 0.75f;
 
     [HideInInspector]
     public Vector2 m_MovementInput = Vector2.zero;
@@ -97,10 +99,16 @@ public class HostController : InputController
 
     public InputActionAsset test;
 
-
-    private bool m_Sliding = false;
-    private Vector2 m_SlideDir = Vector2.zero;
+    [HideInInspector]
+    public bool m_Sliding = false;
+    [HideInInspector]
+    public Vector3 m_SlideDir = Vector2.zero;
     private Vector3 m_CacheSlideMove = Vector3.zero;
+
+    [HideInInspector]
+    public float m_SlideCounter = 0.0f;
+
+    
 
     // Start is called before the first frame update
     void Start()
@@ -194,8 +202,8 @@ public class HostController : InputController
     }
 	private void FixedUpdate()
 	{
-        Move(m_MovementInput);
         Slide();
+        Move(m_MovementInput);
 
 	}
 	public override void OnMovement(InputAction.CallbackContext value)
@@ -205,7 +213,7 @@ public class HostController : InputController
 	public void Move(Vector2 input)
     {
         // Making sure angular velocity isn't a problem.
-        m_Rigidbody.velocity = new Vector3(CacheMovDir.x, m_Rigidbody.velocity.y, CacheMovDir.z);
+        m_Rigidbody.velocity = new Vector3(CacheMovDir.x, m_Rigidbody.velocity.y, CacheMovDir.z) + new Vector3(m_CacheSlideMove.x, 0, m_CacheSlideMove.z);
         m_Rigidbody.angularVelocity = Vector3.zero;
 
 
@@ -425,9 +433,9 @@ public class HostController : InputController
     public void OnSlide(InputAction.CallbackContext value)
     {
         Debug.Log("OnSlide called.");
-        m_SlideDir = value.performed ? transform.forward : Vector3.zero;
-        if (value.performed)
+        if (value.performed && IsGrounded)
         {
+            m_SlideDir = value.performed ? m_orientation.forward : m_SlideDir;
             m_Sliding = true;
         }
         
@@ -435,15 +443,40 @@ public class HostController : InputController
     private void Slide()
     {
         // do slide code.
+        Vector3 currentVelocity = m_CacheSlideMove;
+        Vector3 desiredVelocity = m_SlideDir * m_SlideSpeed * Time.deltaTime;
+
+        Vector3 requiredChange = desiredVelocity - currentVelocity;
+        m_CacheSlideMove += requiredChange * 0.5f;
 
         if (m_Sliding)
-        {
-            Vector3 currentVelocity = m_CacheSlideMove;
-            Vector3 desiredVelocity = m_SlideDir * m_MovementSpeed * 2;
+        { 
+            // smoothly rotate backwards. todo
 
-            Vector3 requiredChange = desiredVelocity - currentVelocity;
-            m_CacheSlideMove += requiredChange * 0.5f; 
+
+            m_SlideCounter += Time.deltaTime;
+            if (m_SlideCounter >= m_SlideDuration)
+            {
+                m_Sliding = false;
+                m_SlideCounter = 0.0f;
+                m_SlideDir = Vector3.zero;
+            }
         }
+
+        //elseif(slideRecovery)
+            // smoothly rotate back to normal.
+        
+    }
+
+    private void SmoothRotate(Vector3 wantedRot, float t)
+    {
+        Quaternion currentRotation = transform.rotation;
+        Quaternion desiredRotation = Quaternion.Euler(wantedRot);
+
+        Quaternion requiredChange = Quaternion.Euler(desiredRotation.eulerAngles - currentRotation.eulerAngles);
+
+       
+        transform.eulerAngles = currentRotation * requiredChange.eulerAngles * t;
     }
 
 }

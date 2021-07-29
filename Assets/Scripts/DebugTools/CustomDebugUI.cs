@@ -22,6 +22,9 @@ public class CustomDebugUI : MonoBehaviour
     public Text m_CacheMovDirText;
     public Text m_XAxisText;
     public Text m_ZAxisText;
+    public Text m_IsSlidingText;
+    public Text m_SlideDirText;
+    public Text m_SlideCounterText;
 
     private bool m_Toggle = true;
 
@@ -78,6 +81,11 @@ public class CustomDebugUI : MonoBehaviour
         GraphicalDebugger.Assign<Vector3>(m_playerController.CacheMovDir, "CacheMovDir", m_CacheMovDirText);
         GraphicalDebugger.Assign<float>(m_playerController.m_MovementInput.x, "XAxis", m_XAxisText);
         GraphicalDebugger.Assign<float>(m_playerController.m_MovementInput.y, "ZAxis", m_ZAxisText);
+
+        GraphicalDebugger.Assign<bool>(m_playerController.m_Sliding, "IsSliding", m_IsSlidingText);
+        GraphicalDebugger.Assign<Vector3>(m_playerController.m_SlideDir, "SlideDir", m_SlideDirText);
+        GraphicalDebugger.Assign<float>(m_playerController.m_SlideCounter, "SlideCounter", m_SlideCounterText);
+        
 
         //GraphicalDebugger.Assign<string>(m_AbilityController.m_Ability1.IsActive().ToString(), "Ability1Active", m_Ability1ActiveText);
         //GraphicalDebugger.Assign<float>(m_AbilityController.m_Ability1.GetCounter(), "Ability1Counter", m_Ability1CounterText);

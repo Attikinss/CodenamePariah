@@ -525,10 +525,20 @@ public class HostController : InputController
         {
             Vector3 finalPosition = new Vector3(-x * 0.02f, -y * 0.02f, 0);
             m_Gun.localPosition = Vector3.Lerp(m_Gun.localPosition, finalPosition + m_GunOriginalPos, Time.deltaTime * 6);
+            Quaternion zAxis = Quaternion.AngleAxis(-x, new Vector3(0, 0, 1));
+            m_Gun.localRotation = Quaternion.Slerp(m_Gun.localRotation, zAxis, 0.1f);
         }
         else if (m_IsAiming)
-        { 
+        {
             // I guess I want a reduced sway.
+            //Vector3 centre = m_Camera.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2 - m_GunAimHeight, transform.forward.z));
+            //Vector3 finalPosition = new Vector3(-x * 0.02f, -y * 0.02f, 0);
+            //Vector3 currentPosition = m_Gun.localPosition;
+            //m_Gun.localPosition += (finalPosition - currentPosition) * 6;
+
+            // Quaternion rotate
+            Quaternion zAxis = Quaternion.AngleAxis(-x, new Vector3(0, 0, 1));
+            m_Gun.localRotation = Quaternion.Slerp(m_Gun.localRotation, zAxis, 0.05f);
         }
     }
 

@@ -149,8 +149,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 15064892}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.393, y: -0.287, z: 0}
-  m_LocalScale: {x: 0.106911816, y: 0.102579914, z: 0.93162}
+  m_LocalPosition: {x: 0, y: 0.078, z: -0.17}
+  m_LocalScale: {x: 0.06994064, y: 0.075904004, z: 0.31529748}
   m_Children: []
   m_Father: {fileID: 1973432803}
   m_RootOrder: 1
@@ -690,7 +690,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 270365529}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.393, y: -0.287, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.106911816, y: 0.102579914, z: 0.93162}
   m_Children: []
   m_Father: {fileID: 1973432803}
@@ -1314,6 +1314,9 @@ MonoBehaviour:
   m_GunOriginalPos: {x: 0, y: 0, z: 0}
   m_GunOriginalRot: {x: 0, y: 0, z: 0, w: 0}
   m_Gun: {fileID: 1973432803}
+  m_IsAiming: 0
+  m_GunAimHeight: 50
+  m_GunAimSpeed: 0.25
 --- !u!114 &696020106
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1508,13 +1511,13 @@ MonoBehaviour:
     m_ActionName: Host/Melee[/Mouse/middleButton,/DualShock4GamepadHID/rightStick/down]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 696020105}
+        m_TargetAssemblyTypeName: HostController, Assembly-CSharp
+        m_MethodName: OnAim
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -3354,7 +3357,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1973432802}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.08099997, z: 0.896}
+  m_LocalPosition: {x: 0.367, y: -0.206, z: 0.896}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 270365530}

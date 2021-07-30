@@ -121,6 +121,12 @@ public class HostController : InputController
 
     private Vector3 lookInput = Vector3.zero;
 
+    [HideInInspector]
+    public bool m_IsAiming = false;
+
+    public float m_GunAimHeight = 0.5f;
+    public float m_GunAimSpeed = 0.25f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -188,6 +194,8 @@ public class HostController : InputController
         }
 
         UpdateSway(lookInput.x, lookInput.y);
+        if (m_IsAiming)
+            Aim();
     }
 
 	public override void OnLook(InputAction.CallbackContext value)
@@ -448,6 +456,12 @@ public class HostController : InputController
         Gizmos.color = Color.green;
         Gizmos.DrawLine(transform.position, transform.position + new Vector3(CacheMovDir.x, CacheMovDir.y, CacheMovDir.z));
 
+
+
+        Vector3 centre = m_Camera.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, transform.forward.z));
+        Gizmos.DrawSphere(centre, 0.25f);
+        Gizmos.DrawSphere(m_Gun.position, 0.25f);
+
     }
 
     public void OnSlide(InputAction.CallbackContext value)
@@ -507,8 +521,43 @@ public class HostController : InputController
 
     private void UpdateSway(float x, float y)
     {
-        Vector3 finalPosition = new Vector3(-x * 0.02f, -y * 0.02f, 0);
-        m_Gun.localPosition = Vector3.Lerp(m_Gun.localPosition, finalPosition + m_GunOriginalPos, Time.deltaTime * 6);
+        if (!m_IsAiming)
+        {
+            Vector3 finalPosition = new Vector3(-x * 0.02f, -y * 0.02f, 0);
+            m_Gun.localPosition = Vector3.Lerp(m_Gun.localPosition, finalPosition + m_GunOriginalPos, Time.deltaTime * 6);
+        }
+        else if (m_IsAiming)
+        { 
+            // I guess I want a reduced sway.
+        }
     }
+
+    public void OnAim(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            m_IsAiming = true;
+        }
+        else if (context.canceled)
+        {
+            m_IsAiming = false;
+        }
+    }
+    private void Aim()
+    {
+        Debug.Log("Aiming");
+        Vector3 centre = m_Camera.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2 - m_GunAimHeight, transform.forward.z));
+
+        //Matrix4x4 localMat = m_Camera.transform.worldToLocalMatrix;
+       
+        Vector3 currentPosition = m_Gun.position;
+        Vector3 requiredChange = centre - currentPosition;
+
+        m_Gun.position += requiredChange * m_GunAimSpeed;
+
+
+    }
+
+    
 
 }

@@ -1317,6 +1317,8 @@ MonoBehaviour:
   m_IsAiming: 0
   m_GunAimHeight: 50
   m_GunAimSpeed: 0.25
+  m_GunAimSwaySrength: 0.5
+  m_GunSwayStrength: 1
 --- !u!114 &696020106
 MonoBehaviour:
   m_ObjectHideFlags: 0

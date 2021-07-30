@@ -126,6 +126,8 @@ public class HostController : InputController
 
     public float m_GunAimHeight = 0.5f;
     public float m_GunAimSpeed = 0.25f;
+    public float m_GunAimSwaySrength = 1;
+    public float m_GunSwayStrength = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -556,8 +558,8 @@ public class HostController : InputController
     private void Aim()
     {
         Debug.Log("Aiming");
-        Vector3 centre = m_Camera.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2 - m_GunAimHeight, transform.forward.z));
-
+        Vector3 centre = m_Camera.ScreenToWorldPoint(new Vector3((Screen.width / 2) + (-lookInput.x * m_GunAimSwaySrength), (Screen.height / 2) + (-lookInput.y * m_GunSwayStrength) - m_GunAimHeight, transform.forward.z));
+        Debug.Log("Centre: " + centre);
         //Matrix4x4 localMat = m_Camera.transform.worldToLocalMatrix;
        
         Vector3 currentPosition = m_Gun.position;

@@ -529,6 +529,12 @@ public class HostController : InputController
             m_Gun.localPosition = Vector3.Lerp(m_Gun.localPosition, finalPosition + m_GunOriginalPos, Time.deltaTime * 6);
             Quaternion zAxis = Quaternion.AngleAxis(-x, new Vector3(0, 0, 1));
             m_Gun.localRotation = Quaternion.Slerp(m_Gun.localRotation, zAxis, 0.1f);
+
+            float currentFOV = m_Camera.fieldOfView;
+            float desiredFOV = 60;
+
+            float requiredChange = desiredFOV - currentFOV;
+            m_Camera.fieldOfView += requiredChange * 0.45f;
         }
         else if (m_IsAiming)
         {
@@ -537,6 +543,16 @@ public class HostController : InputController
             //Vector3 finalPosition = new Vector3(-x * 0.02f, -y * 0.02f, 0);
             //Vector3 currentPosition = m_Gun.localPosition;
             //m_Gun.localPosition += (finalPosition - currentPosition) * 6;
+
+            // Had to put the sway code with the Aim() function since it was easier to just add the neccessary values to the calculations over there rather than try and split up the equations.
+
+            float currentFOV = m_Camera.fieldOfView;
+            float desiredFOV = 40;
+
+            float requiredChange = desiredFOV - currentFOV;
+            m_Camera.fieldOfView += requiredChange * 0.45f;
+
+
 
             // Quaternion rotate
             Quaternion zAxis = Quaternion.AngleAxis(-x, new Vector3(0, 0, 1));
@@ -557,9 +573,8 @@ public class HostController : InputController
     }
     private void Aim()
     {
-        Debug.Log("Aiming");
         Vector3 centre = m_Camera.ScreenToWorldPoint(new Vector3((Screen.width / 2) + (-lookInput.x * m_GunAimSwaySrength), (Screen.height / 2) + (-lookInput.y * m_GunSwayStrength) - m_GunAimHeight, transform.forward.z));
-        Debug.Log("Centre: " + centre);
+
         //Matrix4x4 localMat = m_Camera.transform.worldToLocalMatrix;
        
         Vector3 currentPosition = m_Gun.position;

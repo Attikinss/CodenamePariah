@@ -39,6 +39,8 @@ public class CustomDebugUI : MonoBehaviour
     public Text m_CurrentHealthText;
     public Text m_CurrentMaxHealthText;
 
+    public Text m_AdditionalRecoilText;
+
     //public Text m_ShootHeldText;
     //public Text m_ShootHeldCounterText;
     //public Text m_VertRecoilText;
@@ -85,6 +87,8 @@ public class CustomDebugUI : MonoBehaviour
         GraphicalDebugger.Assign<bool>(m_playerController.m_Sliding, "IsSliding", m_IsSlidingText);
         GraphicalDebugger.Assign<Vector3>(m_playerController.m_SlideDir, "SlideDir", m_SlideDirText);
         GraphicalDebugger.Assign<float>(m_playerController.m_SlideCounter, "SlideCounter", m_SlideCounterText);
+
+        GraphicalDebugger.Assign<Vector3>(m_playerController.m_AdditionalRecoilRotation, "AdditionalRecoilRotation", m_AdditionalRecoilText);
         
 
         //GraphicalDebugger.Assign<string>(m_AbilityController.m_Ability1.IsActive().ToString(), "Ability1Active", m_Ability1ActiveText);

@@ -1079,6 +1079,85 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+--- !u!1 &545597559
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 545597560}
+  - component: {fileID: 545597562}
+  - component: {fileID: 545597561}
+  m_Layer: 5
+  m_Name: AdditionalRecoilText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &545597560
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 545597559}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 971672573}
+  m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 183.21, y: -484.16}
+  m_SizeDelta: {x: 318.4283, y: 32.014008}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &545597561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 545597559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 14
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 'AdditionalRecoilRotation: -'
+--- !u!222 &545597562
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 545597559}
+  m_CullTransparentMesh: 1
 --- !u!1 &621071532
 GameObject:
   m_ObjectHideFlags: 0
@@ -1319,6 +1398,10 @@ MonoBehaviour:
   m_GunAimSpeed: 0.25
   m_GunAimSwaySrength: 0.5
   m_GunSwayStrength: 1
+  RecoilRotationAiming: {x: 0.5, y: 0.5, z: 1.5}
+  rotationSpeed: 6
+  returnSpeed: 1
+  m_AdditionalRecoilRotation: {x: 0, y: 0, z: 0}
 --- !u!114 &696020106
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1529,13 +1612,13 @@ MonoBehaviour:
     m_ActionName: Host/ADS[/Mouse/rightButton,/DualShock4GamepadHID/leftTrigger]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 696020105}
+        m_TargetAssemblyTypeName: HostController, Assembly-CSharp
+        m_MethodName: OnShoot
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1953,6 +2036,7 @@ RectTransform:
   - {fileID: 621071535}
   - {fileID: 1620082011}
   - {fileID: 36652375}
+  - {fileID: 545597560}
   m_Father: {fileID: 0}
   m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2000,6 +2084,7 @@ MonoBehaviour:
   m_SlideCounterText: {fileID: 36652373}
   m_CurrentHealthText: {fileID: 233374959}
   m_CurrentMaxHealthText: {fileID: 1052081592}
+  m_AdditionalRecoilText: {fileID: 545597561}
 --- !u!1 &984265895
 GameObject:
   m_ObjectHideFlags: 0

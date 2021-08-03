@@ -129,6 +129,19 @@ public class HostController : InputController
     public float m_GunAimSwaySrength = 1;
     public float m_GunSwayStrength = 1;
 
+    public Vector3 RecoilRotationAiming = new Vector3(0.5f, 0.5f, 1.5f);
+    public float rotationSpeed = 6;
+    public float returnSpeed = 25;
+
+    // testing recoil stuff.
+    private Vector3 m_CurrentRotation;
+    private Vector3 Rot;
+
+    [HideInInspector]
+    public Vector3 m_AdditionalRecoilRotation;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -224,7 +237,7 @@ public class HostController : InputController
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
         // Perform the rotations
-        m_Camera.transform.localRotation = Quaternion.Euler(Mathf.Clamp(xRotation - m_AdditionalVerticalRecoil, -90f, 90f), desiredX, 0);
+        m_Camera.transform.localRotation = Quaternion.Euler(Mathf.Clamp((xRotation - m_AdditionalVerticalRecoil + m_AdditionalRecoilRotation.y), -90f, 90f), desiredX - m_AdditionalRecoilRotation.x, 0 - m_AdditionalRecoilRotation.z);
         m_orientation.transform.localRotation = Quaternion.Euler(0, desiredX, 0);
 
     }
@@ -232,6 +245,7 @@ public class HostController : InputController
 	{
         Slide();
         Move(m_MovementInput);
+        UpdateRecoil();
 
 	}
 	public override void OnMovement(InputAction.CallbackContext value)
@@ -308,6 +322,10 @@ public class HostController : InputController
         return moveDir;
     }
 
+    public void OnShoot(InputAction.CallbackContext value)
+    {
+        Shoot(true);
+    }
     public void Shoot(bool active)
     {
         if (active && !m_hasFired)
@@ -319,26 +337,28 @@ public class HostController : InputController
             Weapon currentWeapon = PlayerManager.GetCurrentWeapon();
 
             // =========== TESTING =========== //
-            m_AdditionalVerticalRecoil += currentWeapon.ShootRecoil(m_Camera.transform, m_HeldCounter);
+            //m_AdditionalVerticalRecoil += currentWeapon.ShootRecoil(m_Camera.transform, m_HeldCounter);
             // =============================== //
 
             m_hasFired = true;
 
-            if (Physics.Raycast(ray, out hit))
-            {
-                if (hit.transform.gameObject != null)
-                {
-                    Decal newDecal = new Decal(hit.transform, hit.point, currentWeapon.m_HitDecal, hit.normal);
-                    GameManager.Instance.AddDecal(newDecal);
+            Recoil();
 
-
-                    // Adding a force to the hit object.
-                    if (hit.rigidbody != null)
-                    {
-                        hit.rigidbody.AddForce(m_Camera.transform.forward * m_bulletForce, ForceMode.Impulse);
-                    }
-                }
-            }
+            //if (Physics.Raycast(ray, out hit))
+            //{
+            //    if (hit.transform.gameObject != null)
+            //    {
+            //        Decal newDecal = new Decal(hit.transform, hit.point, currentWeapon.m_HitDecal, hit.normal);
+            //        GameManager.Instance.AddDecal(newDecal);
+            //
+            //
+            //        // Adding a force to the hit object.
+            //        if (hit.rigidbody != null)
+            //        {
+            //            hit.rigidbody.AddForce(m_Camera.transform.forward * m_bulletForce, ForceMode.Impulse);
+            //        }
+            //    }
+            //}
         }
         else if (!active) // This else if is a cheap way to track whether they let go of the fire button. To keep track of a continuous fire sequence.
             m_HoldingFire = false;
@@ -581,10 +601,24 @@ public class HostController : InputController
         Vector3 requiredChange = centre - currentPosition;
 
         m_Gun.position += requiredChange * m_GunAimSpeed;
+    }
 
+    private void Recoil()
+    {
+
+        m_AdditionalRecoilRotation += new Vector3(-RecoilRotationAiming.x, Random.Range(-RecoilRotationAiming.y, RecoilRotationAiming.y), Random.Range(-RecoilRotationAiming.z, RecoilRotationAiming.z));
+        
 
     }
 
+    private void UpdateRecoil()
+    {
+        m_AdditionalRecoilRotation = Vector3.Lerp(m_AdditionalRecoilRotation, Vector3.zero, returnSpeed * Time.deltaTime);
+        //Rot = Vector3.Slerp(Rot, m_CurrentRotation, rotationSpeed * Time.fixedDeltaTime);
+        //m_Camera.transform.localRotation = Quaternion.Euler(Rot);
+    }
+
+    
     
 
 }

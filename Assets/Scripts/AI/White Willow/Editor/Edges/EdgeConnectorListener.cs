@@ -10,7 +10,7 @@ namespace WhiteWillow.Editor
         private GraphViewChange m_GraphViewChange;
 
         /// <summary>Collection of edges to create in the graph view.</summary>
-        private List<Edge> m_EdgesToCreate;
+        private List<EdgeView> m_EdgesToCreate;
 
         /// <summary>Collection of edges to delete from the graph view.</summary>
         private List<GraphElement> m_EdgesToDelete;
@@ -24,17 +24,25 @@ namespace WhiteWillow.Editor
         {
             m_SearchWindowProvider = searchWindowProvider;
 
-            m_EdgesToCreate = new List<Edge>();
+            m_EdgesToCreate = new List<EdgeView>();
             m_EdgesToDelete = new List<GraphElement>();
 
-            m_GraphViewChange.edgesToCreate = m_EdgesToCreate;
+            List<Edge> temp = new List<Edge>();
+            foreach (var element in m_EdgesToCreate)
+            {
+                element.input.portColor = Color.white;
+                element.output.portColor = Color.white;
+                temp.Add(element);
+            }
+
+            m_GraphViewChange.edgesToCreate = temp;
         }
 
         public void OnDrop(GraphView graphView, Edge edge)
         {
             // Reset the create list
             m_EdgesToCreate.Clear();
-            m_EdgesToCreate.Add(edge);
+            m_EdgesToCreate.Add((edge as EdgeView));
 
             // Clear the delete list
             m_EdgesToDelete.Clear();
@@ -75,7 +83,12 @@ namespace WhiteWillow.Editor
             // Ensure a graph view change callback has been 
             // assigned and retrieve any edge creations
             if (graphView.graphViewChanged != null)
-                edgesToCreate = graphView.graphViewChanged(m_GraphViewChange).edgesToCreate;
+            {
+                List<EdgeView> temp = new List<EdgeView>();
+                foreach (var element in graphView.graphViewChanged(m_GraphViewChange).edgesToCreate)
+                    temp.Add(element as EdgeView);
+                edgesToCreate = temp;
+            }
 
             foreach (var newEdge in edgesToCreate)
             {
@@ -97,8 +110,8 @@ namespace WhiteWillow.Editor
         public void OnDropOutsidePort(Edge edge, Vector2 position)
         {
             // Get the port from with the edge was dragged from
-            var draggedPort = (edge.output != null ? edge.output.edgeConnector.edgeDragHelper.draggedPort : null) ??
-                              (edge.input != null ? edge.input.edgeConnector.edgeDragHelper.draggedPort : null);
+            var draggedPort = ((edge as EdgeView).output != null ? (edge as EdgeView).output.edgeConnector.edgeDragHelper.draggedPort : null) ??
+                              ((edge as EdgeView).input != null ?  (edge as EdgeView).input.edgeConnector.edgeDragHelper.draggedPort : null);
 
             // Set the connected port of the search window provider so that
             // it can auto connect the from node to any newly created nodes

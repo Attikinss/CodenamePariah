@@ -200,6 +200,8 @@ namespace WhiteWillow.Editor
             if (m_RootNode.Child != null)
             {
                 var newEdge = m_RootNode.OutputPort.ConnectTo(m_RootNode.Child.InputPort);
+                newEdge.input.portColor = Color.white;
+                newEdge.output.portColor = Color.white;
                 AddElement(newEdge);
 
                 m_RootNode.ConnectNodes(m_RootNode.Child.InputPort, Direction.Output);
@@ -215,7 +217,10 @@ namespace WhiteWillow.Editor
                     compNode.AddChildren(nodeList.FindAll(itr => itr.Node.Parent?.GUID == compNode.Node.GUID).ToArray());
                     foreach (var n in compNode.Children)
                     {
-                        AddElement(node.OutputPort.ConnectTo(n.InputPort));
+                        var edge = node.OutputPort.ConnectTo(n.InputPort);
+                        edge.input.portColor = Color.white;
+                        edge.output.portColor = Color.white;
+                        AddElement(edge);
 
                         node.ConnectNodes(n.InputPort, Direction.Output);
                         n.ConnectNodes(node.OutputPort, Direction.Input);
@@ -227,7 +232,10 @@ namespace WhiteWillow.Editor
                     decoNode.SetChild(nodeList.Find(itr => itr.Node.Parent?.GUID == decoNode.Node.GUID));
                     if (decoNode.Child != null)
                     {
-                        AddElement(decoNode.OutputPort.ConnectTo(decoNode.Child.InputPort));
+                        var edge = decoNode.OutputPort.ConnectTo(decoNode.Child.InputPort);
+                        edge.input.portColor = Color.white;
+                        edge.output.portColor = Color.white;
+                        AddElement(edge);
 
                         decoNode.ConnectNodes(decoNode.Child.InputPort, Direction.Output);
                         decoNode.Child.ConnectNodes(decoNode.OutputPort, Direction.Input);
@@ -290,7 +298,7 @@ namespace WhiteWillow.Editor
                     }
 
                     // Delete any edges and disconnect its nodes
-                    var edge = element as Edge;
+                    var edge = element as EdgeView;
                     if (edge != null)
                     {
                         var inputNodeType = (edge?.output as EditorPort)?.Owner.GetType();

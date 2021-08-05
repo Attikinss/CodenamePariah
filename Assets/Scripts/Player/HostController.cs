@@ -8,53 +8,83 @@ using UnityEngine.InputSystem;
 public class HostController : InputController
 {
     [Header("Settings")]
-    //public float m_sensitivity = 1000.0f;
+
+    [Header("Mouse Controls")]
     public float m_verticalLookLock = 75.0f;
-    //public float m_moveSpeed = 1;
+
+    [Header("Temporary Gun Controls")]
     public float m_fireRate = 0.5f;
     public float m_bulletForce = 5;
+
+    [Header("Movement Controls")]
     public float m_JumpHeight = 5;
     public float m_SecondJumpHeight = 2.5f;
     public float m_groundCheckHeight = 1;
     public float m_groundCheckRadius = 1;
     public float m_Gravity = -9.8f;
     public float m_maxSpeed = 5;
-    public float m_BobSpeed = 1;
-    public float m_BobDistance = 1;
     public float m_GroundAcceleration = 0.3f;
     public float m_AirAcceleration = 0.1f;
     public float m_JumpFallModifier = 2.0f;
+
+    [Header("Slide Controls")]
     public float m_SlideSpeed = 700;
     public float m_SlideDuration = 0.75f;
+    public float m_CameraCrouchHeight = -0.5f;
 
-    [HideInInspector]
-    public Vector2 m_MovementInput = Vector2.zero;
+    [Header("Old Bobbing Controls")]
+    public float m_BobSpeed = 1;
+    public float m_BobDistance = 1;
 
-
-    
 
     [Header("Weapons")]                    // ================ NOTE ================ //
     public Weapon m_weapon1;               // Weapons here will be replaced by another
     public Weapon m_weapon2;               // system. It is here for testing reasons.
                                            // ====================================== //
+
+
     [Header("Other References")]
-    public PlayerManager m_PlayerManager;
-    //public Camera m_mainCamera;
     public Transform m_orientation;
     public Rigidbody m_Rigidbody;
-
-
     
 
+    [Header("Temporary Weapon Controls")]
+    public Transform m_Gun;
+    [HideInInspector]
+    public Vector3 m_GunOriginalPos;
+    [HideInInspector]
+    public Quaternion m_GunOriginalRot;
+
+    public float m_GunAimHeight = 0.5f;
+    public float m_GunAimSpeed = 0.25f;
+    public float m_GunAimSwaySrength = 1;
+    public float m_GunSwayStrength = 1;
+
+    public Vector3 RecoilRotationAiming = new Vector3(0.5f, 0.5f, 1.5f);
+    public float rotationSpeed = 6;
+    public float returnSpeed = 25;
+
+    public float m_GunSwayReturn = 6;
+
+    public float m_WeaponSwayClampX = 0.5f;
+    public float m_WeaponSwayClampY = 0.5f;
+    public float m_WeaponSwayRotateClamp = 0.5f;
+    public float m_WeaponSwayRotateSpeed = 0.05f;
+
+    public float m_WeaponRecoilReturnSpeed = 1;
+
+    public float m_WeaponRotRecoilVertStrength = 2.5f;
+    public float m_WeaponTransformRecoilZStrength = 2.5f;
+
+    public float m_ADSRecoilModifier = 1;
 
     // ================== BOOKKEEPING STUFF ================== //
 
-    // Public bookkeeping.
+    [HideInInspector]
+    public Vector2 m_MovementInput = Vector2.zero;
     public bool IsGrounded { get; private set; }
     public Vector3 CacheMovDir = Vector3.zero;
     
-
-    // Private bookkeeping.
     private float m_fireCounter = 0.0f;
     private bool m_hasFired = false;
     [HideInInspector]
@@ -65,6 +95,28 @@ public class HostController : InputController
     private float xRotation = 0;
 
     private bool m_HasDoubleJumped = false;
+
+    [HideInInspector]
+    public bool m_Sliding = false;
+    [HideInInspector]
+    public Vector3 m_SlideDir = Vector2.zero;
+    private Vector3 m_CacheSlideMove = Vector3.zero;
+
+    [HideInInspector]
+    public float m_SlideCounter = 0.0f;
+
+    [HideInInspector]
+    public Vector3 lookInput = Vector3.zero;
+
+    [HideInInspector]
+    public bool m_IsAiming = false;
+
+    [HideInInspector]
+    public Vector3 m_AdditionalRecoilRotation;
+    [HideInInspector]
+    public Vector3 m_WeaponRecoilRot;
+    [HideInInspector]
+    public Vector3 m_WeaponRecoilTransform;
     // ======================================================= //
 
 
@@ -74,12 +126,12 @@ public class HostController : InputController
     [HideInInspector]
     public bool m_isMoving { get; private set; }
 
-
+    
 
     // ========================== TEMPORARY WEAPON SWAY ========================== //
     // This weapon sway stuff is here for now since we haven't got animations in yet.
     // It will be replaced soon.
-   
+
     [HideInInspector]
     public float m_SwayTimer = 0.0f;
     [HideInInspector]
@@ -97,72 +149,32 @@ public class HostController : InputController
 
     // ==================================================================== //
 
-    public InputActionAsset test;
+    
 
-    [HideInInspector]
-    public bool m_Sliding = false;
-    [HideInInspector]
-    public Vector3 m_SlideDir = Vector2.zero;
-    private Vector3 m_CacheSlideMove = Vector3.zero;
-
-    [HideInInspector]
-    public float m_SlideCounter = 0.0f;
+    
 
 
-    public float m_CameraCrouchHeight = -0.5f;
+    
 
 
 
+    
 
-    public Vector3 m_GunOriginalPos;
-    public Quaternion m_GunOriginalRot;
-    public Transform m_Gun;
+    
 
-    [HideInInspector]
-    public Vector3 lookInput = Vector3.zero;
+    
 
-    [HideInInspector]
-    public bool m_IsAiming = false;
+    
 
-    public float m_GunAimHeight = 0.5f;
-    public float m_GunAimSpeed = 0.25f;
-    public float m_GunAimSwaySrength = 1;
-    public float m_GunSwayStrength = 1;
+    
 
-    public Vector3 RecoilRotationAiming = new Vector3(0.5f, 0.5f, 1.5f);
-    public float rotationSpeed = 6;
-    public float returnSpeed = 25;
-
-    // testing recoil stuff.
-    private Vector3 m_CurrentRotation;
-    private Vector3 Rot;
-
-    [HideInInspector]
-    public Vector3 m_AdditionalRecoilRotation;
-    [HideInInspector]
-    public Vector3 m_WeaponRecoilRot;
-    [HideInInspector]
-    public Vector3 m_WeaponRecoilTransform;
-
-    public float m_GunSwayReturn = 6;
-
-    public float m_WeaponSwayClampX = 0.5f;
-    public float m_WeaponSwayClampY = 0.5f;
-    public float m_WeaponSwayRotateClamp = 0.5f;
-    public float m_WeaponSwayRotateSpeed = 0.05f;
-
-    public float m_WeaponRecoilReturnSpeed = 1;
-
-    public float m_WeaponRotRecoilVertStrength = 2.5f;
-    public float m_WeaponTransformRecoilZStrength = 2.5f;
-
-    public float m_ADSRecoilModifier = 1;
+   
 
 
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Assert(m_PlayerManager);
+        //Debug.Assert(m_PlayerManager);
 
         //InputManager.OnLook += Look;
         //InputManager.OnMove += Move;

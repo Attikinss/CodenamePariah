@@ -1365,36 +1365,21 @@ MonoBehaviour:
   m_groundCheckRadius: 0.39
   m_Gravity: -9.8
   m_maxSpeed: 10
-  m_BobSpeed: 5
-  m_BobDistance: 0.05
   m_GroundAcceleration: 0.1
   m_AirAcceleration: 0.2
   m_JumpFallModifier: 2
   m_SlideSpeed: 700
   m_SlideDuration: 0.75
-  m_MovementInput: {x: 0, y: 0}
+  m_CameraCrouchHeight: -0.5
+  m_BobSpeed: 5
+  m_BobDistance: 0.05
   m_weapon1: {fileID: 0}
   m_weapon2: {fileID: 0}
-  m_PlayerManager: {fileID: 1748220048}
   m_orientation: {fileID: 104576320}
-  m_Rigidbody: {fileID: 0}
-  CacheMovDir: {x: 0, y: 0, z: 0}
-  m_HoldingFire: 0
-  m_HeldCounter: 0
-  m_SwayTimer: 0
-  m_WaveSlice: 0
-  m_WaveSliceX: 0
-  m_AdditionalVerticalRecoil: 0
-  test: {fileID: -944628639613478452, guid: b7d6b06b2591d924dada1c948c36504b, type: 3}
-  m_Sliding: 0
-  m_SlideDir: {x: 0, y: 0, z: 0}
-  m_SlideCounter: 0
-  m_CameraCrouchHeight: -0.5
+  m_Rigidbody: {fileID: 696020107}
+  m_Gun: {fileID: 1973432803}
   m_GunOriginalPos: {x: 0, y: 0, z: 0}
   m_GunOriginalRot: {x: 0, y: 0, z: 0, w: 0}
-  m_Gun: {fileID: 1973432803}
-  lookInput: {x: 0, y: 0, z: 0}
-  m_IsAiming: 0
   m_GunAimHeight: 50
   m_GunAimSpeed: 0.25
   m_GunAimSwaySrength: 0.5
@@ -1402,9 +1387,6 @@ MonoBehaviour:
   RecoilRotationAiming: {x: 0.1, y: 0, z: 1}
   rotationSpeed: 6
   returnSpeed: 1
-  m_AdditionalRecoilRotation: {x: 0, y: 0, z: 0}
-  m_WeaponRecoilRot: {x: 0, y: 0, z: 0}
-  m_WeaponRecoilTransform: {x: 0, y: 0, z: 0}
   m_GunSwayReturn: 6
   m_WeaponSwayClampX: 0.1
   m_WeaponSwayClampY: 0.05
@@ -1414,6 +1396,22 @@ MonoBehaviour:
   m_WeaponRotRecoilVertStrength: 150
   m_WeaponTransformRecoilZStrength: 0.25
   m_ADSRecoilModifier: 0.25
+  m_MovementInput: {x: 0, y: 0}
+  CacheMovDir: {x: 0, y: 0, z: 0}
+  m_HoldingFire: 0
+  m_HeldCounter: 0
+  m_Sliding: 0
+  m_SlideDir: {x: 0, y: 0, z: 0}
+  m_SlideCounter: 0
+  lookInput: {x: 0, y: 0, z: 0}
+  m_IsAiming: 0
+  m_AdditionalRecoilRotation: {x: 0, y: 0, z: 0}
+  m_WeaponRecoilRot: {x: 0, y: 0, z: 0}
+  m_WeaponRecoilTransform: {x: 0, y: 0, z: 0}
+  m_SwayTimer: 0
+  m_WaveSlice: 0
+  m_WaveSliceX: 0
+  m_AdditionalVerticalRecoil: 0
 --- !u!114 &696020106
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3913,9 +3911,9 @@ RectTransform:
   m_Father: {fileID: 971672573}
   m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -917.79, y: -484.16}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 183.21, y: 16.007}
   m_SizeDelta: {x: 318.42834, y: 32.014008}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2139365656

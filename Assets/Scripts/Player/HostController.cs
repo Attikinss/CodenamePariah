@@ -139,6 +139,9 @@ public class HostController : InputController
 
     [HideInInspector]
     public Vector3 m_AdditionalRecoilRotation;
+    [HideInInspector]
+    public Vector3 m_WeaponRecoilRot;
+
 
     public float m_GunSwayReturn = 6;
 
@@ -146,6 +149,10 @@ public class HostController : InputController
     public float m_WeaponSwayClampY = 0.5f;
     public float m_WeaponSwayRotateClamp = 0.5f;
     public float m_WeaponSwayRotateSpeed = 0.05f;
+
+    public float m_WeaponRecoilReturnSpeed = 1;
+
+    public float m_WeaponRecoilVertStrength = 2.5f;
 
     // Start is called before the first frame update
     void Start()
@@ -277,7 +284,7 @@ public class HostController : InputController
 
 
 
-        Debug.Log("Move called.");
+        //Debug.Log("Move called.");
         
         float x = input.x;
         float z = input.y;
@@ -330,7 +337,10 @@ public class HostController : InputController
 
     public void OnShoot(InputAction.CallbackContext value)
     {
-        Shoot(true);
+        if (value.control.IsPressed(0)) // Have to use this otherwise mouse button gets triggered on release aswell.
+        {
+            Shoot(true);
+        }
     }
     public void Shoot(bool active)
     {
@@ -399,7 +409,7 @@ public class HostController : InputController
         Ray ray = new Ray(transform.position, Vector3.down);
         if (Physics.SphereCast(ray, m_groundCheckRadius, out hit, m_groundCheckHeight))
         {
-            Debug.Log(hit.transform.name);
+            //Debug.Log(hit.transform.name);
             return true;
         }
         return false;
@@ -549,12 +559,14 @@ public class HostController : InputController
 
     private void UpdateSway(float x, float y)
     {
+        // xAxis Quaternion is for the recoil kick upwards.
+        Quaternion xAxis = Quaternion.AngleAxis(m_WeaponRecoilRot.x, new Vector3(1, 0, 0));
         if (!m_IsAiming)
         {
             Vector3 finalPosition = new Vector3(Mathf.Clamp(-x * 0.02f, -m_WeaponSwayClampX, m_WeaponSwayClampX), Mathf.Clamp(-y * 0.02f, -m_WeaponSwayClampY, m_WeaponSwayClampY), 0);
             m_Gun.localPosition = Vector3.Lerp(m_Gun.localPosition, finalPosition + m_GunOriginalPos, Time.deltaTime * m_GunSwayReturn);
             Quaternion zAxis = Quaternion.AngleAxis(Mathf.Clamp(-x, -m_WeaponSwayRotateClamp, m_WeaponSwayRotateClamp), new Vector3(0, 0, 1));
-            m_Gun.localRotation = Quaternion.Slerp(m_Gun.localRotation, zAxis, m_WeaponSwayRotateSpeed);
+            m_Gun.localRotation = Quaternion.Slerp(m_Gun.localRotation, zAxis * xAxis, m_WeaponSwayRotateSpeed);
 
             float currentFOV = m_Camera.fieldOfView;
             float desiredFOV = 60;
@@ -582,7 +594,8 @@ public class HostController : InputController
 
             // Quaternion rotate
             Quaternion zAxis = Quaternion.AngleAxis(Mathf.Clamp(-x, -m_WeaponSwayRotateClamp, m_WeaponSwayRotateClamp), new Vector3(0, 0, 1));
-            m_Gun.localRotation = Quaternion.Slerp(m_Gun.localRotation, zAxis, m_WeaponSwayRotateSpeed);
+            
+            m_Gun.localRotation = Quaternion.Slerp(m_Gun.localRotation, zAxis * xAxis, m_WeaponSwayRotateSpeed);
         }
     }
 
@@ -608,20 +621,21 @@ public class HostController : InputController
 
         m_Gun.position += requiredChange * m_GunAimSpeed;
 
-
     }
 
     private void Recoil()
     {
-
         m_AdditionalRecoilRotation += new Vector3(-RecoilRotationAiming.x, Random.Range(-RecoilRotationAiming.y, RecoilRotationAiming.y), Random.Range(-RecoilRotationAiming.z, RecoilRotationAiming.z));
-        
-
+        m_WeaponRecoilRot -= new Vector3(m_WeaponRecoilVertStrength, 0, 0);
     }
 
     private void UpdateRecoil()
     {
         m_AdditionalRecoilRotation = Vector3.Lerp(m_AdditionalRecoilRotation, Vector3.zero, returnSpeed * Time.deltaTime);
+        m_WeaponRecoilRot = Vector3.Lerp(m_WeaponRecoilRot, Vector3.zero, m_WeaponRecoilReturnSpeed * Time.deltaTime);
+
+        
+
         //Rot = Vector3.Slerp(Rot, m_CurrentRotation, rotationSpeed * Time.fixedDeltaTime);
         //m_Camera.transform.localRotation = Quaternion.Euler(Rot);
     }

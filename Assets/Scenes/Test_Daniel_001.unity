@@ -1403,11 +1403,14 @@ MonoBehaviour:
   rotationSpeed: 6
   returnSpeed: 1
   m_AdditionalRecoilRotation: {x: 0, y: 0, z: 0}
+  m_WeaponRecoilRot: {x: 0, y: 0, z: 0}
   m_GunSwayReturn: 6
   m_WeaponSwayClampX: 0.1
   m_WeaponSwayClampY: 0.05
   m_WeaponSwayRotateClamp: 15
   m_WeaponSwayRotateSpeed: 0.05
+  m_WeaponRecoilReturnSpeed: 15
+  m_WeaponRecoilVertStrength: 50
 --- !u!114 &696020106
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2044,6 +2047,7 @@ RectTransform:
   - {fileID: 36652375}
   - {fileID: 545597560}
   - {fileID: 2058003934}
+  - {fileID: 1198651385}
   m_Father: {fileID: 0}
   m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2093,6 +2097,7 @@ MonoBehaviour:
   m_CurrentHealthText: {fileID: 233374959}
   m_CurrentMaxHealthText: {fileID: 1052081592}
   m_AdditionalRecoilText: {fileID: 2058003932}
+  m_WeaponRecoilText: {fileID: 1198651383}
 --- !u!1 &984265895
 GameObject:
   m_ObjectHideFlags: 0
@@ -2684,6 +2689,85 @@ Transform:
   m_Father: {fileID: 696020104}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1198651382
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1198651385}
+  - component: {fileID: 1198651384}
+  - component: {fileID: 1198651383}
+  m_Layer: 5
+  m_Name: WeaponRecoilText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1198651383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1198651382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 14
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 'WeaponRecoil: -'
+--- !u!222 &1198651384
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1198651382}
+  m_CullTransparentMesh: 1
+--- !u!224 &1198651385
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1198651382}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 971672573}
+  m_RootOrder: 16
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -159.21002, y: -68.02098}
+  m_SizeDelta: {x: 318.42834, y: 32.014008}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1422635542
 GameObject:
   m_ObjectHideFlags: 0

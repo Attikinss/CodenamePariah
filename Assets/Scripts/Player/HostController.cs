@@ -118,8 +118,8 @@ public class HostController : InputController
     public Quaternion m_GunOriginalRot;
     public Transform m_Gun;
 
-
-    private Vector3 lookInput = Vector3.zero;
+    [HideInInspector]
+    public Vector3 lookInput = Vector3.zero;
 
     [HideInInspector]
     public bool m_IsAiming = false;
@@ -140,7 +140,12 @@ public class HostController : InputController
     [HideInInspector]
     public Vector3 m_AdditionalRecoilRotation;
 
+    public float m_GunSwayReturn = 6;
 
+    public float m_WeaponSwayClampX = 0.5f;
+    public float m_WeaponSwayClampY = 0.5f;
+    public float m_WeaponSwayRotateClamp = 0.5f;
+    public float m_WeaponSwayRotateSpeed = 0.05f;
 
     // Start is called before the first frame update
     void Start()
@@ -208,15 +213,16 @@ public class HostController : InputController
 
         }
 
-        UpdateSway(lookInput.x, lookInput.y);
+        
         if (m_IsAiming)
             Aim();
+        Look(lookInput.x, lookInput.y);
+        UpdateSway(lookInput.x, lookInput.y);
     }
 
 	public override void OnLook(InputAction.CallbackContext value)
 	{
         lookInput = value.ReadValue<Vector2>();
-        Look(lookInput.x, lookInput.y);
 	}
 	public void Look(float xDelta, float yDelta)
     {
@@ -237,7 +243,7 @@ public class HostController : InputController
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
         // Perform the rotations
-        m_Camera.transform.localRotation = Quaternion.Euler(Mathf.Clamp((xRotation - m_AdditionalVerticalRecoil + m_AdditionalRecoilRotation.y), -90f, 90f), desiredX - m_AdditionalRecoilRotation.x, 0 - m_AdditionalRecoilRotation.z);
+        m_Camera.transform.localRotation = Quaternion.Euler(Mathf.Clamp((xRotation - m_AdditionalVerticalRecoil - m_AdditionalRecoilRotation.x), -90f, 90f), desiredX - m_AdditionalRecoilRotation.y, 0 - m_AdditionalRecoilRotation.z);
         m_orientation.transform.localRotation = Quaternion.Euler(0, desiredX, 0);
 
     }
@@ -545,10 +551,10 @@ public class HostController : InputController
     {
         if (!m_IsAiming)
         {
-            Vector3 finalPosition = new Vector3(-x * 0.02f, -y * 0.02f, 0);
-            m_Gun.localPosition = Vector3.Lerp(m_Gun.localPosition, finalPosition + m_GunOriginalPos, Time.deltaTime * 6);
-            Quaternion zAxis = Quaternion.AngleAxis(-x, new Vector3(0, 0, 1));
-            m_Gun.localRotation = Quaternion.Slerp(m_Gun.localRotation, zAxis, 0.1f);
+            Vector3 finalPosition = new Vector3(Mathf.Clamp(-x * 0.02f, -m_WeaponSwayClampX, m_WeaponSwayClampX), Mathf.Clamp(-y * 0.02f, -m_WeaponSwayClampY, m_WeaponSwayClampY), 0);
+            m_Gun.localPosition = Vector3.Lerp(m_Gun.localPosition, finalPosition + m_GunOriginalPos, Time.deltaTime * m_GunSwayReturn);
+            Quaternion zAxis = Quaternion.AngleAxis(Mathf.Clamp(-x, -m_WeaponSwayRotateClamp, m_WeaponSwayRotateClamp), new Vector3(0, 0, 1));
+            m_Gun.localRotation = Quaternion.Slerp(m_Gun.localRotation, zAxis, m_WeaponSwayRotateSpeed);
 
             float currentFOV = m_Camera.fieldOfView;
             float desiredFOV = 60;
@@ -575,8 +581,8 @@ public class HostController : InputController
 
 
             // Quaternion rotate
-            Quaternion zAxis = Quaternion.AngleAxis(-x, new Vector3(0, 0, 1));
-            m_Gun.localRotation = Quaternion.Slerp(m_Gun.localRotation, zAxis, 0.05f);
+            Quaternion zAxis = Quaternion.AngleAxis(Mathf.Clamp(-x, -m_WeaponSwayRotateClamp, m_WeaponSwayRotateClamp), new Vector3(0, 0, 1));
+            m_Gun.localRotation = Quaternion.Slerp(m_Gun.localRotation, zAxis, m_WeaponSwayRotateSpeed);
         }
     }
 
@@ -601,6 +607,8 @@ public class HostController : InputController
         Vector3 requiredChange = centre - currentPosition;
 
         m_Gun.position += requiredChange * m_GunAimSpeed;
+
+
     }
 
     private void Recoil()

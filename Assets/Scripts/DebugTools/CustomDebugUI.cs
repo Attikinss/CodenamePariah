@@ -26,7 +26,11 @@ public class CustomDebugUI : MonoBehaviour
     public Text m_SlideDirText;
     public Text m_SlideCounterText;
 
+    public Text m_LookInputText;
+
     private bool m_Toggle = true;
+
+
 
     //[Header("Weapon Sway")]
     //public Text m_SwayTimerText;
@@ -89,7 +93,8 @@ public class CustomDebugUI : MonoBehaviour
         GraphicalDebugger.Assign<float>(m_playerController.m_SlideCounter, "SlideCounter", m_SlideCounterText);
 
         GraphicalDebugger.Assign<Vector3>(m_playerController.m_AdditionalRecoilRotation, "AdditionalRecoilRotation", m_AdditionalRecoilText);
-        
+
+        GraphicalDebugger.Assign<Vector3>(m_playerController.lookInput, "LookInput", m_LookInputText);
 
         //GraphicalDebugger.Assign<string>(m_AbilityController.m_Ability1.IsActive().ToString(), "Ability1Active", m_Ability1ActiveText);
         //GraphicalDebugger.Assign<float>(m_AbilityController.m_Ability1.GetCounter(), "Ability1Counter", m_Ability1CounterText);

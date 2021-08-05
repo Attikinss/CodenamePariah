@@ -149,42 +149,9 @@ public class HostController : InputController
 
     // ==================================================================== //
 
-    
-
-    
-
-
-    
-
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-   
-
-
-    // Start is called before the first frame update
+ 
     void Start()
     {
-        //Debug.Assert(m_PlayerManager);
-
-        //InputManager.OnLook += Look;
-        //InputManager.OnMove += Move;
-        //InputManager.OnFire += Shoot;
-        //InputManager.OnJump += Jump;
-        //InputManager.OnSelect1 += WeaponSelect1;
-        //InputManager.OnSelect2 += WeaponSelect2;
-
-        m_Rigidbody = GetComponent<Rigidbody>();
-
         Cursor.lockState = CursorLockMode.Locked;
 
         m_GunOriginalPos = m_Gun.localPosition;
@@ -196,7 +163,6 @@ public class HostController : InputController
         Look(lookInput.x, lookInput.y);
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (m_hasFired)
@@ -223,12 +189,7 @@ public class HostController : InputController
         if (IsGrounded)
             m_HasDoubleJumped = false;
 
-        
-
         m_currentMoveSpeed = m_Rigidbody.velocity.magnitude;
-
-        //WeaponBob();
-
 
 
         // Testing recoil stuff.
@@ -240,10 +201,8 @@ public class HostController : InputController
 
         }
 
-        
         if (m_IsAiming)
             Aim();
-        //Look(lookInput.x, lookInput.y);
         UpdateSway(lookInput.x, lookInput.y);
     }
 
@@ -253,10 +212,6 @@ public class HostController : InputController
 	}
 	public void Look(float xDelta, float yDelta)
     {
-        //float mouseX = Input.GetAxis("Mouse X") * m_sensitivity * Time.fixedDeltaTime;
-        //float mouseY = Input.GetAxis("Mouse Y") * m_sensitivity * Time.fixedDeltaTime;
-
-        
 
         float mouseX = xDelta * m_LookSensitivity * Time.fixedDeltaTime;
         float mouseY = yDelta * m_LookSensitivity * Time.fixedDeltaTime;
@@ -279,7 +234,6 @@ public class HostController : InputController
         Slide();
         Move(m_MovementInput);
         UpdateRecoil();
-
 	}
 	public override void OnMovement(InputAction.CallbackContext value)
 	{
@@ -302,10 +256,6 @@ public class HostController : InputController
 
         // ======================================================================== //
 
-
-
-        //Debug.Log("Move called.");
-        
         float x = input.x;
         float z = input.y;
    
@@ -563,10 +513,6 @@ public class HostController : InputController
 		{
 			SmoothMove(m_Camera.transform, new Vector3(0, 0.5f, 0), 0.25f);
 		}
-
-		//elseif(slideRecovery)
-		// smoothly rotate back to normal.
-
 	}
 
 	private void SmoothMove(Transform obj, Vector3 wantedLocalPos, float t)
@@ -601,12 +547,6 @@ public class HostController : InputController
         }
         else if (m_IsAiming)
         {
-            // I guess I want a reduced sway.
-            //Vector3 centre = m_Camera.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2 - m_GunAimHeight, transform.forward.z));
-            //Vector3 finalPosition = new Vector3(-x * 0.02f, -y * 0.02f, 0);
-            //Vector3 currentPosition = m_Gun.localPosition;
-            //m_Gun.localPosition += (finalPosition - currentPosition) * 6;
-
             // Had to put the sway code with the Aim() function since it was easier to just add the neccessary values to the calculations over there rather than try and split up the equations.
 
             float currentFOV = m_Camera.fieldOfView;
@@ -639,13 +579,10 @@ public class HostController : InputController
     {
         Vector3 centre = m_Camera.ScreenToWorldPoint(new Vector3((Screen.width / 2) + (-lookInput.x * m_GunAimSwaySrength), (Screen.height / 2) + (-lookInput.y * m_GunSwayStrength) - m_GunAimHeight, transform.forward.z + m_WeaponRecoilTransform.z));
 
-        //Matrix4x4 localMat = m_Camera.transform.worldToLocalMatrix;
-       
         Vector3 currentPosition = m_Gun.position;
         Vector3 requiredChange = centre - currentPosition;
 
         m_Gun.position += requiredChange * m_GunAimSpeed;
-
     }
 
     private void Recoil()
@@ -663,10 +600,6 @@ public class HostController : InputController
         m_WeaponRecoilRot = Vector3.Lerp(m_WeaponRecoilRot, Vector3.zero, m_WeaponRecoilReturnSpeed * Time.deltaTime);
 
         m_WeaponRecoilTransform = Vector3.Lerp(m_WeaponRecoilTransform, Vector3.zero, m_WeaponRecoilReturnSpeed * Time.deltaTime);
-        
-
-        //Rot = Vector3.Slerp(Rot, m_CurrentRotation, rotationSpeed * Time.fixedDeltaTime);
-        //m_Camera.transform.localRotation = Quaternion.Euler(Rot);
     }
 
     

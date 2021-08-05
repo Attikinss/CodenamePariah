@@ -156,6 +156,8 @@ public class HostController : InputController
     public float m_WeaponRotRecoilVertStrength = 2.5f;
     public float m_WeaponTransformRecoilZStrength = 2.5f;
 
+    public float m_ADSRecoilModifier = 1;
+
 
     // Start is called before the first frame update
     void Start()
@@ -570,11 +572,12 @@ public class HostController : InputController
     private void UpdateSway(float x, float y)
     {
         // xAxis Quaternion is for the recoil kick upwards.
-        Quaternion xAxis = Quaternion.AngleAxis(m_WeaponRecoilRot.x, new Vector3(1, 0, 0));
+        
         if (!m_IsAiming)
         {
-            Vector3 finalPosition = new Vector3(Mathf.Clamp(-x * 0.02f, -m_WeaponSwayClampX, m_WeaponSwayClampX), Mathf.Clamp(-y * 0.02f, -m_WeaponSwayClampY, m_WeaponSwayClampY), 0);
+            Vector3 finalPosition = new Vector3(Mathf.Clamp(-x * 0.02f, -m_WeaponSwayClampX, m_WeaponSwayClampX), Mathf.Clamp(-y * 0.02f, -m_WeaponSwayClampY, m_WeaponSwayClampY), 0 + m_WeaponRecoilTransform.z);
             m_Gun.localPosition = Vector3.Lerp(m_Gun.localPosition, finalPosition + m_GunOriginalPos, Time.deltaTime * m_GunSwayReturn);
+            Quaternion xAxis = Quaternion.AngleAxis(m_WeaponRecoilRot.x, new Vector3(1, 0, 0));
             Quaternion zAxis = Quaternion.AngleAxis(Mathf.Clamp(-x, -m_WeaponSwayRotateClamp, m_WeaponSwayRotateClamp), new Vector3(0, 0, 1));
             m_Gun.localRotation = Quaternion.Slerp(m_Gun.localRotation, zAxis * xAxis, m_WeaponSwayRotateSpeed);
 
@@ -604,7 +607,7 @@ public class HostController : InputController
 
             // Quaternion rotate
             Quaternion zAxis = Quaternion.AngleAxis(Mathf.Clamp(-x, -m_WeaponSwayRotateClamp, m_WeaponSwayRotateClamp), new Vector3(0, 0, 1));
-            
+            Quaternion xAxis = Quaternion.AngleAxis(m_WeaponRecoilRot.x * m_ADSRecoilModifier, new Vector3(1, 0, 0));
             m_Gun.localRotation = Quaternion.Slerp(m_Gun.localRotation, zAxis * xAxis, m_WeaponSwayRotateSpeed);
         }
     }
@@ -622,7 +625,7 @@ public class HostController : InputController
     }
     private void Aim()
     {
-        Vector3 centre = m_Camera.ScreenToWorldPoint(new Vector3((Screen.width / 2) + (-lookInput.x * m_GunAimSwaySrength), (Screen.height / 2) + (-lookInput.y * m_GunSwayStrength) - m_GunAimHeight, transform.forward.z));
+        Vector3 centre = m_Camera.ScreenToWorldPoint(new Vector3((Screen.width / 2) + (-lookInput.x * m_GunAimSwaySrength), (Screen.height / 2) + (-lookInput.y * m_GunSwayStrength) - m_GunAimHeight, transform.forward.z + m_WeaponRecoilTransform.z));
 
         //Matrix4x4 localMat = m_Camera.transform.worldToLocalMatrix;
        
@@ -647,6 +650,7 @@ public class HostController : InputController
         m_AdditionalRecoilRotation = Vector3.Lerp(m_AdditionalRecoilRotation, Vector3.zero, returnSpeed * Time.deltaTime);
         m_WeaponRecoilRot = Vector3.Lerp(m_WeaponRecoilRot, Vector3.zero, m_WeaponRecoilReturnSpeed * Time.deltaTime);
 
+        m_WeaponRecoilTransform = Vector3.Lerp(m_WeaponRecoilTransform, Vector3.zero, m_WeaponRecoilReturnSpeed * Time.deltaTime);
         
 
         //Rot = Vector3.Slerp(Rot, m_CurrentRotation, rotationSpeed * Time.fixedDeltaTime);

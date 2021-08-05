@@ -1410,9 +1410,10 @@ MonoBehaviour:
   m_WeaponSwayClampY: 0.05
   m_WeaponSwayRotateClamp: 15
   m_WeaponSwayRotateSpeed: 0.05
-  m_WeaponRecoilReturnSpeed: 25
+  m_WeaponRecoilReturnSpeed: 30
   m_WeaponRotRecoilVertStrength: 150
-  m_WeaponTransformRecoilZStrength: 2.5
+  m_WeaponTransformRecoilZStrength: 0.25
+  m_ADSRecoilModifier: 0.25
 --- !u!114 &696020106
 MonoBehaviour:
   m_ObjectHideFlags: 0

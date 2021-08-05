@@ -22,13 +22,13 @@ MonoBehaviour:
   ExecutionOrder: 1
   GraphDimensions:
     serializedVersion: 2
-    x: -400
+    x: -402
     y: 476
-    width: 254
+    width: 256
     height: 81
   Interruptable: 1
   RangeType: 0
-  Radius: 35
+  Radius: 30
 --- !u!114 &-5410772201933474676
 MonoBehaviour:
   m_ObjectHideFlags: 0

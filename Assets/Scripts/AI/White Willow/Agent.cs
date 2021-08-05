@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem;
 
 namespace WhiteWillow
 {
@@ -7,6 +8,7 @@ namespace WhiteWillow
     public class Agent : MonoBehaviour
     {
         public BehaviourTree InputTree;
+        public bool m_UserOverride = false;
 
         private BehaviourTree m_RuntimeTree;
         private NavMeshAgent m_NavAgent;
@@ -37,19 +39,36 @@ namespace WhiteWillow
 
         private void Update()
         {
-            m_RuntimeTree?.Tick();
-            m_LastPosition = transform.position;
+            if (Mouse.current.rightButton.wasPressedThisFrame)
+                m_UserOverride = !m_UserOverride;
+
+            if (m_UserOverride)
+            {
+                if (Mouse.current.leftButton.wasPressedThisFrame)
+                {
+                    var ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+                    if (Physics.Raycast(ray.origin, ray.direction, out RaycastHit hitInfo))
+                        m_NavAgent.SetDestination(hitInfo.point);
+                }
+            }
+            else
+            {
+                m_RuntimeTree?.Tick();
+                m_LastPosition = transform.position;
+            }
         }
 
         public void MoveToPosition()
         {
             if (m_MovePosition != Vector3.positiveInfinity && m_MovePosition != Vector3.negativeInfinity)
+            {
                 m_NavAgent.SetDestination(m_MovePosition);
+            }
         }
 
         public bool SetDestination(Vector3 destination)
         {
-            m_MovePosition = transform.position + destination;
+            m_MovePosition = destination;
             bool onNavMesh = NavMesh.SamplePosition(m_MovePosition, out NavMeshHit hitInfo, 2.0f, NavMesh.AllAreas);
             return onNavMesh;
         }

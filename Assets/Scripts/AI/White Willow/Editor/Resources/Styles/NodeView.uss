@@ -1,9 +1,9 @@
 #node-border {
     background-color: rgb(56, 56, 56);
-    border-left-color: rgb(0, 0, 0);
-    border-right-color: rgb(0, 0, 0);
-    border-top-color: rgb(0, 0, 0);
-    border-bottom-color: rgb(0, 0, 0);
+    border-left-color: rgba(0, 0, 0, 0.57);
+    border-right-color: rgba(0, 0, 0, 0.57);
+    border-top-color: rgba(0, 0, 0, 0.57);
+    border-bottom-color: rgba(0, 0, 0, 0.57);
     border-left-width: 0;
     border-right-width: 0;
     border-top-width: 0;
@@ -27,10 +27,10 @@
 
 :hover > #node-border {
     background-color: rgb(79, 79, 79);
-    border-left-color: rgb(0, 0, 0);
-    border-right-color: rgb(0, 0, 0);
-    border-top-color: rgb(0, 0, 0);
-    border-bottom-color: rgb(0, 0, 0);
+    border-left-color: rgba(0, 0, 0, 0.78);
+    border-right-color: rgba(0, 0, 0, 0.78);
+    border-top-color: rgba(0, 0, 0, 0.78);
+    border-bottom-color: rgba(0, 0, 0, 0.78);
     border-left-width: 0;
     border-right-width: 0;
     border-top-width: 0;
@@ -54,10 +54,10 @@
 
 :selected > #node-border {
     background-color: rgb(79, 79, 79);
-    border-left-color: rgb(0, 0, 0);
-    border-right-color: rgb(0, 0, 0);
-    border-top-color: rgb(0, 0, 0);
-    border-bottom-color: rgb(0, 0, 0);
+    border-left-color: rgba(0, 0, 0, 0.78);
+    border-right-color: rgba(0, 0, 0, 0.78);
+    border-top-color: rgba(0, 0, 0, 0.78);
+    border-bottom-color: rgba(0, 0, 0, 0.78);
     border-left-width: 0;
     border-right-width: 0;
     border-top-width: 0;
@@ -82,10 +82,10 @@
 
 :hover:selected > #node-border {
     background-color: rgb(89, 89, 89);
-    border-left-color: rgb(0, 0, 0);
-    border-right-color: rgb(0, 0, 0);
-    border-top-color: rgb(0, 0, 0);
-    border-bottom-color: rgb(0, 0, 0);
+    border-left-color: rgba(0, 0, 0, 0.78);
+    border-right-color: rgba(0, 0, 0, 0.78);
+    border-top-color: rgba(0, 0, 0, 0.78);
+    border-bottom-color: rgba(0, 0, 0, 0.78);
     border-left-width: 0;
     border-right-width: 0;
     border-top-width: 0;
@@ -183,7 +183,7 @@
     margin-top: 0;
     margin-bottom: 0;
     left: auto;
-    color: rgba(207, 207, 207, 255);
+    color: rgb(207, 207, 207);
     -unity-font-style: normal;
     justify-content: center;
     top: 10px;
@@ -191,15 +191,15 @@
 
 #connector {
     --port-color: rgb(255, 0, 0);
-    border-left-color: rgba(255, 255, 255, 255);
-    border-right-color: rgba(255, 255, 255, 255);
-    border-top-color: rgba(255, 255, 255, 255);
-    border-bottom-color: rgba(255, 255, 255, 255);
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
     border-left-width: 0;
     border-right-width: 0;
     border-top-width: 0;
     border-bottom-width: 0;
-    background-color: rgba(255, 255, 255, 255);
+    background-color: rgb(255, 255, 255);
 }
 
 .node {
@@ -225,16 +225,16 @@
 
 .sequence #input {
     -unity-background-image-tint-color: rgb(255, 255, 255);
-    background-color: rgba(160, 255, 71, 255);
+    background-color: rgb(160, 255, 71);
 }
 
 .task #input {
     -unity-background-image-tint-color: rgb(255, 255, 255);
-    background-color: rgba(47, 195, 255, 255);
+    background-color: rgb(47, 195, 255);
 }
 
 .decorator #input {
-    background-color: rgba(157, 0, 255, 255);
+    background-color: rgb(157, 0, 255);
 }
 
 #status-icon-container {
@@ -251,10 +251,10 @@
     -unity-slice-top: 0;
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.47);
-    border-left-color: rgba(200, 200, 200, 255);
-    border-right-color: rgba(200, 200, 200, 255);
-    border-top-color: rgba(200, 200, 200, 255);
-    border-bottom-color: rgba(200, 200, 200, 255);
+    border-left-color: rgb(200, 200, 200);
+    border-right-color: rgb(200, 200, 200);
+    border-top-color: rgb(200, 200, 200);
+    border-bottom-color: rgb(200, 200, 200);
     border-left-width: 1px;
     border-right-width: 1px;
     border-top-width: 1px;

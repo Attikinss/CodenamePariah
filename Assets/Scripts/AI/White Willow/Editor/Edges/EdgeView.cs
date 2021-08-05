@@ -8,6 +8,7 @@ namespace WhiteWillow.Editor
     {
         public EdgeView() : base()
         {
+            styleSheets.Add(Resources.Load<StyleSheet>("Styles/Edge"));
         }
 
         public void Highlight()

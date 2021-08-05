@@ -267,44 +267,44 @@ namespace WhiteWillow.Editor
 
         public void Highlight()
         {
-            //// Highlight borders
-            //m_NodeSelectionBorder.style.borderLeftColor = ActiveColour;
-            //m_NodeSelectionBorder.style.borderRightColor = ActiveColour;
-            //m_NodeSelectionBorder.style.borderTopColor = ActiveColour;
-            //m_NodeSelectionBorder.style.borderBottomColor = ActiveColour;
-            //
-            //m_NodeBorder.style.borderLeftColor = ActiveColour;
-            //m_NodeBorder.style.borderRightColor = ActiveColour;
-            //m_NodeBorder.style.borderTopColor = ActiveColour;
-            //m_NodeBorder.style.borderBottomColor = ActiveColour;
-            //m_NodeBorder.style.borderTopWidth = 2f;
-            //m_NodeBorder.style.borderRightWidth = 2f;
-            //m_NodeBorder.style.borderLeftWidth = 2f;
-            //m_NodeBorder.style.borderBottomWidth = 2f;
-            //
-            //if (InputPort != null)
-            //{
-            //    // Highlight the input port
-            //    InputPort.SetColour(ActiveColour);
-            //}
-            //
-            //if (OutputPort != null)
-            //{
-            //    // Highlight the output port
-            //    OutputPort.SetColour(ActiveColour);
-            //}
-            //
-            //EdgeView edge = InputPort?.connections.FirstOrDefault() as EdgeView;
-            //edge?.Highlight();
-            //if (edge != null)
-            //{
-            //    edge.edgeControl.inputColor = ActiveColour;
-            //    edge.edgeControl.outputColor = ActiveColour;
-            //}
-            //
-            //m_Highlight = true;
-            //
-            //Parent?.Highlight();
+            // Highlight borders
+            m_NodeSelectionBorder.style.borderLeftColor = ActiveColour;
+            m_NodeSelectionBorder.style.borderRightColor = ActiveColour;
+            m_NodeSelectionBorder.style.borderTopColor = ActiveColour;
+            m_NodeSelectionBorder.style.borderBottomColor = ActiveColour;
+            
+            m_NodeBorder.style.borderLeftColor = ActiveColour;
+            m_NodeBorder.style.borderRightColor = ActiveColour;
+            m_NodeBorder.style.borderTopColor = ActiveColour;
+            m_NodeBorder.style.borderBottomColor = ActiveColour;
+            m_NodeBorder.style.borderTopWidth = 2f;
+            m_NodeBorder.style.borderRightWidth = 2f;
+            m_NodeBorder.style.borderLeftWidth = 2f;
+            m_NodeBorder.style.borderBottomWidth = 2f;
+            
+            if (InputPort != null)
+            {
+                // Highlight the input port
+                InputPort.SetColour(ActiveColour);
+            }
+            
+            if (OutputPort != null)
+            {
+                // Highlight the output port
+                OutputPort.SetColour(ActiveColour);
+            }
+            
+            EdgeView edge = InputPort?.connections.FirstOrDefault() as EdgeView;
+            edge?.Highlight();
+            if (edge != null)
+            {
+                edge.edgeControl.inputColor = ActiveColour;
+                edge.edgeControl.outputColor = ActiveColour;
+            }
+            
+            m_Highlight = true;
+            
+            Parent?.Highlight();
         }
 
         public void Unhighlight()

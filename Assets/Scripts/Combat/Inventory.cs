@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;//
-using UnityEngine.UI;
+using TMPro;
 
 public class Inventory : MonoBehaviour
 {
@@ -13,7 +12,6 @@ public class Inventory : MonoBehaviour
     [SerializeField]
     [Tooltip("Health UI.")]//
     public TextMeshProUGUI m_HealthText;
-    public Text m_healthUI;
 
     [SerializeField]
     [Tooltip("Weapons this character has.")]
@@ -43,10 +41,9 @@ public class Inventory : MonoBehaviour
     void DisplayHealth()
     {
         //m_HealthText.text = "";
-        m_healthUI.text = "";
+        m_HealthText.text = "";
         //enable sprite (possibly only at start - until health is 0)
-        //m_HealthText.text += m_Health;
-        m_healthUI.text += m_Health;
+        m_HealthText.text += m_Health;
     }
 
     /// <summary>Takes health away equal to the damage value.</summary>

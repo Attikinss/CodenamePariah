@@ -45,7 +45,8 @@ public class CustomDebugUI : MonoBehaviour
 
     public Text m_AdditionalRecoilText;
 
-    public Text m_WeaponRecoilText;
+    public Text m_WeaponRecoilRotText;
+    public Text m_WeaponRecoilTransfText;
 
     //public Text m_ShootHeldText;
     //public Text m_ShootHeldCounterText;
@@ -98,7 +99,8 @@ public class CustomDebugUI : MonoBehaviour
 
         GraphicalDebugger.Assign<Vector3>(m_playerController.lookInput, "LookInput", m_LookInputText);
 
-        GraphicalDebugger.Assign<Vector3>(m_playerController.m_WeaponRecoilRot, "WeaponRecoil", m_WeaponRecoilText);
+        GraphicalDebugger.Assign<Vector3>(m_playerController.m_WeaponRecoilRot, "WeaponRecoilRot", m_WeaponRecoilRotText);
+        GraphicalDebugger.Assign<Vector3>(m_playerController.m_WeaponRecoilTransform, "WeaponRecoilTransf", m_WeaponRecoilTransfText);
 
         //GraphicalDebugger.Assign<string>(m_AbilityController.m_Ability1.IsActive().ToString(), "Ability1Active", m_Ability1ActiveText);
         //GraphicalDebugger.Assign<float>(m_AbilityController.m_Ability1.GetCounter(), "Ability1Counter", m_Ability1CounterText);

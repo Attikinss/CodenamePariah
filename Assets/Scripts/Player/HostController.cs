@@ -141,7 +141,8 @@ public class HostController : InputController
     public Vector3 m_AdditionalRecoilRotation;
     [HideInInspector]
     public Vector3 m_WeaponRecoilRot;
-
+    [HideInInspector]
+    public Vector3 m_WeaponRecoilTransform;
 
     public float m_GunSwayReturn = 6;
 
@@ -152,7 +153,9 @@ public class HostController : InputController
 
     public float m_WeaponRecoilReturnSpeed = 1;
 
-    public float m_WeaponRecoilVertStrength = 2.5f;
+    public float m_WeaponRotRecoilVertStrength = 2.5f;
+    public float m_WeaponTransformRecoilZStrength = 2.5f;
+
 
     // Start is called before the first frame update
     void Start()
@@ -245,7 +248,7 @@ public class HostController : InputController
         float mouseY = yDelta * m_LookSensitivity * Time.fixedDeltaTime;
 
         // Finding current look rotation
-        Vector3 rot = m_Camera.transform.localRotation.eulerAngles;
+        Vector3 rot = m_orientation.transform.localRotation.eulerAngles;
         float desiredX = rot.y + mouseX;
 
         // Rotate
@@ -253,8 +256,8 @@ public class HostController : InputController
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
         // Perform the rotations
-        m_Camera.transform.localRotation = Quaternion.Euler(Mathf.Clamp((xRotation - m_AdditionalVerticalRecoil - m_AdditionalRecoilRotation.x), -90f, 90f), desiredX - m_AdditionalRecoilRotation.y, 0 - m_AdditionalRecoilRotation.z);
         m_orientation.transform.localRotation = Quaternion.Euler(0, desiredX, 0);
+        m_Camera.transform.localRotation = Quaternion.Euler(Mathf.Clamp((xRotation - m_AdditionalVerticalRecoil - m_AdditionalRecoilRotation.x), -90f, 90f), 0.0f - m_AdditionalRecoilRotation.y, 0 - m_AdditionalRecoilRotation.z);
 
     }
 	private void FixedUpdate()
@@ -633,7 +636,10 @@ public class HostController : InputController
     private void Recoil()
     {
         m_AdditionalRecoilRotation += new Vector3(-RecoilRotationAiming.x, Random.Range(-RecoilRotationAiming.y, RecoilRotationAiming.y), Random.Range(-RecoilRotationAiming.z, RecoilRotationAiming.z));
-        m_WeaponRecoilRot -= new Vector3(m_WeaponRecoilVertStrength, 0, 0);
+        m_WeaponRecoilRot -= new Vector3(m_WeaponRotRecoilVertStrength, 0, 0);
+
+        // Although I am setting the recoil transform here, I have to apply it in the WeaponSway() function since I'm setting pos directly there. I want to change this but I'm unsure how right now
+        m_WeaponRecoilTransform -= new Vector3(0, 0, m_WeaponTransformRecoilZStrength);
     }
 
     private void UpdateRecoil()

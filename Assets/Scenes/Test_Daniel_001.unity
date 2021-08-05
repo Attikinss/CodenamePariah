@@ -3399,6 +3399,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1748220049}
   - component: {fileID: 1748220048}
+  - component: {fileID: 1748220050}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -3433,6 +3434,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1748220050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1748220047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 321117db00972f84ab44b9c72f61a1cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1780589435
 GameObject:
   m_ObjectHideFlags: 0
@@ -3521,6 +3534,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1973432803}
+  - component: {fileID: 1973432804}
   m_Layer: 0
   m_Name: Gun
   m_TagString: Untagged
@@ -3544,6 +3558,27 @@ Transform:
   m_Father: {fileID: 1148609190}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1973432804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1973432802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 782e265ca3eabf54ab9f81dee17cc001, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_BulletDamage: 0
+  m_HitDecal: {fileID: 0}
+  m_VerticalRecoil:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_VerticalProgress: 0
 --- !u!1 &1996643213
 GameObject:
   m_ObjectHideFlags: 0

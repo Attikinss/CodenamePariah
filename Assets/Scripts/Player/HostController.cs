@@ -174,10 +174,13 @@ public class HostController : InputController
         m_GunOriginalRot = transform.localRotation;
     }
 
-	
+    private void LateUpdate()
+    {
+        Look(lookInput.x, lookInput.y);
+    }
 
-	// Update is called once per frame
-	void Update()
+    // Update is called once per frame
+    void Update()
     {
         if (m_hasFired)
         {
@@ -223,7 +226,7 @@ public class HostController : InputController
         
         if (m_IsAiming)
             Aim();
-        Look(lookInput.x, lookInput.y);
+        //Look(lookInput.x, lookInput.y);
         UpdateSway(lookInput.x, lookInput.y);
     }
 
@@ -360,21 +363,25 @@ public class HostController : InputController
 
             Recoil();
 
-            //if (Physics.Raycast(ray, out hit))
-            //{
-            //    if (hit.transform.gameObject != null)
-            //    {
-            //        Decal newDecal = new Decal(hit.transform, hit.point, currentWeapon.m_HitDecal, hit.normal);
-            //        GameManager.Instance.AddDecal(newDecal);
-            //
-            //
-            //        // Adding a force to the hit object.
-            //        if (hit.rigidbody != null)
-            //        {
-            //            hit.rigidbody.AddForce(m_Camera.transform.forward * m_bulletForce, ForceMode.Impulse);
-            //        }
-            //    }
-            //}
+
+            // ========================= TEMPORARY SHOOT COLLISION ========================= //
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.transform.gameObject != null)
+                {
+                    Decal newDecal = new Decal(hit.transform, hit.point, hit.normal);
+                    GameManager.Instance.AddDecal(newDecal);
+            
+            
+                    // Adding a force to the hit object.
+                    if (hit.rigidbody != null)
+                    {
+                        hit.rigidbody.AddForce(m_Camera.transform.forward * m_bulletForce, ForceMode.Impulse);
+                    }
+                }
+            }
+            // ============================================================================= //
         }
         else if (!active) // This else if is a cheap way to track whether they let go of the fire button. To keep track of a continuous fire sequence.
             m_HoldingFire = false;
@@ -496,9 +503,9 @@ public class HostController : InputController
 
 
 
-        Vector3 centre = m_Camera.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, transform.forward.z));
-        Gizmos.DrawSphere(centre, 0.25f);
-        Gizmos.DrawSphere(m_Gun.position, 0.25f);
+        //Vector3 centre = m_Camera.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, transform.forward.z));
+        //Gizmos.DrawSphere(centre, 0.25f);
+        //Gizmos.DrawSphere(m_Gun.position, 0.25f);
 
     }
 

@@ -10,19 +10,19 @@ public class HostController : InputController
     [Header("Settings")]
 
     [Header("Mouse Controls")]
-    public float m_verticalLookLock = 75.0f;
+    public float m_VerticalLock = 75.0f;
 
     [Header("Temporary Gun Controls")]
-    public float m_fireRate = 0.5f;
-    public float m_bulletForce = 5;
+    public float m_FireRate = 0.5f;
+    public float m_BulletForce = 5;
 
     [Header("Movement Controls")]
     public float m_JumpHeight = 5;
     public float m_SecondJumpHeight = 2.5f;
-    public float m_groundCheckHeight = 1;
-    public float m_groundCheckRadius = 1;
+    public float m_GroundCheckHeight = 1;
+    public float m_GroundCheckRadius = 1;
     public float m_Gravity = -9.8f;
-    public float m_maxSpeed = 5;
+    public float m_MaxSpeed = 5;
     public float m_GroundAcceleration = 0.3f;
     public float m_AirAcceleration = 0.1f;
     public float m_JumpFallModifier = 2.0f;
@@ -30,7 +30,7 @@ public class HostController : InputController
     [Header("Slide Controls")]
     public float m_SlideSpeed = 700;
     public float m_SlideDuration = 0.75f;
-    public float m_CameraCrouchHeight = -0.5f;
+    public float m_CameraSlideHeight = -0.5f;
 
     [Header("Old Bobbing Controls")]
     public float m_BobSpeed = 1;
@@ -50,19 +50,16 @@ public class HostController : InputController
 
     [Header("Temporary Weapon Controls")]
     public Transform m_Gun;
-    [HideInInspector]
-    public Vector3 m_GunOriginalPos;
-    [HideInInspector]
-    public Quaternion m_GunOriginalRot;
+    
 
     public float m_GunAimHeight = 0.5f;
     public float m_GunAimSpeed = 0.25f;
-    public float m_GunAimSwaySrength = 1;
+    public float m_GunAimSwayStrength = 1;
     public float m_GunSwayStrength = 1;
 
     public Vector3 RecoilRotationAiming = new Vector3(0.5f, 0.5f, 1.5f);
-    public float rotationSpeed = 6;
-    public float returnSpeed = 25;
+    public float m_RotationSpeed = 6;
+    public float m_CameraRecoilReturnSpeed = 25;
 
     public float m_GunSwayReturn = 6;
 
@@ -76,6 +73,7 @@ public class HostController : InputController
     public float m_WeaponRotRecoilVertStrength = 2.5f;
     public float m_WeaponTransformRecoilZStrength = 2.5f;
 
+    [Tooltip("Can be used to reduce recoil when ADS")]
     public float m_ADSRecoilModifier = 1;
 
     // ================== BOOKKEEPING STUFF ================== //
@@ -117,6 +115,11 @@ public class HostController : InputController
     public Vector3 m_WeaponRecoilRot;
     [HideInInspector]
     public Vector3 m_WeaponRecoilTransform;
+
+    [HideInInspector]
+    public Vector3 m_GunOriginalPos;
+    [HideInInspector]
+    public Quaternion m_GunOriginalRot;
     // ======================================================= //
 
 
@@ -168,7 +171,7 @@ public class HostController : InputController
         if (m_hasFired)
         {
             m_fireCounter += Time.deltaTime;
-            if (m_fireCounter >= m_fireRate)
+            if (m_fireCounter >= m_FireRate)
             {
                 m_hasFired = false;
                 m_fireCounter = 0;
@@ -344,7 +347,7 @@ public class HostController : InputController
                     // Adding a force to the hit object.
                     if (hit.rigidbody != null)
                     {
-                        hit.rigidbody.AddForce(m_Camera.transform.forward * m_bulletForce, ForceMode.Impulse);
+                        hit.rigidbody.AddForce(m_Camera.transform.forward * m_BulletForce, ForceMode.Impulse);
                     }
                 }
             }
@@ -381,7 +384,7 @@ public class HostController : InputController
     {
         RaycastHit hit;
         Ray ray = new Ray(transform.position, Vector3.down);
-        if (Physics.SphereCast(ray, m_groundCheckRadius, out hit, m_groundCheckHeight))
+        if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckHeight))
         {
             //Debug.Log(hit.transform.name);
             return true;
@@ -449,15 +452,15 @@ public class HostController : InputController
 
         RaycastHit hit;
         Ray ray = new Ray(transform.position, Vector3.down);
-        if (Physics.SphereCast(ray, m_groundCheckRadius, out hit, m_groundCheckHeight))
+        if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckHeight))
         {
             Gizmos.DrawLine(transform.position, hit.point);
 
-            GraphicalDebugger.DrawSphereCast(transform.position, hit.point, Color.green, m_groundCheckRadius);
+            GraphicalDebugger.DrawSphereCast(transform.position, hit.point, Color.green, m_GroundCheckRadius);
         }
         else
         {
-            GraphicalDebugger.DrawSphereCast(transform.position, transform.position + Vector3.down, Color.red, m_groundCheckRadius);
+            GraphicalDebugger.DrawSphereCast(transform.position, transform.position + Vector3.down, Color.red, m_GroundCheckRadius);
         }
 
         Gizmos.color = defaultColour;
@@ -577,7 +580,7 @@ public class HostController : InputController
     }
     private void Aim()
     {
-        Vector3 centre = m_Camera.ScreenToWorldPoint(new Vector3((Screen.width / 2) + (-lookInput.x * m_GunAimSwaySrength), (Screen.height / 2) + (-lookInput.y * m_GunSwayStrength) - m_GunAimHeight, transform.forward.z + m_WeaponRecoilTransform.z));
+        Vector3 centre = m_Camera.ScreenToWorldPoint(new Vector3((Screen.width / 2) + (-lookInput.x * m_GunAimSwayStrength), (Screen.height / 2) + (-lookInput.y * m_GunSwayStrength) - m_GunAimHeight, transform.forward.z + m_WeaponRecoilTransform.z));
 
         Vector3 currentPosition = m_Gun.position;
         Vector3 requiredChange = centre - currentPosition;
@@ -596,7 +599,7 @@ public class HostController : InputController
 
     private void UpdateRecoil()
     {
-        m_AdditionalRecoilRotation = Vector3.Lerp(m_AdditionalRecoilRotation, Vector3.zero, returnSpeed * Time.deltaTime);
+        m_AdditionalRecoilRotation = Vector3.Lerp(m_AdditionalRecoilRotation, Vector3.zero, m_CameraRecoilReturnSpeed * Time.deltaTime);
         m_WeaponRecoilRot = Vector3.Lerp(m_WeaponRecoilRot, Vector3.zero, m_WeaponRecoilReturnSpeed * Time.deltaTime);
 
         m_WeaponRecoilTransform = Vector3.Lerp(m_WeaponRecoilTransform, Vector3.zero, m_WeaponRecoilReturnSpeed * Time.deltaTime);

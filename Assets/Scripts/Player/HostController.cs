@@ -19,7 +19,9 @@ public class HostController : InputController
     public float m_GroundCheckRadius = 0.42f;
     public float m_Gravity = -9.8f;
     public float m_MaxSpeed = 5;
+    [Range(0.0f, 1.0f)]
     public float m_GroundAcceleration = 0.3f;
+    [Range(0.0f, 1.0f)]
     public float m_AirAcceleration = 0.1f;
     public float m_JumpFallModifier = 2.0f;
 
@@ -165,7 +167,7 @@ public class HostController : InputController
 
     private void LateUpdate()
     {
-        Look(lookInput.x, lookInput.y);
+        Look();
     }
 
     void Update()
@@ -218,11 +220,11 @@ public class HostController : InputController
 	{
         lookInput = value.ReadValue<Vector2>();
 	}
-	public void Look(float xDelta, float yDelta)
+	private void Look()
     {
 
-        float mouseX = xDelta * m_LookSensitivity * Time.fixedDeltaTime;
-        float mouseY = yDelta * m_LookSensitivity * Time.fixedDeltaTime;
+        float mouseX = lookInput.x * m_LookSensitivity * Time.deltaTime;
+        float mouseY = lookInput.y * m_LookSensitivity * Time.deltaTime;
 
         // Finding current look rotation
         Vector3 rot = m_Orientation.transform.localRotation.eulerAngles;
@@ -249,66 +251,47 @@ public class HostController : InputController
 	}
 	public void Move(Vector2 input)
     {
+        // Preserves m_Rigidbody's y velocity.
+        CacheMovDir.y = m_Rigidbody.velocity.y;
+        
+        // Ensure the slide will never make the player move vertically.
+        m_CacheSlideMove.y = 0;
+
 
         // Making sure angular velocity isn't a problem.
-        m_Rigidbody.velocity = new Vector3(CacheMovDir.x, m_Rigidbody.velocity.y, CacheMovDir.z) + new Vector3(m_CacheSlideMove.x, 0, m_CacheSlideMove.z);
+        m_Rigidbody.velocity = CacheMovDir + m_CacheSlideMove;
         m_Rigidbody.angularVelocity = Vector3.zero;
 
 
-        // ============================ FASTER FALLING ============================ //
-
+        // ============================ MODIFIED FALLING ============================ //
         if (m_Rigidbody.velocity.y < 0)
         {
             m_Rigidbody.velocity += Vector3.up * Physics.gravity.y * m_JumpFallModifier * Time.deltaTime;
         }
-
         // ======================================================================== //
 
-        float x = input.x;
-        float z = input.y;
-   
-
         m_IsMoving = false;
-        if (x != 0 || z != 0)
+        if (input.x != 0 || input.y != 0)
             m_IsMoving = true;
 
-        
-        if (!IsGrounded)
-        {
-            // Slightly weaker movement.
 
-            Vector3 currentVel = CacheMovDir;
-            Vector3 desiredVel = CalculateMoveDirection(x, z, m_MovementSpeed);
 
-            Vector3 requiredChange = desiredVel - currentVel;
+        Vector3 currentVel = CacheMovDir;
+        Vector3 desiredVel = CalculateMoveDirection(input.x, input.y, m_MovementSpeed);
 
-            CacheMovDir += (requiredChange * m_AirAcceleration);
-
-        }
-        else
-        {
-            // Full on movement.
-            
-            Vector3 currentVel = CacheMovDir;
-            Vector3 desiredVel = CalculateMoveDirection(x, z, m_MovementSpeed);
-
-            Vector3 requiredChange = desiredVel - currentVel;
-
-            CacheMovDir += requiredChange * m_GroundAcceleration;
-        }
-
+        Vector3 requiredChange = desiredVel - currentVel;
+        CacheMovDir += requiredChange * (IsGrounded ? m_GroundAcceleration : m_AirAcceleration);
     }
 
     private Vector3 CalculateMoveDirection(float x, float z, float speedMultiplier)
     {
-        Vector3 moveDir = new Vector3();
+        Vector3 xMov = m_Orientation.right * x;
+        Vector3 zMov = m_Orientation.forward * z;
 
-        moveDir = transform.right * x + transform.forward * z;
+        xMov.y = 0;
+        zMov.y = 0;
 
-        Vector3 xMov = new Vector3(x * m_Orientation.right.x, 0, x * m_Orientation.right.z);
-        Vector3 zMov = new Vector3(z * m_Orientation.forward.x, 0, z * m_Orientation.forward.z);
-
-        moveDir = ((xMov + zMov).normalized * speedMultiplier * Time.deltaTime) + new Vector3(0, m_Rigidbody.velocity.y, 0);
+        Vector3 moveDir = ((xMov + zMov).normalized * speedMultiplier * Time.fixedDeltaTime) + Vector3.up * m_Rigidbody.velocity.y;
 
         return moveDir;
     }

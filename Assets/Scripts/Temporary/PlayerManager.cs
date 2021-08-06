@@ -67,11 +67,11 @@ public class PlayerManager : MonoBehaviour
         switch (s_CurrentWeapon)
         {
             case WeaponSlot.WEAPON1:
-                return playerManager.m_PlayerController.m_weapon1;
+                return playerManager.m_PlayerController.m_Weapon1;
             case WeaponSlot.WEAPON2:
-                return playerManager.m_PlayerController.m_weapon2;
+                return playerManager.m_PlayerController.m_Weapon2;
             default:
-                return playerManager.m_PlayerController.m_weapon1;
+                return playerManager.m_PlayerController.m_Weapon1;
         }
     }
 }

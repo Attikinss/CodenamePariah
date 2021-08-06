@@ -79,8 +79,8 @@ public class CustomDebugUI : MonoBehaviour
     void Update()
     {
         GraphicalDebugger.Assign<bool>(m_playerController.IsGrounded, "IsGrounded", m_isGroundedText);
-        GraphicalDebugger.Assign<float>(m_playerController.m_currentMoveSpeed, "MoveSpeed", m_moveSpeedText);
-        GraphicalDebugger.Assign<bool>(m_playerController.m_isMoving, "IsMoving", m_isMovingText);
+        GraphicalDebugger.Assign<float>(m_playerController.m_CurrentMoveSpeed, "MoveSpeed", m_moveSpeedText);
+        GraphicalDebugger.Assign<bool>(m_playerController.m_IsMoving, "IsMoving", m_isMovingText);
         //GraphicalDebugger.Assign<float>(m_playerController.m_WaveSlice, "WaveSlice", m_WaveSliceText);
         //GraphicalDebugger.Assign<float>(m_playerController.m_SwayTimer, "SwayTimer", m_SwayTimerText);
         //GraphicalDebugger.Assign<string>(PlayerManager.s_CurrentWeapon.ToString(), "CurrentWeaponSlot", m_CurrentWeaponSlotText);

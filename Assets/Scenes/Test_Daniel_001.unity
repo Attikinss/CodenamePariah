@@ -1356,46 +1356,44 @@ MonoBehaviour:
   m_MovementSpeed: 500
   m_LookSensitivity: 2
   m_PlayerInput: {fileID: 696020108}
-  m_verticalLookLock: 75
-  m_fireRate: 0.1
-  m_bulletForce: 20
+  m_VerticalLock: 75
   m_JumpHeight: 2
   m_SecondJumpHeight: 2.5
-  m_groundCheckHeight: 0.67
-  m_groundCheckRadius: 0.39
+  m_GroundCheckHeight: 0.65
+  m_GroundCheckRadius: 0.42
   m_Gravity: -9.8
-  m_maxSpeed: 10
+  m_MaxSpeed: 5
   m_GroundAcceleration: 0.1
   m_AirAcceleration: 0.2
   m_JumpFallModifier: 2
   m_SlideSpeed: 700
   m_SlideDuration: 0.75
-  m_CameraCrouchHeight: -0.5
+  m_CameraSlideHeight: -0.5
   m_BobSpeed: 5
   m_BobDistance: 0.05
-  m_weapon1: {fileID: 0}
-  m_weapon2: {fileID: 0}
-  m_orientation: {fileID: 104576320}
+  m_Weapon1: {fileID: 0}
+  m_Weapon2: {fileID: 0}
+  m_Orientation: {fileID: 104576320}
   m_Rigidbody: {fileID: 696020107}
   m_Gun: {fileID: 1973432803}
-  m_GunOriginalPos: {x: 0, y: 0, z: 0}
-  m_GunOriginalRot: {x: 0, y: 0, z: 0, w: 0}
   m_GunAimHeight: 50
   m_GunAimSpeed: 0.25
-  m_GunAimSwaySrength: 0.5
+  m_GunAimSwayStrength: 1
   m_GunSwayStrength: 1
   RecoilRotationAiming: {x: 0.1, y: 0, z: 1}
-  rotationSpeed: 6
-  returnSpeed: 1
+  m_RotationSpeed: 6
+  m_CameraRecoilReturnSpeed: 25
   m_GunSwayReturn: 6
   m_WeaponSwayClampX: 0.1
   m_WeaponSwayClampY: 0.05
   m_WeaponSwayRotateClamp: 15
   m_WeaponSwayRotateSpeed: 0.05
   m_WeaponRecoilReturnSpeed: 30
-  m_WeaponRotRecoilVertStrength: 150
-  m_WeaponTransformRecoilZStrength: 0.25
+  m_WeaponRotRecoilVertStrength: 75
+  m_WeaponTransformRecoilZStrength: 0.1
   m_ADSRecoilModifier: 0.25
+  m_FireRate: 0.1
+  m_BulletForce: 5
   m_MovementInput: {x: 0, y: 0}
   CacheMovDir: {x: 0, y: 0, z: 0}
   m_HoldingFire: 0
@@ -1408,6 +1406,8 @@ MonoBehaviour:
   m_AdditionalRecoilRotation: {x: 0, y: 0, z: 0}
   m_WeaponRecoilRot: {x: 0, y: 0, z: 0}
   m_WeaponRecoilTransform: {x: 0, y: 0, z: 0}
+  m_GunOriginalPos: {x: 0, y: 0, z: 0}
+  m_GunOriginalRot: {x: 0, y: 0, z: 0, w: 0}
   m_SwayTimer: 0
   m_WaveSlice: 0
   m_WaveSliceX: 0

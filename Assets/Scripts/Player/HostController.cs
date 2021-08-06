@@ -12,15 +12,11 @@ public class HostController : InputController
     [Header("Mouse Controls")]
     public float m_VerticalLock = 75.0f;
 
-    [Header("Temporary Gun Controls")]
-    public float m_FireRate = 0.5f;
-    public float m_BulletForce = 5;
-
     [Header("Movement Controls")]
     public float m_JumpHeight = 5;
     public float m_SecondJumpHeight = 2.5f;
-    public float m_GroundCheckHeight = 1;
-    public float m_GroundCheckRadius = 1;
+    public float m_GroundCheckHeight = 0.65f;
+    public float m_GroundCheckRadius = 0.42f;
     public float m_Gravity = -9.8f;
     public float m_MaxSpeed = 5;
     public float m_GroundAcceleration = 0.3f;
@@ -38,13 +34,13 @@ public class HostController : InputController
 
 
     [Header("Weapons")]                    // ================ NOTE ================ //
-    public Weapon m_weapon1;               // Weapons here will be replaced by another
-    public Weapon m_weapon2;               // system. It is here for testing reasons.
+    public Weapon m_Weapon1;               // Weapons here will be replaced by another
+    public Weapon m_Weapon2;               // system. It is here for testing reasons.
                                            // ====================================== //
 
 
     [Header("Other References")]
-    public Transform m_orientation;
+    public Transform m_Orientation;
     public Rigidbody m_Rigidbody;
     
 
@@ -75,6 +71,10 @@ public class HostController : InputController
 
     [Tooltip("Can be used to reduce recoil when ADS")]
     public float m_ADSRecoilModifier = 1;
+
+    [Header("Temporary Weapon 1 Controls")]
+    public float m_FireRate = 0.5f;
+    public float m_BulletForce = 5;
 
     // ================== BOOKKEEPING STUFF ================== //
 
@@ -120,14 +120,16 @@ public class HostController : InputController
     public Vector3 m_GunOriginalPos;
     [HideInInspector]
     public Quaternion m_GunOriginalRot;
+
+    private bool m_IsFiring = false;
     // ======================================================= //
 
 
     // Exposed variables for debugging.
     [HideInInspector]
-    public float m_currentMoveSpeed { get; private set; }
+    public float m_CurrentMoveSpeed { get; private set; }
     [HideInInspector]
-    public bool m_isMoving { get; private set; }
+    public bool m_IsMoving { get; private set; }
 
     
 
@@ -192,7 +194,7 @@ public class HostController : InputController
         if (IsGrounded)
             m_HasDoubleJumped = false;
 
-        m_currentMoveSpeed = m_Rigidbody.velocity.magnitude;
+        m_CurrentMoveSpeed = m_Rigidbody.velocity.magnitude;
 
 
         // Testing recoil stuff.
@@ -207,6 +209,9 @@ public class HostController : InputController
         if (m_IsAiming)
             Aim();
         UpdateSway(lookInput.x, lookInput.y);
+
+        if (m_IsFiring)
+            Shoot(true);
     }
 
 	public override void OnLook(InputAction.CallbackContext value)
@@ -220,7 +225,7 @@ public class HostController : InputController
         float mouseY = yDelta * m_LookSensitivity * Time.fixedDeltaTime;
 
         // Finding current look rotation
-        Vector3 rot = m_orientation.transform.localRotation.eulerAngles;
+        Vector3 rot = m_Orientation.transform.localRotation.eulerAngles;
         float desiredX = rot.y + mouseX;
 
         // Rotate
@@ -228,7 +233,7 @@ public class HostController : InputController
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
         // Perform the rotations
-        m_orientation.transform.localRotation = Quaternion.Euler(0, desiredX, 0);
+        m_Orientation.transform.localRotation = Quaternion.Euler(0, desiredX, 0);
         m_Camera.transform.localRotation = Quaternion.Euler(Mathf.Clamp((xRotation - m_AdditionalVerticalRecoil - m_AdditionalRecoilRotation.x), -90f, 90f), 0.0f - m_AdditionalRecoilRotation.y, 0 - m_AdditionalRecoilRotation.z);
 
     }
@@ -263,9 +268,9 @@ public class HostController : InputController
         float z = input.y;
    
 
-        m_isMoving = false;
+        m_IsMoving = false;
         if (x != 0 || z != 0)
-            m_isMoving = true;
+            m_IsMoving = true;
 
         
         if (!IsGrounded)
@@ -300,8 +305,8 @@ public class HostController : InputController
 
         moveDir = transform.right * x + transform.forward * z;
 
-        Vector3 xMov = new Vector3(x * m_orientation.right.x, 0, x * m_orientation.right.z);
-        Vector3 zMov = new Vector3(z * m_orientation.forward.x, 0, z * m_orientation.forward.z);
+        Vector3 xMov = new Vector3(x * m_Orientation.right.x, 0, x * m_Orientation.right.z);
+        Vector3 zMov = new Vector3(z * m_Orientation.forward.x, 0, z * m_Orientation.forward.z);
 
         moveDir = ((xMov + zMov).normalized * speedMultiplier * Time.deltaTime) + new Vector3(0, m_Rigidbody.velocity.y, 0);
 
@@ -310,9 +315,16 @@ public class HostController : InputController
 
     public void OnShoot(InputAction.CallbackContext value)
     {
+
         if (value.control.IsPressed(0)) // Have to use this otherwise mouse button gets triggered on release aswell.
         {
-            Shoot(true);
+            m_IsFiring = true;
+            Debug.Log("OnShoot called.");
+        }
+        else
+        {
+            m_IsFiring = false;
+            Debug.Log("OnShoot cancelled.");
         }
     }
     public void Shoot(bool active)
@@ -396,8 +408,8 @@ public class HostController : InputController
     {
         if (active)
         {
-            m_weapon1.gameObject.SetActive(true);
-            m_weapon2.gameObject.SetActive(false);
+            m_Weapon1.gameObject.SetActive(true);
+            m_Weapon2.gameObject.SetActive(false);
             PlayerManager.SetWeapon(WeaponSlot.WEAPON1);
         }
     }
@@ -405,8 +417,8 @@ public class HostController : InputController
     {
         if (active)
         {
-            m_weapon1.gameObject.SetActive(false);
-            m_weapon2.gameObject.SetActive(true);
+            m_Weapon1.gameObject.SetActive(false);
+            m_Weapon2.gameObject.SetActive(true);
             PlayerManager.SetWeapon(WeaponSlot.WEAPON2);
         }
     }
@@ -417,7 +429,7 @@ public class HostController : InputController
         Vector3 localPosition = currentWeapon.transform.localPosition;
         Vector3 currentWeaponMidPoint = currentWeapon.m_MidPoint;
 
-        if (m_isMoving)
+        if (m_IsMoving)
         {
             // Do weapon sway stuff.
             m_SwayTimer += Time.deltaTime;
@@ -484,10 +496,9 @@ public class HostController : InputController
         Debug.Log("OnSlide called.");
         if (value.performed && IsGrounded)
         {
-            m_SlideDir = value.performed ? m_orientation.forward : m_SlideDir;
+            m_SlideDir = value.performed ? m_Orientation.forward : m_SlideDir;
             m_Sliding = true;
         }
-        
     }
     private void Slide()
     {

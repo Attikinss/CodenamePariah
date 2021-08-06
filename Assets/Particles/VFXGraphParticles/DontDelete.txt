@@ -1,0 +1,3 @@
+Don't Delete!
+
+Used to keep folder structure until files have been added to the folder.

@@ -38,7 +38,7 @@ public class Inventory : MonoBehaviour
     }
 
     /// <summary>Displays the current health.</summary>
-    void DisplayHealth()
+    void DisplayHealth() //move to ui Manager
     {
         //m_HealthText.text = "";
         m_HealthText.text = "";

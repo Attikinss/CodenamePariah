@@ -48,8 +48,9 @@ public class HostController : InputController
 
     [Header("Temporary Weapon Controls")]
     public Transform m_Gun;
-    
+    public Transform m_ScopeCentre;
 
+    public float m_GunAimZPos = 0.5f;
     public float m_GunAimHeight = 0.5f;
     public float m_GunAimSpeed = 0.25f;
     public float m_GunAimSwayStrength = 1;
@@ -70,6 +71,8 @@ public class HostController : InputController
 
     public float m_WeaponRotRecoilVertStrength = 2.5f;
     public float m_WeaponTransformRecoilZStrength = 2.5f;
+
+    
 
     [Tooltip("Can be used to reduce recoil when ADS")]
     public float m_ADSRecoilModifier = 1;
@@ -535,10 +538,10 @@ public class HostController : InputController
             Quaternion xAxis = Quaternion.AngleAxis(m_WeaponRecoilRot.x, new Vector3(1, 0, 0));
             Quaternion zAxis = Quaternion.AngleAxis(Mathf.Clamp(-x, -m_WeaponSwayRotateClamp, m_WeaponSwayRotateClamp), new Vector3(0, 0, 1));
             m_Gun.localRotation = Quaternion.Slerp(m_Gun.localRotation, zAxis * xAxis, m_WeaponSwayRotateSpeed);
-
+        
             float currentFOV = m_Camera.fieldOfView;
             float desiredFOV = 60;
-
+        
             float requiredChange = desiredFOV - currentFOV;
             m_Camera.fieldOfView += requiredChange * 0.45f;
         }
@@ -574,9 +577,11 @@ public class HostController : InputController
     }
     private void Aim()
     {
-        Vector3 centre = m_Camera.ScreenToWorldPoint(new Vector3((Screen.width / 2) + (-lookInput.x * m_GunAimSwayStrength), (Screen.height / 2) + (-lookInput.y * m_GunSwayStrength) - m_GunAimHeight, transform.forward.z + m_WeaponRecoilTransform.z));
 
-        Vector3 currentPosition = m_Gun.position;
+        Vector3 centre = m_Camera.ScreenToWorldPoint(new Vector3((Screen.width / 2) + (-lookInput.x * m_GunAimSwayStrength), (Screen.height / 2) + (-lookInput.y * m_GunSwayStrength) - m_GunAimHeight, (transform.forward.z * m_GunAimZPos) + m_WeaponRecoilTransform.z * m_ADSRecoilModifier));
+
+        //Vector3 currentPosition = m_Gun.position;
+        Vector3 currentPosition = m_ScopeCentre.position;
         Vector3 requiredChange = centre - currentPosition;
 
         m_Gun.position += requiredChange * m_GunAimSpeed;

@@ -99,8 +99,11 @@ public class CustomDebugUI : MonoBehaviour
 
         GraphicalDebugger.Assign<Vector3>(m_playerController.lookInput, "LookInput", m_LookInputText);
 
+        // Because there are multiple weapons, I have to get the current weapons configuration.
+        WeaponConfiguration weaponConfig = m_playerController.GetCurrentWeaponConfig();
+
         GraphicalDebugger.Assign<Vector3>(m_playerController.m_WeaponRecoilRot, "WeaponRecoilRot", m_WeaponRecoilRotText);
-        GraphicalDebugger.Assign<Vector3>(m_playerController.m_WeaponRecoilTransform, "WeaponRecoilTransf", m_WeaponRecoilTransfText);
+        GraphicalDebugger.Assign<Vector3>(weaponConfig.m_WeaponRecoilTransform, "WeaponRecoilTransf", m_WeaponRecoilTransfText);
 
         //GraphicalDebugger.Assign<string>(m_AbilityController.m_Ability1.IsActive().ToString(), "Ability1Active", m_Ability1ActiveText);
         //GraphicalDebugger.Assign<float>(m_AbilityController.m_Ability1.GetCounter(), "Ability1Counter", m_Ability1CounterText);

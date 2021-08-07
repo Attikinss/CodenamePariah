@@ -34,49 +34,17 @@ public class HostController : InputController
     public float m_BobSpeed = 1;
     public float m_BobDistance = 1;
 
-
-    [Header("Weapons")]                    // ================ NOTE ================ //
-    public Weapon m_Weapon1;               // Weapons here will be replaced by another
-    public Weapon m_Weapon2;               // system. It is here for testing reasons.
-                                           // ====================================== //
-
-
     [Header("Other References")]
     public Transform m_Orientation;
     public Rigidbody m_Rigidbody;
-    
 
-    [Header("Temporary Weapon Controls")]
-    public Transform m_Gun;
-    public Transform m_ScopeCentre;
+    public Transform m_Weapon1;
+    public Transform m_Weapon2;
 
-    public float m_GunAimZPos = 0.5f;
-    public float m_GunAimHeight = 0.5f;
-    public float m_GunAimSpeed = 0.25f;
-    public float m_GunAimSwayStrength = 1;
-    public float m_GunSwayStrength = 1;
-
-    public Vector3 RecoilRotationAiming = new Vector3(0.5f, 0.5f, 1.5f);
-    public float m_RotationSpeed = 6;
-    public float m_CameraRecoilReturnSpeed = 25;
-
-    public float m_GunSwayReturn = 6;
-
-    public float m_WeaponSwayClampX = 0.5f;
-    public float m_WeaponSwayClampY = 0.5f;
-    public float m_WeaponSwayRotateClamp = 0.5f;
-    public float m_WeaponSwayRotateSpeed = 0.05f;
-
-    public float m_WeaponRecoilReturnSpeed = 1;
-
-    public float m_WeaponRotRecoilVertStrength = 2.5f;
-    public float m_WeaponTransformRecoilZStrength = 2.5f;
-
-    
-
-    [Tooltip("Can be used to reduce recoil when ADS")]
-    public float m_ADSRecoilModifier = 1;
-
+    // These are references to the weapons that the controller has.
+    public WeaponConfiguration m_WeaponConfig1;
+    public WeaponConfiguration m_WeaponConfig2;
+   
     [Header("Temporary Weapon 1 Controls")]
     public float m_FireRate = 0.5f;
     public float m_BulletForce = 5;
@@ -118,13 +86,19 @@ public class HostController : InputController
     public Vector3 m_AdditionalRecoilRotation;
     [HideInInspector]
     public Vector3 m_WeaponRecoilRot;
-    [HideInInspector]
-    public Vector3 m_WeaponRecoilTransform;
+    
 
+
+
+    // Storing there original positions and rotations for lerping purposes. Here I'm limiting us to two weapons however this can be replaced.
     [HideInInspector]
-    public Vector3 m_GunOriginalPos;
+    public Vector3 m_GunOriginalPos1;
+    [HideInInspector]
+    public Vector3 m_GunOriginalPos2;
     [HideInInspector]
     public Quaternion m_GunOriginalRot;
+    [HideInInspector]
+    public Quaternion m_GunOriginalRot2;
 
     private bool m_IsFiring = false;
     // ======================================================= //
@@ -164,8 +138,10 @@ public class HostController : InputController
     {
         Cursor.lockState = CursorLockMode.Locked;
 
-        m_GunOriginalPos = m_Gun.localPosition;
-        m_GunOriginalRot = transform.localRotation;
+        m_GunOriginalPos1 = m_Weapon1.localPosition;
+        m_GunOriginalRot = transform.localRotation; // I don't remember why I store this, I think the original rotation will always be 0, 0, 0. I'll leave it here for now but will probably remove later.
+
+        m_GunOriginalPos2 = m_Weapon2.localPosition;
     }
 
     private void LateUpdate()
@@ -321,7 +297,7 @@ public class HostController : InputController
 
             Ray ray = new Ray(m_Camera.transform.position, m_Camera.transform.forward);
             RaycastHit hit;
-            Weapon currentWeapon = PlayerManager.GetCurrentWeapon();
+            //Weapon currentWeapon = PlayerManager.GetCurrentWeapon();
 
             // =========== TESTING =========== //
             //m_AdditionalVerticalRecoil += currentWeapon.ShootRecoil(m_Camera.transform, m_HeldCounter);
@@ -409,40 +385,40 @@ public class HostController : InputController
         }
     }
 
-    public void WeaponBob()
-    {
-        Weapon currentWeapon = PlayerManager.GetCurrentWeapon();
-        Vector3 localPosition = currentWeapon.transform.localPosition;
-        Vector3 currentWeaponMidPoint = currentWeapon.m_MidPoint;
+    //public void WeaponBob()
+    //{
+    //    //Weapon currentWeapon = PlayerManager.GetCurrentWeapon();
+    //    Vector3 localPosition = currentWeapon.transform.localPosition;
+    //    Vector3 currentWeaponMidPoint = currentWeapon.m_MidPoint;
 
-        if (m_IsMoving)
-        {
-            // Do weapon sway stuff.
-            m_SwayTimer += Time.deltaTime;
-            m_WaveSlice = -(Mathf.Sin(m_SwayTimer * m_BobSpeed) + 1) / 2;
-            m_WaveSliceX = Mathf.Cos(m_SwayTimer * m_BobSpeed);
+    //    if (m_IsMoving)
+    //    {
+    //        // Do weapon sway stuff.
+    //        m_SwayTimer += Time.deltaTime;
+    //        m_WaveSlice = -(Mathf.Sin(m_SwayTimer * m_BobSpeed) + 1) / 2;
+    //        m_WaveSliceX = Mathf.Cos(m_SwayTimer * m_BobSpeed);
 
-            if (m_WaveSlice >= -0.5f)
-            {
-                m_WaveSlice = -1 - -(Mathf.Sin(m_SwayTimer * m_BobSpeed) + 1) / 2;
-            }
+    //        if (m_WaveSlice >= -0.5f)
+    //        {
+    //            m_WaveSlice = -1 - -(Mathf.Sin(m_SwayTimer * m_BobSpeed) + 1) / 2;
+    //        }
 
-            float translateChangeX = m_WaveSliceX * m_BobDistance;
-            float translateChangeY = m_WaveSlice * m_BobDistance;
-            localPosition.y = currentWeaponMidPoint.y + translateChangeY;
-            localPosition.x = currentWeaponMidPoint.x + translateChangeX;
+    //        float translateChangeX = m_WaveSliceX * m_BobDistance;
+    //        float translateChangeY = m_WaveSlice * m_BobDistance;
+    //        localPosition.y = currentWeaponMidPoint.y + translateChangeY;
+    //        localPosition.x = currentWeaponMidPoint.x + translateChangeX;
 
-            currentWeapon.transform.localPosition = localPosition;
-        }
-        else
-        {
-            m_SwayTimer = 0.0f;
-            localPosition.y = currentWeaponMidPoint.y;
-            localPosition.x = currentWeaponMidPoint.x;
-            currentWeapon.transform.localPosition = Vector3.Lerp(currentWeapon.transform.localPosition, currentWeapon.m_MidPoint, 0.01f);
-        }
+    //        currentWeapon.transform.localPosition = localPosition;
+    //    }
+    //    else
+    //    {
+    //        m_SwayTimer = 0.0f;
+    //        localPosition.y = currentWeaponMidPoint.y;
+    //        localPosition.x = currentWeaponMidPoint.x;
+    //        currentWeapon.transform.localPosition = Vector3.Lerp(currentWeapon.transform.localPosition, currentWeapon.m_MidPoint, 0.01f);
+    //    }
 
-    }
+    //}
 
     private void OnDrawGizmos()
     {
@@ -531,13 +507,18 @@ public class HostController : InputController
     {
         // xAxis Quaternion is for the recoil kick upwards.
         
+        WeaponConfiguration weaponConfig = GetCurrentWeaponConfig();
+        Transform gunTransform = GetCurrentWeapon();
         if (!m_IsAiming)
         {
-            Vector3 finalPosition = new Vector3(Mathf.Clamp(-x * 0.02f, -m_WeaponSwayClampX, m_WeaponSwayClampX), Mathf.Clamp(-y * 0.02f, -m_WeaponSwayClampY, m_WeaponSwayClampY), 0 + m_WeaponRecoilTransform.z);
-            m_Gun.localPosition = Vector3.Lerp(m_Gun.localPosition, finalPosition + m_GunOriginalPos, Time.deltaTime * m_GunSwayReturn);
+            Vector3 gunOriginalPos = GetCurrentWeaponOriginalPos();
+            
+
+            Vector3 finalPosition = new Vector3(Mathf.Clamp(-x * 0.02f, -weaponConfig.m_WeaponSwayClampX, weaponConfig.m_WeaponSwayClampX), Mathf.Clamp(-y * 0.02f, -weaponConfig.m_WeaponSwayClampY, weaponConfig.m_WeaponSwayClampY), 0 + weaponConfig.m_WeaponRecoilTransform.z);
+            gunTransform.localPosition = Vector3.Lerp(gunTransform.localPosition, finalPosition + gunOriginalPos, Time.deltaTime * weaponConfig.m_GunSwayReturn);
             Quaternion xAxis = Quaternion.AngleAxis(m_WeaponRecoilRot.x, new Vector3(1, 0, 0));
-            Quaternion zAxis = Quaternion.AngleAxis(Mathf.Clamp(-x, -m_WeaponSwayRotateClamp, m_WeaponSwayRotateClamp), new Vector3(0, 0, 1));
-            m_Gun.localRotation = Quaternion.Slerp(m_Gun.localRotation, zAxis * xAxis, m_WeaponSwayRotateSpeed);
+            Quaternion zAxis = Quaternion.AngleAxis(Mathf.Clamp(-x, -weaponConfig.m_WeaponSwayRotateClamp, weaponConfig.m_WeaponSwayRotateClamp), new Vector3(0, 0, 1));
+            gunTransform.localRotation = Quaternion.Slerp(gunTransform.localRotation, zAxis * xAxis, weaponConfig.m_WeaponSwayRotateSpeed);
         
             float currentFOV = m_Camera.fieldOfView;
             float desiredFOV = 60;
@@ -558,9 +539,9 @@ public class HostController : InputController
 
 
             // Quaternion rotate
-            Quaternion zAxis = Quaternion.AngleAxis(Mathf.Clamp(-x, -m_WeaponSwayRotateClamp, m_WeaponSwayRotateClamp), new Vector3(0, 0, 1));
-            Quaternion xAxis = Quaternion.AngleAxis(m_WeaponRecoilRot.x * m_ADSRecoilModifier, new Vector3(1, 0, 0));
-            m_Gun.localRotation = Quaternion.Slerp(m_Gun.localRotation, zAxis * xAxis, m_WeaponSwayRotateSpeed);
+            Quaternion zAxis = Quaternion.AngleAxis(Mathf.Clamp(-x, -weaponConfig.m_WeaponSwayRotateClamp, weaponConfig.m_WeaponSwayRotateClamp), new Vector3(0, 0, 1));
+            Quaternion xAxis = Quaternion.AngleAxis(m_WeaponRecoilRot.x * weaponConfig.m_ADSRecoilModifier, new Vector3(1, 0, 0));
+            gunTransform.localRotation = Quaternion.Slerp(gunTransform.localRotation, zAxis * xAxis, weaponConfig.m_WeaponSwayRotateSpeed);
         }
     }
 
@@ -577,31 +558,61 @@ public class HostController : InputController
     }
     private void Aim()
     {
+        WeaponConfiguration weaponConfig = GetCurrentWeaponConfig();
+        Transform gunTransform = GetCurrentWeapon();
 
-        Vector3 centre = m_Camera.ScreenToWorldPoint(new Vector3((Screen.width / 2) + (-lookInput.x * m_GunAimSwayStrength), (Screen.height / 2) + (-lookInput.y * m_GunSwayStrength) - m_GunAimHeight, (transform.forward.z * m_GunAimZPos) + m_WeaponRecoilTransform.z * m_ADSRecoilModifier));
+        Vector3 centre = m_Camera.ScreenToWorldPoint(new Vector3((Screen.width / 2) + (-lookInput.x * weaponConfig.m_GunAimSwayStrength), (Screen.height / 2) + (-lookInput.y * weaponConfig.m_GunSwayStrength) - weaponConfig.m_GunAimHeight, (transform.forward.z * weaponConfig.m_GunAimZPos) + weaponConfig.m_WeaponRecoilTransform.z * weaponConfig.m_ADSRecoilModifier));
 
         //Vector3 currentPosition = m_Gun.position;
-        Vector3 currentPosition = m_ScopeCentre.position;
+        Vector3 currentPosition = weaponConfig.m_ScopeCentre.position;
         Vector3 requiredChange = centre - currentPosition;
 
-        m_Gun.position += requiredChange * m_GunAimSpeed;
+        gunTransform.position += requiredChange * weaponConfig.m_GunAimSpeed;
     }
 
     private void Recoil()
     {
-        m_AdditionalRecoilRotation += new Vector3(-RecoilRotationAiming.x, Random.Range(-RecoilRotationAiming.y, RecoilRotationAiming.y), Random.Range(-RecoilRotationAiming.z, RecoilRotationAiming.z));
-        m_WeaponRecoilRot -= new Vector3(m_WeaponRotRecoilVertStrength, 0, 0);
+        WeaponConfiguration weaponConfig = GetCurrentWeaponConfig();
+        
+
+        m_AdditionalRecoilRotation += new Vector3(-weaponConfig.RecoilRotationAiming.x, Random.Range(-weaponConfig.RecoilRotationAiming.y, weaponConfig.RecoilRotationAiming.y), Random.Range(-weaponConfig.RecoilRotationAiming.z, weaponConfig.RecoilRotationAiming.z));
+        m_WeaponRecoilRot -= new Vector3(weaponConfig.m_WeaponRotRecoilVertStrength, 0, 0);
 
         // Although I am setting the recoil transform here, I have to apply it in the WeaponSway() function since I'm setting pos directly there. I want to change this but I'm unsure how right now
-        m_WeaponRecoilTransform -= new Vector3(0, 0, m_WeaponTransformRecoilZStrength);
+        weaponConfig.m_WeaponRecoilTransform -= new Vector3(0, 0, weaponConfig.m_WeaponTransformRecoilZStrength);
     }
 
     private void UpdateRecoil()
     {
-        m_AdditionalRecoilRotation = Vector3.Lerp(m_AdditionalRecoilRotation, Vector3.zero, m_CameraRecoilReturnSpeed * Time.deltaTime);
-        m_WeaponRecoilRot = Vector3.Lerp(m_WeaponRecoilRot, Vector3.zero, m_WeaponRecoilReturnSpeed * Time.deltaTime);
+        WeaponConfiguration weaponConfig = GetCurrentWeaponConfig();
 
-        m_WeaponRecoilTransform = Vector3.Lerp(m_WeaponRecoilTransform, Vector3.zero, m_WeaponRecoilReturnSpeed * Time.deltaTime);
+        m_AdditionalRecoilRotation = Vector3.Lerp(m_AdditionalRecoilRotation, Vector3.zero, weaponConfig.m_CameraRecoilReturnSpeed * Time.deltaTime);
+        m_WeaponRecoilRot = Vector3.Lerp(m_WeaponRecoilRot, Vector3.zero, weaponConfig.m_WeaponRecoilReturnSpeed * Time.deltaTime);
+
+        weaponConfig.m_WeaponRecoilTransform = Vector3.Lerp(weaponConfig.m_WeaponRecoilTransform, Vector3.zero, weaponConfig.m_WeaponRecoilReturnSpeed * Time.deltaTime);
+    }
+
+    private WeaponInventory GetCurrentWeaponInv()
+    {
+        return null;
+    }
+    /// <summary>
+    /// GetCurrentWeaponConfig() returns the currently held weapons WeaponConfiguration script. It is public because the CustomDebugUI script needs to access it.
+    /// </summary>
+    /// <returns></returns>
+    public WeaponConfiguration GetCurrentWeaponConfig()
+    {
+        return m_WeaponConfig1;
+    }
+
+    private Transform GetCurrentWeapon()
+    {
+        return m_Weapon1;
+    }
+
+    private Vector3 GetCurrentWeaponOriginalPos()
+    {
+        return m_GunOriginalPos1;
     }
 
     

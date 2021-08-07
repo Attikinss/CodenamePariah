@@ -58,20 +58,20 @@ public class PlayerManager : MonoBehaviour
 
     public static void SetWeapon(WeaponSlot weapon) { s_CurrentWeapon = weapon; }
 
-    public static Weapon GetCurrentWeapon()
-    {
-        PlayerManager playerManager = PlayerManager.s_Instance;
-        Debug.Assert(playerManager.m_PlayerController, "PlayerController is a null reference.");
-
-
-        switch (s_CurrentWeapon)
-        {
-            case WeaponSlot.WEAPON1:
-                return playerManager.m_PlayerController.m_Weapon1;
-            case WeaponSlot.WEAPON2:
-                return playerManager.m_PlayerController.m_Weapon2;
-            default:
-                return playerManager.m_PlayerController.m_Weapon1;
-        }
-    }
+    //public static Weapon GetCurrentWeapon()
+    //{
+    //    PlayerManager playerManager = PlayerManager.s_Instance;
+    //    Debug.Assert(playerManager.m_PlayerController, "PlayerController is a null reference.");
+    //
+    //
+    //    switch (s_CurrentWeapon)
+    //    {
+    //        case WeaponSlot.WEAPON1:
+    //            return playerManager.m_PlayerController.m_Weapon1;
+    //        case WeaponSlot.WEAPON2:
+    //            return playerManager.m_PlayerController.m_Weapon2;
+    //        default:
+    //            return playerManager.m_PlayerController.m_Weapon1;
+    //    }
+    //}
 }

@@ -4,6 +4,13 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 
+public enum WEAPON
+{ 
+    WEAPON1,
+    WEAPON2
+}
+
+
 [RequireComponent(typeof(Rigidbody))]
 public class HostController : InputController
 {

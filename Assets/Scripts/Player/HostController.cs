@@ -69,8 +69,7 @@ public class HostController : InputController
     
     private float m_fireCounter = 0.0f;
     private bool m_hasFired = false;
-    [HideInInspector]
-    public bool m_HoldingFire = false;
+
     [HideInInspector]
     public float m_HeldCounter = 0.0f;
     
@@ -97,6 +96,9 @@ public class HostController : InputController
     public Vector3 m_AdditionalRecoilRotation;
     [HideInInspector]
     public Vector3 m_WeaponRecoilRot;
+
+    [HideInInspector]
+    public float m_AdditionCameraRecoilX; // For actual recoil pattern. This will judge how much higher your camera will go while shooting.
     
 
 
@@ -112,6 +114,8 @@ public class HostController : InputController
     public Quaternion m_GunOriginalRot2;
 
     private bool m_IsFiring = false;
+
+    private Vector3 m_PreviousCameraRotation; // Stores rotation when the player just starts shooting.
     // ======================================================= //
 
 
@@ -135,16 +139,6 @@ public class HostController : InputController
     public float m_WaveSliceX = 0.0f;
     // ========================================================================== //
 
-
-
-    // ========================== TESTING RECOIL ========================== //
-
-    [HideInInspector]
-    public float m_AdditionalVerticalRecoil = 0.0f;
-
-    // ==================================================================== //
-
- 
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -172,14 +166,21 @@ public class HostController : InputController
             }
         }
 
-        if (m_HoldingFire)
+        if (m_IsFiring)
         {
             // They are holding down the fire button.
             m_HeldCounter += Time.deltaTime;
         }
         else
         {
+            // If we just keep decreasing the additional recoil until it reaches 0, it results in the camera going further down then what feels right.
+            // This is because as the player is shooting, they are compensating and making the gun stand in place. While this is happening, the additional recoil could
+            // build up to a high number and when the player stops shooting, the recoil will take a long time to get back to 0.
+
+            // An experimental method I'd like to try is to either decrease it back to 0, or until the camera rotation is back to where it when they just started shooting.
             m_HeldCounter = 0.0f;
+            m_AdditionCameraRecoilX -= 1 * 0.1f;
+            m_AdditionCameraRecoilX = Mathf.Clamp(m_AdditionCameraRecoilX, 0, 85f);
         }
 
         IsGrounded = CheckGrounded();
@@ -188,15 +189,6 @@ public class HostController : InputController
 
         m_CurrentMoveSpeed = m_Rigidbody.velocity.magnitude;
 
-
-        // Testing recoil stuff.
-        if (!m_HoldingFire)
-        { 
-            float requiredChange = m_AdditionalVerticalRecoil - m_AdditionalVerticalRecoil;
-            m_AdditionalVerticalRecoil -= 1 * 0.1f;
-            m_AdditionalVerticalRecoil = Mathf.Clamp(m_AdditionalVerticalRecoil, 0, 85f);
-
-        }
 
         if (m_IsAiming)
             Aim();
@@ -226,7 +218,7 @@ public class HostController : InputController
 
         // Perform the rotations
         m_Orientation.transform.localRotation = Quaternion.Euler(0, desiredX, 0);
-        m_Camera.transform.localRotation = Quaternion.Euler(Mathf.Clamp((xRotation - m_AdditionalVerticalRecoil - m_AdditionalRecoilRotation.x), -90f, 90f), 0.0f - m_AdditionalRecoilRotation.y, 0 - m_AdditionalRecoilRotation.z);
+        m_Camera.transform.localRotation = Quaternion.Euler(Mathf.Clamp((xRotation - m_AdditionCameraRecoilX - m_AdditionalRecoilRotation.x), -90f, 90f), 0.0f - m_AdditionalRecoilRotation.y, 0 - m_AdditionalRecoilRotation.z);
 
     }
 	private void FixedUpdate()
@@ -304,14 +296,13 @@ public class HostController : InputController
     {
         if (active && !m_hasFired)
         {
-            m_HoldingFire = true; // ----------- To keep track of a continuous fire sequence. It's just here for testing reasons right now.
 
             Ray ray = new Ray(m_Camera.transform.position, m_Camera.transform.forward);
             RaycastHit hit;
-            //Weapon currentWeapon = PlayerManager.GetCurrentWeapon();
 
+            WeaponConfiguration currentConfig = GetCurrentWeaponConfig();
             // =========== TESTING =========== //
-            //m_AdditionalVerticalRecoil += currentWeapon.ShootRecoil(m_Camera.transform, m_HeldCounter);
+            m_AdditionCameraRecoilX += currentConfig.m_VerticalRecoil.Evaluate(m_HeldCounter);
             // =============================== //
 
             m_hasFired = true;
@@ -337,10 +328,7 @@ public class HostController : InputController
                 }
             }
             // ============================================================================= //
-        }
-        else if (!active) // This else if is a cheap way to track whether they let go of the fire button. To keep track of a continuous fire sequence.
-            m_HoldingFire = false;
-        
+        }  
     }
 
     public void Jump(InputAction.CallbackContext context)

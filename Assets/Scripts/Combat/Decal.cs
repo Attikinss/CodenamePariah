@@ -57,7 +57,7 @@ public class Decal
         else // This decal doesn't have a game object since it's not using a texture.
         {
             Vector3 position = m_hitPointWorld;
-            Gizmos.DrawSphere(position, 0.5f);
+            Gizmos.DrawSphere(position, 0.1f);
         }
     }
 

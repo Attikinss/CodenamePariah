@@ -39,16 +39,4 @@ public class Weapon : MonoBehaviour
     {
 
     }
-
-    /// <summary>
-    /// Shoot is a temporary function to allow testing of weapon recoil.
-    /// </summary>
-    /// <param name="objCamera">The transform that will be receiving the vertical recoil.</param>
-    public float ShootRecoil(Transform objCamera, float timeHeld)
-    {
-        Debug.Log(timeHeld);
-        return m_VerticalRecoil.Evaluate(timeHeld);
-    }
-
- 
 }

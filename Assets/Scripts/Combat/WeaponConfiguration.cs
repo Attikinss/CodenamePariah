@@ -20,7 +20,6 @@ public class WeaponConfiguration : MonoBehaviour
     public float m_GunSwayStrength = 1;
     public float m_GunSwayReturn = 6;
 
-
     [Header("Camera Shake Recoil")]
     public Vector3 RecoilRotationAiming = new Vector3(0.5f, 0.5f, 1.5f);
     public float m_RotationSpeed = 6;
@@ -40,4 +39,8 @@ public class WeaponConfiguration : MonoBehaviour
     public float m_ADSRecoilModifier = 1;
     [HideInInspector]
     public Vector3 m_WeaponRecoilTransform;
+
+    [Header("Camera Recoil Pattern")]
+    public AnimationCurve m_VerticalRecoil;
+    public AnimationCurve m_HorizontalRecoil;
 }

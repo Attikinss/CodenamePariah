@@ -48,6 +48,11 @@ public class CustomDebugUI : MonoBehaviour
     public Text m_WeaponRecoilRotText;
     public Text m_WeaponRecoilTransfText;
 
+    public Text m_FireHeldCounterText;
+
+    [Header("Recoil Patterns")]
+    public Text m_VerticalCameraRecoilText;
+
     //public Text m_ShootHeldText;
     //public Text m_ShootHeldCounterText;
     //public Text m_VertRecoilText;
@@ -104,6 +109,10 @@ public class CustomDebugUI : MonoBehaviour
 
         GraphicalDebugger.Assign<Vector3>(m_playerController.m_WeaponRecoilRot, "WeaponRecoilRot", m_WeaponRecoilRotText);
         GraphicalDebugger.Assign<Vector3>(weaponConfig.m_WeaponRecoilTransform, "WeaponRecoilTransf", m_WeaponRecoilTransfText);
+
+        GraphicalDebugger.Assign<float>(m_playerController.m_AdditionCameraRecoilX, "VerticalCameraRecoil", m_VerticalCameraRecoilText);
+
+        GraphicalDebugger.Assign<float>(m_playerController.m_HeldCounter, "FireHeldCounter", m_FireHeldCounterText);
 
         //GraphicalDebugger.Assign<string>(m_AbilityController.m_Ability1.IsActive().ToString(), "Ability1Active", m_Ability1ActiveText);
         //GraphicalDebugger.Assign<float>(m_AbilityController.m_Ability1.GetCounter(), "Ability1Counter", m_Ability1CounterText);

@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 
+/// <summary>
+/// This enum helps keep track of what weapon the player is currently using.
+/// </summary>
 public enum WEAPON
 { 
     WEAPON1,
@@ -44,6 +47,7 @@ public class HostController : InputController
     [Header("Other References")]
     public Transform m_Orientation;
     public Rigidbody m_Rigidbody;
+    public Inventory m_Inventory;
 
     public Transform m_Weapon1;
     public Transform m_Weapon2;
@@ -373,23 +377,38 @@ public class HostController : InputController
         return false;
     }
 
-    public void WeaponSelect1(bool active)
+    public void OnWeaponSelect1(InputAction.CallbackContext value)
     {
-        if (active)
+        if (value.performed)
         {
-            m_Weapon1.gameObject.SetActive(true);
-            m_Weapon2.gameObject.SetActive(false);
-            PlayerManager.SetWeapon(WeaponSlot.WEAPON1);
+            SelectWeapon(0);
+
+            // Previously I was tracking weapon states in PlayerManager in an attempt to free up space in this controller script. However, now that we have an Inventory script that tracks weapons and
+            // the players current weapon, I'll leave that stuff in there.
+            //PlayerManager.SetWeapon(WeaponSlot.WEAPON1);
         }
     }
-    public void WeaponSelect2(bool active)
+    public void OnWeaponSelect2(InputAction.CallbackContext value)
     {
-        if (active)
+        if (value.performed)
         {
-            m_Weapon1.gameObject.SetActive(false);
-            m_Weapon2.gameObject.SetActive(true);
-            PlayerManager.SetWeapon(WeaponSlot.WEAPON2);
+            SelectWeapon(1);
         }
+    }
+
+    /// <summary>
+    /// SelectWeapon() parses in an index to the weapon you want to select that is in the Inventory m_Weapons List.
+    /// </summary>
+    /// <param name="index">The element of the m_Weapons List you want to swap to.</param>
+    private void SelectWeapon(int index)
+    {
+        Weapon cache = m_Inventory.m_CurrentWeapon;
+        m_Inventory.m_CurrentWeapon = m_Inventory.m_Weapons[index];
+
+        // Setting them active/inactive to display the correct weapon. Eventually this will be complimented by a weapon swapping phase where it will take some time before
+        // the player can shoot after swapping weapons.
+        cache.gameObject.SetActive(false);
+        m_Inventory.m_CurrentWeapon.gameObject.SetActive(true);
     }
 
     //public void WeaponBob()
@@ -532,6 +551,8 @@ public class HostController : InputController
         
             float requiredChange = desiredFOV - currentFOV;
             m_Camera.fieldOfView += requiredChange * 0.45f;
+
+            Debug.Log(gunOriginalPos);
         }
         else if (m_IsAiming)
         {
@@ -550,6 +571,8 @@ public class HostController : InputController
             Quaternion xAxis = Quaternion.AngleAxis(m_WeaponRecoilRot.x * weaponConfig.m_ADSRecoilModifier, new Vector3(1, 0, 0));
             gunTransform.localRotation = Quaternion.Slerp(gunTransform.localRotation, zAxis * xAxis, weaponConfig.m_WeaponSwayRotateSpeed);
         }
+
+       
     }
 
     public void OnAim(InputAction.CallbackContext context)
@@ -609,17 +632,20 @@ public class HostController : InputController
     /// <returns></returns>
     public WeaponConfiguration GetCurrentWeaponConfig()
     {
-        return m_WeaponConfig1;
+        // I know it's bad to use GetComponent() during runtime, but for now this does the job. An alternative I though of but am unsure if is good practice would be for the Inventory.cs script
+        // to have another list that compliments the m_Weapons list. This new list would match each element in the m_Weapons list and store the corresponding weapons WeaponConfiguration script.
+        
+        return m_Inventory.m_CurrentWeapon.gameObject.GetComponent<WeaponConfiguration>();
     }
 
     private Transform GetCurrentWeapon()
     {
-        return m_Weapon1;
+        return m_Inventory.m_CurrentWeapon.transform;
     }
 
     private Vector3 GetCurrentWeaponOriginalPos()
     {
-        return m_GunOriginalPos1;
+        return m_Inventory.m_CurrentWeapon.m_OriginalPosition;
     }
 
     

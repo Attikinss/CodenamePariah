@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &406170485
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 406170486}
+  m_Layer: 0
+  m_Name: ScopeCentre
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &406170486
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 406170485}
+  m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -0.02549, y: 0.05686, z: 0.0309}
+  m_LocalScale: {x: 0.08883584, y: 0.08883584, z: 0.08883584}
+  m_Children: []
+  m_Father: {fileID: 1313509439}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &672113345
 GameObject:
   m_ObjectHideFlags: 0
@@ -39,6 +69,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1128038171}
+  - component: {fileID: 101379942}
+  - component: {fileID: 101379944}
   m_Layer: 0
   m_Name: GunHolder
   m_TagString: Untagged
@@ -62,6 +94,248 @@ Transform:
   m_Father: {fileID: 8559930379736425303}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &101379942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1128038170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74963254095af7042a4188d46d3f1467, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Gun: {fileID: 8160595293846714693}
+  m_ScopeCentre: {fileID: 672113346}
+  m_GunAimZPos: 0.1
+  m_GunAimHeight: 0
+  m_GunAimSpeed: 0.25
+  m_GunAimSwayStrength: 0.5
+  m_GunSwayStrength: 1
+  m_GunSwayReturn: 6
+  RecoilRotationAiming: {x: 0.1, y: 0.1, z: 0.5}
+  m_RotationSpeed: 6
+  m_CameraRecoilReturnSpeed: 25
+  m_WeaponSwayClampX: 0.1
+  m_WeaponSwayClampY: 0.1
+  m_WeaponSwayRotateClamp: 10
+  m_WeaponSwayRotateSpeed: 0.05
+  m_WeaponRecoilReturnSpeed: 5
+  m_WeaponRotRecoilVertStrength: 5
+  m_WeaponTransformRecoilZStrength: 0.05
+  m_ADSRecoilModifier: 0.15
+  m_WeaponRecoilTransform: {x: 0, y: 0, z: -0.00003173851}
+  m_VerticalRecoil:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.25
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.25
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_HorizontalRecoil:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.011677859
+      outSlope: 0.011677859
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.39477524
+      value: 0.0046101296
+      inSlope: -0.008213946
+      outSlope: -0.008213946
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.86827844
+      value: -0.008698033
+      inSlope: -0.005328051
+      outSlope: -0.005328051
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1.8202863
+      value: 0.007914168
+      inSlope: -0.0008356292
+      outSlope: -0.0008356292
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 2.9790869
+      value: -0.01424315
+      inSlope: -0.019120907
+      outSlope: -0.019120907
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_RecoilRecoveryModifier: 0.25
+--- !u!114 &101379944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1128038170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 782e265ca3eabf54ab9f81dee17cc001, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_BulletDamage: 0
+  m_HitDecal: {fileID: 0}
+  m_VerticalRecoil:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_VerticalProgress: 0
+  m_OriginalLocalPosition: {x: 0, y: 0, z: 0}
+  m_OriginalGlobalPosition: {x: 0, y: 0, z: 0}
+--- !u!1 &1313509437
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1313509439}
+  - component: {fileID: 1313509438}
+  - component: {fileID: 1313509440}
+  m_Layer: 0
+  m_Name: GunHolder2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1313509439
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1313509437}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.345, y: -0.206, z: 0.525}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 406170486}
+  - {fileID: 8160595293132485892}
+  m_Father: {fileID: 8559930379736425303}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1313509438
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1313509437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74963254095af7042a4188d46d3f1467, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Gun: {fileID: 8160595293132485892}
+  m_ScopeCentre: {fileID: 406170486}
+  m_GunAimZPos: 0.1
+  m_GunAimHeight: 0
+  m_GunAimSpeed: 0.25
+  m_GunAimSwayStrength: 0.5
+  m_GunSwayStrength: 1
+  m_GunSwayReturn: 6
+  RecoilRotationAiming: {x: 0.1, y: 0.1, z: 0.1}
+  m_RotationSpeed: 6
+  m_CameraRecoilReturnSpeed: 25
+  m_WeaponSwayClampX: 0.1
+  m_WeaponSwayClampY: 0.1
+  m_WeaponSwayRotateClamp: 10
+  m_WeaponSwayRotateSpeed: 0.05
+  m_WeaponRecoilReturnSpeed: 5
+  m_WeaponRotRecoilVertStrength: 5
+  m_WeaponTransformRecoilZStrength: 0.05
+  m_ADSRecoilModifier: 0.15
+  m_WeaponRecoilTransform: {x: 0, y: 0, z: -0.00003173851}
+  m_VerticalRecoil:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_HorizontalRecoil:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_RecoilRecoveryModifier: 0
+--- !u!114 &1313509440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1313509437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 782e265ca3eabf54ab9f81dee17cc001, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_BulletDamage: 0
+  m_HitDecal: {fileID: 0}
+  m_VerticalRecoil:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_VerticalProgress: 0
+  m_OriginalLocalPosition: {x: 0, y: 0, z: 0}
+  m_OriginalGlobalPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &8559930378344312181
 GameObject:
   m_ObjectHideFlags: 0
@@ -212,35 +486,18 @@ MonoBehaviour:
   m_CameraSlideHeight: -0.5
   m_BobSpeed: 5
   m_BobDistance: 0.05
-  m_Weapon1: {fileID: 0}
-  m_Weapon2: {fileID: 0}
   m_Orientation: {fileID: 8559930378625643697}
   m_Rigidbody: {fileID: 8559930378344312186}
-  m_Gun: {fileID: 1128038171}
-  m_ScopeCentre: {fileID: 672113346}
-  m_GunAimZPos: 0.09
-  m_GunAimHeight: 0
-  m_GunAimSpeed: 0.25
-  m_GunAimSwayStrength: 1
-  m_GunSwayStrength: 1
-  RecoilRotationAiming: {x: 0.1, y: 0, z: 1}
-  m_RotationSpeed: 6
-  m_CameraRecoilReturnSpeed: 25
-  m_GunSwayReturn: 6
-  m_WeaponSwayClampX: 0.1
-  m_WeaponSwayClampY: 0.05
-  m_WeaponSwayRotateClamp: 15
-  m_WeaponSwayRotateSpeed: 0.05
-  m_WeaponRecoilReturnSpeed: 30
-  m_WeaponRotRecoilVertStrength: 75
-  m_WeaponTransformRecoilZStrength: 0.1
-  m_ADSRecoilModifier: 0.15
+  m_Inventory: {fileID: 696020109}
+  m_Weapon1: {fileID: 1128038171}
+  m_Weapon2: {fileID: 1313509439}
+  m_WeaponConfig1: {fileID: 101379942}
+  m_WeaponConfig2: {fileID: 1313509438}
   m_FireRate: 0.1
   m_BulletForce: 5
   m_MovementInput: {x: 0, y: 0}
   CacheMovDir: {x: 4e-45, y: 0, z: 4e-45}
-  m_HoldingFire: 1
-  m_HeldCounter: 320.7422
+  m_HeldCounter: 0
   m_Sliding: 0
   m_SlideDir: {x: 0, y: 0, z: 0}
   m_SlideCounter: 0
@@ -248,13 +505,17 @@ MonoBehaviour:
   m_IsAiming: 0
   m_AdditionalRecoilRotation: {x: 0, y: 0, z: 0}
   m_WeaponRecoilRot: {x: 0, y: 0, z: 0}
-  m_WeaponRecoilTransform: {x: 0, y: 0, z: 0}
-  m_GunOriginalPos: {x: 0.345, y: -0.206, z: 0.62}
+  m_AdditionCameraRecoilX: 0
+  m_AdditionalCameraRecoilY: 0
+  m_GunOriginalPos1: {x: 0, y: 0, z: 0}
+  m_GunOriginalPos2: {x: 0, y: 0, z: 0}
   m_GunOriginalRot: {x: 0, y: 0, z: 0, w: 1}
+  m_GunOriginalRot2: {x: 0, y: 0, z: 0, w: 0}
+  m_PreviousCameraRotation: {x: 0, y: 0, z: 0}
+  m_CurrentCamRot: {x: 0, y: 0, z: 0}
   m_SwayTimer: 0
   m_WaveSlice: 0
   m_WaveSliceX: 0
-  m_AdditionalVerticalRecoil: 0
 --- !u!114 &8559930378344312187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -495,6 +756,38 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 93a55832-59b9-416a-87c6-b8f78d496127
     m_ActionName: Host/Slide[/Keyboard/leftCtrl,/XInputControllerWindows/buttonNorth]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8559930378344312184}
+        m_TargetAssemblyTypeName: HostController, Assembly-CSharp
+        m_MethodName: OnWeaponSelect1
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 0364cb4f-20c1-4e50-829a-718426a89f84
+    m_ActionName: Host/Select1[/Keyboard/1]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8559930378344312184}
+        m_TargetAssemblyTypeName: HostController, Assembly-CSharp
+        m_MethodName: OnWeaponSelect2
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 1a369283-ec17-47f9-8107-662f60fdea79
+    m_ActionName: Host/Select2[/Keyboard/2]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: KBM
   m_DefaultActionMap: Host
@@ -514,7 +807,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Health: 100
   m_HealthText: {fileID: 0}
-  m_Weapons: []
+  m_Weapons:
+  - {fileID: 101379944}
+  - {fileID: 1313509440}
+  m_CurrentWeapon: {fileID: 0}
 --- !u!1 &8559930378459591336
 GameObject:
   m_ObjectHideFlags: 0
@@ -764,6 +1060,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   m_VerticalProgress: 0
+  m_OriginalLocalPosition: {x: 0, y: 0, z: 0}
+  m_OriginalGlobalPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &8559930379736425299
 GameObject:
   m_ObjectHideFlags: 0
@@ -796,6 +1094,7 @@ Transform:
   m_Children:
   - {fileID: 8559930378953289746}
   - {fileID: 1128038171}
+  - {fileID: 1313509439}
   m_Father: {fileID: 8559930378625643697}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1025,4 +1324,66 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: baec3ce215c58d94ea5ff7bc220b1c58, type: 3}
   m_PrefabInstance: {fileID: 8559930378419723950}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &8559930379100721903
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1313509439}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 5ceb676312004ed4c90a040b67b2e12a, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5ceb676312004ed4c90a040b67b2e12a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5ceb676312004ed4c90a040b67b2e12a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5ceb676312004ed4c90a040b67b2e12a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5ceb676312004ed4c90a040b67b2e12a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5ceb676312004ed4c90a040b67b2e12a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5ceb676312004ed4c90a040b67b2e12a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5ceb676312004ed4c90a040b67b2e12a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5ceb676312004ed4c90a040b67b2e12a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5ceb676312004ed4c90a040b67b2e12a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5ceb676312004ed4c90a040b67b2e12a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5ceb676312004ed4c90a040b67b2e12a, type: 3}
+      propertyPath: m_Name
+      value: Mesh_Weapon_Pistol_001
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 5ceb676312004ed4c90a040b67b2e12a, type: 3}
+--- !u!4 &8160595293132485892 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5ceb676312004ed4c90a040b67b2e12a, type: 3}
+  m_PrefabInstance: {fileID: 8559930379100721903}
   m_PrefabAsset: {fileID: 0}

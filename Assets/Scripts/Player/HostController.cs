@@ -446,40 +446,45 @@ public class HostController : InputController
         m_Inventory.m_CurrentWeapon.gameObject.SetActive(true);
     }
 
-    //public void WeaponBob()
-    //{
-    //    //Weapon currentWeapon = PlayerManager.GetCurrentWeapon();
-    //    Vector3 localPosition = currentWeapon.transform.localPosition;
-    //    Vector3 currentWeaponMidPoint = currentWeapon.m_MidPoint;
+    public Vector3 WeaponBob()
+    {
+        //Weapon currentWeapon = PlayerManager.GetCurrentWeapon();
+        Vector3 localPosition = GetCurrentWeapon().transform.position;
+        Vector3 currentWeaponMidPoint = GetCurrentWeaponOriginalPos();
 
-    //    if (m_IsMoving)
-    //    {
-    //        // Do weapon sway stuff.
-    //        m_SwayTimer += Time.deltaTime;
-    //        m_WaveSlice = -(Mathf.Sin(m_SwayTimer * m_BobSpeed) + 1) / 2;
-    //        m_WaveSliceX = Mathf.Cos(m_SwayTimer * m_BobSpeed);
+        if (m_IsMoving)
+        {
+            // Do weapon sway stuff.
+            m_SwayTimer += Time.deltaTime;
+            m_WaveSlice = -(Mathf.Sin(m_SwayTimer * m_BobSpeed) + 1) / 2;
+            m_WaveSliceX = Mathf.Cos(m_SwayTimer * m_BobSpeed);
 
-    //        if (m_WaveSlice >= -0.5f)
-    //        {
-    //            m_WaveSlice = -1 - -(Mathf.Sin(m_SwayTimer * m_BobSpeed) + 1) / 2;
-    //        }
+            if (m_WaveSlice >= -0.5f)
+            {
+                m_WaveSlice = -1 - -(Mathf.Sin(m_SwayTimer * m_BobSpeed) + 1) / 2;
+            }
 
-    //        float translateChangeX = m_WaveSliceX * m_BobDistance;
-    //        float translateChangeY = m_WaveSlice * m_BobDistance;
-    //        localPosition.y = currentWeaponMidPoint.y + translateChangeY;
-    //        localPosition.x = currentWeaponMidPoint.x + translateChangeX;
+            float translateChangeX = m_WaveSliceX * m_BobDistance;
+            float translateChangeY = m_WaveSlice * m_BobDistance;
+            localPosition.y = /*currentWeaponMidPoint.y + */translateChangeY;
+            localPosition.x = /*currentWeaponMidPoint.x + */translateChangeX;
 
-    //        currentWeapon.transform.localPosition = localPosition;
-    //    }
-    //    else
-    //    {
-    //        m_SwayTimer = 0.0f;
-    //        localPosition.y = currentWeaponMidPoint.y;
-    //        localPosition.x = currentWeaponMidPoint.x;
-    //        currentWeapon.transform.localPosition = Vector3.Lerp(currentWeapon.transform.localPosition, currentWeapon.m_MidPoint, 0.01f);
-    //    }
+            return localPosition;
+            //currentWeapon.transform.localPosition = localPosition;
+        }
+        else
+        {
+            return Vector3.zero;
+        }
+        //else
+        //{
+        //    m_SwayTimer = 0.0f;
+        //    localPosition.y = currentWeaponMidPoint.y;
+        //    localPosition.x = currentWeaponMidPoint.x;
+        //    currentWeapon.transform.localPosition = Vector3.Lerp(currentWeapon.transform.localPosition, currentWeapon.m_MidPoint, 0.01f);
+        //}
 
-    //}
+    }
 
     private void OnDrawGizmos()
     {
@@ -543,6 +548,8 @@ public class HostController : InputController
         Gizmos.DrawLine(m_Camera.transform.position, m_Camera.transform.position + m_PreviousCameraRotation * 100);    // Forward vector when they first clicked the fire trigger.
 
         Gizmos.color = cache;
+
+        // ============================================================================== //
     }
 
     public void OnSlide(InputAction.CallbackContext value)
@@ -604,9 +611,10 @@ public class HostController : InputController
         if (!m_IsAiming)
         {
             Vector3 gunOriginalPos = GetCurrentWeaponOriginalPos();
-            
 
-            Vector3 finalPosition = new Vector3(Mathf.Clamp(-x * 0.02f, -weaponConfig.m_WeaponSwayClampX, weaponConfig.m_WeaponSwayClampX), Mathf.Clamp(-y * 0.02f, -weaponConfig.m_WeaponSwayClampY, weaponConfig.m_WeaponSwayClampY), 0 + weaponConfig.m_WeaponRecoilTransform.z);
+            Vector3 bobStuff = WeaponBob();
+
+            Vector3 finalPosition = new Vector3(Mathf.Clamp((-x * 0.02f), -weaponConfig.m_WeaponSwayClampX, weaponConfig.m_WeaponSwayClampX) + bobStuff.x, Mathf.Clamp((-y * 0.02f), -weaponConfig.m_WeaponSwayClampY, weaponConfig.m_WeaponSwayClampY) + bobStuff.y, 0 + weaponConfig.m_WeaponRecoilTransform.z);
             gunTransform.localPosition = Vector3.Lerp(gunTransform.localPosition, finalPosition + gunOriginalPos, Time.deltaTime * weaponConfig.m_GunSwayReturn);
             Quaternion xAxis = Quaternion.AngleAxis(m_WeaponRecoilRot.x, new Vector3(1, 0, 0));
             Quaternion zAxis = Quaternion.AngleAxis(Mathf.Clamp(-x, -weaponConfig.m_WeaponSwayRotateClamp, weaponConfig.m_WeaponSwayRotateClamp), new Vector3(0, 0, 1));
@@ -711,7 +719,12 @@ public class HostController : InputController
 
     private Vector3 GetCurrentWeaponOriginalPos()
     {
-        return m_Inventory.m_CurrentWeapon.m_OriginalPosition;
+        return m_Inventory.m_CurrentWeapon.m_OriginalLocalPosition;
+    }
+
+    private Vector3 GetCurrentWeaponOriginalGlobalPos()
+    {
+        return m_Inventory.m_CurrentWeapon.m_OriginalGlobalPosition;
     }
 
     

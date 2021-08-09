@@ -461,74 +461,47 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
+      inSlope: 0.011677859
+      outSlope: 0.011677859
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.146931
-      value: 0.0834398
-      inSlope: 0.08305785
-      outSlope: 0.08305785
-      tangentMode: 0
+      time: 0.39477524
+      value: 0.0046101296
+      inSlope: -0.008213946
+      outSlope: -0.008213946
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.3990934
-      value: 0.059687644
-      inSlope: 0.654438
-      outSlope: 0.654438
-      tangentMode: 0
+      time: 0.86827844
+      value: -0.008698033
+      inSlope: -0.005328051
+      outSlope: -0.005328051
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.5692704
-      value: 0.112155974
-      inSlope: -0.0071984907
-      outSlope: -0.0071984907
-      tangentMode: 0
+      time: 1.8202863
+      value: 0.007914168
+      inSlope: -0.0008356292
+      outSlope: -0.0008356292
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 1.1006312
-      value: -0.031624064
-      inSlope: -0.04253583
-      outSlope: -0.04253583
-      tangentMode: 0
+      time: 2.9790869
+      value: -0.01424315
+      inSlope: -0.019120907
+      outSlope: -0.019120907
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 2.2154481
-      value: -0.02034187
-      inSlope: -0.13535857
-      outSlope: -0.13535857
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 4.6677237
-      value: 0.0775056
-      inSlope: -0.15930519
-      outSlope: -0.15930519
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 7.810591
-      value: -0.28032464
-      inSlope: 0.25521234
-      outSlope: 0.25521234
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.039080177
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -713,11 +686,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 971672573}
-  m_RootOrder: 22
+  m_RootOrder: 23
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -159.21, y: -260.09}
+  m_AnchoredPosition: {x: -159.21, y: -292.1}
   m_SizeDelta: {x: 318.42834, y: 32.014008}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &233374958
@@ -1234,11 +1207,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 971672573}
-  m_RootOrder: 20
+  m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -159.21, y: -196.07}
+  m_AnchoredPosition: {x: -159.21, y: -228.08}
   m_SizeDelta: {x: 318.42834, y: 32.014008}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &483222375
@@ -1318,6 +1291,85 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -159.21, y: -132.05}
+  m_SizeDelta: {x: 318.42834, y: 32.014008}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &540170334
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 540170337}
+  - component: {fileID: 540170336}
+  - component: {fileID: 540170335}
+  m_Layer: 5
+  m_Name: HorizontalCameraRecoil
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &540170335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 540170334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 14
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 'HorizontalCameraRecoil: -'
+--- !u!222 &540170336
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 540170334}
+  m_CullTransparentMesh: 1
+--- !u!224 &540170337
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 540170334}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 971672573}
+  m_RootOrder: 19
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -159.21, y: -164.06}
   m_SizeDelta: {x: 318.42834, y: 32.014008}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &545597559
@@ -1837,11 +1889,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 971672573}
-  m_RootOrder: 19
+  m_RootOrder: 20
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -159.21, y: -164.06}
+  m_AnchoredPosition: {x: -159.21, y: -196.07}
   m_SizeDelta: {x: 318.42834, y: 32.014008}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &971672569
@@ -1956,6 +2008,7 @@ RectTransform:
   - {fileID: 1198651385}
   - {fileID: 1246658124}
   - {fileID: 483222378}
+  - {fileID: 540170337}
   - {fileID: 938844772}
   - {fileID: 419813169}
   - {fileID: 1526488870}
@@ -2013,6 +2066,7 @@ MonoBehaviour:
   m_WeaponRecoilTransfText: {fileID: 1246658125}
   m_FireHeldCounterText: {fileID: 938844770}
   m_VerticalCameraRecoilText: {fileID: 483222376}
+  m_HorizontalCameraRecoilText: {fileID: 540170335}
   m_PreviousCamXRotText: {fileID: 1526488868}
   m_CurrentCamXRotText: {fileID: 419813167}
   m_CameraRecoilDotProductText: {fileID: 120549967}
@@ -2634,7 +2688,16 @@ MonoBehaviour:
     m_RotationOrder: 4
   m_HorizontalRecoil:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -3172,11 +3235,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 971672573}
-  m_RootOrder: 21
+  m_RootOrder: 22
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -159.21, y: -228.08}
+  m_AnchoredPosition: {x: -159.21, y: -260.09}
   m_SizeDelta: {x: 318.42834, y: 32.014008}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1569286537

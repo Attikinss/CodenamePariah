@@ -183,10 +183,10 @@ public class HostController : InputController
             // build up to a high number and when the player stops shooting, the recoil will take a long time to get back to 0.
 
             // An experimental method I'd like to try is to either decrease it back to 0, or until the camera rotation is back to where it when they just started shooting.
-            float currentCamX = m_Camera.transform.eulerAngles.x;
-            float previousCamX = m_PreviousCameraRotation.x;
-            float dot = Vector3.Dot(m_CurrentCamRot.normalized, m_PreviousCameraRotation.normalized);
-            if (dot > 1.1f || dot < 0.9f)
+            Vector2 currentCamX = new Vector2(m_CurrentCamRot.y, 1);
+            Vector2 previousCamX = new Vector2(m_PreviousCameraRotation.y, 1);          // I know I'm using the new keyword here and that's bad. But for now I'm trying to see if this system will work.
+            float dot = Vector3.Dot(currentCamX.normalized, previousCamX.normalized);
+            if (dot < 0.9999f || dot > 1.0001f) // Such a small difference in numbers still gives quite a generous margin for error.
             { 
                 m_HeldCounter = 0.0f;
                 m_AdditionCameraRecoilX -= 1 * 0.1f;
@@ -489,7 +489,18 @@ public class HostController : InputController
 
         Color cache = Gizmos.color;
         // ================= Camera Forward Vectors For Recoil Recovery ================= //
-        Gizmos.color = Color.yellow;
+        Vector2 modifiedCurrent = new Vector2(m_Camera.transform.forward.y, 1);
+        Vector2 modifiedPrevious = new Vector2(m_PreviousCameraRotation.y, 1);
+        
+        float dot = Vector2.Dot(modifiedCurrent.normalized, modifiedPrevious.normalized);
+
+        if (dot < 0.9999f || dot > 1.0001f)
+            Gizmos.color = Color.yellow;
+        else
+            Gizmos.color = Color.green;
+
+        // Trying to create the same forward vectors but only caring about x and z.
+
         Gizmos.DrawLine(m_Camera.transform.position, m_Camera.transform.position + m_Camera.transform.forward * 100);  // Current forward vector.
         Gizmos.DrawLine(m_Camera.transform.position, m_Camera.transform.position + m_PreviousCameraRotation * 100);    // Forward vector when they first clicked the fire trigger.
 

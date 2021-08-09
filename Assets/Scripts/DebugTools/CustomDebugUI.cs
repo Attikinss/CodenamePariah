@@ -124,7 +124,10 @@ public class CustomDebugUI : MonoBehaviour
         GraphicalDebugger.Assign<float>(m_playerController.m_PreviousCameraRotation.x, "PreviousCamXRot", m_PreviousCamXRotText);
 
         // I know it's super inefficient to recalculate the dot product here but this wont be in the builds of the game so I think its okay, plus it saved me like 1 minute.
-        GraphicalDebugger.Assign<float>(Vector3.Dot(m_playerController.m_CurrentCamRot.normalized, m_playerController.m_PreviousCameraRotation.normalized), "CameraDotProduct", m_CameraRecoilDotProductText);
+        Vector3 modifiedCurrent = new Vector2(m_playerController.m_CurrentCamRot.y, 1);
+        Vector3 modifiedPrevious = new Vector2(m_playerController.m_PreviousCameraRotation.y, 1);
+        float dot = Vector2.Dot(modifiedCurrent.normalized, modifiedPrevious.normalized);
+        GraphicalDebugger.Assign<float>(dot, "CameraDotProduct", m_CameraRecoilDotProductText);
 
 
         //GraphicalDebugger.Assign<string>(m_AbilityController.m_Ability1.IsActive().ToString(), "Ability1Active", m_Ability1ActiveText);

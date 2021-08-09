@@ -43,4 +43,6 @@ public class WeaponConfiguration : MonoBehaviour
     [Header("Camera Recoil Pattern")]
     public AnimationCurve m_VerticalRecoil;
     public AnimationCurve m_HorizontalRecoil;
+    [Range(0, 1)]
+    public float m_RecoilRecoveryModifier;
 }

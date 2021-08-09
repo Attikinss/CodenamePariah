@@ -210,7 +210,7 @@ public class HostController : InputController
                     else
                     { 
                         // Otherwise, they are aiming higher than when they started, so we'll bring the gun down to where it was.
-                        m_AdditionCameraRecoilX -= 1 * 0.1f;
+                        m_AdditionCameraRecoilX -= 1 * GetCurrentWeaponConfig().m_RecoilRecoveryModifier;
                         m_AdditionCameraRecoilX = Mathf.Clamp(m_AdditionCameraRecoilX, 0, 85f);
                     }
 

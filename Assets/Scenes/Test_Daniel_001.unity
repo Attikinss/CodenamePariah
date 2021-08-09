@@ -436,21 +436,21 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1
+      value: 0.25
       inSlope: 0
       outSlope: 0
       tangentMode: 34
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
-      value: 1
+      value: 0.25
       inSlope: 0
       outSlope: 0
       tangentMode: 34
       weightedMode: 0
-      inWeight: 0
+      inWeight: 0.33333334
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -461,6 +461,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  m_RecoilRecoveryModifier: 0.25
 --- !u!4 &101379943 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1128038171, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
@@ -2564,6 +2565,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  m_RecoilRecoveryModifier: 0
 --- !u!4 &1313509439
 Transform:
   m_ObjectHideFlags: 0

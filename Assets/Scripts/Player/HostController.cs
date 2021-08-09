@@ -70,8 +70,8 @@ public class HostController : InputController
     private float m_fireCounter = 0.0f;
     private bool m_hasFired = false;
 
-    [HideInInspector]
-    public float m_HeldCounter = 0.0f;
+    [HideInInspector] // If this variable was once public and you had set it's value in the inspector, it will still have the value you set in the inspector even if you change its initialization here.
+    public float m_HeldCounter = 1;
     
     private float xRotation = 0;
 
@@ -99,8 +99,9 @@ public class HostController : InputController
 
     [HideInInspector]
     public float m_AdditionCameraRecoilX; // For actual recoil pattern. This will judge how much higher your camera will go while shooting.
-    
 
+    [HideInInspector]
+    public float m_AdditionalCameraRecoilY; // This will be how much horizontal recoil will be applied to the camera.
 
 
     // Storing there original positions and rotations for lerping purposes. Here I'm limiting us to two weapons however this can be replaced.
@@ -213,11 +214,16 @@ public class HostController : InputController
                         m_AdditionCameraRecoilX -= 1 * GetCurrentWeaponConfig().m_RecoilRecoveryModifier;
                         m_AdditionCameraRecoilX = Mathf.Clamp(m_AdditionCameraRecoilX, 0, 85f);
                     }
-
-                    // Reset held counter happens regardless.
-                    m_HeldCounter = 0.0f;
+                    
                 }
             }
+            if (m_AdditionalCameraRecoilY > 0)
+            {
+                // If we have accumulated horizontal recoil.
+                //m_AdditionalCameraRecoilY -= 1 * GetCurrentWeaponConfig().m_RecoilRecoveryModifier;
+                
+            }
+            
 
 
         }
@@ -260,7 +266,7 @@ public class HostController : InputController
 
         // Perform the rotations
         m_Orientation.transform.localRotation = Quaternion.Euler(0, desiredX, 0);
-        m_Camera.transform.localRotation = Quaternion.Euler(Mathf.Clamp((xRotation - m_AdditionCameraRecoilX - m_AdditionalRecoilRotation.x), -90f, 90f), 0.0f - m_AdditionalRecoilRotation.y, 0 - m_AdditionalRecoilRotation.z);
+        m_Camera.transform.localRotation = Quaternion.Euler(Mathf.Clamp((xRotation - m_AdditionCameraRecoilX - m_AdditionalRecoilRotation.x), -90f, 90f), 0.0f - m_AdditionalRecoilRotation.y - m_AdditionalCameraRecoilY, 0 - m_AdditionalRecoilRotation.z);
 
     }
 	private void FixedUpdate()
@@ -337,6 +343,8 @@ public class HostController : InputController
         {
             m_IsFiring = false;
             Debug.Log("OnShoot cancelled.");
+            // Reset held counter happens regardless.
+            m_HeldCounter = 0.0f;
         }
     }
     public void Shoot(bool active)
@@ -350,6 +358,7 @@ public class HostController : InputController
             WeaponConfiguration currentConfig = GetCurrentWeaponConfig();
             // =========== TESTING =========== //
             m_AdditionCameraRecoilX += currentConfig.m_VerticalRecoil.Evaluate(m_HeldCounter);
+            m_AdditionalCameraRecoilY += currentConfig.m_HorizontalRecoil.Evaluate(m_HeldCounter);
             // =============================== //
 
             m_hasFired = true;

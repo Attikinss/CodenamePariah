@@ -457,7 +457,79 @@ MonoBehaviour:
     m_RotationOrder: 4
   m_HorizontalRecoil:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.146931
+      value: 0.0834398
+      inSlope: 0.08305785
+      outSlope: 0.08305785
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.3990934
+      value: 0.059687644
+      inSlope: 0.654438
+      outSlope: 0.654438
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.5692704
+      value: 0.112155974
+      inSlope: -0.0071984907
+      outSlope: -0.0071984907
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1.1006312
+      value: -0.031624064
+      inSlope: -0.04253583
+      outSlope: -0.04253583
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 2.2154481
+      value: -0.02034187
+      inSlope: -0.13535857
+      outSlope: -0.13535857
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 4.6677237
+      value: 0.0775056
+      inSlope: -0.15930519
+      outSlope: -0.15930519
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 7.810591
+      value: -0.28032464
+      inSlope: 0.25521234
+      outSlope: 0.25521234
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.039080177
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -488,7 +560,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   m_VerticalProgress: 0
-  m_OriginalPosition: {x: 0, y: 0, z: 0}
+  m_OriginalLocalPosition: {x: 0, y: 0, z: 0}
+  m_OriginalGlobalPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &106941240
 GameObject:
   m_ObjectHideFlags: 0
@@ -2603,7 +2676,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   m_VerticalProgress: 0
-  m_OriginalPosition: {x: 0, y: 0, z: 0}
+  m_OriginalLocalPosition: {x: 0, y: 0, z: 0}
+  m_OriginalGlobalPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &1422635542
 GameObject:
   m_ObjectHideFlags: 0
@@ -4236,6 +4310,10 @@ PrefabInstance:
       propertyPath: m_Inventory
       value: 
       objectReference: {fileID: 2041685293}
+    - target: {fileID: 8559930378344312184, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_HeldCounter
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8559930378344312184, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_WeaponConfig1
       value: 

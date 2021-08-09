@@ -50,8 +50,14 @@ public class CustomDebugUI : MonoBehaviour
 
     public Text m_FireHeldCounterText;
 
+
     [Header("Recoil Patterns")]
     public Text m_VerticalCameraRecoilText;
+
+    public Text m_PreviousCamXRotText;
+    public Text m_CurrentCamXRotText;
+
+    public Text m_CameraRecoilDotProductText;
 
     //public Text m_ShootHeldText;
     //public Text m_ShootHeldCounterText;
@@ -113,6 +119,13 @@ public class CustomDebugUI : MonoBehaviour
         GraphicalDebugger.Assign<float>(m_playerController.m_AdditionCameraRecoilX, "VerticalCameraRecoil", m_VerticalCameraRecoilText);
 
         GraphicalDebugger.Assign<float>(m_playerController.m_HeldCounter, "FireHeldCounter", m_FireHeldCounterText);
+
+        GraphicalDebugger.Assign<float>(m_playerController.m_CurrentCamRot.x, "CurrentCamXRot", m_CurrentCamXRotText);
+        GraphicalDebugger.Assign<float>(m_playerController.m_PreviousCameraRotation.x, "PreviousCamXRot", m_PreviousCamXRotText);
+
+        // I know it's super inefficient to recalculate the dot product here but this wont be in the builds of the game so I think its okay, plus it saved me like 1 minute.
+        GraphicalDebugger.Assign<float>(Vector3.Dot(m_playerController.m_CurrentCamRot.normalized, m_playerController.m_PreviousCameraRotation.normalized), "CameraDotProduct", m_CameraRecoilDotProductText);
+
 
         //GraphicalDebugger.Assign<string>(m_AbilityController.m_Ability1.IsActive().ToString(), "Ability1Active", m_Ability1ActiveText);
         //GraphicalDebugger.Assign<float>(m_AbilityController.m_Ability1.GetCounter(), "Ability1Counter", m_Ability1CounterText);

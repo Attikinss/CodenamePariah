@@ -115,7 +115,12 @@ public class HostController : InputController
 
     private bool m_IsFiring = false;
 
-    private Vector3 m_PreviousCameraRotation; // Stores rotation when the player just starts shooting.
+    [HideInInspector]
+    public Vector3 m_PreviousCameraRotation; // Stores rotation when the player just starts shooting. Okay, so because comparing euler angles is a terrible idea due to there being multiple numbers
+                                             // that can describe the same thing, this variable now stores the forward vector before shooting. The idea being that I can use the dot product to
+                                             // compare the difference in angle between the old forward vector and the new forward vector.
+    [HideInInspector]
+    public Vector3 m_CurrentCamRot;          // Like I mentioned above, this variable will be storing the current forward vector to be used when recovering from recoil.
     // ======================================================= //
 
 
@@ -178,9 +183,15 @@ public class HostController : InputController
             // build up to a high number and when the player stops shooting, the recoil will take a long time to get back to 0.
 
             // An experimental method I'd like to try is to either decrease it back to 0, or until the camera rotation is back to where it when they just started shooting.
-            m_HeldCounter = 0.0f;
-            m_AdditionCameraRecoilX -= 1 * 0.1f;
-            m_AdditionCameraRecoilX = Mathf.Clamp(m_AdditionCameraRecoilX, 0, 85f);
+            float currentCamX = m_Camera.transform.eulerAngles.x;
+            float previousCamX = m_PreviousCameraRotation.x;
+            float dot = Vector3.Dot(m_CurrentCamRot.normalized, m_PreviousCameraRotation.normalized);
+            if (dot > 1.1f || dot < 0.9f)
+            { 
+                m_HeldCounter = 0.0f;
+                m_AdditionCameraRecoilX -= 1 * 0.1f;
+                m_AdditionCameraRecoilX = Mathf.Clamp(m_AdditionCameraRecoilX, 0, 85f);
+            }
         }
 
         IsGrounded = CheckGrounded();
@@ -196,6 +207,9 @@ public class HostController : InputController
 
         if (m_IsFiring)
             Shoot(true);
+
+        // Just for debugging purposes. This variable is only used in the CustomDebugUI script.
+        m_CurrentCamRot = m_Camera.transform.forward;
     }
 
 	public override void OnLook(InputAction.CallbackContext value)
@@ -285,6 +299,11 @@ public class HostController : InputController
         {
             m_IsFiring = true;
             Debug.Log("OnShoot called.");
+
+            // Experimental thing I'm trying.
+            // I will store the original camera rotation when they first start shooting that way I can go back to this rotation when they recover from recoil.
+            m_PreviousCameraRotation = m_Camera.transform.forward;
+
         }
         else
         {
@@ -465,6 +484,16 @@ public class HostController : InputController
         //Gizmos.DrawSphere(centre, 0.25f);
         //Gizmos.DrawSphere(m_Gun.position, 0.25f);
 
+
+
+
+        Color cache = Gizmos.color;
+        // ================= Camera Forward Vectors For Recoil Recovery ================= //
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(m_Camera.transform.position, m_Camera.transform.position + m_Camera.transform.forward * 100);  // Current forward vector.
+        Gizmos.DrawLine(m_Camera.transform.position, m_Camera.transform.position + m_PreviousCameraRotation * 100);    // Forward vector when they first clicked the fire trigger.
+
+        Gizmos.color = cache;
     }
 
     public void OnSlide(InputAction.CallbackContext value)

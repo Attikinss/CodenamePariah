@@ -103,6 +103,8 @@ public class HostController : InputController
     [HideInInspector]
     public float m_AdditionalCameraRecoilY; // This will be how much horizontal recoil will be applied to the camera.
 
+    float desiredX = 0;
+
 
     // Storing there original positions and rotations for lerping purposes. Here I'm limiting us to two weapons however this can be replaced.
     [HideInInspector]
@@ -209,22 +211,33 @@ public class HostController : InputController
                         m_AdditionCameraRecoilX = 0;
                     }
                     else
-                    { 
+                    {
                         // Otherwise, they are aiming higher than when they started, so we'll bring the gun down to where it was.
                         m_AdditionCameraRecoilX -= 1 * GetCurrentWeaponConfig().m_RecoilRecoveryModifier;
                         m_AdditionCameraRecoilX = Mathf.Clamp(m_AdditionCameraRecoilX, 0, 85f);
                     }
-                    
+
+                }
+                else
+                {
+                    // Since the forward vectors match, we'll clear the m_AdditionalCameraRecoilX variable just to keep things clean.
+                    xRotation -= m_AdditionCameraRecoilX;
+                    m_AdditionCameraRecoilX = 0;
                 }
             }
-            if (m_AdditionalCameraRecoilY > 0)
+            if (m_AdditionalCameraRecoilY != 0)
             {
+                // I've decided not to lerp the additional horizontal recoil to 0 since it feels disorientating.
+                
+                
+
                 // If we have accumulated horizontal recoil.
                 //m_AdditionalCameraRecoilY -= 1 * GetCurrentWeaponConfig().m_RecoilRecoveryModifier;
                 
+                desiredX -= m_AdditionalCameraRecoilY;
+                m_AdditionalCameraRecoilY = 0;
             }
             
-
 
         }
 
@@ -258,15 +271,15 @@ public class HostController : InputController
 
         // Finding current look rotation
         Vector3 rot = m_Orientation.transform.localRotation.eulerAngles;
-        float desiredX = rot.y + mouseX;
+        /*float*/ desiredX = rot.y + mouseX;
 
         // Rotate
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
         // Perform the rotations
-        m_Orientation.transform.localRotation = Quaternion.Euler(0, desiredX, 0);
-        m_Camera.transform.localRotation = Quaternion.Euler(Mathf.Clamp((xRotation - m_AdditionCameraRecoilX - m_AdditionalRecoilRotation.x), -90f, 90f), 0.0f - m_AdditionalRecoilRotation.y - m_AdditionalCameraRecoilY, 0 - m_AdditionalRecoilRotation.z);
+        m_Orientation.transform.localRotation = Quaternion.Euler(0, desiredX - m_AdditionalCameraRecoilY, 0);
+        m_Camera.transform.localRotation = Quaternion.Euler(Mathf.Clamp((xRotation - m_AdditionCameraRecoilX - m_AdditionalRecoilRotation.x), -90f, 90f), 0.0f - m_AdditionalRecoilRotation.y, 0 - m_AdditionalRecoilRotation.z);
 
     }
 	private void FixedUpdate()

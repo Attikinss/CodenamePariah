@@ -178,20 +178,48 @@ public class HostController : InputController
         }
         else
         {
-            // If we just keep decreasing the additional recoil until it reaches 0, it results in the camera going further down then what feels right.
-            // This is because as the player is shooting, they are compensating and making the gun stand in place. While this is happening, the additional recoil could
-            // build up to a high number and when the player stops shooting, the recoil will take a long time to get back to 0.
-
-            // An experimental method I'd like to try is to either decrease it back to 0, or until the camera rotation is back to where it when they just started shooting.
-            Vector2 currentCamX = new Vector2(m_CurrentCamRot.y, 1);
-            Vector2 previousCamX = new Vector2(m_PreviousCameraRotation.y, 1);          // I know I'm using the new keyword here and that's bad. But for now I'm trying to see if this system will work.
-            float dot = Vector3.Dot(currentCamX.normalized, previousCamX.normalized);
-            if (dot < 0.9999f || dot > 1.0001f) // Such a small difference in numbers still gives quite a generous margin for error.
+            if (m_AdditionCameraRecoilX > 0) // We only want to decrement AdditionCameraRecoilX if it has accumuluated recoil still in it.
             { 
-                m_HeldCounter = 0.0f;
-                m_AdditionCameraRecoilX -= 1 * 0.1f;
-                m_AdditionCameraRecoilX = Mathf.Clamp(m_AdditionCameraRecoilX, 0, 85f);
+                // If we just keep decreasing the additional recoil until it reaches 0, it results in the camera going further down then what feels right.
+                // This is because as the player is shooting, they are compensating and making the gun stand in place. While this is happening, the additional recoil could
+                // build up to a high number and when the player stops shooting, the recoil will take a long time to get back to 0.
+
+                // An experimental method I'd like to try is to either decrease it back to 0, or until the camera rotation is back to where it when they just started shooting.
+                Vector2 currentCamX = new Vector2(m_CurrentCamRot.y, 1);
+                Vector2 previousCamX = new Vector2(m_PreviousCameraRotation.y, 1);          // I know I'm using the new keyword here and that's bad. But for now I'm trying to see if this system will work.
+                float dot = Vector3.Dot(currentCamX.normalized, previousCamX.normalized);
+                if (dot < 0.9999f || dot > 1.0001f) // Such a small difference in numbers still gives quite a generous margin for error.
+                {
+                    // This means the current forward vector's y does not much the previous forward vector's y.
+                    // We have to do one of two things.
+                    // Either bring the gun down, so that the previous and current y components match.
+                    // Or if the gun is already below the previous y component, we just leave the gun alone because they've over compensated for the recoil.
+
+                    // If previous rotation's y is greater, it means they are looking further down then when they started firing.
+                    if (m_PreviousCameraRotation.y > m_CurrentCamRot.y)
+                    {
+                        // We want to incorporate the additional camera recoil into the rotation of the camera, that way we can set the variable to 0 without worrying that later we will be moving the camera downwards.
+
+                        // Because I'm setting the local rotation of the camera in the Look() function, it makes it kind of annoying to try and add/remove things to and from the rotation.
+                        // Instead I will add the AdditionalCameraRecoilX into xRotation and then set AdditionalCameraRecoilX to 0. This way I don't have to directly touch the cameras local rotation
+                        // here.
+
+                        xRotation -= m_AdditionCameraRecoilX;
+                        m_AdditionCameraRecoilX = 0;
+                    }
+                    else
+                    { 
+                        // Otherwise, they are aiming higher than when they started, so we'll bring the gun down to where it was.
+                        m_AdditionCameraRecoilX -= 1 * 0.1f;
+                        m_AdditionCameraRecoilX = Mathf.Clamp(m_AdditionCameraRecoilX, 0, 85f);
+                    }
+
+                    // Reset held counter happens regardless.
+                    m_HeldCounter = 0.0f;
+                }
             }
+
+
         }
 
         IsGrounded = CheckGrounded();
@@ -492,10 +520,20 @@ public class HostController : InputController
         Vector2 modifiedCurrent = new Vector2(m_Camera.transform.forward.y, 1);
         Vector2 modifiedPrevious = new Vector2(m_PreviousCameraRotation.y, 1);
         
+        // Debug Lines:
+        // When the dot product is close to 1, the two lines will be GREEN.
+        // When the current forward vector is below the previous forward vector, the two lines will be PURPLE.
+        // When the current forward vector is above the previous forward vector, the two lines will be YELLOW.
+
         float dot = Vector2.Dot(modifiedCurrent.normalized, modifiedPrevious.normalized);
 
-        if (dot < 0.9999f || dot > 1.0001f)
-            Gizmos.color = Color.yellow;
+        if (dot < 0.9999f)
+        {
+            if (m_PreviousCameraRotation.y > m_CurrentCamRot.y)
+                Gizmos.color = Color.magenta;
+            else
+                Gizmos.color = Color.yellow;
+        }
         else
             Gizmos.color = Color.green;
 

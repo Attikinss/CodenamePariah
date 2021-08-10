@@ -3963,10 +3963,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 101379942, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_FireRate
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 696020109, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_HealthText
       value: 
       objectReference: {fileID: 1486646502}
+    - target: {fileID: 1313509438, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_FireRate
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8559930378344312181, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_Name
       value: Player

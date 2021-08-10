@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// make serializable, make variable in Weapon script that contains this information.
 public class WeaponConfiguration : MonoBehaviour
 {
     [Header("Weapon Controls")]
@@ -9,6 +10,10 @@ public class WeaponConfiguration : MonoBehaviour
     [Header("Transform References")]
     public Transform m_Gun;
     public Transform m_ScopeCentre;
+
+    [Header("General")]
+    public float m_FireRate = 0.5f;
+    public float m_BulletForce = 5;
 
     [Header("ADS")]
     public float m_GunAimZPos = 0.5f;

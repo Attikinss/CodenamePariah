@@ -56,9 +56,9 @@ public class HostController : InputController
     public WeaponConfiguration m_WeaponConfig1;
     public WeaponConfiguration m_WeaponConfig2;
    
-    [Header("Temporary Weapon 1 Controls")]
-    public float m_FireRate = 0.5f;
-    public float m_BulletForce = 5;
+    //[Header("Temporary Weapon 1 Controls")]
+    //public float m_FireRate = 0.5f;
+    //public float m_BulletForce = 5;
 
     // ================== BOOKKEEPING STUFF ================== //
 
@@ -167,7 +167,8 @@ public class HostController : InputController
         if (m_hasFired)
         {
             m_fireCounter += Time.deltaTime;
-            if (m_fireCounter >= m_FireRate)
+            //m_fireCounter = Time.time + (60.0f / GetCurrentWeaponConfig().m_FireRate);
+            if (m_fireCounter >= 60.0f / GetCurrentWeaponConfig().m_FireRate)
             {
                 m_hasFired = false;
                 m_fireCounter = 0;
@@ -392,7 +393,7 @@ public class HostController : InputController
                     // Adding a force to the hit object.
                     if (hit.rigidbody != null)
                     {
-                        hit.rigidbody.AddForce(m_Camera.transform.forward * m_BulletForce, ForceMode.Impulse);
+                        hit.rigidbody.AddForce(m_Camera.transform.forward * GetCurrentWeaponConfig().m_BulletForce, ForceMode.Impulse);
                     }
                 }
             }

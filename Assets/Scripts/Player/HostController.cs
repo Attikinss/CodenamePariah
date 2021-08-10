@@ -167,7 +167,8 @@ public class HostController : InputController
         if (m_hasFired)
         {
             m_fireCounter += Time.deltaTime;
-            if (m_fireCounter >= GetCurrentWeaponConfig().m_FireRate)
+            //m_fireCounter = Time.time + (60.0f / GetCurrentWeaponConfig().m_FireRate);
+            if (m_fireCounter >= 60.0f / GetCurrentWeaponConfig().m_FireRate)
             {
                 m_hasFired = false;
                 m_fireCounter = 0;

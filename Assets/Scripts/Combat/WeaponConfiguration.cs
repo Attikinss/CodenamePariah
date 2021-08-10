@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// make serializable, make variable in Weapon script that contains this information.
 public class WeaponConfiguration : MonoBehaviour
 {
     [Header("Weapon Controls")]

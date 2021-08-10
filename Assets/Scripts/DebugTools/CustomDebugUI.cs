@@ -48,6 +48,18 @@ public class CustomDebugUI : MonoBehaviour
     public Text m_WeaponRecoilRotText;
     public Text m_WeaponRecoilTransfText;
 
+    public Text m_FireHeldCounterText;
+
+
+    [Header("Recoil Patterns")]
+    public Text m_VerticalCameraRecoilText;
+    public Text m_HorizontalCameraRecoilText;
+
+    public Text m_PreviousCamXRotText;
+    public Text m_CurrentCamXRotText;
+
+    public Text m_CameraRecoilDotProductText;
+
     //public Text m_ShootHeldText;
     //public Text m_ShootHeldCounterText;
     //public Text m_VertRecoilText;
@@ -99,8 +111,26 @@ public class CustomDebugUI : MonoBehaviour
 
         GraphicalDebugger.Assign<Vector3>(m_playerController.lookInput, "LookInput", m_LookInputText);
 
+        // Because there are multiple weapons, I have to get the current weapons configuration.
+        WeaponConfiguration weaponConfig = m_playerController.GetCurrentWeaponConfig();
+
         GraphicalDebugger.Assign<Vector3>(m_playerController.m_WeaponRecoilRot, "WeaponRecoilRot", m_WeaponRecoilRotText);
-        GraphicalDebugger.Assign<Vector3>(m_playerController.m_WeaponRecoilTransform, "WeaponRecoilTransf", m_WeaponRecoilTransfText);
+        GraphicalDebugger.Assign<Vector3>(weaponConfig.m_WeaponRecoilTransform, "WeaponRecoilTransf", m_WeaponRecoilTransfText);
+
+        GraphicalDebugger.Assign<float>(m_playerController.m_AdditionCameraRecoilX, "VerticalCameraRecoil", m_VerticalCameraRecoilText);
+        GraphicalDebugger.Assign<float>(m_playerController.m_AdditionalCameraRecoilY, "HorizontalCameraRecoil", m_HorizontalCameraRecoilText);
+
+        GraphicalDebugger.Assign<float>(m_playerController.m_HeldCounter, "FireHeldCounter", m_FireHeldCounterText);
+
+        GraphicalDebugger.Assign<float>(m_playerController.m_CurrentCamRot.x, "CurrentCamXRot", m_CurrentCamXRotText);
+        GraphicalDebugger.Assign<float>(m_playerController.m_PreviousCameraRotation.x, "PreviousCamXRot", m_PreviousCamXRotText);
+
+        // I know it's super inefficient to recalculate the dot product here but this wont be in the builds of the game so I think its okay, plus it saved me like 1 minute.
+        Vector3 modifiedCurrent = new Vector2(m_playerController.m_CurrentCamRot.y, 1);
+        Vector3 modifiedPrevious = new Vector2(m_playerController.m_PreviousCameraRotation.y, 1);
+        float dot = Vector2.Dot(modifiedCurrent.normalized, modifiedPrevious.normalized);
+        GraphicalDebugger.Assign<float>(dot, "CameraDotProduct", m_CameraRecoilDotProductText);
+
 
         //GraphicalDebugger.Assign<string>(m_AbilityController.m_Ability1.IsActive().ToString(), "Ability1Active", m_Ability1ActiveText);
         //GraphicalDebugger.Assign<float>(m_AbilityController.m_Ability1.GetCounter(), "Ability1Counter", m_Ability1CounterText);

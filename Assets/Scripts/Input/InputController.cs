@@ -21,6 +21,9 @@ public abstract class InputController : MonoBehaviour
     public virtual void OnDash(InputAction.CallbackContext value) { }
     public abstract void OnMovement(InputAction.CallbackContext value);
     public abstract void OnLook(InputAction.CallbackContext value);
+    public abstract void OnJump(InputAction.CallbackContext value);
+    public abstract void OnSlide(InputAction.CallbackContext value);
+    public abstract void OnPossess(InputAction.CallbackContext value);
 
     public void ControllerRumbleOnce(float stength)
     {

@@ -49,6 +49,22 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Raise"",
+                    ""type"": ""Button"",
+                    ""id"": ""bad2e9ad-e017-4bf7-8cb4-218300a5a17e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Lower"",
+                    ""type"": ""Button"",
+                    ""id"": ""16b5e56d-e5d9-43c7-b959-cb11a8cb8555"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -200,7 +216,7 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""id"": ""f32dccea-9ed7-4dc0-aa9a-3b620162022d"",
                     ""path"": ""2DVector(mode=2)"",
                     ""interactions"": """",
-                    ""processors"": ""ScaleVector2(x=3,y=3)"",
+                    ""processors"": """",
                     ""groups"": ""Controller"",
                     ""action"": ""Look"",
                     ""isComposite"": true,
@@ -255,7 +271,7 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""id"": ""5e9199ff-0f85-4845-ad15-d91b7d2195a2"",
                     ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""ScaleVector2(x=0.5,y=0.5),ScaleVector2(x=0.1,y=0.1)"",
                     ""groups"": ""KBM"",
                     ""action"": ""Look"",
                     ""isComposite"": false,
@@ -269,6 +285,50 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Controller"",
                     ""action"": ""Possession"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2ab8cc32-a24b-47f7-9384-d894f3b28e14"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Controller"",
+                    ""action"": ""Raise"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9ebf7aa5-030d-4d2c-a031-85cc4e6e69cf"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Raise"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""eb12ab1b-acbe-4082-8f3f-112500243de9"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Controller"",
+                    ""action"": ""Lower"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""03ae98bd-2f7f-4e08-9609-5fffbee8a37b"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Lower"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -696,6 +756,8 @@ public class @InputMap : IInputActionCollection, IDisposable
         m_Pariah_Look = m_Pariah.FindAction("Look", throwIfNotFound: true);
         m_Pariah_Dash = m_Pariah.FindAction("Dash", throwIfNotFound: true);
         m_Pariah_Possession = m_Pariah.FindAction("Possession", throwIfNotFound: true);
+        m_Pariah_Raise = m_Pariah.FindAction("Raise", throwIfNotFound: true);
+        m_Pariah_Lower = m_Pariah.FindAction("Lower", throwIfNotFound: true);
         // Host
         m_Host = asset.FindActionMap("Host", throwIfNotFound: true);
         m_Host_Movement = m_Host.FindAction("Movement", throwIfNotFound: true);
@@ -759,6 +821,8 @@ public class @InputMap : IInputActionCollection, IDisposable
     private readonly InputAction m_Pariah_Look;
     private readonly InputAction m_Pariah_Dash;
     private readonly InputAction m_Pariah_Possession;
+    private readonly InputAction m_Pariah_Raise;
+    private readonly InputAction m_Pariah_Lower;
     public struct PariahActions
     {
         private @InputMap m_Wrapper;
@@ -767,6 +831,8 @@ public class @InputMap : IInputActionCollection, IDisposable
         public InputAction @Look => m_Wrapper.m_Pariah_Look;
         public InputAction @Dash => m_Wrapper.m_Pariah_Dash;
         public InputAction @Possession => m_Wrapper.m_Pariah_Possession;
+        public InputAction @Raise => m_Wrapper.m_Pariah_Raise;
+        public InputAction @Lower => m_Wrapper.m_Pariah_Lower;
         public InputActionMap Get() { return m_Wrapper.m_Pariah; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -788,6 +854,12 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Possession.started -= m_Wrapper.m_PariahActionsCallbackInterface.OnPossession;
                 @Possession.performed -= m_Wrapper.m_PariahActionsCallbackInterface.OnPossession;
                 @Possession.canceled -= m_Wrapper.m_PariahActionsCallbackInterface.OnPossession;
+                @Raise.started -= m_Wrapper.m_PariahActionsCallbackInterface.OnRaise;
+                @Raise.performed -= m_Wrapper.m_PariahActionsCallbackInterface.OnRaise;
+                @Raise.canceled -= m_Wrapper.m_PariahActionsCallbackInterface.OnRaise;
+                @Lower.started -= m_Wrapper.m_PariahActionsCallbackInterface.OnLower;
+                @Lower.performed -= m_Wrapper.m_PariahActionsCallbackInterface.OnLower;
+                @Lower.canceled -= m_Wrapper.m_PariahActionsCallbackInterface.OnLower;
             }
             m_Wrapper.m_PariahActionsCallbackInterface = instance;
             if (instance != null)
@@ -804,6 +876,12 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Possession.started += instance.OnPossession;
                 @Possession.performed += instance.OnPossession;
                 @Possession.canceled += instance.OnPossession;
+                @Raise.started += instance.OnRaise;
+                @Raise.performed += instance.OnRaise;
+                @Raise.canceled += instance.OnRaise;
+                @Lower.started += instance.OnLower;
+                @Lower.performed += instance.OnLower;
+                @Lower.canceled += instance.OnLower;
             }
         }
     }
@@ -921,6 +999,8 @@ public class @InputMap : IInputActionCollection, IDisposable
         void OnLook(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
         void OnPossession(InputAction.CallbackContext context);
+        void OnRaise(InputAction.CallbackContext context);
+        void OnLower(InputAction.CallbackContext context);
     }
     public interface IHostActions
     {

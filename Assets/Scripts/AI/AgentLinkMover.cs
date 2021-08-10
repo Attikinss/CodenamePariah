@@ -26,8 +26,8 @@ public class AgentLinkMover : MonoBehaviour
         {
             if (agent.isOnOffMeshLink)
             {
-                if (Physics.Raycast(transform.position + transform.forward, Vector3.down, out RaycastHit info))
-                    jumpHeight = Mathf.Clamp(info.distance / 2.0f, 0.5f, 5.0f);
+                if (Physics.Raycast(transform.position + transform.forward * 2.5f, Vector3.down, out RaycastHit info))
+                    jumpHeight = Mathf.Clamp(info.distance / 2.0f, 0.5f, 10.0f);
 
                 if (m_Method == OffMeshLinkMoveMethod.NormalSpeed)
                     yield return StartCoroutine(NormalSpeed(agent));

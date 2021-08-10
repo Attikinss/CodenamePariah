@@ -10,6 +10,10 @@ namespace WhiteWillow
         public BehaviourTree InputTree;
         public bool m_UserOverride = false;
 
+        [ReadOnly]
+        [SerializeField]
+        private bool m_Possessed = false;
+
         private BehaviourTree m_RuntimeTree;
         private NavMeshAgent m_NavAgent;
 
@@ -40,7 +44,10 @@ namespace WhiteWillow
         private void Update()
         {
             if (Mouse.current.rightButton.wasPressedThisFrame)
+            {
                 m_UserOverride = !m_UserOverride;
+                m_NavAgent.SetDestination(transform.position);
+            }
 
             if (m_UserOverride)
             {
@@ -76,5 +83,15 @@ namespace WhiteWillow
         public bool MovingToPosition() => m_NavAgent.destination == m_MovePosition && transform.position != m_LastPosition;
 
         public bool AtPosition() => m_NavAgent.remainingDistance <= m_NavAgent.stoppingDistance;
+
+        public void Possess()
+        {
+
+        }
+
+        public void Reliquinsh()
+        {
+
+        }
     }
 }

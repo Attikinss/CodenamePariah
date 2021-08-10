@@ -10,6 +10,10 @@ public class WeaponConfiguration : MonoBehaviour
     public Transform m_Gun;
     public Transform m_ScopeCentre;
 
+    [Header("General")]
+    public float m_FireRate = 0.5f;
+    public float m_BulletForce = 5;
+
     [Header("ADS")]
     public float m_GunAimZPos = 0.5f;
     public float m_GunAimHeight = 0.5f;

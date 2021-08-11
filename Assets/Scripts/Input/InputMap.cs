@@ -280,7 +280,7 @@ public class @InputMap : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""34b954f0-161d-4dec-960b-dfa789a39853"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Controller"",
@@ -398,6 +398,30 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""e119e84c-d294-4a5a-afb7-7cf29ab71709"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Slide"",
+                    ""type"": ""Button"",
+                    ""id"": ""93a55832-59b9-416a-87c6-b8f78d496127"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Select1"",
+                    ""type"": ""Button"",
+                    ""id"": ""0364cb4f-20c1-4e50-829a-718426a89f84"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Select2"",
+                    ""type"": ""Button"",
+                    ""id"": ""1a369283-ec17-47f9-8107-662f60fdea79"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -682,7 +706,7 @@ public class @InputMap : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""a2b87edc-4e45-466f-bd41-9b228d93808f"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Controller"",
@@ -709,6 +733,50 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Controller"",
                     ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ddb31c03-aafc-41dc-9146-b181bb57af18"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Slide"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c52b96ba-281a-4f8c-be1d-22fa59d42267"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Controller"",
+                    ""action"": ""Slide"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ef6720c9-a014-4fa8-ba5c-a31f7fc09217"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Select1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cbd2250e-468b-4b91-9ca4-2f5f58d84d64"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Select2"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -768,6 +836,9 @@ public class @InputMap : IInputActionCollection, IDisposable
         m_Host_ADS = m_Host.FindAction("ADS", throwIfNotFound: true);
         m_Host_Fire = m_Host.FindAction("Fire", throwIfNotFound: true);
         m_Host_Jump = m_Host.FindAction("Jump", throwIfNotFound: true);
+        m_Host_Slide = m_Host.FindAction("Slide", throwIfNotFound: true);
+        m_Host_Select1 = m_Host.FindAction("Select1", throwIfNotFound: true);
+        m_Host_Select2 = m_Host.FindAction("Select2", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -898,6 +969,9 @@ public class @InputMap : IInputActionCollection, IDisposable
     private readonly InputAction m_Host_ADS;
     private readonly InputAction m_Host_Fire;
     private readonly InputAction m_Host_Jump;
+    private readonly InputAction m_Host_Slide;
+    private readonly InputAction m_Host_Select1;
+    private readonly InputAction m_Host_Select2;
     public struct HostActions
     {
         private @InputMap m_Wrapper;
@@ -910,6 +984,9 @@ public class @InputMap : IInputActionCollection, IDisposable
         public InputAction @ADS => m_Wrapper.m_Host_ADS;
         public InputAction @Fire => m_Wrapper.m_Host_Fire;
         public InputAction @Jump => m_Wrapper.m_Host_Jump;
+        public InputAction @Slide => m_Wrapper.m_Host_Slide;
+        public InputAction @Select1 => m_Wrapper.m_Host_Select1;
+        public InputAction @Select2 => m_Wrapper.m_Host_Select2;
         public InputActionMap Get() { return m_Wrapper.m_Host; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -943,6 +1020,15 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Jump.started -= m_Wrapper.m_HostActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnJump;
+                @Slide.started -= m_Wrapper.m_HostActionsCallbackInterface.OnSlide;
+                @Slide.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnSlide;
+                @Slide.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnSlide;
+                @Select1.started -= m_Wrapper.m_HostActionsCallbackInterface.OnSelect1;
+                @Select1.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnSelect1;
+                @Select1.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnSelect1;
+                @Select2.started -= m_Wrapper.m_HostActionsCallbackInterface.OnSelect2;
+                @Select2.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnSelect2;
+                @Select2.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnSelect2;
             }
             m_Wrapper.m_HostActionsCallbackInterface = instance;
             if (instance != null)
@@ -971,6 +1057,15 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @Slide.started += instance.OnSlide;
+                @Slide.performed += instance.OnSlide;
+                @Slide.canceled += instance.OnSlide;
+                @Select1.started += instance.OnSelect1;
+                @Select1.performed += instance.OnSelect1;
+                @Select1.canceled += instance.OnSelect1;
+                @Select2.started += instance.OnSelect2;
+                @Select2.performed += instance.OnSelect2;
+                @Select2.canceled += instance.OnSelect2;
             }
         }
     }
@@ -1012,5 +1107,8 @@ public class @InputMap : IInputActionCollection, IDisposable
         void OnADS(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnSlide(InputAction.CallbackContext context);
+        void OnSelect1(InputAction.CallbackContext context);
+        void OnSelect2(InputAction.CallbackContext context);
     }
 }

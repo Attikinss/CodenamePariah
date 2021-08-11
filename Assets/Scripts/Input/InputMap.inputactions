@@ -267,7 +267,7 @@
                 {
                     "name": "",
                     "id": "34b954f0-161d-4dec-960b-dfa789a39853",
-                    "path": "<Gamepad>/buttonNorth",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "Controller",
@@ -385,6 +385,30 @@
                     "name": "Jump",
                     "type": "Button",
                     "id": "e119e84c-d294-4a5a-afb7-7cf29ab71709",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Slide",
+                    "type": "Button",
+                    "id": "93a55832-59b9-416a-87c6-b8f78d496127",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Select1",
+                    "type": "Button",
+                    "id": "0364cb4f-20c1-4e50-829a-718426a89f84",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Select2",
+                    "type": "Button",
+                    "id": "1a369283-ec17-47f9-8107-662f60fdea79",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -669,7 +693,7 @@
                 {
                     "name": "",
                     "id": "a2b87edc-4e45-466f-bd41-9b228d93808f",
-                    "path": "<Gamepad>/buttonNorth",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "Controller",
@@ -696,6 +720,50 @@
                     "processors": "",
                     "groups": "Controller",
                     "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ddb31c03-aafc-41dc-9146-b181bb57af18",
+                    "path": "<Keyboard>/leftCtrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KBM",
+                    "action": "Slide",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c52b96ba-281a-4f8c-be1d-22fa59d42267",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Controller",
+                    "action": "Slide",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ef6720c9-a014-4fa8-ba5c-a31f7fc09217",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KBM",
+                    "action": "Select1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cbd2250e-468b-4b91-9ca4-2f5f58d84d64",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KBM",
+                    "action": "Select2",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

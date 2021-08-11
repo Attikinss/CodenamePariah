@@ -8,7 +8,6 @@ namespace WhiteWillow
     public class Agent : MonoBehaviour
     {
         public BehaviourTree InputTree;
-        public bool m_UserOverride = false;
 
         [ReadOnly]
         [SerializeField]
@@ -28,6 +27,15 @@ namespace WhiteWillow
             m_LastPosition = transform.position;
         }
 
+        private void Update()
+        {
+            if (!m_Possessed)
+            {
+                m_RuntimeTree?.Tick();
+                m_LastPosition = transform.position;
+            }
+        }
+
         public bool FacingTarget(Transform target)
         {
             return Vector3.Dot(transform.forward, target.position - transform.position) < 10.0f;
@@ -41,30 +49,6 @@ namespace WhiteWillow
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime);
         }
 
-        private void Update()
-        {
-            if (Mouse.current.rightButton.wasPressedThisFrame)
-            {
-                m_UserOverride = !m_UserOverride;
-                m_NavAgent.SetDestination(transform.position);
-            }
-
-            if (m_UserOverride)
-            {
-                if (Mouse.current.leftButton.wasPressedThisFrame)
-                {
-                    var ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-                    if (Physics.Raycast(ray.origin, ray.direction, out RaycastHit hitInfo))
-                        m_NavAgent.SetDestination(hitInfo.point);
-                }
-            }
-            else
-            {
-                m_RuntimeTree?.Tick();
-                m_LastPosition = transform.position;
-            }
-        }
-
         public void MoveToPosition()
         {
             if (m_MovePosition != Vector3.positiveInfinity && m_MovePosition != Vector3.negativeInfinity)
@@ -76,22 +60,20 @@ namespace WhiteWillow
         public bool SetDestination(Vector3 destination)
         {
             m_MovePosition = destination;
-            bool onNavMesh = NavMesh.SamplePosition(m_MovePosition, out NavMeshHit hitInfo, 2.0f, NavMesh.AllAreas);
-            return onNavMesh;
+            return NavMesh.SamplePosition(m_MovePosition, out NavMeshHit hitInfo, 1.0f, NavMesh.AllAreas);
         }
 
         public bool MovingToPosition() => m_NavAgent.destination == m_MovePosition && transform.position != m_LastPosition;
-
         public bool AtPosition() => m_NavAgent.remainingDistance <= m_NavAgent.stoppingDistance;
 
         public void Possess()
         {
-
+            m_Possessed = true;
         }
 
         public void Reliquinsh()
         {
-
+            m_Possessed = false;
         }
     }
 }

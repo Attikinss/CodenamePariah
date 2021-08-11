@@ -298,7 +298,7 @@ namespace WhiteWillow.Editor
                     }
 
                     // Delete any edges and disconnect its nodes
-                    var edge = element as EdgeView;
+                    var edge = element as Edge;
                     if (edge != null)
                     {
                         var inputNodeType = (edge?.output as EditorPort)?.Owner.GetType();

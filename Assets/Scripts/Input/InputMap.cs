@@ -271,7 +271,7 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""id"": ""5e9199ff-0f85-4845-ad15-d91b7d2195a2"",
                     ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
-                    ""processors"": ""ScaleVector2(x=0.5,y=0.5),ScaleVector2(x=0.1,y=0.1)"",
+                    ""processors"": """",
                     ""groups"": ""KBM"",
                     ""action"": ""Look"",
                     ""isComposite"": false,

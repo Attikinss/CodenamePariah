@@ -241,7 +241,7 @@ namespace WhiteWillow.Editor
 
         /// <summary>Handles the deletion/removal of the node from the graph view.</summary>
         /// <returns>Any edges that need to be deleted/remove.</returns>
-        public abstract IEnumerable<EdgeView> OnDelete();
+        public abstract IEnumerable<Edge> OnDelete();
 
         /// <summary>Adds the node to the graph view.</summary>
         public void AddToGraphView() => m_GraphView.AddElement(this);
@@ -267,20 +267,20 @@ namespace WhiteWillow.Editor
 
         public void Highlight()
         {
-            // Highlight borders
-            m_NodeSelectionBorder.style.borderLeftColor = ActiveColour;
-            m_NodeSelectionBorder.style.borderRightColor = ActiveColour;
-            m_NodeSelectionBorder.style.borderTopColor = ActiveColour;
-            m_NodeSelectionBorder.style.borderBottomColor = ActiveColour;
-            
-            m_NodeBorder.style.borderLeftColor = ActiveColour;
-            m_NodeBorder.style.borderRightColor = ActiveColour;
-            m_NodeBorder.style.borderTopColor = ActiveColour;
-            m_NodeBorder.style.borderBottomColor = ActiveColour;
-            m_NodeBorder.style.borderTopWidth = 2f;
-            m_NodeBorder.style.borderRightWidth = 2f;
-            m_NodeBorder.style.borderLeftWidth = 2f;
-            m_NodeBorder.style.borderBottomWidth = 2f;
+            //// Highlight borders
+            //_NodeSelectionBorder.style.borderLeftColor = ActiveColour;
+            //_NodeSelectionBorder.style.borderRightColor = ActiveColour;
+            //_NodeSelectionBorder.style.borderTopColor = ActiveColour;
+            //_NodeSelectionBorder.style.borderBottomColor = ActiveColour;
+            //
+            //_NodeBorder.style.borderLeftColor = ActiveColour;
+            //_NodeBorder.style.borderRightColor = ActiveColour;
+            //_NodeBorder.style.borderTopColor = ActiveColour;
+            //_NodeBorder.style.borderBottomColor = ActiveColour;
+            //_NodeBorder.style.borderTopWidth = 2f;
+            //_NodeBorder.style.borderRightWidth = 2f;
+            //_NodeBorder.style.borderLeftWidth = 2f;
+            //_NodeBorder.style.borderBottomWidth = 2f;
             
             if (InputPort != null)
             {
@@ -294,8 +294,7 @@ namespace WhiteWillow.Editor
                 OutputPort.SetColour(ActiveColour);
             }
             
-            EdgeView edge = InputPort?.connections.FirstOrDefault() as EdgeView;
-            edge?.Highlight();
+            Edge edge = InputPort?.connections.FirstOrDefault();
             if (edge != null)
             {
                 edge.edgeControl.inputColor = ActiveColour;
@@ -335,8 +334,7 @@ namespace WhiteWillow.Editor
             //    OutputPort.SetColour(InactivePortColour);
             //}
             //
-            //EdgeView edge = InputPort?.connections.FirstOrDefault() as EdgeView;
-            //edge?.Unhighlight();
+            //Edge edge = InputPort?.connections.FirstOrDefault();
             //if (edge != null)
             //{
             //    edge.edgeControl.inputColor = InactivePortColour;

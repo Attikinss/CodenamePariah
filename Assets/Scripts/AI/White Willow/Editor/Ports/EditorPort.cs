@@ -17,9 +17,8 @@ namespace WhiteWillow.Editor
         {
             Owner = portDescription.Owner;
             Description = portDescription;
-            //styleSheets.Add(Resources.Load<StyleSheet>("Styles/NodeView"));
 
-            m_EdgeConnector = new EdgeConnector<EdgeView>(Owner.GraphView.EdgeConnectorListener);
+            m_EdgeConnector = new EdgeConnector<Edge>(Owner.GraphView.EdgeConnectorListener);
 
             this.AddManipulator(m_EdgeConnector);
         }

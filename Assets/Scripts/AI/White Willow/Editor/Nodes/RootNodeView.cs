@@ -29,7 +29,7 @@ namespace WhiteWillow.Editor
         }
 
         /// <summary>Handles the deletion/removal of the node from the graph view.</summary>
-        public override IEnumerable<EdgeView> OnDelete()
+        public override IEnumerable<Edge> OnDelete()
         {
             Child?.SetParent(null);
             Child = null;

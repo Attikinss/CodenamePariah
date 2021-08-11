@@ -52,7 +52,7 @@ namespace WhiteWillow.Editor
             Node.GraphDimensions = Position;
         }
 
-        public override IEnumerable<EdgeView> OnDelete()
+        public override IEnumerable<Edge> OnDelete()
         {
             // Remove connection between this node and child node
             if (Parent != null)

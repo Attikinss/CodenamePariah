@@ -37,7 +37,7 @@ namespace WhiteWillow.Editor
             Node.GraphDimensions = Position;
         }
 
-        public override IEnumerable<EdgeView> OnDelete()
+        public override IEnumerable<Edge> OnDelete()
         {
             // Remove connection between this node and child node
             Child?.SetParent(null);
@@ -63,13 +63,7 @@ namespace WhiteWillow.Editor
             Node.Owner?.DeleteNode(Node);
 
             // Return all edges needing removal from the graph view.
-            InputPort.connections.Concat(OutputPort.connections);
-            IEnumerable<EdgeView> connections = null;
-            
-            foreach (var edge in InputPort.connections)
-                connections.Append(edge as EdgeView);
-
-            return connections;
+            return InputPort.connections.Concat(OutputPort.connections); 
         }
 
         public override void SetParent(NodeView node)

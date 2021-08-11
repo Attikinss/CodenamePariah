@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 namespace WhiteWillow
 {
     [RequireComponent(typeof(NavMeshAgent))]
+    [RequireComponent(typeof(HostController))]
     public class Agent : MonoBehaviour
     {
         public BehaviourTree InputTree;
@@ -15,6 +16,10 @@ namespace WhiteWillow
 
         private BehaviourTree m_RuntimeTree;
         private NavMeshAgent m_NavAgent;
+        private HostController m_HostController;
+
+        [SerializeField]
+        private GameObject m_Pariah;
 
         private Vector3 m_MovePosition = Vector3.positiveInfinity;
         private Vector3 m_LastPosition;
@@ -24,6 +29,7 @@ namespace WhiteWillow
             m_RuntimeTree = InputTree?.Clone(gameObject.name);
             m_RuntimeTree?.SetAgent(this);
             m_NavAgent = GetComponent<NavMeshAgent>();
+            m_HostController = GetComponent<HostController>();
             m_LastPosition = transform.position;
         }
 
@@ -32,8 +38,13 @@ namespace WhiteWillow
             if (!m_Possessed)
             {
                 m_RuntimeTree?.Tick();
-                m_LastPosition = transform.position;
+
+                Vector3 faceFirection = m_NavAgent.velocity;
+                faceFirection.y = 0.0f;
+                m_HostController.m_Orientation.rotation = Quaternion.Lerp(m_HostController.m_Orientation.rotation, Quaternion.LookRotation(faceFirection.normalized, Vector3.up), 0.02f);
             }
+
+            m_LastPosition = transform.position;
         }
 
         public bool FacingTarget(Transform target)
@@ -69,11 +80,18 @@ namespace WhiteWillow
         public void Possess()
         {
             m_Possessed = true;
+            m_NavAgent.SetDestination(transform.position);
+            m_NavAgent.enabled = false;
+            m_Pariah?.GetComponent<PariahController>().Disable();
+            m_HostController?.Enable();
         }
 
         public void Reliquinsh()
         {
             m_Possessed = false;
+            m_NavAgent.enabled = true;
+            m_HostController?.Disable();
+            m_Pariah?.GetComponent<PariahController>().Enable();
         }
     }
 }

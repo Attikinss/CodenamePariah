@@ -18,6 +18,12 @@ public abstract class InputController : MonoBehaviour
     [SerializeField]
     private PlayerInput m_PlayerInput;
 
+    [SerializeField]
+    protected bool m_Active = false;
+
+    public abstract void Enable();
+    public abstract void Disable();
+
     public virtual void OnDash(InputAction.CallbackContext value) { }
     public abstract void OnMovement(InputAction.CallbackContext value);
     public abstract void OnLook(InputAction.CallbackContext value);

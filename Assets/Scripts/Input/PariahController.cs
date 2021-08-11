@@ -55,11 +55,50 @@ public class PariahController : InputController
     [SerializeField]
     private bool m_Possessing = false;
 
+    [ReadOnly]
+    [SerializeField]
+    private Agent m_CurrentPossessed;
+
     private Rigidbody m_Rigidbody;
 
     private void Awake() => m_Rigidbody = GetComponent<Rigidbody>();
-    private void FixedUpdate() => Move();
-    private void LateUpdate() => Look();
+
+    private void FixedUpdate()
+    {
+        if (m_Active)
+            Move();
+        else
+        {
+            if (m_CurrentPossessed != null)
+                transform.position = m_CurrentPossessed.transform.position + Vector3.up * 1.75f;
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (m_Active)
+            Look();
+        else
+        {
+
+        }
+    }
+
+    public override void Enable()
+    {
+        GetComponent<PlayerInput>().enabled = true;
+        GetComponent<Collider>().enabled = true;
+        m_Active = true;
+        m_Camera.enabled = true;
+    }
+
+    public override void Disable()
+    {
+        GetComponent<PlayerInput>().enabled = false;
+        GetComponent<Collider>().enabled = false;
+        m_Active = false;
+        m_Camera.enabled = false;
+    }
 
     public override void OnLook(InputAction.CallbackContext value)
     {
@@ -103,10 +142,7 @@ public class PariahController : InputController
             if (Physics.Raycast(m_Camera.transform.position, m_Camera.transform.forward, out RaycastHit hitInfo, m_DashDistance))
             {
                 if (hitInfo.transform.TryGetComponent(out Agent agent))
-                {
                     StartCoroutine(Possess(agent));
-                    GetComponent<Collider>().enabled = false;
-                }
             }
         }
     }
@@ -126,7 +162,7 @@ public class PariahController : InputController
     {
         CameraTilt();
 
-        m_Rotation += m_LookInput * m_LookSensitivity;
+        m_Rotation += m_LookInput * m_LookSensitivity * Time.deltaTime;
         m_Rotation.y = Mathf.Clamp(m_Rotation.y, -90.0f, 90.0f);
         transform.rotation = Quaternion.Euler(-m_Rotation.y, m_Rotation.x, 0.0f);
     }
@@ -173,6 +209,7 @@ public class PariahController : InputController
         }
 
         target.Possess();
+        m_CurrentPossessed = target;
         m_Possessing = false;
     }
 }

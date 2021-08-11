@@ -55,10 +55,7 @@ public class HostController : InputController
     // These are references to the weapons that the controller has.
     public WeaponConfiguration m_WeaponConfig1;
     public WeaponConfiguration m_WeaponConfig2;
-   
-    //[Header("Temporary Weapon 1 Controls")]
-    //public float m_FireRate = 0.5f;
-    //public float m_BulletForce = 5;
+  
 
     // ================== BOOKKEEPING STUFF ================== //
 
@@ -105,17 +102,6 @@ public class HostController : InputController
 
     float desiredX = 0;
 
-
-    // Storing there original positions and rotations for lerping purposes. Here I'm limiting us to two weapons however this can be replaced.
-    [HideInInspector]
-    public Vector3 m_GunOriginalPos1;
-    [HideInInspector]
-    public Vector3 m_GunOriginalPos2;
-    [HideInInspector]
-    public Quaternion m_GunOriginalRot;
-    [HideInInspector]
-    public Quaternion m_GunOriginalRot2;
-
     private bool m_IsFiring = false;
 
     [HideInInspector]
@@ -128,14 +114,14 @@ public class HostController : InputController
 
 
     // Exposed variables for debugging.
-    [HideInInspector]
-    public float m_CurrentMoveSpeed { get; private set; }
-    [HideInInspector]
-    public bool m_IsMoving { get; private set; }
+    [ReadOnly]
+    public float m_CurrentMoveSpeed;
+    [ReadOnly]
+    public bool m_IsMoving;
 
     
 
-    // ========================== TEMPORARY WEAPON SWAY ========================== //
+    // ========================== TEMPORARY WEAPON BOBBING ========================== //
     // This weapon sway stuff is here for now since we haven't got animations in yet.
     // It will be replaced soon.
 
@@ -150,11 +136,6 @@ public class HostController : InputController
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
-
-        m_GunOriginalPos1 = m_Weapon1.localPosition;
-        m_GunOriginalRot = transform.localRotation; // I don't remember why I store this, I think the original rotation will always be 0, 0, 0. I'll leave it here for now but will probably remove later.
-
-        m_GunOriginalPos2 = m_Weapon2.localPosition;
     }
 
     private void LateUpdate()

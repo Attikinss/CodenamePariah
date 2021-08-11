@@ -63,7 +63,7 @@ namespace WhiteWillow.Editor
             Node.Owner?.DeleteNode(Node);
 
             // Return all edges needing removal from the graph view.
-            return InputPort.connections.Concat(OutputPort.connections);
+            return InputPort.connections.Concat(OutputPort.connections); 
         }
 
         public override void SetParent(NodeView node)

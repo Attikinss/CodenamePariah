@@ -13,7 +13,7 @@ namespace WhiteWillow.Editor
         /// <summary>The port details.</summary>
         public PortDescription Description { get; private set; }
 
-        protected EditorPort(PortDescription portDescription) : base(Orientation.Horizontal, portDescription.Direction, portDescription.Capacity, typeof(float))
+        protected EditorPort(PortDescription portDescription) : base(Orientation.Vertical, portDescription.Direction, portDescription.Capacity, typeof(float))
         {
             Owner = portDescription.Owner;
             Description = portDescription;
@@ -50,14 +50,14 @@ namespace WhiteWillow.Editor
         public void SetColour(Color colour)
         {
             //portColor = colour;
-            m_ConnectorBox.style.borderLeftColor = colour;
-            m_ConnectorBox.style.borderRightColor = colour;
-            m_ConnectorBox.style.borderTopColor = colour;
-            m_ConnectorBox.style.borderBottomColor = colour;
-            m_ConnectorBox.MarkDirtyRepaint();
-            
-            m_ConnectorBoxCap.style.backgroundColor = colour;
-            m_ConnectorBoxCap.MarkDirtyRepaint();
+            //m_ConnectorBox.style.borderLeftColor = colour;
+            //m_ConnectorBox.style.borderRightColor = colour;
+            //m_ConnectorBox.style.borderTopColor = colour;
+            //m_ConnectorBox.style.borderBottomColor = colour;
+            //m_ConnectorBox.MarkDirtyRepaint();
+            //
+            //m_ConnectorBoxCap.style.backgroundColor = colour;
+            //m_ConnectorBoxCap.MarkDirtyRepaint();
         }
 
         public override void OnStartEdgeDragging()

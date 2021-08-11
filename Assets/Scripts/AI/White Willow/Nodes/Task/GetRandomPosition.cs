@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.AI;
 
 namespace WhiteWillow.Nodes
 {
@@ -14,8 +15,13 @@ namespace WhiteWillow.Nodes
         [Tooltip("The distance of the random position from the agent.")]
         public float Radius = 5.0f;
 
+        private TaskDebugView m_DebugView;
+
         protected override void OnEnter()
         {
+            if (m_DebugView == null)
+                m_DebugView = new TaskDebugView();
+
             if (RangeType == RangeValueType.Varying)
                 Radius += Random.Range(-Radius, Radius) / 2;
         }
@@ -28,7 +34,10 @@ namespace WhiteWillow.Nodes
         protected override NodeResult OnTick()
         {
             var offset = Random.insideUnitSphere * Radius;
-            if (Owner.Agent.SetDestination(new Vector3(offset.x, 0.0f, offset.y)))
+
+            m_DebugView.Position = new Vector3(offset.x, 0.0f, offset.y);
+
+            if (Owner.Agent.SetDestination(m_DebugView.Position))
                 return NodeResult.Success;
             else
             {
@@ -37,6 +46,16 @@ namespace WhiteWillow.Nodes
                 else
                     return NodeResult.Running;
             }
+        }
+    }
+
+    public class TaskDebugView : UnityEditor.Editor
+    {
+        public Vector3 Position { get; set; } = Vector3.zero;
+
+        private void OnSceneGUI()
+        {
+            UnityEditor.Handles.DrawSolidArc(Position, Vector3.up, Vector3.zero, 360.0f, 0.5f);
         }
     }
 }

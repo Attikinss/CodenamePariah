@@ -10,12 +10,16 @@ public class Inventory : MonoBehaviour
     private int m_Health = 100;
 
     [SerializeField]
-    [Tooltip("Health UI.")]//
-    public TextMeshProUGUI m_HealthText;
+    [Tooltip("Health Text UI.")]//
+    private TextMeshProUGUI m_HealthText;
+
+    [SerializeField]
+    [Tooltip("Health Sprite UI")]
+    private GameObject m_HealthSprite;
 
     [SerializeField]
     [Tooltip("Weapons this character has.")]
-    public List<Weapon> m_Weapons;
+    private List<Weapon> m_Weapons;
 
     /// <summary>
     /// 
@@ -30,10 +34,12 @@ public class Inventory : MonoBehaviour
         if (m_Health > 100)
         {
             m_Health = 100;
+            m_HealthSprite.SetActive(true);
         }
         if (m_Health < 0)
         {
             m_Health = 0;
+            m_HealthSprite.SetActive(false);
         }
     }
 
@@ -42,6 +48,7 @@ public class Inventory : MonoBehaviour
     {
         //m_HealthText.text = "";
         m_HealthText.text = "";
+        //m_HealthSprite.SetActive(true);
         //enable sprite (possibly only at start - until health is 0)
         m_HealthText.text += m_Health;
     }

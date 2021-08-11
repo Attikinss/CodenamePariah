@@ -70,6 +70,8 @@ public class WeaponInventory : MonoBehaviour
 
     private void Update()
     {
+        GetComponentInParent<UIManager>().DisplayInventory();
+
         // Thankfully you've written this yourself in the original version but just to
         // confirm this will all be moved into the player/AI controller scripts soon
 
@@ -83,11 +85,11 @@ public class WeaponInventory : MonoBehaviour
             //}
             //
             // need to make sure this is only active when possessing
-            if (Mouse.current.leftButton.wasPressedThisFrame)
+            if (Mouse.current.leftButton.isPressed) //waspressedthisframe for semi auto
             {
                 Fire();
             }
-            else if (Keyboard.current.rKey.wasPressedThisFrame)
+            else if (Keyboard.current.rKey.wasPressedThisFrame) //
             {
                 if (!PrimaryAmmoFull() && !ReserveAmmoEmpty() && !m_IsReloading)
                     StartCoroutine(Reload());
@@ -106,16 +108,18 @@ public class WeaponInventory : MonoBehaviour
         {
             if (m_RoundsInMagazine > 0)
             {
+                // Currently gets rid of bullet sprite before UI has fully updated
                 this.GetComponentInParent<UIManager>().DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);
                 m_RoundsInMagazine--;
-                if (TotalAmmoEmpty())
-                    this.GetComponentInParent<UIManager>().DisableMagazine();// may need to move this
+                
             }
             else
             {
                 // Do nothing / reload automatically
                 if (!ReserveAmmoEmpty())
                     StartCoroutine(Reload());
+                //else if (TotalAmmoEmpty())
+                //    this.GetComponentInParent<UIManager>().DisableMagazine();
             }
         }
     }
@@ -145,7 +149,7 @@ public class WeaponInventory : MonoBehaviour
         // When triggering an animation it would also be pretty neat
         // to modify its playback speed to match the reload time.
 
-        yield return new WaitForSeconds(m_ReloadTime);
+        //yield return new WaitForSeconds(m_ReloadTime);
 
         // I don't want to strip your hard work with the modulo
         // operations that you took the time to design so if you
@@ -160,31 +164,25 @@ public class WeaponInventory : MonoBehaviour
         // Check the size of the reserve pool
         if (m_ReserveAmmo <= ammoRequired)
         {
-            Debug.Log("this");
-            //this.GetComponentInParent<UIManager>().DisableMagazine();
+            // Update UI to only show one mag
             this.GetComponentInParent<UIManager>().ModuloEqualsZero(m_RoundsInMagazine + m_ReserveAmmo);
 
             // Move all remaining ammo into magazine
             m_RoundsInMagazine += m_ReserveAmmo;
             m_ReserveAmmo = 0;
-
-            //for (int i = 0; i < m_RoundsInMagazine; i++)
-            //{
-            //    this.GetComponentInParent<UIManager>().EnableBulletSprite(i);
-            //}
-            //this.GetComponentInParent<UIManager>().RemoveMagazine();
         }
         else
         {
             if ((m_RoundsInMagazine + m_ReserveAmmo) % m_MagazineSize == 0)
             {
+                // Total ammo equals an amount that when divided by magazine size, has no remainder therefore get rid of a mag UI element
                 this.GetComponentInParent<UIManager>().ModuloEqualsZero(m_MagazineSize);
             }
             else
             {
-                this.GetComponentInParent<UIManager>().ModuloDoesNotEqualZero(m_MagazineSize, ammoRequired, this.GetComponentInParent<UIManager>().RemoveAmmoFromLastAddToCurrent(m_MagazineSize));//may break depending on reserveammo being less than a mag or more than a mag
+                // Removes bullet sprites total from 1 - 2 mags depending on the ammo missing from current magazine and how much ammo was already missing in the last magazine
+                this.GetComponentInParent<UIManager>().RemoveAmmoFromLastAddToCurrent(m_MagazineSize);
             }
-            
 
             // Move required amount from reserve to magazine
             m_RoundsInMagazine += ammoRequired;
@@ -192,6 +190,7 @@ public class WeaponInventory : MonoBehaviour
         }
 
         m_IsReloading = false;
+        yield return new WaitForSeconds(m_ReloadTime);
     }
 
     /// <summary>Refills both the primary and reserve ammo pools.</summary>
@@ -269,5 +268,15 @@ public class WeaponInventory : MonoBehaviour
     public bool ReserveAmmoEmpty()
     {
         return m_ReserveAmmo == 0;
+    }
+
+    public int GetRoundsInMagazine()
+    {
+        return m_RoundsInMagazine;
+    }
+
+    public int GetReserve()
+    {
+        return m_ReserveAmmo;
     }
 }

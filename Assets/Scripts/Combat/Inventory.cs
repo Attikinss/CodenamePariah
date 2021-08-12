@@ -52,9 +52,7 @@ public class Inventory : MonoBehaviour
     void DisplayHealth()
     {
         //m_HealthText.text = "";
-        m_HealthText.text = "";
-        //enable sprite (possibly only at start - until health is 0)
-        m_HealthText.text += m_Health;
+        m_HealthText?.SetText(m_Health.ToString());
     }
 
     /// <summary>Takes health away equal to the damage value.</summary>

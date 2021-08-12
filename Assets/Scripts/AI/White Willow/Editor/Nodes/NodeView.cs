@@ -10,10 +10,10 @@ namespace WhiteWillow.Editor
 {
     public abstract class NodeView : Node
     {
-        protected readonly Color ActiveColour = Color.green;
-        protected readonly Color InactiveColour = new Color(1.0f / 255 * 25, 1.0f / 255 * 25, 1.0f / 255 * 25);
-        protected readonly Color InactiveSelectionColour = new Color(1.0f, 1.0f / 255 * 215, 0.0f);
-        protected readonly Color InactivePortColour = new Color(1.0f / 255 * 132, 1.0f / 255 * 228, 1.0f / 255 * 231);
+        protected readonly Color ActiveColour = new Color(0.2f, 0.8f, 0.1f);
+        protected readonly Color InactiveColour = new Color(0.8f, 0.8f, 0.8f);
+        protected readonly Color InactiveSelectionColour = new Color(0.8f, 0.8f, 0.8f);
+        protected readonly Color InactivePortColour = new Color(0.8f, 0.8f, 0.8f);
 
         public Action<NodeView> OnNodeSelected;
 
@@ -72,13 +72,30 @@ namespace WhiteWillow.Editor
 
             // Remove connection between this node and parent node
             if (nodeType.IsSubclassOf(typeof(Composite)))
+            {
                 nodeView = new CompositeNodeView();
+                nodeView.AddToClassList("composite");
+
+                if (nodeType == typeof(Selector))
+                    nodeView.AddToClassList("selector");
+                else if (nodeType == typeof(Sequence))
+                    nodeView.AddToClassList("sequence");
+            }
             else if (nodeType.IsSubclassOf(typeof(Decorator)))
+            {
                 nodeView = new DecoratorNodeView();
+                nodeView.AddToClassList("decorator");
+            }
             else if (nodeType.IsSubclassOf(typeof(Task)))
+            {
                 nodeView = new TaskNodeView();
+                nodeView.AddToClassList("task");
+            }
             else if (nodeType == typeof(Root))
+            {
                 nodeView = new RootNodeView();
+                nodeView.AddToClassList("root");
+            }
 
             nodeView.Node = node;
             nodeView.title = !string.IsNullOrWhiteSpace(node.Title) ? node.Title : node.GetType().Name;
@@ -86,7 +103,7 @@ namespace WhiteWillow.Editor
             nodeView.m_GraphView = graphView;
 
             // Get the styling for the node
-            nodeView.styleSheets.Add(Resources.Load<StyleSheet>("Styles/GraphNode"));
+            nodeView.styleSheets.Add(Resources.Load<StyleSheet>("Styles/NodeView"));
 
             // Build the node with specific node elements
             nodeView.Construct();
@@ -133,8 +150,8 @@ namespace WhiteWillow.Editor
         protected void SetNodeIcon(Sprite sprite)
         {
             // Check if the icon element already exists
-            if (titleContainer.ElementAt(0)?.name == "status-icon-container")
-                return;
+            //if (titleContainer.ElementAt(0)?.name == "status-icon-container")
+            //    return;
 
             // Create an container for the icon
             VisualElement iconElement = new VisualElement() { name = "status-icon-container" };
@@ -164,7 +181,8 @@ namespace WhiteWillow.Editor
                 return;
 
             InputPort = EditorPort.Create(new PortDescription(this, "Input", "Input", Direction.Input, Port.Capacity.Single));
-            InputPort.portName = "Parent";
+            InputPort.portName = "";
+            InputPort.style.flexDirection = FlexDirection.Column;
             inputContainer.Add(InputPort);
         }
 
@@ -193,7 +211,8 @@ namespace WhiteWillow.Editor
                 return;
 
             OutputPort = EditorPort.Create(new PortDescription(this, "Output", "Output", Direction.Output, capacity));
-            OutputPort.portName = capacity == Port.Capacity.Single ? "Child" : "Children";
+            OutputPort.portName = "";
+            OutputPort.style.flexDirection = FlexDirection.ColumnReverse;
             outputContainer.Add(OutputPort);
         }
 
@@ -203,7 +222,7 @@ namespace WhiteWillow.Editor
             {
                 List<KeyValuePair<int, float>> nodeHeights = new List<KeyValuePair<int, float>>();
                 for (int i = 0; i < (Parent as CompositeNodeView).Children.Count; i++)
-                    nodeHeights.Add(new KeyValuePair<int, float>(i, (Parent as CompositeNodeView).Children.ElementAt(i).Position.position.y));
+                    nodeHeights.Add(new KeyValuePair<int, float>(i, (Parent as CompositeNodeView).Children.ElementAt(i).Position.position.x));
 
                 nodeHeights.Sort(delegate (KeyValuePair<int, float> a, KeyValuePair<int, float> b) { return a.Value.CompareTo(b.Value); });
 
@@ -248,21 +267,21 @@ namespace WhiteWillow.Editor
 
         public void Highlight()
         {
-            // Highlight borders
-            m_NodeSelectionBorder.style.borderLeftColor = ActiveColour;
-            m_NodeSelectionBorder.style.borderRightColor = ActiveColour;
-            m_NodeSelectionBorder.style.borderTopColor = ActiveColour;
-            m_NodeSelectionBorder.style.borderBottomColor = ActiveColour;
-
-            m_NodeBorder.style.borderLeftColor = ActiveColour;
-            m_NodeBorder.style.borderRightColor = ActiveColour;
-            m_NodeBorder.style.borderTopColor = ActiveColour;
-            m_NodeBorder.style.borderBottomColor = ActiveColour;
-            m_NodeBorder.style.borderTopWidth = 2f;
-            m_NodeBorder.style.borderRightWidth = 2f;
-            m_NodeBorder.style.borderLeftWidth = 2f;
-            m_NodeBorder.style.borderBottomWidth = 2f;
-
+            //// Highlight borders
+            //_NodeSelectionBorder.style.borderLeftColor = ActiveColour;
+            //_NodeSelectionBorder.style.borderRightColor = ActiveColour;
+            //_NodeSelectionBorder.style.borderTopColor = ActiveColour;
+            //_NodeSelectionBorder.style.borderBottomColor = ActiveColour;
+            //
+            //_NodeBorder.style.borderLeftColor = ActiveColour;
+            //_NodeBorder.style.borderRightColor = ActiveColour;
+            //_NodeBorder.style.borderTopColor = ActiveColour;
+            //_NodeBorder.style.borderBottomColor = ActiveColour;
+            //_NodeBorder.style.borderTopWidth = 2f;
+            //_NodeBorder.style.borderRightWidth = 2f;
+            //_NodeBorder.style.borderLeftWidth = 2f;
+            //_NodeBorder.style.borderBottomWidth = 2f;
+            
             if (InputPort != null)
             {
                 // Highlight the input port
@@ -274,57 +293,57 @@ namespace WhiteWillow.Editor
                 // Highlight the output port
                 OutputPort.SetColour(ActiveColour);
             }
-
+            
             Edge edge = InputPort?.connections.FirstOrDefault();
             if (edge != null)
             {
                 edge.edgeControl.inputColor = ActiveColour;
                 edge.edgeControl.outputColor = ActiveColour;
             }
-
+            
             m_Highlight = true;
-
+            
             Parent?.Highlight();
         }
 
         public void Unhighlight()
         {
-            // Unhighlight borders
-            m_NodeSelectionBorder.style.borderLeftColor = InactiveSelectionColour;
-            m_NodeSelectionBorder.style.borderRightColor = InactiveSelectionColour;
-            m_NodeSelectionBorder.style.borderTopColor = InactiveSelectionColour;
-            m_NodeSelectionBorder.style.borderBottomColor = InactiveSelectionColour;
-
-            m_NodeBorder.style.borderLeftColor = InactiveColour;
-            m_NodeBorder.style.borderRightColor = InactiveColour;
-            m_NodeBorder.style.borderTopColor = InactiveColour;
-            m_NodeBorder.style.borderBottomColor = InactiveColour;
-            m_NodeBorder.style.borderTopWidth = 1f;
-            m_NodeBorder.style.borderRightWidth = 1f;
-            m_NodeBorder.style.borderLeftWidth = 1f;
-            m_NodeBorder.style.borderBottomWidth = 1f;
-
-            if (InputPort != null)
-            {
-                // Unhighlight the input port
-                InputPort.SetColour(InactivePortColour);
-            }
-            if (OutputPort != null)
-            {
-                // Unhighlight the output port
-                OutputPort.SetColour(InactivePortColour);
-            }
-
-            Edge edge = InputPort?.connections.FirstOrDefault();
-            if (edge != null)
-            {
-                edge.edgeControl.inputColor = InactivePortColour;
-                edge.edgeControl.outputColor = InactivePortColour;
-            }
-
-            m_Highlight = false;
-
-            Parent?.Unhighlight();
+            //// Unhighlight borders
+            //m_NodeSelectionBorder.style.borderLeftColor = InactiveSelectionColour;
+            //m_NodeSelectionBorder.style.borderRightColor = InactiveSelectionColour;
+            //m_NodeSelectionBorder.style.borderTopColor = InactiveSelectionColour;
+            //m_NodeSelectionBorder.style.borderBottomColor = InactiveSelectionColour;
+            //
+            //m_NodeBorder.style.borderLeftColor = InactiveColour;
+            //m_NodeBorder.style.borderRightColor = InactiveColour;
+            //m_NodeBorder.style.borderTopColor = InactiveColour;
+            //m_NodeBorder.style.borderBottomColor = InactiveColour;
+            //m_NodeBorder.style.borderTopWidth = 1f;
+            //m_NodeBorder.style.borderRightWidth = 1f;
+            //m_NodeBorder.style.borderLeftWidth = 1f;
+            //m_NodeBorder.style.borderBottomWidth = 1f;
+            //
+            //if (InputPort != null)
+            //{
+            //    // Unhighlight the input port
+            //    InputPort.SetColour(InactivePortColour);
+            //}
+            //if (OutputPort != null)
+            //{
+            //    // Unhighlight the output port
+            //    OutputPort.SetColour(InactivePortColour);
+            //}
+            //
+            //Edge edge = InputPort?.connections.FirstOrDefault();
+            //if (edge != null)
+            //{
+            //    edge.edgeControl.inputColor = InactivePortColour;
+            //    edge.edgeControl.outputColor = InactivePortColour;
+            //}
+            //
+            //m_Highlight = false;
+            //
+            //Parent?.Unhighlight();
         }
     }
 }

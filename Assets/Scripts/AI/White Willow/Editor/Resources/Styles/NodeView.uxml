@@ -1,25 +1,16 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="NodeView.uss" />
     <ui:VisualElement name="node-border">
         <ui:VisualElement name="contents">
-            <ui:VisualElement name="divider" class="horizontal" />
             <ui:VisualElement name="top">
-                <ui:VisualElement name="input" />
-                <ui:VisualElement name="title">
-                    <ui:VisualElement name="status-icon-container">
-                        <ui:Image name="status-icon" class="unity-image" />
-                    </ui:VisualElement>
-                    <ui:Label name="title-label" text="Patrol" class="unity-text-element unity-label" />
-                    <ui:VisualElement name="title-button-container">
-                        <ui:VisualElement name="collapse-button">
-                            <ui:VisualElement name="icon" />
-                        </ui:VisualElement>
-                    </ui:VisualElement>
-                </ui:VisualElement>
+                <ui:VisualElement name="input" style="position: relative; left: auto; top: auto; right: auto; bottom: 0;" />
                 <ui:VisualElement name="divider" class="vertical" />
+                <ui:VisualElement name="title">
+                    <ui:Label name="title-label" class="unity-text-element unity-label" style="padding-right: 0; padding-left: 0; align-items: center;" />
+                </ui:VisualElement>
                 <ui:VisualElement name="output" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="selection-border" />
+    <ui:VisualElement name="selection-border" picking-mode="Ignore" style="position: absolute; flex-grow: 1;" />
 </ui:UXML>

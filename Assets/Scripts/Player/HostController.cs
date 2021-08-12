@@ -4,16 +4,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 
-/// <summary>
-/// This enum helps keep track of what weapon the player is currently using.
-/// </summary>
-public enum WEAPON
-{ 
-    WEAPON1,
-    WEAPON2
-}
-
-
 [RequireComponent(typeof(Rigidbody))]
 public class HostController : InputController
 {
@@ -65,17 +55,17 @@ public class HostController : InputController
     public bool IsGrounded { get; private set; }
     public Vector3 CacheMovDir { get; private set; }
 
-    private float m_FireCounter = 0.0f;
+    private float m_FireCounter = 0.0f; // time counter between shots.
     private bool m_HasFired = false;
 
     // If this variable was once public and you had set it's value in the inspector, it will still have the value you set in the inspector even if you change its initialization here.
-    public float HeldCounter { get; private set; } = 1;
+    public float ShootingDuration { get; private set; } = 1; // time tracking since started shooting.
     
-    private float xRotation = 0;
+    private float m_XRotation = 0;
 
     private bool m_HasDoubleJumped = false;
 
-    public bool Sliding { get; private set; }
+    public bool IsSliding { get; private set; }
     public Vector3 SlideDir { get; private set; }
 
     private Vector3 m_CacheSlideMove = Vector3.zero;
@@ -95,7 +85,7 @@ public class HostController : InputController
 
     public float AdditionalCameraRecoilY { get; private set; } // This will be how much horizontal recoil will be applied to the camera.
 
-    private float desiredX = 0;
+    private float m_DesiredX = 0;
 
     private bool m_IsFiring = false;
 
@@ -155,7 +145,7 @@ public class HostController : InputController
         if (m_IsFiring)
         {
             // They are holding down the fire button.
-            HeldCounter += Time.deltaTime;
+            ShootingDuration += Time.deltaTime;
         }
         else
         {
@@ -185,7 +175,7 @@ public class HostController : InputController
                         // Instead I will add the AdditionalCameraRecoilX into xRotation and then set AdditionalCameraRecoilX to 0. This way I don't have to directly touch the cameras local rotation
                         // here.
 
-                        xRotation -= AdditionalCameraRecoilX;
+                        m_XRotation -= AdditionalCameraRecoilX;
                         AdditionalCameraRecoilX = 0;
                     }
                     else
@@ -199,7 +189,7 @@ public class HostController : InputController
                 else
                 {
                     // Since the forward vectors match, we'll clear the m_AdditionalCameraRecoilX variable just to keep things clean.
-                    xRotation -= AdditionalCameraRecoilX;
+                    m_XRotation -= AdditionalCameraRecoilX;
                     AdditionalCameraRecoilX = 0;
                 }
             }
@@ -212,7 +202,7 @@ public class HostController : InputController
                 // If we have accumulated horizontal recoil.
                 //m_AdditionalCameraRecoilY -= 1 * GetCurrentWeaponConfig().m_RecoilRecoveryModifier;
                 
-                desiredX -= AdditionalCameraRecoilY;
+                m_DesiredX -= AdditionalCameraRecoilY;
                 AdditionalCameraRecoilY = 0;
             }
             
@@ -412,7 +402,7 @@ public class HostController : InputController
         {
             Debug.Log("OnSlide called.");
             SlideDir = value.performed ? m_Orientation.forward : SlideDir;
-            Sliding = true;
+            IsSliding = true;
         }
     }
 
@@ -447,7 +437,7 @@ public class HostController : InputController
             m_IsFiring = false;
             Debug.Log("OnShoot cancelled.");
             // Reset held counter happens regardless.
-            HeldCounter = 0.0f;
+            ShootingDuration = 0.0f;
         }
     }
 
@@ -490,15 +480,15 @@ public class HostController : InputController
 
         // Finding current look rotation
         Vector3 rot = m_Orientation.transform.localRotation.eulerAngles;
-        /*float*/ desiredX = rot.y + mouseX;
+        /*float*/ m_DesiredX = rot.y + mouseX;
 
         // Rotate
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        m_XRotation -= mouseY;
+        m_XRotation = Mathf.Clamp(m_XRotation, -90f, 90f);
 
         // Perform the rotations
-        m_Orientation.transform.localRotation = Quaternion.Euler(0, desiredX - AdditionalCameraRecoilY, 0);
-        m_Camera.transform.localRotation = Quaternion.Euler(Mathf.Clamp((xRotation - AdditionalCameraRecoilX - AdditionalRecoilRotation.x), -90f, 90f), 0.0f - AdditionalRecoilRotation.y, 0 - AdditionalRecoilRotation.z);
+        m_Orientation.transform.localRotation = Quaternion.Euler(0, m_DesiredX - AdditionalCameraRecoilY, 0);
+        m_Camera.transform.localRotation = Quaternion.Euler(Mathf.Clamp((m_XRotation - AdditionalCameraRecoilX - AdditionalRecoilRotation.x), -90f, 90f), 0.0f - AdditionalRecoilRotation.y, 0 - AdditionalRecoilRotation.z);
 
     }
 
@@ -561,8 +551,8 @@ public class HostController : InputController
 
             WeaponConfiguration currentConfig = GetCurrentWeaponConfig();
             // =========== TESTING =========== //
-            AdditionalCameraRecoilX += currentConfig.m_VerticalRecoil.Evaluate(HeldCounter);
-            AdditionalCameraRecoilY += currentConfig.m_HorizontalRecoil.Evaluate(HeldCounter);
+            AdditionalCameraRecoilX += currentConfig.m_VerticalRecoil.Evaluate(ShootingDuration);
+            AdditionalCameraRecoilY += currentConfig.m_HorizontalRecoil.Evaluate(ShootingDuration);
             // =============================== //
 
             m_HasFired = true;
@@ -667,7 +657,7 @@ public class HostController : InputController
 		Vector3 requiredChange = desiredVelocity - currentVelocity;
 		m_CacheSlideMove += requiredChange * 0.5f;
 
-		if (Sliding)
+		if (IsSliding)
 		{
             Debug.Log("Sliding");
 			// smoothly rotate backwards. todo
@@ -676,7 +666,7 @@ public class HostController : InputController
 			SlideCounter += Time.deltaTime;
 			if (SlideCounter >= m_SlideDuration)
 			{
-				Sliding = false;
+				IsSliding = false;
 				SlideCounter = 0.0f;
 				SlideDir = Vector3.zero;
 			}
@@ -789,7 +779,7 @@ public class HostController : InputController
     /// GetCurrentWeaponConfig() returns the currently held weapons WeaponConfiguration script. It is public because the CustomDebugUI script needs to access it.
     /// </summary>
     /// <returns></returns>
-    public WeaponConfiguration GetCurrentWeaponConfig()
+    private WeaponConfiguration GetCurrentWeaponConfig()
     {
         // I know it's bad to use GetComponent() during runtime, but for now this does the job.
         // An alternative I though of but am unsure if is good practice would be for the Inventory.cs

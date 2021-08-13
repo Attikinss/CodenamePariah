@@ -108,7 +108,7 @@ public class WeaponInventory : MonoBehaviour
         {
             if (m_RoundsInMagazine > 0)
             {
-                // Currently gets rid of bullet sprite before UI has fully updated
+                // Currently gets rid of bullet sprite before UI has fully updated //
                 this.GetComponentInParent<UIManager>().DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);
                 m_RoundsInMagazine--;
                 
@@ -149,7 +149,7 @@ public class WeaponInventory : MonoBehaviour
         // When triggering an animation it would also be pretty neat
         // to modify its playback speed to match the reload time.
 
-        //yield return new WaitForSeconds(m_ReloadTime);
+        yield return new WaitForSeconds(m_ReloadTime);
 
         // I don't want to strip your hard work with the modulo
         // operations that you took the time to design so if you
@@ -190,7 +190,6 @@ public class WeaponInventory : MonoBehaviour
         }
 
         m_IsReloading = false;
-        yield return new WaitForSeconds(m_ReloadTime);
     }
 
     /// <summary>Refills both the primary and reserve ammo pools.</summary>

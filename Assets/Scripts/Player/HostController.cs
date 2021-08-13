@@ -136,6 +136,20 @@ public class HostController : InputController
         if (GetCurrentWeaponConfig().m_AlwaysFiring) // Doing same here for the reason above.
             m_IsFiring = true;
 
+
+
+
+        //if (IsGrounded)
+        //{
+        //    Vector3 cache = CacheMovDir;
+        //    cache.y = 0;
+        //    CacheMovDir = cache;
+        //}
+
+
+
+
+
         if (m_HasFired)
         {
             m_FireCounter += Time.deltaTime;
@@ -501,7 +515,10 @@ public class HostController : InputController
     {
         // Preserves m_Rigidbody's y velocity.
         Vector3 direction = CacheMovDir;
-        direction.y = Rigidbody.velocity.y;
+        if (IsGrounded)
+            direction.y = 0;
+        else
+            direction.y = Rigidbody.velocity.y;
         CacheMovDir = direction;
 
         // Ensure the slide will never make the player move vertically.

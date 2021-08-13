@@ -551,8 +551,11 @@ public class HostController : InputController
 
             WeaponConfiguration currentConfig = GetCurrentWeaponConfig();
             // =========== TESTING =========== //
-            AdditionalCameraRecoilX += currentConfig.m_VerticalRecoil.Evaluate(ShootingDuration);
-            AdditionalCameraRecoilY += currentConfig.m_HorizontalRecoil.Evaluate(ShootingDuration);
+            if (!currentConfig.m_DisableAllRecoil)
+            { 
+                AdditionalCameraRecoilX += currentConfig.m_VerticalRecoil.Evaluate(ShootingDuration);
+                AdditionalCameraRecoilY += currentConfig.m_HorizontalRecoil.Evaluate(ShootingDuration);
+            }
             // =============================== //
 
             m_HasFired = true;
@@ -755,14 +758,18 @@ public class HostController : InputController
 
     private void Recoil()
     {
-        WeaponConfiguration weaponConfig = GetCurrentWeaponConfig();
-        
 
-        AdditionalRecoilRotation += new Vector3(-weaponConfig.RecoilRotationAiming.x, Random.Range(-weaponConfig.RecoilRotationAiming.y, weaponConfig.RecoilRotationAiming.y), Random.Range(-weaponConfig.RecoilRotationAiming.z, weaponConfig.RecoilRotationAiming.z));
-        WeaponRecoilRot -= new Vector3(weaponConfig.m_WeaponRotRecoilVertStrength, 0, 0);
+        if (!GetCurrentWeaponConfig().m_DisableAllRecoil)
+        { 
+            WeaponConfiguration weaponConfig = GetCurrentWeaponConfig();
+            
 
-        // Although I am setting the recoil transform here, I have to apply it in the WeaponSway() function since I'm setting pos directly there. I want to change this but I'm unsure how right now
-        weaponConfig.m_WeaponRecoilTransform -= new Vector3(0, 0, weaponConfig.m_WeaponTransformRecoilZStrength);
+            AdditionalRecoilRotation += new Vector3(-weaponConfig.RecoilRotationAiming.x, Random.Range(-weaponConfig.RecoilRotationAiming.y, weaponConfig.RecoilRotationAiming.y), Random.Range(-weaponConfig.RecoilRotationAiming.z, weaponConfig.RecoilRotationAiming.z));
+            WeaponRecoilRot -= new Vector3(weaponConfig.m_WeaponRotRecoilVertStrength, 0, 0);
+
+            // Although I am setting the recoil transform here, I have to apply it in the WeaponSway() function since I'm setting pos directly there. I want to change this but I'm unsure how right now
+            weaponConfig.m_WeaponRecoilTransform -= new Vector3(0, 0, weaponConfig.m_WeaponTransformRecoilZStrength);
+        }
     }
 
     private void UpdateRecoil()

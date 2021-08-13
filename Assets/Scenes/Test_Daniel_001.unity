@@ -3967,6 +3967,10 @@ PrefabInstance:
       propertyPath: m_FireRate
       value: 600
       objectReference: {fileID: 0}
+    - target: {fileID: 101379942, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_DisableAllRecoil
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 696020109, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_HealthText
       value: 

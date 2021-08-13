@@ -6,6 +6,8 @@ using UnityEngine;
 public class WeaponConfiguration : MonoBehaviour
 {
     [Header("Weapon Controls")]
+    [Header("Debugging Stuff")]
+    public bool m_DisableAllRecoil;
 
     [Header("Transform References")]
     public Transform m_Gun;

@@ -15,7 +15,7 @@ public class HostController : InputController
     [Header("Movement Controls")]
     public float m_JumpHeight = 5;
     public float m_SecondJumpHeight = 2.5f;
-    public float m_GroundCheckHeight = 0.65f;
+    public float m_GroundCheckDistance = 0.65f;
     public float m_GroundCheckRadius = 0.42f;
     public float m_Gravity = -9.8f;
     public float m_MaxSpeed = 5;
@@ -244,15 +244,15 @@ public class HostController : InputController
 
         RaycastHit hit;
         Ray ray = new Ray(transform.position + Vector3.up, Vector3.down);
-        if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckHeight))
+        if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckDistance))
         {
             Gizmos.DrawLine(transform.position, hit.point);
 
-            GraphicalDebugger.DrawSphereCast(transform.position + Vector3.up, hit.point, Color.green, m_GroundCheckRadius);
+            GraphicalDebugger.DrawSphereCast(transform.position + Vector3.up, (transform.position + Vector3.up) + Vector3.down * m_GroundCheckDistance, Color.green, m_GroundCheckRadius, m_GroundCheckDistance);
         }
         else
         {
-            GraphicalDebugger.DrawSphereCast(transform.position + Vector3.up, transform.position + Vector3.down, Color.red, m_GroundCheckRadius);
+            GraphicalDebugger.DrawSphereCast(transform.position + Vector3.up, (transform.position + Vector3.up) + Vector3.down * m_GroundCheckDistance, Color.red, m_GroundCheckRadius, m_GroundCheckDistance);
         }
 
         Gizmos.color = defaultColour;
@@ -585,7 +585,7 @@ public class HostController : InputController
     {
         RaycastHit hit;
         Ray ray = new Ray(transform.position + Vector3.up, Vector3.down);
-        if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckHeight))
+        if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckDistance))
         {
             //Debug.Log(hit.transform.name);
             return true;
@@ -779,7 +779,7 @@ public class HostController : InputController
     /// GetCurrentWeaponConfig() returns the currently held weapons WeaponConfiguration script. It is public because the CustomDebugUI script needs to access it.
     /// </summary>
     /// <returns></returns>
-    private WeaponConfiguration GetCurrentWeaponConfig()
+    public WeaponConfiguration GetCurrentWeaponConfig()
     {
         // I know it's bad to use GetComponent() during runtime, but for now this does the job.
         // An alternative I though of but am unsure if is good practice would be for the Inventory.cs

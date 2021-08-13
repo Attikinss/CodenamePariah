@@ -392,7 +392,7 @@ Transform:
   m_LocalScale: {x: 6.0953784, y: 6.0953784, z: 6.0953784}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!1 &106941240
 GameObject:
@@ -3271,7 +3271,7 @@ Transform:
   m_LocalScale: {x: 4.6151457, y: 4.6151457, z: 4.6151457}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
 --- !u!1 &1748220047
 GameObject:
@@ -3980,12 +3980,28 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 8559930378344312184, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_Active
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8559930378344312184, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_EnableDebug
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8559930378344312184, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_LookSensitivity
-      value: 7
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 8559930378344312184, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_GroundCheckHeight
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 8559930378344312184, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_GroundCheckDistance
+      value: 1.63
       objectReference: {fileID: 0}
     - target: {fileID: 8559930378344312185, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8559930378344312185, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_LocalPosition.x

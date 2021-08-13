@@ -403,7 +403,7 @@ public class HostController : InputController
 
     public override void OnSlide(InputAction.CallbackContext value)
     {
-        if (value.performed && IsGrounded)
+        if (value.performed && IsGrounded && m_IsMoving)
         {
             Debug.Log("OnSlide called.");
             SlideDir = value.performed ? m_Orientation.forward : SlideDir;

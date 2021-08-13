@@ -8,6 +8,8 @@ public class WeaponConfiguration : MonoBehaviour
     [Header("Weapon Controls")]
     [Header("Debugging Stuff")]
     public bool m_DisableAllRecoil;
+    public bool m_AlwaysADS;
+    public bool m_AlwaysFiring;
 
     [Header("Transform References")]
     public Transform m_Gun;

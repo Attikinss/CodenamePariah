@@ -131,6 +131,11 @@ public class HostController : InputController
     {
         if (!m_Active) return;
 
+        if (GetCurrentWeaponConfig().m_AlwaysADS) // The reason why I do this is so I don't have to check for the m_AlwaysADS bool everywhere. This way I can still just check for m_IsAiming in all functions.
+            m_IsAiming = true;
+        if (GetCurrentWeaponConfig().m_AlwaysFiring) // Doing same here for the reason above.
+            m_IsFiring = true;
+
         if (m_HasFired)
         {
             m_FireCounter += Time.deltaTime;
@@ -746,7 +751,7 @@ public class HostController : InputController
 
         Vector3 centre = m_Camera.ScreenToWorldPoint(new Vector3(
             (Screen.width / 2) + (-LookInput.x * weaponConfig.m_GunAimSwayStrength),
-            (Screen.height / 2) + (-LookInput.y * weaponConfig.m_GunSwayStrength) - weaponConfig.m_GunAimHeight,
+            (Screen.height / 2) + (-LookInput.y * weaponConfig.m_GunSwayStrength) - (transform.up.y * weaponConfig.m_GunAimHeight),
             (transform.forward.z * weaponConfig.m_GunAimZPos) + weaponConfig.m_WeaponRecoilTransform.z * weaponConfig.m_ADSRecoilModifier));
 
         //Vector3 currentPosition = m_Gun.position;

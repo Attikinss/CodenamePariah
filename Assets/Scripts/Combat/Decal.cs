@@ -37,6 +37,19 @@ public class Decal
         m_hitPointWorld = hitPoint;
     }
 
+    public Decal()
+    { 
+        
+    }
+
+    public void SetDecal(Transform obj, Vector3 hitPoint, Vector3 dir)
+    {
+        m_objAttached = obj;
+        m_hitPoint = m_objAttached.InverseTransformPoint(hitPoint);
+        m_Dir = m_objAttached.InverseTransformDirection(dir);
+        m_LocalMat = m_objAttached.worldToLocalMatrix;
+        m_hitPointWorld = hitPoint;
+    }
     public void Update()
     {
         if (m_Decal) // We are checking if the decal's game object exists because there is a possibility it does not have one if it was created using the constructor that doesn't need a texture.
@@ -54,10 +67,17 @@ public class Decal
         {
             Gizmos.DrawSphere(m_Decal.transform.position, 0.5f);
         }
-        else // This decal doesn't have a game object since it's not using a texture.
+        else if (m_objAttached != null) // This decal doesn't have a game object since it's not using a texture.
         {
             Vector3 position = m_hitPointWorld;
             Gizmos.DrawSphere(position, 0.1f);
+        }
+        else
+        { 
+            // The decal is completely unintialised so do nothing.
+            // This will be the case for the ones that are in the unused object pool.
+
+            // doing nothing.
         }
     }
 

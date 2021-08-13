@@ -574,8 +574,8 @@ public class HostController : InputController
             {
                 if (hit.transform.gameObject != null)
                 {
-                    Decal newDecal = new Decal(hit.transform, hit.point, hit.normal);
-                    GameManager.Instance?.AddDecal(newDecal);
+                    //Decal newDecal = new Decal(hit.transform, hit.point, hit.normal);         // No longer need this now with the all new Object Pooling Decals! - daniel
+                    GameManager.Instance?.AddDecal(hit.transform, hit.point, hit.normal);
             
             
                     // Adding a force to the hit object.

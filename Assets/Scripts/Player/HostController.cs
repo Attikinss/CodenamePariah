@@ -115,6 +115,14 @@ public class HostController : InputController
     public float m_WaveSliceX = 0.0f;
     // ========================================================================== //
 
+
+    // Temporary ground normal thing.
+    Vector3 m_GroundNormal = Vector3.zero;
+
+    Vector3 m_ModifiedRight = Vector3.zero;
+    Vector3 m_ModifiedForward = Vector3.zero;
+    Vector3 moveDir = Vector3.zero;
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -230,7 +238,9 @@ public class HostController : InputController
 
         IsGrounded = CheckGrounded();
         if (IsGrounded)
+        { 
             m_HasDoubleJumped = false;
+        }
 
         m_CurrentMoveSpeed = Rigidbody.velocity.magnitude;
 
@@ -268,6 +278,10 @@ public class HostController : InputController
             Gizmos.DrawLine(transform.position, hit.point);
 
             GraphicalDebugger.DrawSphereCast(transform.position + Vector3.up, (transform.position + Vector3.up) + Vector3.down * m_GroundCheckDistance, Color.green, m_GroundCheckRadius, m_GroundCheckDistance);
+
+            // Draw forward direction but relative to ground normal.
+            Gizmos.color = Color.black;
+            Gizmos.DrawLine(transform.position, transform.position + (Vector3.Cross(m_GroundNormal, -m_Orientation.right) * 100));
         }
         else
         {
@@ -280,7 +294,11 @@ public class HostController : InputController
         Gizmos.DrawLine(transform.position + Vector3.up, transform.position + new Vector3(-CacheMovDir.x, CacheMovDir.y, -CacheMovDir.z));
 
         Gizmos.color = Color.green;
-        Gizmos.DrawLine(transform.position + Vector3.up, transform.position + new Vector3(CacheMovDir.x, CacheMovDir.y, CacheMovDir.z));
+        Gizmos.DrawLine(transform.position + Vector3.up, transform.position + CacheMovDir);
+
+        // Trying to visualise true movement forward vector.
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawLine(transform.position, transform.position + m_ModifiedForward);
 
 
 
@@ -515,10 +533,14 @@ public class HostController : InputController
     {
         // Preserves m_Rigidbody's y velocity.
         Vector3 direction = CacheMovDir;
-        if (IsGrounded)
+        if (IsGrounded && !m_IsMoving)
+        {
             direction.y = 0;
-        else
-            direction.y = Rigidbody.velocity.y;
+            //direction.y = direction.y;
+            //Rigidbody.velocity = new Vector3(Rigidbody.velocity.x, 0, Rigidbody.velocity.z);
+        }
+        //else
+            //direction.y = Rigidbody.velocity.y;
         CacheMovDir = direction;
 
         // Ensure the slide will never make the player move vertically.
@@ -545,6 +567,7 @@ public class HostController : InputController
 
         Vector3 currentVel = CacheMovDir;
         Vector3 desiredVel = CalculateMoveDirection(input.x, input.y, m_MovementSpeed);
+        
 
         Vector3 requiredChange = desiredVel - currentVel;
         CacheMovDir += requiredChange * (IsGrounded ? m_GroundAcceleration : m_AirAcceleration);
@@ -552,13 +575,22 @@ public class HostController : InputController
 
     private Vector3 CalculateMoveDirection(float x, float z, float speedMultiplier)
     {
-        Vector3 xMov = m_Orientation.right * x;
-        Vector3 zMov = m_Orientation.forward * z;
 
-        xMov.y = 0;
-        zMov.y = 0;
+        m_ModifiedForward = Vector3.Cross(m_GroundNormal, -m_Orientation.right);
+        m_ModifiedRight = Vector3.Cross(m_GroundNormal, m_Orientation.forward);
 
-        Vector3 moveDir = ((xMov + zMov).normalized * speedMultiplier * Time.fixedDeltaTime) + Vector3.up * Rigidbody.velocity.y;
+        Vector3 xMov = m_ModifiedRight * x;
+        Vector3 zMov = m_ModifiedForward * z;
+
+        //Vector3 xMov = m_Orientation.transform.right * x;
+        //Vector3 zMov = m_Orientation.transform.forward * z;
+
+        //xMov.y = 0;
+        //zMov.y = 0;
+
+        /*Vector3 */moveDir = ((xMov + zMov).normalized * speedMultiplier * Time.fixedDeltaTime) + Vector3.up * Rigidbody.velocity.y;
+
+        Debug.Log(moveDir.y);
 
         return moveDir;
     }
@@ -613,6 +645,7 @@ public class HostController : InputController
         if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckDistance))
         {
             //Debug.Log(hit.transform.name);
+            m_GroundNormal = hit.normal;
             return true;
         }
         return false;
@@ -738,7 +771,6 @@ public class HostController : InputController
             float requiredChange = desiredFOV - currentFOV;
             m_Camera.fieldOfView += requiredChange * 0.45f;
 
-            Debug.Log(gunOriginalPos);
         }
         else if (m_IsAiming)
         {

@@ -65,6 +65,8 @@ public class HostController : InputController
 
     private bool m_HasDoubleJumped = false;
 
+    private bool m_HasJumped = false;
+
     public bool IsSliding { get; private set; }
     public Vector3 SlideDir { get; private set; }
 
@@ -122,6 +124,9 @@ public class HostController : InputController
     Vector3 m_ModifiedRight = Vector3.zero;
     Vector3 m_ModifiedForward = Vector3.zero;
     Vector3 moveDir = Vector3.zero;
+
+    // temporary jump deactivate cooldown. to prevent m_IsJumping from being deactivated as soon as you jump.
+    float m_JumpCounter = 0;
 
     private void Start()
     {
@@ -237,6 +242,7 @@ public class HostController : InputController
         }
 
         IsGrounded = CheckGrounded();
+        CalculateGroundNormal();
         if (IsGrounded)
         { 
             m_HasDoubleJumped = false;
@@ -254,6 +260,12 @@ public class HostController : InputController
 
         // Just for debugging purposes. This variable is only used in the CustomDebugUI script.
         CurrentCamRot = m_Camera.transform.forward;
+
+
+        if (m_HasJumped)
+        {
+            m_JumpCounter += Time.deltaTime; // how to get around having a timer for something like this?
+        }
     }
 
 	private void FixedUpdate()
@@ -395,6 +407,9 @@ public class HostController : InputController
 
         if (active)
         {
+            m_HasJumped = true;
+
+
             Vector3 direction = Vector3.up * ControllerMaths.CalculateJumpForce(m_JumpHeight, Rigidbody.mass, m_Gravity);
             direction.x = Rigidbody.velocity.x;
             direction.z = Rigidbody.velocity.z;
@@ -529,18 +544,41 @@ public class HostController : InputController
 
     }
 
-	private void Move(Vector2 input)
+    private void Move(Vector2 input)
     {
         // Preserves m_Rigidbody's y velocity.
         Vector3 direction = CacheMovDir;
-        if (IsGrounded && !m_IsMoving)
+        if (IsGrounded/* && !m_IsMoving*/)
         {
-            direction.y = 0;
+            //direction.y = 0;
+            //direction.y = direction.y;
+            Rigidbody.useGravity = false;
+
+            // ========== Idea of this was to negate upwards force properly. Because upwards force isn't always completely vertical ========== //
+            //Vector3 velocityTowardsSurface = Vector3.Dot(Rigidbody.velocity, m_GroundNormal) * m_GroundNormal;
+            //direction -= velocityTowardsSurface;
+            // =============================================================================================================================== //
+
+            Debug.Log("IsGrounded && !m_IsMoving");
             //direction.y = direction.y;
             //Rigidbody.velocity = new Vector3(Rigidbody.velocity.x, 0, Rigidbody.velocity.z);
         }
+        else if (!IsGrounded)
+        {
+            Rigidbody.useGravity = true;
+
+            direction.y = Rigidbody.velocity.y;
+            Debug.Log("Else");
+        }
         //else
-            //direction.y = Rigidbody.velocity.y;
+        //{
+        //    Rigidbody.useGravity = false;
+        //}
+        if (m_GroundNormal != Vector3.zero && !IsGrounded && !m_HasJumped)
+        { 
+            Vector3 velocityTowardsSurface = Vector3.Dot(Rigidbody.velocity, m_GroundNormal) * m_GroundNormal;
+            direction -= velocityTowardsSurface;
+        }
         CacheMovDir = direction;
 
         // Ensure the slide will never make the player move vertically.
@@ -549,7 +587,7 @@ public class HostController : InputController
 
         // Making sure angular velocity isn't a problem.
         Rigidbody.velocity = CacheMovDir + m_CacheSlideMove;
-        Rigidbody.angularVelocity = Vector3.zero;
+        //Rigidbody.angularVelocity = Vector3.zero;
 
 
         // ============================ MODIFIED FALLING ============================ //
@@ -576,21 +614,30 @@ public class HostController : InputController
     private Vector3 CalculateMoveDirection(float x, float z, float speedMultiplier)
     {
 
+        
         m_ModifiedForward = Vector3.Cross(m_GroundNormal, -m_Orientation.right);
         m_ModifiedRight = Vector3.Cross(m_GroundNormal, m_Orientation.forward);
 
-        Vector3 xMov = m_ModifiedRight * x;
-        Vector3 zMov = m_ModifiedForward * z;
+        Vector3 xMov;
+        Vector3 zMov;
 
-        //Vector3 xMov = m_Orientation.transform.right * x;
-        //Vector3 zMov = m_Orientation.transform.forward * z;
+        if (m_GroundNormal != Vector3.zero)
+        {
+            xMov = m_ModifiedRight * x;
+            zMov = m_ModifiedForward * z;
+        }
+        else
+        { 
+            xMov = m_Orientation.transform.right * x;
+            zMov = m_Orientation.transform.forward * z;
+        }
+
 
         //xMov.y = 0;
         //zMov.y = 0;
 
-        /*Vector3 */moveDir = ((xMov + zMov).normalized * speedMultiplier * Time.fixedDeltaTime) + Vector3.up * Rigidbody.velocity.y;
-
-        Debug.Log(moveDir.y);
+        /*Vector3 */moveDir = ((xMov + zMov).normalized * speedMultiplier * Time.fixedDeltaTime) /*+ Vector3.up * Rigidbody.velocity.y*/; // i don't know why this line of code was there but without it
+                                                                                                                                          // it works better.
 
         return moveDir;
     }
@@ -645,10 +692,36 @@ public class HostController : InputController
         if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckDistance))
         {
             //Debug.Log(hit.transform.name);
-            m_GroundNormal = hit.normal;
+            //m_GroundNormal = hit.normal;          Moved to its own function.
+
+            if (m_JumpCounter >= 0.25f)
+            {
+                m_JumpCounter = 0.0f;
+                m_HasJumped = false;
+            }
+
             return true;
         }
+        //m_GroundNormal = Vector3.zero;
         return false;
+    }
+
+    /// <summary>
+    /// CalculateGroundNormal() used to just be a line of code in the CheckGrounded() function, but I wanted to be able to check the ground normal before the player is offically "grounded".
+    /// </summary>
+    /// <returns></returns>
+    private void CalculateGroundNormal()
+    {
+        RaycastHit hit;
+        Ray ray = new Ray(transform.position + Vector3.up, Vector3.down);
+        if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckDistance * 1.04f))
+        {
+            m_GroundNormal = hit.normal;
+        }
+        else
+        {
+            m_GroundNormal = Vector3.zero;
+        }
     }
 
     /// <summary>

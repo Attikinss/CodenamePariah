@@ -128,6 +128,12 @@ public class HostController : InputController
     // temporary jump deactivate cooldown. to prevent m_IsJumping from being deactivated as soon as you jump.
     float m_JumpCounter = 0;
 
+
+
+    // ================== TEMPORARY RECOIL TESTING ================== //
+    private bool m_IsRecoilTesting = false;
+
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;

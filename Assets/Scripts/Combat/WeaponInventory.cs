@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//using UnityEngine.InputSystem;
+using UnityEngine.InputSystem;
 
 public class WeaponInventory : MonoBehaviour
 {
@@ -70,29 +70,31 @@ public class WeaponInventory : MonoBehaviour
 
     private void Update()
     {
+        GetComponentInParent<UIManager>().DisplayInventory();
+
         // Thankfully you've written this yourself in the original version but just to
         // confirm this will all be moved into the player/AI controller scripts soon
 
         // TEMP FIX so that other characters with this script dont have their ammo decrement when the player clicks.
-        if (m_Camera.gameObject.activeSelf == true)
-        {
+        //if (m_Camera.gameObject.activeSelf == true)
+        //{
             //// need to make sure this is only active when possessing
             //if (Mouse.current.leftButton.isPressed && this.CompareTag("AssaultRifle"))
             //{
             //    Fire();
             //}
             //
-            //// need to make sure this is only active when possessing
-            //if (Mouse.current.leftButton.wasPressedThisFrame)
-            //{
-            //    Fire();
-            //}
-            //else if (Keyboard.current.rKey.wasPressedThisFrame)
-            //{
-            //    if (!PrimaryAmmoFull() && !ReserveAmmoEmpty() && !m_IsReloading)
-            //        StartCoroutine(Reload());
-            //}
-        }
+            // need to make sure this is only active when possessing
+            if (Mouse.current.leftButton.isPressed) //waspressedthisframe for semi auto
+            {
+                Fire();
+            }
+            else if (Keyboard.current.rKey.wasPressedThisFrame) //
+            {
+                if (!PrimaryAmmoFull() && !ReserveAmmoEmpty() && !m_IsReloading)
+                    StartCoroutine(Reload());
+            }
+        //}
     }
 
     /// <summary>Fires the weapon.</summary>
@@ -106,13 +108,18 @@ public class WeaponInventory : MonoBehaviour
         {
             if (m_RoundsInMagazine > 0)
             {
+                // Currently gets rid of bullet sprite before UI has fully updated //
+                this.GetComponentInParent<UIManager>().DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);
                 m_RoundsInMagazine--;
+                
             }
             else
             {
                 // Do nothing / reload automatically
                 if (!ReserveAmmoEmpty())
                     StartCoroutine(Reload());
+                //else if (TotalAmmoEmpty())
+                //    this.GetComponentInParent<UIManager>().DisableMagazine();
             }
         }
     }
@@ -155,14 +162,28 @@ public class WeaponInventory : MonoBehaviour
         int ammoRequired = m_MagazineSize - m_RoundsInMagazine;
 
         // Check the size of the reserve pool
-        if (m_ReserveAmmo < ammoRequired)
+        if (m_ReserveAmmo <= ammoRequired)
         {
+            // Update UI to only show one mag
+            this.GetComponentInParent<UIManager>().ModuloEqualsZero(m_RoundsInMagazine + m_ReserveAmmo);
+
             // Move all remaining ammo into magazine
             m_RoundsInMagazine += m_ReserveAmmo;
             m_ReserveAmmo = 0;
         }
         else
         {
+            if ((m_RoundsInMagazine + m_ReserveAmmo) % m_MagazineSize == 0)
+            {
+                // Total ammo equals an amount that when divided by magazine size, has no remainder therefore get rid of a mag UI element
+                this.GetComponentInParent<UIManager>().ModuloEqualsZero(m_MagazineSize);
+            }
+            else
+            {
+                // Removes bullet sprites total from 1 - 2 mags depending on the ammo missing from current magazine and how much ammo was already missing in the last magazine
+                this.GetComponentInParent<UIManager>().RemoveAmmoFromLastAddToCurrent(m_MagazineSize);
+            }
+
             // Move required amount from reserve to magazine
             m_RoundsInMagazine += ammoRequired;
             m_ReserveAmmo -= ammoRequired;
@@ -228,6 +249,14 @@ public class WeaponInventory : MonoBehaviour
         return m_RoundsInMagazine == (int)(m_MagazineSize * m_LowAmmoWarningPercentage) * 0.5f;
     }
 
+    /// <summary>Defines whether or not the weapon's magazine is empty and there is no reserve ammo.</summary>
+    public bool TotalAmmoEmpty()
+    {
+        // Try to find a more elegant way to handle this
+        // through exposed variables that Michael can play with.
+        return m_RoundsInMagazine + m_ReserveAmmo == 0;
+    }
+
     /// <summary>Defines whether or not the weapon's magazine is empty.</summary>
     public bool PrimaryAmmoEmpty()
     {
@@ -238,5 +267,15 @@ public class WeaponInventory : MonoBehaviour
     public bool ReserveAmmoEmpty()
     {
         return m_ReserveAmmo == 0;
+    }
+
+    public int GetRoundsInMagazine()
+    {
+        return m_RoundsInMagazine;
+    }
+
+    public int GetReserve()
+    {
+        return m_ReserveAmmo;
     }
 }

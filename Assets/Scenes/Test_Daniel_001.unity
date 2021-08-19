@@ -3496,7 +3496,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 321117db00972f84ab44b9c72f61a1cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_MaxDecals: 25
+  m_MaxDecals: 45
 --- !u!1 &1780589435
 GameObject:
   m_ObjectHideFlags: 0
@@ -4218,6 +4218,10 @@ PrefabInstance:
       propertyPath: m_GroundCheckDistance
       value: 1.63
       objectReference: {fileID: 0}
+    - target: {fileID: 8559930378344312184, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_RecoilTestIntervals
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 8559930378344312185, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -4264,7 +4268,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_ActionEvents.Array.size
-      value: 17
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_ActionEvents.Array.data[15].m_ActionId
@@ -4275,6 +4279,10 @@ PrefabInstance:
       value: 16b5e56d-e5d9-43c7-b959-cb11a8cb8555
       objectReference: {fileID: 0}
     - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_ActionEvents.Array.data[17].m_ActionId
+      value: bcf73363-bc80-4831-b974-7150f49040b0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_ActionEvents.Array.data[15].m_ActionName
       value: Pariah/Raise[/DualShock4GamepadHID/buttonSouth,/Keyboard/space]
       objectReference: {fileID: 0}
@@ -4283,8 +4291,40 @@ PrefabInstance:
       value: Pariah/Lower[/DualShock4GamepadHID/buttonEast,/Keyboard/leftCtrl]
       objectReference: {fileID: 0}
     - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_ActionEvents.Array.data[17].m_ActionName
+      value: Host/RecoilTest[/Keyboard/k]
+      objectReference: {fileID: 0}
+    - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_ActionEvents.Array.data[17].m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_ActionEvents.Array.data[17].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_ActionEvents.Array.data[17].m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 696020105}
+    - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_ActionEvents.Array.data[17].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_ActionEvents.Array.data[11].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: OnJump
+      objectReference: {fileID: 0}
+    - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_ActionEvents.Array.data[17].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnTestRecoil
+      objectReference: {fileID: 0}
+    - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_ActionEvents.Array.data[17].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: HostController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_ActionEvents.Array.data[17].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}

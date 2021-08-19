@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    public int m_MaxDecals = 12;
+    public int m_MaxDecals = 35;
 
     public List<Decal> m_allDecals = new List<Decal>();
 

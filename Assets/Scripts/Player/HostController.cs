@@ -131,8 +131,16 @@ public class HostController : InputController
 
 
     // ================== TEMPORARY RECOIL TESTING ================== //
-    private bool m_IsRecoilTesting = false;
+    [Header("Recoil Testing")]
+    public float m_RecoilTestIntervals = 3.0f;
+    public float m_RecoilTestRestTime = 2.0f;
 
+    private bool m_IsRecoilTesting = false;
+    private bool m_IsTestResting = false;
+    private float m_RecoilTestCounter = 0;
+
+    Vector3 m_PreviousOrientationVector = Vector3.zero;
+    float m_PreviousXCameraRot = 0;
 
     private void Start()
     {
@@ -268,13 +276,44 @@ public class HostController : InputController
         CurrentCamRot = m_Camera.transform.forward;
 
 
+        // ================ NOTE ================ //
+        // It's really weird and bad to have a counter like this. I'll try find a way around it but
+        // for now it's helping fix an issue with walking up ramps and jumping.
+        // ====================================== //
+
         if (m_HasJumped)
         {
             m_JumpCounter += Time.deltaTime; // how to get around having a timer for something like this?
         }
+
+
+        // ============== EXPERIMENTAL RECOIL TESTING STUFF ============== //
+        if (m_IsRecoilTesting)
+        {
+            if (!m_IsTestResting)
+                m_IsFiring = true;
+            else
+                m_IsFiring = false;
+
+
+            m_RecoilTestCounter += Time.deltaTime;
+            if (!m_IsTestResting && m_RecoilTestCounter >= m_RecoilTestIntervals)
+            {
+                m_IsTestResting = true;
+                ShootingDuration = 0; // This sequence of firing should be cancelled. It normally gets cancelled on mouse button up after firing.
+                m_RecoilTestCounter = 0.0f;
+            }
+            else if(m_IsTestResting && m_RecoilTestCounter >= m_RecoilTestRestTime) // This means were now counting the rest time.
+            {
+                m_IsTestResting = false;
+                m_RecoilTestCounter = 0.0f;
+                m_XRotation = m_PreviousXCameraRot; // this might be unnessessary since the guns camera rotation goes back down through the recoil recovery system.
+                m_Orientation.transform.eulerAngles = m_PreviousOrientationVector;
+            }
+        }
     }
 
-	private void FixedUpdate()
+    private void FixedUpdate()
 	{
         if (!m_Active) return;
 
@@ -404,6 +443,8 @@ public class HostController : InputController
 
     public override void OnLook(InputAction.CallbackContext value)
 	{
+        if (m_IsRecoilTesting)
+            return; // early out to prevent mouse movement while testing recoil.
         LookInput = value.ReadValue<Vector2>();
 	}
 
@@ -533,6 +574,8 @@ public class HostController : InputController
 
     private void Look()
     {
+        
+
         float mouseX = LookInput.x * m_LookSensitivity * Time.deltaTime;
         float mouseY = LookInput.y * m_LookSensitivity * Time.deltaTime;
 
@@ -932,4 +975,28 @@ public class HostController : InputController
     private Transform GetCurrentWeapon() => m_Inventory.m_CurrentWeapon.transform;
     private Vector3 GetCurrentWeaponOriginalPos() => m_Inventory.m_CurrentWeapon.m_OriginalLocalPosition;
     private Vector3 GetCurrentWeaponOriginalGlobalPos() => m_Inventory.m_CurrentWeapon.m_OriginalGlobalPosition;
+
+
+    public void OnTestRecoil(InputAction.CallbackContext value)
+    {
+        if (value.performed && !m_IsRecoilTesting)
+        {
+            // do test.
+            m_IsRecoilTesting = true;
+            m_PreviousOrientationVector = m_Orientation.transform.eulerAngles;
+            m_PreviousXCameraRot = m_XRotation;
+
+            Debug.Log("OnTestRecoil value performed!");
+            Debug.Log(m_Camera.transform.eulerAngles + "vs" + PreviousCameraRotation);
+            //m_IsFiring = true;
+        }
+        else if (value.performed && m_IsRecoilTesting)
+        {
+            m_IsRecoilTesting = false;
+            m_IsTestResting = false;
+            
+            m_IsFiring = false;
+            m_RecoilTestCounter = 0;
+        }
+    }
 }

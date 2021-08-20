@@ -242,9 +242,9 @@ public class Weapon : MonoBehaviour
                     {
                         //Decal newDecal = new Decal(hit.transform, hit.point, hit.normal);         // No longer need this now with the all new Object Pooling Decals! - daniel
 
-                        if(m_HitDecal)
-                            GameManager.Instance?.AddDecal(hit.transform, hit.point, hit.normal, m_HitDecal);
-                        else
+                        //if(m_HitDecal)
+                        //    GameManager.Instance?.AddDecal(hit.transform, hit.point, hit.normal, m_HitDecal);
+                        //else
                             GameManager.Instance?.AddDecal(hit.transform, hit.point, hit.normal);
 
 

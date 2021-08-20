@@ -13,6 +13,11 @@ public class Decal
     private Matrix4x4 m_LocalMat;
     private Vector3 m_hitPointWorld;
 
+
+    public Decal(GameObject hitDecal)
+    {
+        m_Decal = hitDecal;
+    }
     public Decal(Transform obj, Vector3 hitPoint, GameObject hitDecal, Vector3 dir)
     {
         m_Decal = GameObject.Instantiate<GameObject>(hitDecal);
@@ -64,11 +69,14 @@ public class Decal
     public void Update()
     {
         if (m_Decal) // We are checking if the decal's game object exists because there is a possibility it does not have one if it was created using the constructor that doesn't need a texture.
-        { 
-            Vector3 localPos = m_objAttached.TransformPoint(m_hitPoint);
-            m_Decal.transform.LookAt(localPos + m_objAttached.TransformVector(m_Dir));
-            localPos += m_objAttached.TransformVector(m_Dir) * 0.009f;
-            m_Decal.transform.position = localPos;
+        {
+            if (m_objAttached)
+            { 
+                Vector3 localPos = m_objAttached.TransformPoint(m_hitPoint);
+                m_Decal.transform.LookAt(localPos + m_objAttached.TransformVector(m_Dir));
+                localPos += m_objAttached.TransformVector(m_Dir) * 0.009f;
+                m_Decal.transform.position = localPos;
+            }
         }
     }
 

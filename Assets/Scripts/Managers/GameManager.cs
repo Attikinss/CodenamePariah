@@ -45,6 +45,15 @@ public class GameManager : MonoBehaviour
         m_decalPool.Add(m_oldFirst); // Adding it back so it's at the back of the list.
     }
 
+    public void AddDecal(Transform obj, Vector3 hitPoint, Vector3 normal, GameObject decal)
+    {
+        m_decalPool[0].SetDecal(obj, hitPoint, normal);
+
+        Decal m_oldFirst = m_decalPool[0];
+        m_decalPool.RemoveAt(0); // Removing the first one.
+        m_decalPool.Add(m_oldFirst); // Adding it back so it's at the back of the list.
+    }
+
     public void PopDecal()
     { }
 

@@ -50,6 +50,17 @@ public class Decal
         m_LocalMat = m_objAttached.worldToLocalMatrix;
         m_hitPointWorld = hitPoint;
     }
+
+    public void SetDecal(Transform obj, Vector3 hitPoint, Vector3 dir, GameObject decal)
+    {
+        m_objAttached = obj;
+        m_hitPoint = m_objAttached.InverseTransformPoint(hitPoint);
+        m_Dir = m_objAttached.InverseTransformDirection(dir);
+        m_LocalMat = m_objAttached.worldToLocalMatrix;
+        m_hitPointWorld = hitPoint;
+
+        m_Decal = decal;
+    }
     public void Update()
     {
         if (m_Decal) // We are checking if the decal's game object exists because there is a possibility it does not have one if it was created using the constructor that doesn't need a texture.

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -9,20 +9,18 @@ using WhiteWillow.Nodes;
 namespace WhiteWillow.Editor
 {
     [CustomEditor(typeof(BaseNode))]
-    public class NodeEditorView : UnityEditor.Editor
+    public class BlackboardView : UnityEditor.Editor
     {
         private BaseNode m_SelectedNode;
         private VisualElement m_RootVisualElement;
 
         private List<VisualElement> m_FieldElements;
 
-        public NodeEditorView(Object target)
+        public BlackboardView(Object target)
         {
             m_FieldElements = new List<VisualElement>();
             m_SelectedNode = target as BaseNode;
             m_RootVisualElement = new VisualElement();
-
-            Debug.Log("Noice");
         }
 
         public override VisualElement CreateInspectorGUI()
@@ -30,11 +28,6 @@ namespace WhiteWillow.Editor
             var fields = m_SelectedNode?.GetType().GetFields(System.Reflection.BindingFlags.Public).ToList();
             var hiddenFields = fields?.Where(field => field.GetCustomAttributes(typeof(HideInInspector), true) != null).ToList();
             hiddenFields?.ForEach(field => fields.Remove(field));
-
-            foreach (var field in fields)
-            {
-                Debug.Log(field.FieldType.Name);
-            }
 
             return m_RootVisualElement;
         }

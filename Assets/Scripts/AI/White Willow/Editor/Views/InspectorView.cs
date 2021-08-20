@@ -7,7 +7,8 @@ namespace WhiteWillow.Editor
     {
         public new class UxmlFactory : UxmlFactory<InspectorView, UxmlTraits> { }
 
-        private UnityEditor.Editor m_PropertyEditor;
+        //private UnityEditor.Editor m_PropertyEditor;
+        private NodeEditorView m_PropertyEditor;
 
         public InspectorView()
         {
@@ -22,7 +23,7 @@ namespace WhiteWillow.Editor
                 return;
 
             Object.DestroyImmediate(m_PropertyEditor);
-            m_PropertyEditor = UnityEditor.Editor.CreateEditor(nodeView.Node);
+            m_PropertyEditor = UnityEditor.Editor.CreateEditor(nodeView.Node, typeof(NodeEditorView)) as NodeEditorView;
             IMGUIContainer container = new IMGUIContainer(() => { m_PropertyEditor.OnInspectorGUI(); });
             container.style.marginTop = 5;
             container.style.marginLeft = 5;

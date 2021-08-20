@@ -51,9 +51,13 @@ namespace WhiteWillow
                 else
                 {
                     Vector3 faceDirection = m_NavAgent.velocity;
-                    faceDirection.y = 0.0f;
-                    m_HostController.m_Orientation.rotation = Quaternion.Lerp(m_HostController.m_Orientation.rotation, Quaternion.LookRotation(faceDirection.normalized, Vector3.up), 0.02f);
-                    FacingDirection = m_HostController.m_Orientation.eulerAngles;
+                    
+                    if (faceDirection != Vector3.zero)
+                    {
+                        faceDirection.y = 0.0f;
+                        m_HostController.m_Orientation.rotation = Quaternion.Lerp(m_HostController.m_Orientation.rotation, Quaternion.LookRotation(faceDirection.normalized, Vector3.up), 0.02f);
+                        FacingDirection = m_HostController.m_Orientation.eulerAngles;
+                    }
                 }
             }
 

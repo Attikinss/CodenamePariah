@@ -71,6 +71,8 @@ public static class Telemetry
 
         foreach (var name in fileNames)
         {
+            Debug.Log(name);
+
             if (new FileInfo(name).Length > 0)
             {
                 string[] inputData = File.ReadAllLines(name);
@@ -86,7 +88,10 @@ public static class Telemetry
                     positions.Add(new Vector3(Mathf.RoundToInt(float.Parse(split[2])), Mathf.RoundToInt(float.Parse(split[3])), Mathf.RoundToInt(float.Parse(split[4]))));
                 }
 
-                parsedData.Add(dataSetName, positions);
+                if (parsedData.ContainsKey(dataSetName))
+                    parsedData[dataSetName].AddRange(positions);
+                else
+                    parsedData.Add(dataSetName, positions);
             }
         }
 

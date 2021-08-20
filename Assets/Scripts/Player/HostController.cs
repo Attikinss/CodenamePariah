@@ -555,7 +555,6 @@ public class HostController : InputController
     {
         if (active && !m_HasFired)
         {
-
             Ray ray = new Ray(m_Camera.transform.position, m_Camera.transform.forward);
             RaycastHit hit;
 

@@ -63,17 +63,12 @@ namespace WhiteWillow.Editor
             m_FileMenu = rootVisualElement.Q<ToolbarMenu>("FileMenu");
 
             m_FileMenu.menu.AppendAction("New", ctx => { m_GraphView.NewTree(); AddTreesToTreeMenu(); });
+            m_FileMenu.menu.AppendAction("Save As New", ctx => { m_GraphView.NewTree(); AddTreesToTreeMenu(); });
         }
 
         private void CreateTreeMenu()
         {
             m_TreeMenu = rootVisualElement.Q<ToolbarMenu>("TreeMenu");
-        }
-
-        private void CreateScanButton()
-        {
-            m_ScanButton = rootVisualElement.Q<ToolbarButton>("ScanProj");
-            m_ScanButton.clicked += AddTreesToTreeMenu;
         }
 
         private void CreateGraphView()

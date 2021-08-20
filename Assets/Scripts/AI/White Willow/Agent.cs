@@ -23,6 +23,7 @@ namespace WhiteWillow
 
         private Vector3 m_MovePosition = Vector3.positiveInfinity;
         private Vector3 m_LastPosition;
+        public Vector3 FacingDirection { get; private set; }
 
         private void Start()
         {
@@ -35,13 +36,18 @@ namespace WhiteWillow
 
         private void Update()
         {
-            if (!m_Possessed)
+            if (m_Possessed)
+            {
+                FacingDirection = m_HostController.m_Orientation.rotation * m_HostController.m_Orientation.forward;
+            }
+            else
             {
                 m_RuntimeTree?.Tick();
 
                 Vector3 faceFirection = m_NavAgent.velocity;
                 faceFirection.y = 0.0f;
                 m_HostController.m_Orientation.rotation = Quaternion.Lerp(m_HostController.m_Orientation.rotation, Quaternion.LookRotation(faceFirection.normalized, Vector3.up), 0.02f);
+                FacingDirection = m_HostController.m_Orientation.eulerAngles;
             }
 
             m_LastPosition = transform.position;
@@ -57,7 +63,7 @@ namespace WhiteWillow
             Vector3 direction = (transform.position - target.position).normalized;
             float rotation = Mathf.Atan2(direction.z, direction.x);
             Quaternion targetRotation = Quaternion.Euler(0.0f, rotation, 0.0f);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime);
         }
 
         public void MoveToPosition()
@@ -80,7 +86,7 @@ namespace WhiteWillow
         public void Possess()
         {
             m_Possessed = true;
-            m_NavAgent.SetDestination(transform.position);
+            m_NavAgent.ResetPath();
             m_NavAgent.enabled = false;
             m_Pariah?.GetComponent<PariahController>().Disable();
             m_HostController?.Enable();

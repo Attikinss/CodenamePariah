@@ -46,12 +46,12 @@ public class Weapon : MonoBehaviour
 
 
     // ================================= Added things from HostController. ================================= //
-    public Transform m_Weapon1;
-    public Transform m_Weapon2;
+    //public Transform m_Weapon;
+    //public Transform m_Weapon2;
 
     // These are references to the weapons that the controller has.
-    public WeaponConfiguration m_WeaponConfig1;
-    public WeaponConfiguration m_WeaponConfig2;
+    //public WeaponConfiguration m_WeaponConfig;
+   // public WeaponConfiguration m_WeaponConfig2;
 
     [Header("Old Bobbing Controls")]
     public float m_BobSpeed = 5;
@@ -93,6 +93,7 @@ public class Weapon : MonoBehaviour
     // Because I'm trying to move away from the technique of having timers in Update(), I need a new
     // way of getting the total firing duration. I'm going to record the time when you start firing
     // and calculate the difference between the current time to find out the duration.
+    [HideInInspector]
     public float m_FireStartTime = 0.0f;
 
 
@@ -118,10 +119,10 @@ public class Weapon : MonoBehaviour
 
     public Inventory m_Inventory;
 
-    public float m_BulletDamage;
+    //public float m_BulletDamage;
     public GameObject m_HitDecal;
 
-    public AnimationCurve m_VerticalRecoil;
+    //public AnimationCurve m_VerticalRecoil;
 
     // ============= INTERNAL BOOKKEEPING ============= //
     [HideInInspector]

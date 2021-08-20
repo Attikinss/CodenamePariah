@@ -381,6 +381,7 @@ public class HostController : InputController
         else
         {
             GetCurrentWeapon().m_IsFiring = false;
+
             // Reset held counter happens regardless.
             ShootingDuration = 0.0f;
         }
@@ -583,7 +584,7 @@ public class HostController : InputController
     private void SelectWeapon(int index)
     {
         Weapon cache = m_Inventory.m_CurrentWeapon;
-        //m_Inventory.m_CurrentWeapon = m_Inventory.m_Weapons[index];
+        m_Inventory.m_CurrentWeapon = m_Inventory.m_Weapons[index];
 
         // Setting them active/inactive to display the correct weapon. Eventually this will be complimented by a weapon swapping phase where it will take some time before
         // the player can shoot after swapping weapons.

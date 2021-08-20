@@ -19,7 +19,7 @@ public class Inventory : MonoBehaviour
 
     [SerializeField]
     [Tooltip("Weapons this character has.")]
-    private List<Weapon> m_Weapons;
+    public List<Weapon> m_Weapons;  // Has been made public so I can access it within the HostController.cs script. Only temporary.
 
     /// <summary>
     /// 

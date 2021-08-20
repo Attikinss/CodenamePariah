@@ -412,6 +412,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "RecoilTest",
+                    "type": "Button",
+                    "id": "bcf73363-bc80-4831-b974-7150f49040b0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -764,6 +772,17 @@
                     "processors": "",
                     "groups": "KBM",
                     "action": "Select2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fd18cd63-caeb-4989-aefc-5546fc2ed0b5",
+                    "path": "<Keyboard>/k",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KBM",
+                    "action": "RecoilTest",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

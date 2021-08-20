@@ -10,12 +10,16 @@ public class Inventory : MonoBehaviour
     private int m_Health = 100;
 
     [SerializeField]
-    [Tooltip("Health UI.")]//
-    public TextMeshProUGUI m_HealthText;
+    [Tooltip("Health Text UI.")]//
+    private TextMeshProUGUI m_HealthText;
+
+    [SerializeField]
+    [Tooltip("Health Sprite UI")]
+    private GameObject m_HealthSprite;
 
     [SerializeField]
     [Tooltip("Weapons this character has.")]
-    public List<Weapon> m_Weapons;
+    public List<Weapon> m_Weapons;  // Has been made public so I can access it within the HostController.cs script. Only temporary.
 
     /// <summary>
     /// 
@@ -41,15 +45,17 @@ public class Inventory : MonoBehaviour
         if (m_Health > 100)
         {
             m_Health = 100;
+            m_HealthSprite.SetActive(true);
         }
         if (m_Health < 0)
         {
             m_Health = 0;
+            m_HealthSprite.SetActive(false);
         }
     }
 
     /// <summary>Displays the current health.</summary>
-    void DisplayHealth()
+    void DisplayHealth() //move to ui Manager
     {
         //m_HealthText.text = "";
         m_HealthText?.SetText(m_Health.ToString());

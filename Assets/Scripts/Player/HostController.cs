@@ -504,6 +504,8 @@ public class HostController : InputController
 
 	private void Move(Vector2 input)
     {
+        Telemetry.TracePosition("Host-Movement", transform.position, 0.05f, 150);
+
         // Preserves m_Rigidbody's y velocity.
         Vector3 direction = CacheMovDir;
         direction.y = Rigidbody.velocity.y;

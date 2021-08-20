@@ -252,8 +252,8 @@ public class Weapon : MonoBehaviour
 
         Vector3 centre = m_Camera.ScreenToWorldPoint(new Vector3(
             (Screen.width / 2) + (-m_Controller.LookInput.x * weaponConfig.m_GunAimSwayStrength),
-            (Screen.height / 2) + (-m_Controller.LookInput.y * weaponConfig.m_GunSwayStrength) - (transform.up.y * weaponConfig.m_GunAimHeight),
-            (transform.forward.z * weaponConfig.m_GunAimZPos) + weaponConfig.m_WeaponRecoilTransform.z * weaponConfig.m_ADSRecoilModifier));
+            (Screen.height / 2) + (-m_Controller.LookInput.y * weaponConfig.m_GunSwayStrength) - (m_Controller.transform.up.y * weaponConfig.m_GunAimHeight),
+            (m_Controller.transform.forward.z * weaponConfig.m_GunAimZPos) + weaponConfig.m_WeaponRecoilTransform.z * weaponConfig.m_ADSRecoilModifier));
 
         //Vector3 currentPosition = m_Gun.position;
         Vector3 currentPosition = weaponConfig.m_ScopeCentre.position;

@@ -144,13 +144,13 @@ public class UIManager : MonoBehaviour
 
     public void DisplayInventory()
     {
-        if (GetComponentInChildren<WeaponInventory>().TotalAmmoEmpty())
+        if (GetComponentInChildren<Weapon>().TotalAmmoEmpty())
         {
             DisableMagazine();
         }
 
         m_AmmoWarning.text = "";
-        if (GetComponentInChildren<WeaponInventory>().TotalAmmoEmpty())
+        if (GetComponentInChildren<Weapon>().TotalAmmoEmpty())
         {
             m_AmmoWarning.text = "";
             m_AmmoWarning.text = "No Ammo";
@@ -158,6 +158,6 @@ public class UIManager : MonoBehaviour
 
         m_AmmoDisplay.text = "";
 
-        m_AmmoDisplay.text += string.Format("{0:D2} / {1:D2}", GetComponentInChildren<WeaponInventory>().GetRoundsInMagazine(), GetComponentInChildren<WeaponInventory>().GetReserve());//set a gameobject in inspector to avoid getcomponent
+        m_AmmoDisplay.text += string.Format("{0:D2} / {1:D2}", GetComponentInChildren<Weapon>().GetRoundsInMagazine(), GetComponentInChildren<Weapon>().GetReserve());//set a gameobject in inspector to avoid getcomponent
     }
 }

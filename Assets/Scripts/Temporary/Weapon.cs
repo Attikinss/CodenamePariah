@@ -45,7 +45,60 @@ public class Weapon : MonoBehaviour
     private float m_NextTimeToFire = 0f;
 
 
+    // ================================= Added things from HostController. ================================= //
+    public Transform m_Weapon1;
+    public Transform m_Weapon2;
 
+    // These are references to the weapons that the controller has.
+    public WeaponConfiguration m_WeaponConfig1;
+    public WeaponConfiguration m_WeaponConfig2;
+
+    [Header("Old Bobbing Controls")]
+    public float m_BobSpeed = 1;
+    public float m_BobDistance = 1;
+
+    public bool m_IsFiring = false;
+    public bool m_IsAiming = false;
+
+    // Recoil variables.
+    // These two recoil's are the actual shot pattern related recoils.
+    //public float m_AdditionalCameraRecoilX;                                           // Im going to try keep them in HostController.cs since they aren't weapon specific.
+    //public float m_AdditionalCameraRecoilY;
+
+    // This recoil is the camera shake recoil. It rotates the camera by a very small amount. Not intended to effect shooting patterns.
+    //public Vector3 m_AdditionalRecoilRotation;                                                                                            // Going to try and also keep this in HostController.cs since it effects the camera.
+
+    // This recoil is to move the gun model up and down. Just a visual effect.
+    public Vector3 m_WeaponRecoilRot;
+
+
+    // Because we're not in the HostController.cs script, we need a reference to it to access some things.
+    public HostController m_Controller;
+
+
+    // ========================== TEMPORARY WEAPON BOBBING ========================== //
+    // This weapon sway stuff is here for now since we haven't got animations in yet.
+    // It will be replaced soon.
+
+    [HideInInspector]
+    public float m_SwayTimer = 0.0f;
+    [HideInInspector]
+    public float m_WaveSlice = 0.0f;
+    [HideInInspector]
+    public float m_WaveSliceX = 0.0f;
+    // ========================================================================== //
+
+
+    // Because I'm trying to move away from the technique of having timers in Update(), I need a new
+    // way of getting the total firing duration. I'm going to record the time when you start firing
+    // and calculate the difference between the current time to find out the duration.
+    public float m_FireStartTime = 0.0f;
+
+    // ===================================================================================================== //
+
+    // Stuff from my original Weapon.cs script.
+
+    public Inventory m_Inventory;
 
     public float m_BulletDamage;
     public GameObject m_HitDecal;
@@ -73,7 +126,7 @@ public class Weapon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        GetComponentInParent<UIManager>().DisplayInventory();
+        //GetComponentInParent<UIManager>().DisplayInventory();
 
 
 
@@ -95,18 +148,32 @@ public class Weapon : MonoBehaviour
 
         
 
-        if (Mouse.current.leftButton.isPressed) //waspressedthisframe for semi auto
-        {
+        if (m_IsFiring)
             Fire();
-        }
-        else if (Keyboard.current.rKey.wasPressedThisFrame) //
-        {
-            if (!PrimaryAmmoFull() && !ReserveAmmoEmpty() && !m_IsReloading)
-                StartCoroutine(Reload());
-        }
+        if (m_IsAiming)
+            Aim();
+
+        UpdateSway(m_Controller.LookInput.x, m_Controller.LookInput.y);
+
+        // Reloading. Going to leave it out for now just while I get the system back in working order. 
+
+        //else if (Keyboard.current.rKey.wasPressedThisFrame) //
+        //{
+        //    if (!PrimaryAmmoFull() && !ReserveAmmoEmpty() && !m_IsReloading)
+        //        StartCoroutine(Reload());
+        //}
+
+
+        // Update and other functions from HostController.cs
     }
 
-    public void Fire()
+	private void FixedUpdate()
+	{
+        UpdateRecoil();
+		
+	}
+
+	public void Fire()
     {
         // In this function you can do a few invocations to different systems
         // For example whenever a sound needs to be played, you can call into
@@ -120,6 +187,46 @@ public class Weapon : MonoBehaviour
                 this.GetComponentInParent<UIManager>().DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);
                 m_RoundsInMagazine--;
 
+
+                // I'll add my shoot code in here.
+                Ray ray = new Ray(m_Camera.transform.position, m_Camera.transform.forward);
+                RaycastHit hit;
+
+                WeaponConfiguration currentConfig = GetCurrentWeaponConfig();
+                // =========== TESTING =========== //
+                if (!currentConfig.m_DisableAllRecoil)
+                {
+                    float ShootingDuration = Time.time - m_FireStartTime;
+                    m_Controller.AdditionalCameraRecoilX += currentConfig.m_VerticalRecoil.Evaluate(ShootingDuration);
+                    m_Controller.AdditionalCameraRecoilY += currentConfig.m_HorizontalRecoil.Evaluate(ShootingDuration);
+                }
+                // =============================== //
+
+                //m_HasFired = true;
+
+                AddVisualRecoil();
+
+
+                // ========================= TEMPORARY SHOOT COLLISION ========================= //
+
+                if (Physics.Raycast(ray, out hit))
+                {
+                    if (hit.transform.gameObject != null)
+                    {
+                        //Decal newDecal = new Decal(hit.transform, hit.point, hit.normal);         // No longer need this now with the all new Object Pooling Decals! - daniel
+                        GameManager.Instance?.AddDecal(hit.transform, hit.point, hit.normal);
+
+
+                        // Adding a force to the hit object.
+                        if (hit.rigidbody != null)
+                        {
+                            hit.rigidbody.AddForce(m_Camera.transform.forward * GetCurrentWeaponConfig().m_BulletForce, ForceMode.Impulse);
+                        }
+                    }
+                }
+                // ============================================================================= //
+
+
             }
             else
             {
@@ -128,6 +235,156 @@ public class Weapon : MonoBehaviour
                     StartCoroutine(Reload());
                 //else if (TotalAmmoEmpty())
                 //    this.GetComponentInParent<UIManager>().DisableMagazine();
+            }
+        }
+    }
+
+    private void Aim()
+    {
+        WeaponConfiguration weaponConfig = GetCurrentWeaponConfig();
+        Transform gunTransform = GetCurrentWeaponTransform();
+
+        Vector3 centre = m_Camera.ScreenToWorldPoint(new Vector3(
+            (Screen.width / 2) + (-m_Controller.LookInput.x * weaponConfig.m_GunAimSwayStrength),
+            (Screen.height / 2) + (-m_Controller.LookInput.y * weaponConfig.m_GunSwayStrength) - (transform.up.y * weaponConfig.m_GunAimHeight),
+            (transform.forward.z * weaponConfig.m_GunAimZPos) + weaponConfig.m_WeaponRecoilTransform.z * weaponConfig.m_ADSRecoilModifier));
+
+        //Vector3 currentPosition = m_Gun.position;
+        Vector3 currentPosition = weaponConfig.m_ScopeCentre.position;
+        Vector3 requiredChange = centre - currentPosition;
+
+        gunTransform.position += requiredChange * weaponConfig.m_GunAimSpeed;
+    }
+
+    private Vector3 WeaponBob()
+    {
+        //Weapon currentWeapon = PlayerManager.GetCurrentWeapon();
+        Vector3 localPosition = GetCurrentWeaponTransform().transform.position;
+        Vector3 currentWeaponMidPoint = GetCurrentWeaponOriginalPos();
+
+        if (m_Controller.m_IsMoving)
+        {
+            // Do weapon sway stuff.
+            m_SwayTimer += Time.deltaTime;
+            m_WaveSlice = -(Mathf.Sin(m_SwayTimer * m_BobSpeed) + 1) / 2;
+            m_WaveSliceX = Mathf.Cos(m_SwayTimer * m_BobSpeed);
+
+            if (m_WaveSlice >= -0.5f)
+            {
+                m_WaveSlice = -1 - -(Mathf.Sin(m_SwayTimer * m_BobSpeed) + 1) / 2;
+            }
+
+            float translateChangeX = m_WaveSliceX * m_BobDistance;
+            float translateChangeY = m_WaveSlice * m_BobDistance;
+            localPosition.y = /*currentWeaponMidPoint.y + */translateChangeY;
+            localPosition.x = /*currentWeaponMidPoint.x + */translateChangeX;
+
+            return localPosition;
+            //currentWeapon.transform.localPosition = localPosition;
+        }
+        else
+        {
+            return Vector3.zero;
+        }
+        //else
+        //{
+        //    m_SwayTimer = 0.0f;
+        //    localPosition.y = currentWeaponMidPoint.y;
+        //    localPosition.x = currentWeaponMidPoint.x;
+        //    currentWeapon.transform.localPosition = Vector3.Lerp(currentWeapon.transform.localPosition, currentWeapon.m_MidPoint, 0.01f);
+        //}
+    }
+
+    /// <summary>
+    /// AddRecoil() adds to the visual recoil's. There is a visual recoil for the camera, 
+    /// (this is seperate from the camera's recoil the causes a pattern), and a visual recoil for the gun model.
+    /// </summary>
+    private void AddVisualRecoil()
+    {
+        if (!GetCurrentWeaponConfig().m_DisableAllRecoil)
+        {
+            WeaponConfiguration weaponConfig = GetCurrentWeaponConfig();
+
+
+            m_Controller.AdditionalRecoilRotation += new Vector3(-weaponConfig.RecoilRotationAiming.x, Random.Range(-weaponConfig.RecoilRotationAiming.y, weaponConfig.RecoilRotationAiming.y), Random.Range(-weaponConfig.RecoilRotationAiming.z, weaponConfig.RecoilRotationAiming.z));
+            m_WeaponRecoilRot -= new Vector3(weaponConfig.m_WeaponRotRecoilVertStrength, 0, 0);
+
+            // Although I am setting the recoil transform here, I have to apply it in the WeaponSway() function since I'm setting pos directly there. I want to change this but I'm unsure how right now
+            weaponConfig.m_WeaponRecoilTransform -= new Vector3(0, 0, weaponConfig.m_WeaponTransformRecoilZStrength);
+        }
+    }
+    /// <summary>
+    /// UpdateRecoil() should be called every frame and exponetially returns the visual recoils back to 0.
+    /// </summary>
+    private void UpdateRecoil()
+    {
+        WeaponConfiguration weaponConfig = GetCurrentWeaponConfig();
+
+        m_Controller.AdditionalRecoilRotation = Vector3.Lerp(m_Controller.AdditionalRecoilRotation, Vector3.zero, weaponConfig.m_CameraRecoilReturnSpeed * Time.deltaTime);
+        m_WeaponRecoilRot = Vector3.Lerp(m_WeaponRecoilRot, Vector3.zero, weaponConfig.m_WeaponRecoilReturnSpeed * Time.deltaTime);
+
+        weaponConfig.m_WeaponRecoilTransform = Vector3.Lerp(weaponConfig.m_WeaponRecoilTransform, Vector3.zero, weaponConfig.m_WeaponRecoilReturnSpeed * Time.deltaTime);
+    }
+
+    /// <summary>
+    /// UpdateRecoilRecovery() handles returning the gun back to it's position before firing.
+    /// </summary>
+    private void UpdateRecoilRecovery()
+    {
+        if (m_Controller.AdditionalCameraRecoilX > 0) // We only want to decrement AdditionCameraRecoilX if it has accumuluated recoil still in it.
+        {
+            // If we just keep decreasing the additional recoil until it reaches 0, it results in the camera going further down then what feels right.
+            // This is because as the player is shooting, they are compensating and making the gun stand in place. While this is happening, the additional recoil could
+            // build up to a high number and when the player stops shooting, the recoil will take a long time to get back to 0.
+
+            // An experimental method I'd like to try is to either decrease it back to 0, or until the camera rotation is back to where it when they just started shooting.
+            Vector2 currentCamX = new Vector2(m_Controller.CurrentCamRot.y, 1);
+            Vector2 previousCamX = new Vector2(m_Controller.PreviousCameraRotation.y, 1);          // I know I'm using the new keyword here and that's bad. But for now I'm trying to see if this system will work.
+            float dot = Vector3.Dot(currentCamX.normalized, previousCamX.normalized);
+            if (dot < 0.9999f || dot > 1.0001f) // Such a small difference in numbers still gives quite a generous margin for error.
+            {
+                // This means the current forward vector's y does not much the previous forward vector's y.
+                // We have to do one of two things.
+                // Either bring the gun down, so that the previous and current y components match.
+                // Or if the gun is already below the previous y component, we just leave the gun alone because they've over compensated for the recoil.
+
+                // If previous rotation's y is greater, it means they are looking further down then when they started firing.
+                if (m_Controller.PreviousCameraRotation.y > m_Controller.CurrentCamRot.y)
+                {
+                    // We want to incorporate the additional camera recoil into the rotation of the camera, that way we can set the variable to 0 without worrying that later we will be moving the camera downwards.
+
+                    // Because I'm setting the local rotation of the camera in the Look() function, it makes it kind of annoying to try and add/remove things to and from the rotation.
+                    // Instead I will add the AdditionalCameraRecoilX into xRotation and then set AdditionalCameraRecoilX to 0. This way I don't have to directly touch the cameras local rotation
+                    // here.
+
+                    m_Controller.m_XRotation -= m_Controller.AdditionalCameraRecoilX;
+                    m_Controller.AdditionalCameraRecoilX = 0;
+                }
+                else
+                {
+                    // Otherwise, they are aiming higher than when they started, so we'll bring the gun down to where it was.
+                    m_Controller.AdditionalCameraRecoilX -= 1 * GetCurrentWeaponConfig().m_RecoilRecoveryModifier;
+                    m_Controller.AdditionalCameraRecoilX = Mathf.Clamp(m_Controller.AdditionalCameraRecoilX, 0, 85f);
+                }
+
+            }
+            else
+            {
+                // Since the forward vectors match, we'll clear the m_AdditionalCameraRecoilX variable just to keep things clean.
+                m_Controller.m_XRotation -= m_Controller.AdditionalCameraRecoilX;
+                m_Controller.AdditionalCameraRecoilX = 0;
+            }
+            // The rotation on the Y Axis. So this is if the player gets turned horizontally from the recoil.
+            if (m_Controller.AdditionalCameraRecoilY != 0)
+            {
+                // I've decided not to lerp the additional horizontal recoil to 0 since it feels disorientating.
+
+                // If we have accumulated horizontal recoil.
+                //m_AdditionalCameraRecoilY -= 1 * GetCurrentWeaponConfig().m_RecoilRecoveryModifier;
+
+                // Just incorporating the accumulated recoil into m_DesiredX to clean up AdditionalCameraRecoilY.
+                m_Controller.m_DesiredX -= m_Controller.AdditionalCameraRecoilY;
+                m_Controller.AdditionalCameraRecoilY = 0;
             }
         }
     }
@@ -198,6 +455,52 @@ public class Weapon : MonoBehaviour
         }
 
         m_IsReloading = false;
+    }
+
+    private void UpdateSway(float x, float y)
+    {
+        // xAxis Quaternion is for the recoil kick upwards.
+
+        WeaponConfiguration weaponConfig = GetCurrentWeaponConfig();
+        Transform gunTransform = GetCurrentWeaponTransform();
+        if (!m_IsAiming)
+        {
+            Vector3 gunOriginalPos = GetCurrentWeaponOriginalPos();
+
+            Vector3 bobStuff = WeaponBob();
+
+            Vector3 finalPosition = new Vector3(Mathf.Clamp((-x * 0.02f), -weaponConfig.m_WeaponSwayClampX, weaponConfig.m_WeaponSwayClampX) + bobStuff.x, Mathf.Clamp((-y * 0.02f), -weaponConfig.m_WeaponSwayClampY, weaponConfig.m_WeaponSwayClampY) + bobStuff.y, 0 + weaponConfig.m_WeaponRecoilTransform.z);
+            gunTransform.localPosition = Vector3.Lerp(gunTransform.localPosition, finalPosition + gunOriginalPos, Time.deltaTime * weaponConfig.m_GunSwayReturn);
+            Quaternion xAxis = Quaternion.AngleAxis(m_WeaponRecoilRot.x, new Vector3(1, 0, 0));
+            Quaternion zAxis = Quaternion.AngleAxis(Mathf.Clamp(-x, -weaponConfig.m_WeaponSwayRotateClamp, weaponConfig.m_WeaponSwayRotateClamp), new Vector3(0, 0, 1));
+            gunTransform.localRotation = Quaternion.Slerp(gunTransform.localRotation, zAxis * xAxis, weaponConfig.m_WeaponSwayRotateSpeed);
+
+            float currentFOV = m_Camera.fieldOfView;
+            float desiredFOV = 60;
+
+            float requiredChange = desiredFOV - currentFOV;
+            m_Camera.fieldOfView += requiredChange * 0.45f;
+
+        }
+        else if (m_IsAiming)
+        {
+            // Had to put the sway code with the Aim() function since it was easier to just add the neccessary values to the calculations over there rather than try and split up the equations.
+
+            float currentFOV = m_Camera.fieldOfView;
+            float desiredFOV = 40;
+
+            float requiredChange = desiredFOV - currentFOV;
+            m_Camera.fieldOfView += requiredChange * 0.45f;
+
+
+
+            // Quaternion rotate
+            Quaternion zAxis = Quaternion.AngleAxis(Mathf.Clamp(-x, -weaponConfig.m_WeaponSwayRotateClamp, weaponConfig.m_WeaponSwayRotateClamp), new Vector3(0, 0, 1));
+            Quaternion xAxis = Quaternion.AngleAxis(m_WeaponRecoilRot.x * weaponConfig.m_ADSRecoilModifier, new Vector3(1, 0, 0));
+            gunTransform.localRotation = Quaternion.Slerp(gunTransform.localRotation, zAxis * xAxis, weaponConfig.m_WeaponSwayRotateSpeed);
+        }
+
+
     }
 
     /// <summary>Refills both the primary and reserve ammo pools.</summary>
@@ -285,5 +588,28 @@ public class Weapon : MonoBehaviour
     public int GetReserve()
     {
         return m_ReserveAmmo;
+    }
+
+    private WeaponConfiguration GetCurrentWeaponConfig()
+    {
+        return m_Inventory.m_CurrentWeapon.GetComponent<WeaponConfiguration>();
+    }
+    private Transform GetCurrentWeaponTransform() => m_Inventory.m_CurrentWeapon.transform;
+    private Vector3 GetCurrentWeaponOriginalPos() => m_Inventory.m_CurrentWeapon.m_OriginalLocalPosition;
+    private HostController GetController()
+    {
+        // Maybe we'll have a function to do this but for now I'm just going to make the 
+        // controller a public variable that can be set in the inspector.
+
+        return null;
+    }
+
+    /// <summary>
+    /// SetFireTime() is a helper function that allows the HostController script to set the time when the player
+    /// starts to hold down the mouse button.
+    /// </summary>
+    public void SetFireTime()
+    {
+        m_FireStartTime = Time.time;
     }
 }

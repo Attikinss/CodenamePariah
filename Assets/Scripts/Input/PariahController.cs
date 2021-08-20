@@ -161,6 +161,8 @@ public class PariahController : InputController
 
         if (!m_Dashing && !m_Possessing)
             m_Rigidbody.velocity = m_MoveVelocity;
+
+        Telemetry.TracePosition("Pariah-Movement", transform.position, 0.05f, 150);
     }
 
     private void Look()

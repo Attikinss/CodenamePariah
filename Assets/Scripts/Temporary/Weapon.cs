@@ -95,6 +95,23 @@ public class Weapon : MonoBehaviour
     // and calculate the difference between the current time to find out the duration.
     public float m_FireStartTime = 0.0f;
 
+
+
+    // ================== TEMPORARY RECOIL TESTING ================== //
+    [Header("Recoil Testing")]
+    public float m_RecoilTestIntervals = 3.0f;
+    public float m_RecoilTestRestTime = 2.0f;
+
+    [HideInInspector]
+    public bool m_IsRecoilTesting = false;  // Public because I've been moving things into Weapon.cs script.
+    [HideInInspector]
+    public bool m_IsTestResting = false;
+    [HideInInspector]
+    public float m_RecoilTestCounter = 0;
+
+
+
+
     // ===================================================================================================== //
 
     // Stuff from my original Weapon.cs script.
@@ -160,6 +177,8 @@ public class Weapon : MonoBehaviour
             Aim();
 
         UpdateSway(m_Controller.LookInput.x, m_Controller.LookInput.y);
+
+        UpdateRecoilTest();
 
 
         // Reloading. Going to leave it out for now just while I get the system back in working order. 
@@ -508,6 +527,36 @@ public class Weapon : MonoBehaviour
         }
 
 
+    }
+
+    private void UpdateRecoilTest()
+    {
+        // ============== EXPERIMENTAL RECOIL TESTING STUFF ============== //
+        if (m_IsRecoilTesting)
+        {
+            if (!m_IsTestResting)
+                m_IsFiring = true;
+            else
+                m_IsFiring = false;
+
+
+            m_RecoilTestCounter += Time.deltaTime;
+            if (!m_IsTestResting && m_RecoilTestCounter >= m_RecoilTestIntervals)
+            {
+                m_IsTestResting = true;
+                
+                m_RecoilTestCounter = 0.0f;
+            }
+            else if (m_IsTestResting && m_RecoilTestCounter >= m_RecoilTestRestTime) // This means were now counting the rest time.
+            {
+                m_IsTestResting = false;
+                m_RecoilTestCounter = 0.0f;
+                m_Controller.m_XRotation = m_Controller.m_PreviousXCameraRot; // this might be unnessessary since the guns camera rotation goes back down through the recoil recovery system.
+                m_Controller.m_Orientation.transform.eulerAngles = m_Controller.m_PreviousOrientationVector;
+
+                SetFireTime(); // This sequence of firing should be reset. It normally gets cancelled on mouse button up after firing.
+            }
+        }
     }
 
     /// <summary>Refills both the primary and reserve ammo pools.</summary>

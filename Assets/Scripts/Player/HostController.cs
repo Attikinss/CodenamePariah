@@ -112,17 +112,11 @@ public class HostController : InputController
 
 
 
-    // ================== TEMPORARY RECOIL TESTING ================== //
-    [Header("Recoil Testing")]
-    public float m_RecoilTestIntervals = 3.0f;
-    public float m_RecoilTestRestTime = 2.0f;
-
-    private bool m_IsRecoilTesting = false;
-    private bool m_IsTestResting = false;
-    private float m_RecoilTestCounter = 0;
-
-    Vector3 m_PreviousOrientationVector = Vector3.zero;
-    float m_PreviousXCameraRot = 0;
+    
+    [HideInInspector]
+    public Vector3 m_PreviousOrientationVector = Vector3.zero;
+    [HideInInspector]
+    public float m_PreviousXCameraRot = 0;
 
     private void Start()
     {
@@ -146,42 +140,31 @@ public class HostController : InputController
             m_IsFiring = true;
 
 
+        // This is now taken care of by Lauchlan's weapon system.
 
-
-        //if (IsGrounded)
+        //if (m_HasFired)
         //{
-        //    Vector3 cache = CacheMovDir;
-        //    cache.y = 0;
-        //    CacheMovDir = cache;
+        //    m_FireCounter += Time.deltaTime;
+        //    //m_fireCounter = Time.time + (60.0f / GetCurrentWeaponConfig().m_FireRate);
+        //    if (m_FireCounter >= 60.0f / GetCurrentWeaponConfig().m_FireRate)
+        //    {
+        //        m_HasFired = false;
+        //        m_FireCounter = 0;
+        //    }
         //}
 
-
-
-
-
-        if (m_HasFired)
-        {
-            m_FireCounter += Time.deltaTime;
-            //m_fireCounter = Time.time + (60.0f / GetCurrentWeaponConfig().m_FireRate);
-            if (m_FireCounter >= 60.0f / GetCurrentWeaponConfig().m_FireRate)
-            {
-                m_HasFired = false;
-                m_FireCounter = 0;
-            }
-        }
-
-        if (m_IsFiring)
-        {
-            // They are holding down the fire button.
-            ShootingDuration += Time.deltaTime;
-        }
-        else
-        {
+        //if (m_IsFiring)
+        //{
+        //    // They are holding down the fire button.
+        //    ShootingDuration += Time.deltaTime;
+        //}
+        //else
+        //{
             
-            // RECOIL RECOVERY STUFF MOVED TO WEAPON.CS SCRIPT.
+        //    // RECOIL RECOVERY STUFF MOVED TO WEAPON.CS SCRIPT.
             
 
-        }
+        //}
 
         IsGrounded = CheckGrounded();
         CalculateGroundNormal();
@@ -219,30 +202,7 @@ public class HostController : InputController
         }
 
 
-        // ============== EXPERIMENTAL RECOIL TESTING STUFF ============== //
-        if (m_IsRecoilTesting)
-        {
-            if (!m_IsTestResting)
-                m_IsFiring = true;
-            else
-                m_IsFiring = false;
-
-
-            m_RecoilTestCounter += Time.deltaTime;
-            if (!m_IsTestResting && m_RecoilTestCounter >= m_RecoilTestIntervals)
-            {
-                m_IsTestResting = true;
-                ShootingDuration = 0; // This sequence of firing should be cancelled. It normally gets cancelled on mouse button up after firing.
-                m_RecoilTestCounter = 0.0f;
-            }
-            else if(m_IsTestResting && m_RecoilTestCounter >= m_RecoilTestRestTime) // This means were now counting the rest time.
-            {
-                m_IsTestResting = false;
-                m_RecoilTestCounter = 0.0f;
-                m_XRotation = m_PreviousXCameraRot; // this might be unnessessary since the guns camera rotation goes back down through the recoil recovery system.
-                m_Orientation.transform.eulerAngles = m_PreviousOrientationVector;
-            }
-        }
+        
     }
 
     private void FixedUpdate()
@@ -342,40 +302,11 @@ public class HostController : InputController
         GetComponent<PlayerInput>().enabled = false;
         m_Active = false;
         m_Camera.enabled = false;
-
-        //// Input reset
-        //MovementInput = Vector2.zero;
-        //LookInput = Vector3.zero;
-        //
-        //IsGrounded = true;
-        //HeldCounter = 0;
-        //xRotation = 0;
-        //
-        //AdditionalCameraRecoilX = 0.0f;
-        //AdditionalCameraRecoilY = 0.0f;
-        //desiredX = 0.0f;
-        //m_IsFiring = false;
-        //m_IsAiming = false;
-        //m_HasFired = false;
-        //m_HasDoubleJumped = false;
-        //m_IsMoving = false;
-        //m_FireCounter = 0.0f;
-        //m_CurrentMoveSpeed = 0.0f;
-        //
-        //m_SwayTimer = 0.0f;
-        //m_WaveSlice = 0.0f;
-        //m_WaveSliceX = 0.0f;
-        //
-        //// Slide reset
-        //Sliding = false;
-        //SlideDir = Vector3.zero;
-        //SlideCounter = 0;
-        //m_CacheSlideMove = Vector3.zero;
     }
 
     public override void OnLook(InputAction.CallbackContext value)
 	{
-        if (m_IsRecoilTesting)
+        if (GetCurrentWeapon().m_IsRecoilTesting)
             return; // early out to prevent mouse movement while testing recoil.
         LookInput = value.ReadValue<Vector2>();
 	}
@@ -407,24 +338,6 @@ public class HostController : InputController
                 m_HasDoubleJumped = true;
             }
         }
-
-        //if (active && IsGrounded)
-        //{
-        //    CacheMovDir = Vector3.up * ControllerMaths.CalculateJumpForce(m_JumpHeight, Rigidbody.mass, m_Gravity);
-        //    CacheMovDir.x = Rigidbody.velocity.x;
-        //    CacheMovDir.z = Rigidbody.velocity.z;
-        //    Rigidbody.velocity = CacheMovDir;
-        //}
-        //else if ((active && !IsGrounded) && !m_HasDoubleJumped)
-        //{
-        //    CacheMovDir = Vector3.up * ControllerMaths.CalculateJumpForce(m_SecondJumpHeight, Rigidbody.mass, m_Gravity);
-        //    CacheMovDir.x = Rigidbody.velocity.x;
-        //    CacheMovDir.z = Rigidbody.velocity.z;
-        //    Rigidbody.velocity = CacheMovDir;
-        //
-        //    // Have to tick m_HasDoubleJumped to false;
-        //    m_HasDoubleJumped = true;
-        //}
     }
 
     public override void OnSlide(InputAction.CallbackContext value)
@@ -755,19 +668,21 @@ public class HostController : InputController
 
     public void OnTestRecoil(InputAction.CallbackContext value)
     {
-        if (value.performed && !m_IsRecoilTesting)
+        if (value.performed && !GetCurrentWeapon().m_IsRecoilTesting)
         {
-            m_IsRecoilTesting = true;
+            GetCurrentWeapon().m_IsRecoilTesting = true;
             m_PreviousOrientationVector = m_Orientation.transform.eulerAngles;
             m_PreviousXCameraRot = m_XRotation;
+
+            GetCurrentWeapon().SetFireTime(); // Starting fire counter.
         }
-        else if (value.performed && m_IsRecoilTesting)
+        else if (value.performed && GetCurrentWeapon().m_IsRecoilTesting)
         {
-            m_IsRecoilTesting = false;
-            m_IsTestResting = false;
+            GetCurrentWeapon().m_IsRecoilTesting = false;
+            GetCurrentWeapon().m_IsTestResting = false;
             
             GetCurrentWeapon().m_IsFiring = false;
-            m_RecoilTestCounter = 0;
+            GetCurrentWeapon().m_RecoilTestCounter = 0;
         }
     }
 }

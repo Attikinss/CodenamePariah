@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
 
     public void AddDecal(Transform obj, Vector3 hitPoint, Vector3 normal, GameObject decal)
     {
-        m_decalPool[0].SetDecal(obj, hitPoint, normal);
+        m_decalPool[0].SetDecal(obj, hitPoint, normal, decal);
 
         Decal m_oldFirst = m_decalPool[0];
         m_decalPool.RemoveAt(0); // Removing the first one.

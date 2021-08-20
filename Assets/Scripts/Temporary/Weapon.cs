@@ -146,14 +146,20 @@ public class Weapon : MonoBehaviour
         // =================================================================================== //
 
 
-        
+
 
         if (m_IsFiring)
             Fire();
+        else
+        { 
+            UpdateRecoilRecovery();
+        }
+        
         if (m_IsAiming)
             Aim();
 
         UpdateSway(m_Controller.LookInput.x, m_Controller.LookInput.y);
+
 
         // Reloading. Going to leave it out for now just while I get the system back in working order. 
 
@@ -184,7 +190,7 @@ public class Weapon : MonoBehaviour
             if (m_RoundsInMagazine > 0)
             {
                 // Currently gets rid of bullet sprite before UI has fully updated //
-                this.GetComponentInParent<UIManager>().DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);
+                //this.GetComponentInParent<UIManager>().DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);
                 m_RoundsInMagazine--;
 
 

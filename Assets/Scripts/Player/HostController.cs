@@ -462,6 +462,7 @@ public class HostController : InputController
             // Experimental thing I'm trying.
             // I will store the original camera rotation when they first start shooting that way I can go back to this rotation when they recover from recoil.
             PreviousCameraRotation = m_Camera.transform.forward;
+            GetCurrentWeapon().SetFireTime();
 
         }
         else
@@ -749,7 +750,7 @@ public class HostController : InputController
     private Transform GetCurrentWeaponTransform() => m_Inventory.m_CurrentWeapon.transform;
     private Vector3 GetCurrentWeaponOriginalPos() => m_Inventory.m_CurrentWeapon.m_OriginalLocalPosition;
     private Vector3 GetCurrentWeaponOriginalGlobalPos() => m_Inventory.m_CurrentWeapon.m_OriginalGlobalPosition;
-    private Weapon GetCurrentWeapon() => m_Inventory.m_CurrentWeapon;
+    public Weapon GetCurrentWeapon() => m_Inventory.m_CurrentWeapon;
 
 
     public void OnTestRecoil(InputAction.CallbackContext value)

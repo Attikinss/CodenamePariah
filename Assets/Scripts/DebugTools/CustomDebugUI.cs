@@ -120,7 +120,7 @@ public class CustomDebugUI : MonoBehaviour
         GraphicalDebugger.Assign<float>(m_playerController.AdditionalCameraRecoilX, "VerticalCameraRecoil", m_VerticalCameraRecoilText);
         GraphicalDebugger.Assign<float>(m_playerController.AdditionalCameraRecoilY, "HorizontalCameraRecoil", m_HorizontalCameraRecoilText);
 
-        GraphicalDebugger.Assign<float>(m_playerController.ShootingDuration, "FireHeldCounter", m_FireHeldCounterText);
+        GraphicalDebugger.Assign<float>(Time.time - m_playerController.GetCurrentWeapon().m_FireStartTime, "FireHeldCounter", m_FireHeldCounterText);
 
         GraphicalDebugger.Assign<float>(m_playerController.CurrentCamRot.x, "CurrentCamXRot", m_CurrentCamXRotText);
         GraphicalDebugger.Assign<float>(m_playerController.PreviousCameraRotation.x, "PreviousCamXRot", m_PreviousCamXRotText);

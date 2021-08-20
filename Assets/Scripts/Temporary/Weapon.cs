@@ -54,8 +54,9 @@ public class Weapon : MonoBehaviour
     public WeaponConfiguration m_WeaponConfig2;
 
     [Header("Old Bobbing Controls")]
-    public float m_BobSpeed = 1;
-    public float m_BobDistance = 1;
+    public float m_BobSpeed = 5;
+    [Range(0, 1)]
+    public float m_BobDistance = 0.05f;
 
     public bool m_IsFiring = false;
     public bool m_IsAiming = false;

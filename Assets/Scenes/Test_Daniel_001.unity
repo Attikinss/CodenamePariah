@@ -4202,6 +4202,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 319507965}
     - target: {fileID: 101379944, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_BobSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 101379944, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_FireRate
       value: 600
       objectReference: {fileID: 0}
@@ -4213,6 +4217,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 696020105}
+    - target: {fileID: 101379944, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_BobDistance
+      value: 0.05
+      objectReference: {fileID: 0}
     - target: {fileID: 101379944, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_ReserveAmmo
       value: 500

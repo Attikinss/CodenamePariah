@@ -757,21 +757,16 @@ public class HostController : InputController
     {
         if (value.performed && !m_IsRecoilTesting)
         {
-            // do test.
             m_IsRecoilTesting = true;
             m_PreviousOrientationVector = m_Orientation.transform.eulerAngles;
             m_PreviousXCameraRot = m_XRotation;
-
-            Debug.Log("OnTestRecoil value performed!");
-            Debug.Log(m_Camera.transform.eulerAngles + "vs" + PreviousCameraRotation);
-            //m_IsFiring = true;
         }
         else if (value.performed && m_IsRecoilTesting)
         {
             m_IsRecoilTesting = false;
             m_IsTestResting = false;
             
-            m_IsFiring = false;
+            GetCurrentWeapon().m_IsFiring = false;
             m_RecoilTestCounter = 0;
         }
     }

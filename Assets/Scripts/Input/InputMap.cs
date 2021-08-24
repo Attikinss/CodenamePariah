@@ -425,6 +425,14 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""RecoilTest"",
+                    ""type"": ""Button"",
+                    ""id"": ""bcf73363-bc80-4831-b974-7150f49040b0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -779,6 +787,17 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""action"": ""Select2"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fd18cd63-caeb-4989-aefc-5546fc2ed0b5"",
+                    ""path"": ""<Keyboard>/k"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""RecoilTest"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -839,6 +858,7 @@ public class @InputMap : IInputActionCollection, IDisposable
         m_Host_Slide = m_Host.FindAction("Slide", throwIfNotFound: true);
         m_Host_Select1 = m_Host.FindAction("Select1", throwIfNotFound: true);
         m_Host_Select2 = m_Host.FindAction("Select2", throwIfNotFound: true);
+        m_Host_RecoilTest = m_Host.FindAction("RecoilTest", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -972,6 +992,7 @@ public class @InputMap : IInputActionCollection, IDisposable
     private readonly InputAction m_Host_Slide;
     private readonly InputAction m_Host_Select1;
     private readonly InputAction m_Host_Select2;
+    private readonly InputAction m_Host_RecoilTest;
     public struct HostActions
     {
         private @InputMap m_Wrapper;
@@ -987,6 +1008,7 @@ public class @InputMap : IInputActionCollection, IDisposable
         public InputAction @Slide => m_Wrapper.m_Host_Slide;
         public InputAction @Select1 => m_Wrapper.m_Host_Select1;
         public InputAction @Select2 => m_Wrapper.m_Host_Select2;
+        public InputAction @RecoilTest => m_Wrapper.m_Host_RecoilTest;
         public InputActionMap Get() { return m_Wrapper.m_Host; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1029,6 +1051,9 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Select2.started -= m_Wrapper.m_HostActionsCallbackInterface.OnSelect2;
                 @Select2.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnSelect2;
                 @Select2.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnSelect2;
+                @RecoilTest.started -= m_Wrapper.m_HostActionsCallbackInterface.OnRecoilTest;
+                @RecoilTest.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnRecoilTest;
+                @RecoilTest.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnRecoilTest;
             }
             m_Wrapper.m_HostActionsCallbackInterface = instance;
             if (instance != null)
@@ -1066,6 +1091,9 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Select2.started += instance.OnSelect2;
                 @Select2.performed += instance.OnSelect2;
                 @Select2.canceled += instance.OnSelect2;
+                @RecoilTest.started += instance.OnRecoilTest;
+                @RecoilTest.performed += instance.OnRecoilTest;
+                @RecoilTest.canceled += instance.OnRecoilTest;
             }
         }
     }
@@ -1110,5 +1138,6 @@ public class @InputMap : IInputActionCollection, IDisposable
         void OnSlide(InputAction.CallbackContext context);
         void OnSelect1(InputAction.CallbackContext context);
         void OnSelect2(InputAction.CallbackContext context);
+        void OnRecoilTest(InputAction.CallbackContext context);
     }
 }

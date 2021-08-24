@@ -103,7 +103,7 @@ public class CustomDebugUI : MonoBehaviour
         GraphicalDebugger.Assign<float>(m_playerController.MovementInput.x, "XAxis", m_XAxisText);
         GraphicalDebugger.Assign<float>(m_playerController.MovementInput.y, "ZAxis", m_ZAxisText);
 
-        GraphicalDebugger.Assign<bool>(m_playerController.Sliding, "IsSliding", m_IsSlidingText);
+        GraphicalDebugger.Assign<bool>(m_playerController.IsSliding, "IsSliding", m_IsSlidingText);
         GraphicalDebugger.Assign<Vector3>(m_playerController.SlideDir, "SlideDir", m_SlideDirText);
         GraphicalDebugger.Assign<float>(m_playerController.SlideCounter, "SlideCounter", m_SlideCounterText);
 
@@ -114,13 +114,13 @@ public class CustomDebugUI : MonoBehaviour
         // Because there are multiple weapons, I have to get the current weapons configuration.
         WeaponConfiguration weaponConfig = m_playerController.GetCurrentWeaponConfig();
 
-        GraphicalDebugger.Assign<Vector3>(m_playerController.WeaponRecoilRot, "WeaponRecoilRot", m_WeaponRecoilRotText);
+        //GraphicalDebugger.Assign<Vector3>(m_playerController.WeaponRecoilRot, "WeaponRecoilRot", m_WeaponRecoilRotText);
         GraphicalDebugger.Assign<Vector3>(weaponConfig.m_WeaponRecoilTransform, "WeaponRecoilTransf", m_WeaponRecoilTransfText);
 
         GraphicalDebugger.Assign<float>(m_playerController.AdditionalCameraRecoilX, "VerticalCameraRecoil", m_VerticalCameraRecoilText);
         GraphicalDebugger.Assign<float>(m_playerController.AdditionalCameraRecoilY, "HorizontalCameraRecoil", m_HorizontalCameraRecoilText);
 
-        GraphicalDebugger.Assign<float>(m_playerController.HeldCounter, "FireHeldCounter", m_FireHeldCounterText);
+        GraphicalDebugger.Assign<float>(Time.time - m_playerController.GetCurrentWeapon().m_FireStartTime, "FireHeldCounter", m_FireHeldCounterText);
 
         GraphicalDebugger.Assign<float>(m_playerController.CurrentCamRot.x, "CurrentCamXRot", m_CurrentCamXRotText);
         GraphicalDebugger.Assign<float>(m_playerController.PreviousCameraRotation.x, "PreviousCamXRot", m_PreviousCamXRotText);

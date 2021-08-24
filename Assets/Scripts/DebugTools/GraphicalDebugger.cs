@@ -27,16 +27,17 @@ public class GraphicalDebugger : MonoBehaviour
     /// </summary>
     /// <param name="start">Start point.</param>
     /// <param name="end">End point.</param>
-    public static void DrawSphereCast(Vector3 start, Vector3 end, Color colour, float radius)
+    public static void DrawSphereCast(Vector3 start, Vector3 end, Color colour, float radius, float height)
     {
         Color defaultColour = Gizmos.color;
         Gizmos.color = colour;
 
         
 
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 7; i++)
         {
-            Vector3 circlePoint = Vector3.Lerp(start, end, (float)i / 5);
+            Vector3 circlePoint = Vector3.Lerp(start, end, /*(float)i / height*/(float)i/7);
+            
             Gizmos.DrawWireSphere(circlePoint, radius);
         }
 

@@ -63,8 +63,10 @@ public class Inventory : MonoBehaviour
 
     /// <summary>Takes health away equal to the damage value.</summary>
     /// <param name="damage"></param>
-    void TakeDamage(int damage)
+    public void TakeDamage(int damage)
     {
         m_Health -= damage;
     }
+
+    public int GetHealth() { return m_Health; }
 }

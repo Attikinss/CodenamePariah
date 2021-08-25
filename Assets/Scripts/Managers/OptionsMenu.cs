@@ -8,6 +8,8 @@ public class OptionsMenu : MonoBehaviour
 {
     public TMP_InputField m_InputField;
     public Slider m_Slider;
+    public static float m_MouseSensitivityMultiplier;   //multiply looksensitivity by these depending on gamepad or kbm.
+    public static int m_ControllerSensitivityMultiplier;//multiply looksensitivity by these depending on gamepad or kbm. convert each value of 1-8 to a float??
 
     public void SetMasterVolume(float value)
     {
@@ -80,6 +82,7 @@ public class OptionsMenu : MonoBehaviour
         m_InputField.text = value.ToString();//
         if (m_Slider)
             m_Slider.value = value;
+        m_ControllerSensitivityMultiplier = value;
         //if (m_InputField) m_InputField.text = value;
     }
 
@@ -100,6 +103,7 @@ public class OptionsMenu : MonoBehaviour
         m_InputField.text = value.ToString("F2");//
         if (m_Slider)
             m_Slider.value = value;
+        m_MouseSensitivityMultiplier = value;
         //if (m_InputField) m_InputField.text = value;
     }
 }

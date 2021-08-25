@@ -34,7 +34,8 @@ public class Inventory : MonoBehaviour
     /// </summary>
 	private void Awake()
 	{
-        m_CurrentWeapon = m_Weapons[0]; // For now, m_CurrentWeapon will always start off as the first element in the m_Weapons list.
+        if(m_Weapons.Count > 0)
+            m_CurrentWeapon = m_Weapons[0]; // For now, m_CurrentWeapon will always start off as the first element in the m_Weapons list.
 	}
 
 	// Update is called once per frame

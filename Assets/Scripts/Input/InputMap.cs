@@ -441,6 +441,14 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""5b49c673-d3b1-41b6-99d5-f9d704f79ca1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -817,6 +825,17 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""action"": ""Ability2"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c82cdf53-4342-4604-a013-40d6cd52bada"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -879,6 +898,7 @@ public class @InputMap : IInputActionCollection, IDisposable
         m_Host_Select2 = m_Host.FindAction("Select2", throwIfNotFound: true);
         m_Host_RecoilTest = m_Host.FindAction("RecoilTest", throwIfNotFound: true);
         m_Host_Ability2 = m_Host.FindAction("Ability2", throwIfNotFound: true);
+        m_Host_Reload = m_Host.FindAction("Reload", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1014,6 +1034,7 @@ public class @InputMap : IInputActionCollection, IDisposable
     private readonly InputAction m_Host_Select2;
     private readonly InputAction m_Host_RecoilTest;
     private readonly InputAction m_Host_Ability2;
+    private readonly InputAction m_Host_Reload;
     public struct HostActions
     {
         private @InputMap m_Wrapper;
@@ -1031,6 +1052,7 @@ public class @InputMap : IInputActionCollection, IDisposable
         public InputAction @Select2 => m_Wrapper.m_Host_Select2;
         public InputAction @RecoilTest => m_Wrapper.m_Host_RecoilTest;
         public InputAction @Ability2 => m_Wrapper.m_Host_Ability2;
+        public InputAction @Reload => m_Wrapper.m_Host_Reload;
         public InputActionMap Get() { return m_Wrapper.m_Host; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1079,6 +1101,9 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Ability2.started -= m_Wrapper.m_HostActionsCallbackInterface.OnAbility2;
                 @Ability2.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnAbility2;
                 @Ability2.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnAbility2;
+                @Reload.started -= m_Wrapper.m_HostActionsCallbackInterface.OnReload;
+                @Reload.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnReload;
+                @Reload.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnReload;
             }
             m_Wrapper.m_HostActionsCallbackInterface = instance;
             if (instance != null)
@@ -1122,6 +1147,9 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Ability2.started += instance.OnAbility2;
                 @Ability2.performed += instance.OnAbility2;
                 @Ability2.canceled += instance.OnAbility2;
+                @Reload.started += instance.OnReload;
+                @Reload.performed += instance.OnReload;
+                @Reload.canceled += instance.OnReload;
             }
         }
     }
@@ -1168,5 +1196,6 @@ public class @InputMap : IInputActionCollection, IDisposable
         void OnSelect2(InputAction.CallbackContext context);
         void OnRecoilTest(InputAction.CallbackContext context);
         void OnAbility2(InputAction.CallbackContext context);
+        void OnReload(InputAction.CallbackContext context);
     }
 }

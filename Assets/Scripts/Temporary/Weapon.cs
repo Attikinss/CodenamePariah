@@ -133,19 +133,25 @@ public class Weapon : MonoBehaviour
     [HideInInspector]
     public Vector3 m_OriginalGlobalPosition;
 
-	// ================================================ //
+    // ================================================ //
+
+
+    // temporary ui thing
+    private UIManager m_UIManager; 
 
 
 	private void Awake()
 	{
         m_OriginalLocalPosition = transform.localPosition;
         m_OriginalGlobalPosition = transform.position;
+
+        m_UIManager = transform.parent.parent.parent.GetComponent<UIManager>();
 	}
 
     // Update is called once per frame
     void Update()
     {
-        //GetComponentInParent<UIManager>().DisplayInventory();
+        m_UIManager?.DisplayInventory();
 
 
 
@@ -211,7 +217,7 @@ public class Weapon : MonoBehaviour
             if (m_RoundsInMagazine > 0)
             {
                 // Currently gets rid of bullet sprite before UI has fully updated //
-                //this.GetComponentInParent<UIManager>().DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);
+                m_UIManager.DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);
                 m_RoundsInMagazine--;
 
 
@@ -461,7 +467,7 @@ public class Weapon : MonoBehaviour
         if (m_ReserveAmmo <= ammoRequired)
         {
             // Update UI to only show one mag
-            this.GetComponentInParent<UIManager>().ModuloEqualsZero(m_RoundsInMagazine + m_ReserveAmmo);
+            m_UIManager.ModuloEqualsZero(m_RoundsInMagazine + m_ReserveAmmo);
 
             // Move all remaining ammo into magazine
             m_RoundsInMagazine += m_ReserveAmmo;
@@ -472,12 +478,12 @@ public class Weapon : MonoBehaviour
             if ((m_RoundsInMagazine + m_ReserveAmmo) % m_MagazineSize == 0)
             {
                 // Total ammo equals an amount that when divided by magazine size, has no remainder therefore get rid of a mag UI element
-                this.GetComponentInParent<UIManager>().ModuloEqualsZero(m_MagazineSize);
+                m_UIManager.ModuloEqualsZero(m_MagazineSize);
             }
             else
             {
                 // Removes bullet sprites total from 1 - 2 mags depending on the ammo missing from current magazine and how much ammo was already missing in the last magazine
-                this.GetComponentInParent<UIManager>().RemoveAmmoFromLastAddToCurrent(m_MagazineSize);
+                m_UIManager.RemoveAmmoFromLastAddToCurrent(m_MagazineSize);
             }
 
             // Move required amount from reserve to magazine

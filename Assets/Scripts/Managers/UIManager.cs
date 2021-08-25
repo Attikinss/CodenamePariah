@@ -17,8 +17,23 @@ public class UIManager : MonoBehaviour
     [Tooltip("All the Magazine UI elements active on this character")]
     private List<Magazine> m_Magazines;
 
-    /// <summary>Disables the last magazine gameObject.</summary>
-    public void DisableMagazine()
+    //private static UIManager s_Instance;
+	//private void Awake()
+	//{
+ //       if (!s_Instance)
+ //       {
+ //           s_Instance = this;
+ //       }
+ //       else
+ //       {
+ //           Debug.LogWarning("UIManager already exists in scene!");
+ //           Destroy(this);
+ //       }
+	//}
+
+
+	/// <summary>Disables the last magazine gameObject.</summary>
+	public void DisableMagazine()
     {
         m_Magazines[m_Magazines.Count - 1].gameObject.SetActive(false);
     }

@@ -17,12 +17,13 @@ namespace WhiteWillow
         private BehaviourTree m_RuntimeTree;
         private NavMeshAgent m_NavAgent;
         private HostController m_HostController;
-
-        [SerializeField]
-        private GameObject m_Pariah;
+        [HideInInspector]
+        public PariahController PariahController;
 
         private Vector3 m_MovePosition = Vector3.positiveInfinity;
         private Vector3 m_LastPosition;
+        public Vector3 FacingDirection { get; private set; }
+        public bool EngagingTarget { get; private set; } = true;
 
         private void Start()
         {
@@ -31,23 +32,45 @@ namespace WhiteWillow
             m_NavAgent = GetComponent<NavMeshAgent>();
             m_HostController = GetComponent<HostController>();
             m_LastPosition = transform.position;
+
+            PariahController = FindObjectOfType<PariahController>();
         }
 
         private void Update()
         {
-            if (!m_Possessed)
+            if (m_Possessed)
+            {
+                FacingDirection = m_HostController.m_Orientation.rotation * m_HostController.m_Orientation.forward;
+            }
+            else
             {
                 m_RuntimeTree?.Tick();
 
-                Vector3 faceFirection = m_NavAgent.velocity;
-                faceFirection.y = 0.0f;
-                m_HostController.m_Orientation.rotation = Quaternion.Lerp(m_HostController.m_Orientation.rotation, Quaternion.LookRotation(faceFirection.normalized, Vector3.up), 0.02f);
+                if (TargetInRange(PariahController.transform))
+                    RotateToFaceTarget(PariahController.transform);
+                else
+                {
+                    Vector3 faceDirection = m_NavAgent.velocity;
+                    
+                    if (faceDirection != Vector3.zero)
+                    {
+                        faceDirection.y = 0.0f;
+                        m_HostController.m_Orientation.rotation = Quaternion.Lerp(m_HostController.m_Orientation.rotation, Quaternion.LookRotation(faceDirection.normalized, Vector3.up), 0.02f);
+                        FacingDirection = m_HostController.m_Orientation.eulerAngles;
+                    }
+                }
             }
 
             m_LastPosition = transform.position;
         }
+        
+        private bool TargetInRange(Transform target)
+        {
+            return Vector3.Distance(transform.position, target.position)
+                < 15.0f; // Detection radius
+        }
 
-        public bool FacingTarget(Transform target)
+        private bool FacingTarget(Transform target)
         {
             return Vector3.Dot(transform.forward, target.position - transform.position) < 10.0f;
         }
@@ -55,17 +78,15 @@ namespace WhiteWillow
         public void RotateToFaceTarget(Transform target)
         {
             Vector3 direction = (transform.position - target.position).normalized;
-            float rotation = Mathf.Atan2(direction.z, direction.x);
+            float rotation = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg - 180.0f;
             Quaternion targetRotation = Quaternion.Euler(0.0f, rotation, 0.0f);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime);
+            m_HostController.m_Orientation.rotation = Quaternion.Lerp(m_HostController.m_Orientation.rotation, targetRotation, 12.5f * Time.deltaTime);
         }
 
         public void MoveToPosition()
         {
             if (m_MovePosition != Vector3.positiveInfinity && m_MovePosition != Vector3.negativeInfinity)
-            {
                 m_NavAgent.SetDestination(m_MovePosition);
-            }
         }
 
         public bool SetDestination(Vector3 destination)
@@ -80,9 +101,9 @@ namespace WhiteWillow
         public void Possess()
         {
             m_Possessed = true;
-            m_NavAgent.SetDestination(transform.position);
+            m_NavAgent.ResetPath();
             m_NavAgent.enabled = false;
-            m_Pariah?.GetComponent<PariahController>().Disable();
+            PariahController?.Disable();
             m_HostController?.Enable();
         }
 
@@ -91,7 +112,7 @@ namespace WhiteWillow
             m_Possessed = false;
             m_NavAgent.enabled = true;
             m_HostController?.Disable();
-            m_Pariah?.GetComponent<PariahController>().Enable();
+            PariahController?.Enable();
         }
     }
 }

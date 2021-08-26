@@ -64,7 +64,10 @@ public class PariahController : InputController
         else
         {
             if (m_CurrentPossessed != null)
+            {
                 transform.position = m_CurrentPossessed.transform.position + Vector3.up * 1.75f;
+                transform.rotation = Quaternion.Euler(m_CurrentPossessed.FacingDirection);
+            }
         }
     }
 
@@ -136,7 +139,9 @@ public class PariahController : InputController
             if (Physics.Raycast(m_Camera.transform.position, m_Camera.transform.forward, out RaycastHit hitInfo, m_DashDistance))
             {
                 if (hitInfo.transform.TryGetComponent(out Agent agent))
+                {
                     StartCoroutine(Possess(agent));
+                }
             }
         }
     }
@@ -150,6 +155,8 @@ public class PariahController : InputController
 
         if (!m_Dashing && !m_Possessing)
             m_Rigidbody.velocity = m_MoveVelocity;
+
+        Telemetry.TracePosition("Pariah-Movement", transform.position, 0.05f, 150);
     }
 
     private void Look()
@@ -181,6 +188,10 @@ public class PariahController : InputController
         while (Vector3.Distance(transform.position, targetEyes) > 0.01f)
         {
             transform.position = Vector3.Lerp(transform.position, targetEyes, Tween.EaseInOut5(currentTime / m_DashDuration));
+
+            float distToTarget = Vector3.Distance(transform.position, targetEyes);
+            if (distToTarget <= 1.0f)
+                transform.rotation = Quaternion.Lerp(transform.rotation, target.transform.rotation, Tween.EaseOut3(distToTarget));
 
             currentTime += Time.deltaTime;
             yield return null;

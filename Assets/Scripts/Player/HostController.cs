@@ -574,6 +574,8 @@ public class HostController : InputController
 
         Vector3 requiredChange = desiredVel - currentVel;
         CacheMovDir += requiredChange * (IsGrounded ? m_GroundAcceleration : m_AirAcceleration);
+
+        Telemetry.TracePosition("Host-Movement", transform.position, 0.05f, 150);
     }
 
     private Vector3 CalculateMoveDirection(float x, float z, float speedMultiplier)

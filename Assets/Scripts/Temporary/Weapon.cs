@@ -287,6 +287,15 @@ public class Weapon : MonoBehaviour
         }
     }
 
+    public void StartReload()
+    {
+        if (!PrimaryAmmoFull() && !ReserveAmmoEmpty() && !m_IsReloading)
+        { 
+            StartCoroutine(Reload());
+            m_Controller.ShootingDuration = 0;
+        }
+    }
+
     private void Aim()
     {
         WeaponConfiguration weaponConfig = GetCurrentWeaponConfig();

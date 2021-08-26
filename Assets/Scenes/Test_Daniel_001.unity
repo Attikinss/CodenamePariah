@@ -4768,7 +4768,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_ActionEvents.Array.size
-      value: 19
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_ActionEvents.Array.data[15].m_ActionId
@@ -4787,6 +4787,10 @@ PrefabInstance:
       value: f9c58ad8-8a77-4d56-a4a3-4075ad8b7bde
       objectReference: {fileID: 0}
     - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_ActionEvents.Array.data[19].m_ActionId
+      value: 5b49c673-d3b1-41b6-99d5-f9d704f79ca1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_ActionEvents.Array.data[15].m_ActionName
       value: Pariah/Raise[/DualShock4GamepadHID/buttonSouth,/Keyboard/space]
       objectReference: {fileID: 0}
@@ -4801,6 +4805,10 @@ PrefabInstance:
     - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_ActionEvents.Array.data[18].m_ActionName
       value: Host/Ability2[/Keyboard/f]
+      objectReference: {fileID: 0}
+    - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_ActionEvents.Array.data[19].m_ActionName
+      value: Host/Reload[/Keyboard/r]
       objectReference: {fileID: 0}
     - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_DeviceLostEvent.m_PersistentCalls.m_Calls.Array.size
@@ -4819,6 +4827,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_ActionEvents.Array.data[19].m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_DeviceLostEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
@@ -4831,6 +4843,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_ActionEvents.Array.data[19].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_ActionEvents.Array.data[17].m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 696020105}
@@ -4839,11 +4855,19 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 696020105}
     - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_ActionEvents.Array.data[19].m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 696020105}
+    - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_ActionEvents.Array.data[17].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_ActionEvents.Array.data[18].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_ActionEvents.Array.data[19].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
@@ -4859,6 +4883,10 @@ PrefabInstance:
       value: OnAbility2
       objectReference: {fileID: 0}
     - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_ActionEvents.Array.data[19].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnReload
+      objectReference: {fileID: 0}
+    - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_ActionEvents.Array.data[17].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: HostController, Assembly-CSharp
       objectReference: {fileID: 0}
@@ -4867,11 +4895,19 @@ PrefabInstance:
       value: HostController, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_ActionEvents.Array.data[19].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: HostController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_ActionEvents.Array.data[17].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_ActionEvents.Array.data[18].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8559930378344312189, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_ActionEvents.Array.data[19].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8559930378953289749, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}

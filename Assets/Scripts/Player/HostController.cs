@@ -467,8 +467,11 @@ public class HostController : InputController
     }
 
     public void OnReload(InputAction.CallbackContext value)
-    { 
-        
+    {
+        if (value.performed)
+        { 
+            GetCurrentWeapon().StartReload();
+        }
     }
 
 

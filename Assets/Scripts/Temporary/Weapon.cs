@@ -172,13 +172,18 @@ public class Weapon : MonoBehaviour
 
 
 
+        
+        // I've added m_IsReloading checks to prevent shooting while reloading and also to activate recoil recovery even if m_IsFiring is still true.
+        // This gives the advantage of reloading while holding down the mouse button will let you begin shooting again without having to re-press the mouse button.
 
-        if (m_IsFiring)
+        if (m_IsFiring && !m_IsReloading)
             Fire();
-        else
-        { 
+        else if (!m_IsFiring || m_IsReloading) // We want to recovery if we are reloading. This lets us set reloading to true and keep firing on true and the player wont shoot.
+        {
             UpdateRecoilRecovery();
+            Debug.Log("Recoil recovery.");
         }
+
         
         if (m_IsAiming)
             Aim();
@@ -214,7 +219,7 @@ public class Weapon : MonoBehaviour
 
         if (ReadyToFire())
         {
-            if (m_RoundsInMagazine > 0)
+            if (m_RoundsInMagazine > 0/* && !m_IsReloading*/)
             {
                 // Currently gets rid of bullet sprite before UI has fully updated //
                 m_UIManager.DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);
@@ -269,7 +274,13 @@ public class Weapon : MonoBehaviour
             {
                 // Do nothing / reload automatically
                 if (!ReserveAmmoEmpty())
+                { 
                     StartCoroutine(Reload());
+                    // To prevent recoil from affecting player while reloading, we must.
+                    m_Controller.ShootingDuration = 0;
+                    
+                    //m_IsFiring = false;
+                }
                 //else if (TotalAmmoEmpty())
                 //    this.GetComponentInParent<UIManager>().DisableMagazine();
             }
@@ -491,6 +502,8 @@ public class Weapon : MonoBehaviour
             m_ReserveAmmo -= ammoRequired;
         }
 
+        SetFireTime(); // Added so that if the player is holding down fire while reloading, they will begin firing at t=0. Without this the fire time is what is what when they
+                       // originally started firing.
         m_IsReloading = false;
     }
 

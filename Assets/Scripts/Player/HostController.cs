@@ -51,7 +51,7 @@ public class HostController : InputController
     private bool m_HasFired = false;
 
     // If this variable was once public and you had set it's value in the inspector, it will still have the value you set in the inspector even if you change its initialization here.
-    public float ShootingDuration { get; private set; } = 1; // time tracking since started shooting.
+    public float ShootingDuration { get; set; } = 1; // time tracking since started shooting.
     
     public float m_XRotation = 0;   // Made public because nowadays the Weapon.cs script needs to access it.
 
@@ -116,11 +116,11 @@ public class HostController : InputController
     // These are integers because the Inventory.cs script has health stored as an integer.
     public int m_DrainDamage = 10;         // By setting them to the same value, its a 1:1 ratio of drain/restoration.
     public int m_DrainRestore = 10;
-
-    public float m_DrainCounter = 0.0f;
-    public bool m_IsDraining = false;
     [Range(0,2)]
     public float m_DrainInterval = 0.15f;
+
+    private float m_DrainCounter = 0.0f;
+    private bool m_IsDraining = false;
 
     
     [HideInInspector]
@@ -507,8 +507,6 @@ public class HostController : InputController
             //Vector3 velocityTowardsSurface = Vector3.Dot(Rigidbody.velocity, m_GroundNormal) * m_GroundNormal;
             //direction -= velocityTowardsSurface;
             // =============================================================================================================================== //
-
-            Debug.Log("IsGrounded && !m_IsMoving");
             //direction.y = direction.y;
             //Rigidbody.velocity = new Vector3(Rigidbody.velocity.x, 0, Rigidbody.velocity.z);
         }
@@ -517,7 +515,6 @@ public class HostController : InputController
             Rigidbody.useGravity = true;
 
             direction.y = Rigidbody.velocity.y;
-            Debug.Log("Else");
         }
         //else
         //{

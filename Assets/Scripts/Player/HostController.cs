@@ -474,6 +474,22 @@ public class HostController : InputController
         }
     }
 
+    public override void OnDash(InputAction.CallbackContext value)
+    {
+        if (value.performed && !m_Dashing)
+        {
+            Vector3 forwardDir = m_Camera.transform.forward;
+            if (IsGrounded)
+                forwardDir = m_Orientation.forward;
+            
+
+            if (Physics.Raycast(transform.position, forwardDir, out RaycastHit hitInfo, m_DashDistance))
+                StartCoroutine(Dash(hitInfo.point, -forwardDir * 0.5f, m_DashDuration));
+            else
+                StartCoroutine(Dash(transform.position + forwardDir * m_DashDistance, Vector3.zero, m_DashDuration));
+        }
+    }
+
 
     private void Look()
     {

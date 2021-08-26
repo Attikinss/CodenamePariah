@@ -117,9 +117,9 @@ public class PariahController : InputController
         if (value.performed && !m_Dashing && !m_Possessing)
         {
             if (Physics.Raycast(m_Camera.transform.position, m_Camera.transform.forward, out RaycastHit hitInfo, m_DashDistance))
-                StartCoroutine(Dash(hitInfo.point - m_Camera.transform.forward * 0.5f));
+                StartCoroutine(Dash(hitInfo.point, - m_Camera.transform.forward * 0.5f, m_DashDuration));
             else
-                StartCoroutine(Dash(m_Camera.transform.position + m_Camera.transform.forward * m_DashDistance));
+                StartCoroutine(Dash(m_Camera.transform.position + m_Camera.transform.forward * m_DashDistance, Vector3.zero, m_DashDuration));
         }
     }
 
@@ -173,22 +173,6 @@ public class PariahController : InputController
         float mouseDelta = half + m_LookInput.x / 2.0f;
 
         m_Camera.transform.localRotation = Quaternion.Euler(transform.localRotation.x, transform.localRotation.y, m_CameraTilt);
-    }
-
-    private IEnumerator Dash(Vector3 destination)
-    {
-        float currentTime = 0.0f;
-
-        // TODO: Use epsilon and replace distance check with non sqrt function
-        while (currentTime < m_DashDuration && Vector3.Distance(transform.position, destination) > 0.05f)
-        {
-            transform.position = Vector3.Lerp(transform.position, destination, Tween.EaseInOut5(currentTime / m_DashDuration));
-
-            currentTime += Time.deltaTime;
-            yield return null;
-        }
-
-        m_Dashing = false;
     }
 
     private IEnumerator Possess(Agent target)

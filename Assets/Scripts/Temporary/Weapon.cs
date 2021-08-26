@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.VFX;
 
 public class Weapon : MonoBehaviour
 {
@@ -137,7 +137,11 @@ public class Weapon : MonoBehaviour
 
 
     // temporary ui thing
-    private UIManager m_UIManager; 
+    private UIManager m_UIManager;
+
+
+    // temporary muzzle flash
+    public VisualEffect m_MuzzleFlash;
 
 
 	private void Awake()
@@ -152,7 +156,6 @@ public class Weapon : MonoBehaviour
     void Update()
     {
         m_UIManager?.DisplayInventory();
-
 
 
         // ========================= DECREMENTING AMMO WHEN SHOOTING ========================= //
@@ -221,6 +224,9 @@ public class Weapon : MonoBehaviour
         {
             if (m_RoundsInMagazine > 0/* && !m_IsReloading*/)
             {
+                // Play effects.
+                m_MuzzleFlash.Play();
+
                 // Currently gets rid of bullet sprite before UI has fully updated //
                 m_UIManager.DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);
                 m_RoundsInMagazine--;

@@ -11,13 +11,7 @@ public class PariahController : InputController
     [SerializeField]
     private float m_Acceleration = 0.75f;
 
-    [Min(0.0f)]
-    [SerializeField]
-    private float m_DashDuration = 0.5f;
-
-    [Min(0.0f)]
-    [SerializeField]
-    private float m_DashDistance = 5.0f;
+    
 
     [Header("Inputs")]
 

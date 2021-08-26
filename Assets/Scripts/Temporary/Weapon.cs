@@ -176,9 +176,9 @@ public class Weapon : MonoBehaviour
         // I've added m_IsReloading checks to prevent shooting while reloading and also to activate recoil recovery even if m_IsFiring is still true.
         // This gives the advantage of reloading while holding down the mouse button will let you begin shooting again without having to re-press the mouse button.
 
-        if (m_IsFiring && !m_IsReloading)
+        if (m_IsFiring && !m_IsReloading && !TotalAmmoEmpty())
             Fire();
-        else if (!m_IsFiring || m_IsReloading) // We want to recovery if we are reloading. This lets us set reloading to true and keep firing on true and the player wont shoot.
+        else if (!m_IsFiring || m_IsReloading || TotalAmmoEmpty()) // We want to recovery if we are reloading. This lets us set reloading to true and keep firing on true and the player wont shoot.
         {
             UpdateRecoilRecovery();
             Debug.Log("Recoil recovery.");

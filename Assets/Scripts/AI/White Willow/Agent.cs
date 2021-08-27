@@ -23,6 +23,7 @@ namespace WhiteWillow
         private Vector3 m_MovePosition = Vector3.positiveInfinity;
         private Vector3 m_LastPosition;
         public Vector3 FacingDirection { get; private set; }
+        public Transform Orientation { get => m_HostController.m_Orientation; }
         public bool EngagingTarget { get; private set; } = true;
 
         private void Start()

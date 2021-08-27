@@ -16,6 +16,9 @@ public abstract class InputController : MonoBehaviour
     protected float m_LookSensitivity;
 
     [SerializeField]
+    protected PlayerPreferences m_PlayerPrefs;
+
+    [SerializeField]
     private PlayerInput m_PlayerInput;
 
     public virtual void OnDash(InputAction.CallbackContext value) { }

@@ -152,9 +152,9 @@ public class HostController : InputController
         if (!m_Active) return;
 
         if (GetCurrentWeaponConfig().m_AlwaysADS) // The reason why I do this is so I don't have to check for the m_AlwaysADS bool everywhere. This way I can still just check for m_IsAiming in all functions.
-            m_IsAiming = true;
+            GetCurrentWeapon().m_IsAiming = true;
         if (GetCurrentWeaponConfig().m_AlwaysFiring) // Doing same here for the reason above.
-            m_IsFiring = true;
+            GetCurrentWeapon().m_IsFiring = true;
 
 
         // This is now taken care of by Lauchlan's weapon system.
@@ -430,11 +430,11 @@ public class HostController : InputController
 
     public void OnWeaponSelect1(InputAction.CallbackContext value)
     {
-        if (value.performed)
+        if (value.performed && !GetCurrentWeapon().IsReloading())
         {
             // Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
             GetCurrentWeapon().ResetReload();
-
+            //GetCurrentWeapon().ResetReloadAnimation(); dont need here because pistol doesnt have animation yet.
 
 
             SelectWeapon(0);
@@ -451,10 +451,11 @@ public class HostController : InputController
 
     public void OnWeaponSelect2(InputAction.CallbackContext value)
     {
-        if (value.performed)
+        if (value.performed && !GetCurrentWeapon().IsReloading())
         {
             // Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
             GetCurrentWeapon().ResetReload();
+            GetCurrentWeapon().ResetReloadAnimation();
 
             SelectWeapon(1);
 

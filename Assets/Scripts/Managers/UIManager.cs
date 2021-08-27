@@ -162,7 +162,7 @@ public class UIManager : MonoBehaviour
         if(m_IsRifle)
             return m_Magazines[m_Magazines.Count - 1].BulletSprites[i].activeSelf;
         else
-            return m_PistolMagazines[m_Magazines.Count - 1].BulletSprites[i].activeSelf;
+            return m_PistolMagazines[m_PistolMagazines.Count - 1].BulletSprites[i].activeSelf;
     }
 
     /// <summary>Activates if (total ammo % magazineSize = 0).</summary>

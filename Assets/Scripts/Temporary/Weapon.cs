@@ -194,7 +194,7 @@ public class Weapon : MonoBehaviour
         }
 
         
-        if (m_IsAiming)
+        if (m_IsAiming && !m_IsReloading)
             Aim();
 
         UpdateSway(m_Controller.LookInput.x, m_Controller.LookInput.y);
@@ -539,7 +539,7 @@ public class Weapon : MonoBehaviour
 
         WeaponConfiguration weaponConfig = GetCurrentWeaponConfig();
         Transform gunTransform = GetCurrentWeaponTransform();
-        if (!m_IsAiming)
+        if (!m_IsAiming || m_IsReloading)
         {
             Vector3 gunOriginalPos = GetCurrentWeaponOriginalPos();
 
@@ -566,6 +566,8 @@ public class Weapon : MonoBehaviour
             float desiredFOV = 40;
 
             float requiredChange = desiredFOV - currentFOV;
+
+            if(!m_IsReloading) // Wont zoom in if we are reloading.
             m_Camera.fieldOfView += requiredChange * 0.45f;
 
 
@@ -723,7 +725,20 @@ public class Weapon : MonoBehaviour
 
     private void StartReloadAnimation()
     {
-        m_AssualtRifleAnimator.SetTrigger("OnReload");
-        m_AssualtRifleArmsAnimator.SetTrigger("OnReload");
+        if (m_AssualtRifleAnimator && m_AssualtRifleArmsAnimator)
+        { 
+            m_AssualtRifleAnimator.SetTrigger("OnReload");
+            m_AssualtRifleArmsAnimator.SetTrigger("OnReload");
+        }
     }
+
+    public void ResetReloadAnimation()
+    {
+        // okay this isn't working so for now I will just prevent players from swapping weapons while reloading.
+
+        //m_AssualtRifleAnimator.enabled = false;
+        //m_AssualtRifleAnimator.enabled = true;
+    }
+
+    public bool IsReloading() { return m_IsReloading; }
 }

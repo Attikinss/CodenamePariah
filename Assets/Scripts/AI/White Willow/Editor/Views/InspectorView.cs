@@ -24,7 +24,10 @@ namespace WhiteWillow.Editor
 
             Object.DestroyImmediate(m_PropertyEditor);
             m_PropertyEditor = UnityEditor.Editor.CreateEditor(nodeView.Node, typeof(NodeEditorView)) as NodeEditorView;
+            m_PropertyEditor.SetTarget(nodeView.Node);
+
             IMGUIContainer container = new IMGUIContainer(() => { m_PropertyEditor.OnInspectorGUI(); });
+            container.Add(m_PropertyEditor.CreateInspectorGUI());
             container.style.marginTop = 5;
             container.style.marginLeft = 5;
             container.style.minWidth = 250;

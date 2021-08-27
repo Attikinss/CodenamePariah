@@ -51,7 +51,7 @@ public class HostController : InputController
     private bool m_HasFired = false;
 
     // If this variable was once public and you had set it's value in the inspector, it will still have the value you set in the inspector even if you change its initialization here.
-    public float ShootingDuration { get; private set; } = 1; // time tracking since started shooting.
+    public float ShootingDuration { get; set; } = 1; // time tracking since started shooting.
     
     public float m_XRotation = 0;   // Made public because nowadays the Weapon.cs script needs to access it.
 
@@ -112,13 +112,30 @@ public class HostController : InputController
 
 
 
+    // Temporary host drain ability stuff.
+    // These are integers because the Inventory.cs script has health stored as an integer.
+    public int m_DrainDamage = 10;         // By setting them to the same value, its a 1:1 ratio of drain/restoration.
+    public int m_DrainRestore = 10;
+    [Range(0,2)]
+    public float m_DrainInterval = 0.15f;
+
+    private float m_DrainCounter = 0.0f;
+    private bool m_IsDraining = false;
+
     
     [HideInInspector]
     public Vector3 m_PreviousOrientationVector = Vector3.zero;
     [HideInInspector]
     public float m_PreviousXCameraRot = 0;
 
-    private void Start()
+
+    private UIManager m_UIManager;
+
+	private void Awake()
+	{
+        m_UIManager = GetComponent<UIManager>();
+	}
+	private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Rigidbody = GetComponent<Rigidbody>();
@@ -135,9 +152,9 @@ public class HostController : InputController
         if (!m_Active) return;
 
         if (GetCurrentWeaponConfig().m_AlwaysADS) // The reason why I do this is so I don't have to check for the m_AlwaysADS bool everywhere. This way I can still just check for m_IsAiming in all functions.
-            m_IsAiming = true;
+            GetCurrentWeapon().m_IsAiming = true;
         if (GetCurrentWeaponConfig().m_AlwaysFiring) // Doing same here for the reason above.
-            m_IsFiring = true;
+            GetCurrentWeapon().m_IsFiring = true;
 
 
         // This is now taken care of by Lauchlan's weapon system.
@@ -199,6 +216,30 @@ public class HostController : InputController
         if (m_HasJumped)
         {
             m_JumpCounter += Time.deltaTime; // how to get around having a timer for something like this?
+        }
+
+
+        // While draining, the player is not allowed to interact with their weapons.
+        // ;-;
+        if (m_IsDraining)
+        {
+            if (m_Inventory.GetHealth() > 0)
+            {
+                // timed event. have adjustable drain speed.
+                m_DrainCounter += Time.deltaTime;
+                if (m_DrainCounter >= m_DrainInterval)
+                {
+                    m_DrainCounter = 0.0f;
+                    m_Inventory.TakeDamage(m_DrainDamage);
+                }
+
+            }
+            else
+            { 
+                // TODO 
+                // Kill host if health less than 0.
+                // eject Pariah at the same time damage Pariah.
+            }
         }
 
 
@@ -389,21 +430,37 @@ public class HostController : InputController
 
     public void OnWeaponSelect1(InputAction.CallbackContext value)
     {
-        if (value.performed)
+        if (value.performed && !GetCurrentWeapon().IsReloading())
         {
+            // Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
+            GetCurrentWeapon().ResetReload();
+            //GetCurrentWeapon().ResetReloadAnimation(); dont need here because pistol doesnt have animation yet.
+
+
             SelectWeapon(0);
 
             // Previously I was tracking weapon states in PlayerManager in an attempt to free up space in this controller script. However, now that we have an Inventory script that tracks weapons and
             // the players current weapon, I'll leave that stuff in there.
             //PlayerManager.SetWeapon(WeaponSlot.WEAPON1);
+
+
+            m_UIManager.m_IsRifle = true;
+            m_UIManager.HideMagazine(true);
         }
     }
 
     public void OnWeaponSelect2(InputAction.CallbackContext value)
     {
-        if (value.performed)
+        if (value.performed && !GetCurrentWeapon().IsReloading())
         {
+            // Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
+            GetCurrentWeapon().ResetReload();
+            GetCurrentWeapon().ResetReloadAnimation();
+
             SelectWeapon(1);
+
+            m_UIManager.m_IsRifle = false;
+            m_UIManager.HideMagazine(false);
         }
     }
 
@@ -418,6 +475,44 @@ public class HostController : InputController
             GetCurrentWeapon().m_IsAiming = false;
         }
     }
+
+    public void OnAbility2(InputAction.CallbackContext value)
+    {
+        // Do ability 2 stuff.
+        if (value.performed)
+        {
+            m_IsDraining = true;
+        }
+        else if (value.canceled)
+        {
+            m_IsDraining = false;
+        }
+    }
+
+    public void OnReload(InputAction.CallbackContext value)
+    {
+        if (value.performed)
+        { 
+            GetCurrentWeapon().StartReload();
+        }
+    }
+
+    public override void OnDash(InputAction.CallbackContext value)
+    {
+        if (value.performed && !m_Dashing)
+        {
+            Vector3 forwardDir = m_Camera.transform.forward;
+            if (IsGrounded)
+                forwardDir = m_Orientation.forward;
+            
+
+            if (Physics.Raycast(transform.position, forwardDir, out RaycastHit hitInfo, m_DashDistance))
+                StartCoroutine(Dash(hitInfo.point, -forwardDir * 0.5f, m_DashDuration));
+            else
+                StartCoroutine(Dash(transform.position + forwardDir * m_DashDistance, Vector3.zero, m_DashDuration));
+        }
+    }
+
 
     private void Look()
     {
@@ -454,8 +549,6 @@ public class HostController : InputController
             //Vector3 velocityTowardsSurface = Vector3.Dot(Rigidbody.velocity, m_GroundNormal) * m_GroundNormal;
             //direction -= velocityTowardsSurface;
             // =============================================================================================================================== //
-
-            Debug.Log("IsGrounded && !m_IsMoving");
             //direction.y = direction.y;
             //Rigidbody.velocity = new Vector3(Rigidbody.velocity.x, 0, Rigidbody.velocity.z);
         }
@@ -464,7 +557,6 @@ public class HostController : InputController
             Rigidbody.useGravity = true;
 
             direction.y = Rigidbody.velocity.y;
-            Debug.Log("Else");
         }
         //else
         //{

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.VFX;
 
 public class Weapon : MonoBehaviour
 {
@@ -133,20 +133,35 @@ public class Weapon : MonoBehaviour
     [HideInInspector]
     public Vector3 m_OriginalGlobalPosition;
 
-	// ================================================ //
+    // ================================================ //
+
+
+    // temporary ui thing
+    private UIManager m_UIManager;
+
+
+    // temporary muzzle flash
+    public VisualEffect m_MuzzleFlash;
+
+
+    // temporary animation reference
+    public Animator m_AssualtRifleAnimator;
+    public Animator m_AssualtRifleArmsAnimator;
 
 
 	private void Awake()
 	{
         m_OriginalLocalPosition = transform.localPosition;
         m_OriginalGlobalPosition = transform.position;
+
+        m_UIManager = transform.parent.parent.parent.GetComponent<UIManager>();
+
 	}
 
     // Update is called once per frame
     void Update()
     {
-        //GetComponentInParent<UIManager>().DisplayInventory();
-
+        m_UIManager?.DisplayInventory();
 
 
         // ========================= DECREMENTING AMMO WHEN SHOOTING ========================= //
@@ -166,15 +181,20 @@ public class Weapon : MonoBehaviour
 
 
 
-
-        if (m_IsFiring)
-            Fire();
-        else
-        { 
-            UpdateRecoilRecovery();
-        }
         
-        if (m_IsAiming)
+        // I've added m_IsReloading checks to prevent shooting while reloading and also to activate recoil recovery even if m_IsFiring is still true.
+        // This gives the advantage of reloading while holding down the mouse button will let you begin shooting again without having to re-press the mouse button.
+
+        if (m_IsFiring && !m_IsReloading && !TotalAmmoEmpty())
+            Fire();
+        else if (!m_IsFiring || m_IsReloading || TotalAmmoEmpty()) // We want to recovery if we are reloading. This lets us set reloading to true and keep firing on true and the player wont shoot.
+        {
+            UpdateRecoilRecovery();
+            Debug.Log("Recoil recovery.");
+        }
+
+        
+        if (m_IsAiming && !m_IsReloading)
             Aim();
 
         UpdateSway(m_Controller.LookInput.x, m_Controller.LookInput.y);
@@ -208,10 +228,14 @@ public class Weapon : MonoBehaviour
 
         if (ReadyToFire())
         {
-            if (m_RoundsInMagazine > 0)
+            if (m_RoundsInMagazine > 0/* && !m_IsReloading*/)
             {
+                // Play effects.
+                if(m_MuzzleFlash)
+                    m_MuzzleFlash.Play();
+
                 // Currently gets rid of bullet sprite before UI has fully updated //
-                //this.GetComponentInParent<UIManager>().DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);
+                m_UIManager.DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);
                 m_RoundsInMagazine--;
 
 
@@ -263,10 +287,27 @@ public class Weapon : MonoBehaviour
             {
                 // Do nothing / reload automatically
                 if (!ReserveAmmoEmpty())
+                { 
                     StartCoroutine(Reload());
+                    // To prevent recoil from affecting player while reloading, we must.
+                    m_Controller.ShootingDuration = 0;
+                    
+                    //m_IsFiring = false;
+                }
                 //else if (TotalAmmoEmpty())
                 //    this.GetComponentInParent<UIManager>().DisableMagazine();
             }
+        }
+    }
+
+    public void StartReload()
+    {
+        if (!PrimaryAmmoFull() && !ReserveAmmoEmpty() && !m_IsReloading)
+        { 
+            StartCoroutine(Reload());
+            m_Controller.ShootingDuration = 0;
+
+            
         }
     }
 
@@ -436,6 +477,8 @@ public class Weapon : MonoBehaviour
     /// <summary>Reloads the weapon over time.</summary>
     public IEnumerator Reload()
     {
+        StartReloadAnimation();
+
         m_IsReloading = true;
 
         // Before waiting you could invoke an animator here
@@ -461,7 +504,7 @@ public class Weapon : MonoBehaviour
         if (m_ReserveAmmo <= ammoRequired)
         {
             // Update UI to only show one mag
-            this.GetComponentInParent<UIManager>().ModuloEqualsZero(m_RoundsInMagazine + m_ReserveAmmo);
+            m_UIManager.ModuloEqualsZero(m_RoundsInMagazine + m_ReserveAmmo);
 
             // Move all remaining ammo into magazine
             m_RoundsInMagazine += m_ReserveAmmo;
@@ -472,12 +515,12 @@ public class Weapon : MonoBehaviour
             if ((m_RoundsInMagazine + m_ReserveAmmo) % m_MagazineSize == 0)
             {
                 // Total ammo equals an amount that when divided by magazine size, has no remainder therefore get rid of a mag UI element
-                this.GetComponentInParent<UIManager>().ModuloEqualsZero(m_MagazineSize);
+                m_UIManager.ModuloEqualsZero(m_MagazineSize);
             }
             else
             {
                 // Removes bullet sprites total from 1 - 2 mags depending on the ammo missing from current magazine and how much ammo was already missing in the last magazine
-                this.GetComponentInParent<UIManager>().RemoveAmmoFromLastAddToCurrent(m_MagazineSize);
+                m_UIManager.RemoveAmmoFromLastAddToCurrent(m_MagazineSize);
             }
 
             // Move required amount from reserve to magazine
@@ -485,6 +528,8 @@ public class Weapon : MonoBehaviour
             m_ReserveAmmo -= ammoRequired;
         }
 
+        SetFireTime(); // Added so that if the player is holding down fire while reloading, they will begin firing at t=0. Without this the fire time is what is what when they
+                       // originally started firing.
         m_IsReloading = false;
     }
 
@@ -494,7 +539,7 @@ public class Weapon : MonoBehaviour
 
         WeaponConfiguration weaponConfig = GetCurrentWeaponConfig();
         Transform gunTransform = GetCurrentWeaponTransform();
-        if (!m_IsAiming)
+        if (!m_IsAiming || m_IsReloading)
         {
             Vector3 gunOriginalPos = GetCurrentWeaponOriginalPos();
 
@@ -521,6 +566,8 @@ public class Weapon : MonoBehaviour
             float desiredFOV = 40;
 
             float requiredChange = desiredFOV - currentFOV;
+
+            if(!m_IsReloading) // Wont zoom in if we are reloading.
             m_Camera.fieldOfView += requiredChange * 0.45f;
 
 
@@ -673,4 +720,25 @@ public class Weapon : MonoBehaviour
     {
         m_FireStartTime = Time.time;
     }
+
+    public void ResetReload() { m_IsReloading = false; }
+
+    private void StartReloadAnimation()
+    {
+        if (m_AssualtRifleAnimator && m_AssualtRifleArmsAnimator)
+        { 
+            m_AssualtRifleAnimator.SetTrigger("OnReload");
+            m_AssualtRifleArmsAnimator.SetTrigger("OnReload");
+        }
+    }
+
+    public void ResetReloadAnimation()
+    {
+        // okay this isn't working so for now I will just prevent players from swapping weapons while reloading.
+
+        //m_AssualtRifleAnimator.enabled = false;
+        //m_AssualtRifleAnimator.enabled = true;
+    }
+
+    public bool IsReloading() { return m_IsReloading; }
 }

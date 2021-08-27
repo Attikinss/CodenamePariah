@@ -27,22 +27,31 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
 
-        for (int i = 0; i < m_MaxDecals; i++)
-        {
-            m_DecalSprite.Add( GameObject.Instantiate(m_DecalObject));
-            m_DecalSprite[i].transform.position = new Vector3(-1000, -1000, -1000); // temporary!!
+        // super temporary decal system. todo completely rework it.
 
+        if (m_DecalObject)
+        {
+            for (int i = 0; i < m_MaxDecals; i++)
+            {
+                m_DecalSprite.Add(GameObject.Instantiate(m_DecalObject));
+                m_DecalSprite[i].transform.position = new Vector3(-1000, -1000, -1000); // temporary!!
+
+            }
+            for (int i = 0; i < m_MaxDecals; i++)
+            {
+                m_decalPool.Add(new Decal(m_DecalSprite[i]));
+            }
+        }
+        else
+        {
+            for (int i = 0; i < m_MaxDecals; i++)
+            {
+                m_decalPool.Add(new Decal());
+            }
         }
 
         // Initialise the unused pool of decals.
-        for (int i = 0; i < m_MaxDecals; i++)
-        {
-            m_decalPool.Add(new Decal(m_DecalSprite[i]));
 
-            
-            
-            
-        }
     }
 
     // Update is called once per frame

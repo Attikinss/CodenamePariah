@@ -3696,6 +3696,30 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0b0f9a58bbfb9064098d14dcf43f0480, type: 3}
+--- !u!1 &1725574459 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: b63fccd010284504b9a7fd6befb5f129, type: 3}
+  m_PrefabInstance: {fileID: 2026407551}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1725574461
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1725574459}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6a58650611f96c64cb2c8c711b44a006, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1728058309
 GameObject:
   m_ObjectHideFlags: 0
@@ -4591,6 +4615,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 782e265ca3eabf54ab9f81dee17cc001, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &2123069565 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8794283785618547711, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+  m_PrefabInstance: {fileID: 8559930378728882673}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &2123069567
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2123069565}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e7509e658af707544aca898874743670, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2139365656
 GameObject:
   m_ObjectHideFlags: 0
@@ -4722,6 +4770,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 696020105}
     - target: {fileID: 101379944, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_ReloadTime
+      value: 2.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 101379944, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_BobDistance
       value: 0.05
       objectReference: {fileID: 0}
@@ -4753,6 +4805,14 @@ PrefabInstance:
       propertyPath: m_RoundsInMagazine
       value: 30
       objectReference: {fileID: 0}
+    - target: {fileID: 101379944, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_AssualtRifleAnimator
+      value: 
+      objectReference: {fileID: 2123069567}
+    - target: {fileID: 101379944, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_AssualtRifleArmsAnimator
+      value: 
+      objectReference: {fileID: 1725574461}
     - target: {fileID: 672113346, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_LocalScale.x
       value: 1
@@ -5012,6 +5072,18 @@ PrefabInstance:
     - target: {fileID: 1313509440, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_RoundsInMagazine
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8160595293846714693, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.169
+      objectReference: {fileID: 0}
+    - target: {fileID: 8160595293846714693, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.3889
+      objectReference: {fileID: 0}
+    - target: {fileID: 8160595293846714693, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.359
       objectReference: {fileID: 0}
     - target: {fileID: 8559930378344312181, guid: 97aad7d864afefa4eb9ec4916efebf53, type: 3}
       propertyPath: m_Name

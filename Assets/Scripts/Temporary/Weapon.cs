@@ -144,6 +144,11 @@ public class Weapon : MonoBehaviour
     public VisualEffect m_MuzzleFlash;
 
 
+    // temporary animation reference
+    public Animator m_AssualtRifleAnimator;
+    public Animator m_AssualtRifleArmsAnimator;
+
+
 	private void Awake()
 	{
         m_OriginalLocalPosition = transform.localPosition;
@@ -301,6 +306,8 @@ public class Weapon : MonoBehaviour
         { 
             StartCoroutine(Reload());
             m_Controller.ShootingDuration = 0;
+
+            
         }
     }
 
@@ -470,6 +477,8 @@ public class Weapon : MonoBehaviour
     /// <summary>Reloads the weapon over time.</summary>
     public IEnumerator Reload()
     {
+        StartReloadAnimation();
+
         m_IsReloading = true;
 
         // Before waiting you could invoke an animator here
@@ -711,4 +720,10 @@ public class Weapon : MonoBehaviour
     }
 
     public void ResetReload() { m_IsReloading = false; }
+
+    private void StartReloadAnimation()
+    {
+        m_AssualtRifleAnimator.SetTrigger("OnReload");
+        m_AssualtRifleArmsAnimator.SetTrigger("OnReload");
+    }
 }

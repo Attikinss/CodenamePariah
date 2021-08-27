@@ -63,6 +63,13 @@ public class PariahController : InputController
 
     private void Awake() => m_Rigidbody = GetComponent<Rigidbody>();
 
+    private void Start()
+    {
+        // Crude fix for allowing player to face any direction at start of runtime
+        var euler = transform.rotation.eulerAngles;
+        m_Rotation = new Vector2(euler.y, euler.x);
+    }
+
     private void FixedUpdate()
     {
         if (m_Active)

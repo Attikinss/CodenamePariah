@@ -3,8 +3,6 @@
     <uie:Toolbar style="flex-grow: 0;">
         <uie:ToolbarMenu display-tooltip-when-elided="true" text="File" name="FileMenu" style="min-width: 50px; -unity-text-align: middle-center; padding-left: 5px;" />
         <uie:ToolbarSpacer style="width: 2px;" />
-        <uie:ToolbarButton text="Scan Project" display-tooltip-when-elided="true" name="ScanProj" style="-unity-text-align: middle-left; min-width: 85px; padding-left: 5px;" />
-        <uie:ToolbarSpacer style="width: 2px;" />
         <uie:ToolbarMenu display-tooltip-when-elided="true" text="Select Behavior Tree" name="TreeMenu" focusable="false" style="-unity-text-align: middle-left; padding-left: 5px; min-width: 150px;" />
     </uie:Toolbar>
     <WhiteWillow.Editor.SplitView fixed-pane-initial-dimension="265" picking-mode="Ignore" fixed-pane-index="0">

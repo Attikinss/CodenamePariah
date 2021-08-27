@@ -73,7 +73,8 @@ public class PariahController : InputController
             if (m_CurrentPossessed != null)
             {
                 transform.position = m_CurrentPossessed.transform.position + Vector3.up * 1.75f;
-                transform.rotation = Quaternion.Euler(m_CurrentPossessed.FacingDirection);
+                m_Rotation.x = m_CurrentPossessed.Orientation.localEulerAngles.y;
+                m_Rotation.y = m_CurrentPossessed.Orientation.localEulerAngles.x;
             }
         }
     }

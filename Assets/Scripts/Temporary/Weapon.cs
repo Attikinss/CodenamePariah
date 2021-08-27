@@ -150,6 +150,7 @@ public class Weapon : MonoBehaviour
         m_OriginalGlobalPosition = transform.position;
 
         m_UIManager = transform.parent.parent.parent.GetComponent<UIManager>();
+
 	}
 
     // Update is called once per frame
@@ -708,4 +709,6 @@ public class Weapon : MonoBehaviour
     {
         m_FireStartTime = Time.time;
     }
+
+    public void ResetReload() { m_IsReloading = false; }
 }

@@ -42,6 +42,38 @@ public class UIManager : MonoBehaviour
     //       }
     //}
 
+    /// <summary>
+    /// HideMagazine() is a veeery temporary function just so the apporpriate magazines appear when the player switches weapons.
+    /// </summary>
+    /// <param name="rifle"></param>
+    public void HideMagazine(bool rifle)
+    {
+        // When rifle is held, hide the pistol magazines.
+        if (rifle)
+        {
+            for (int i = 0; i < m_Magazines.Count; i++)
+            {
+                m_Magazines[i].gameObject.SetActive(true);
+            }
+            for (int i = 0; i < m_PistolMagazines.Count; i++)
+            {
+                m_PistolMagazines[i].gameObject.SetActive(false);
+            }
+        }
+        // When pistol is held, hide the rifle magazines.
+        else
+        {
+            for (int i = 0; i < m_Magazines.Count; i++)
+            {
+                m_Magazines[i].gameObject.SetActive(false);
+            }
+            for (int i = 0; i < m_PistolMagazines.Count; i++)
+            {
+                m_PistolMagazines[i].gameObject.SetActive(true);
+            }
+        }
+    }
+
 
     /// <summary>Disables the last magazine gameObject.</summary>
     public void DisableMagazine()

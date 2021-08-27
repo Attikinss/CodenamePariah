@@ -432,6 +432,11 @@ public class HostController : InputController
     {
         if (value.performed)
         {
+            // Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
+            GetCurrentWeapon().ResetReload();
+
+
+
             SelectWeapon(0);
 
             // Previously I was tracking weapon states in PlayerManager in an attempt to free up space in this controller script. However, now that we have an Inventory script that tracks weapons and
@@ -440,6 +445,7 @@ public class HostController : InputController
 
 
             m_UIManager.m_IsRifle = true;
+            m_UIManager.HideMagazine(true);
         }
     }
 
@@ -447,9 +453,13 @@ public class HostController : InputController
     {
         if (value.performed)
         {
+            // Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
+            GetCurrentWeapon().ResetReload();
+
             SelectWeapon(1);
 
             m_UIManager.m_IsRifle = false;
+            m_UIManager.HideMagazine(false);
         }
     }
 

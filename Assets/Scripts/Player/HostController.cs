@@ -128,7 +128,14 @@ public class HostController : InputController
     [HideInInspector]
     public float m_PreviousXCameraRot = 0;
 
-    private void Start()
+
+    private UIManager m_UIManager;
+
+	private void Awake()
+	{
+        m_UIManager = GetComponent<UIManager>();
+	}
+	private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Rigidbody = GetComponent<Rigidbody>();
@@ -430,6 +437,9 @@ public class HostController : InputController
             // Previously I was tracking weapon states in PlayerManager in an attempt to free up space in this controller script. However, now that we have an Inventory script that tracks weapons and
             // the players current weapon, I'll leave that stuff in there.
             //PlayerManager.SetWeapon(WeaponSlot.WEAPON1);
+
+
+            m_UIManager.m_IsRifle = true;
         }
     }
 
@@ -438,6 +448,8 @@ public class HostController : InputController
         if (value.performed)
         {
             SelectWeapon(1);
+
+            m_UIManager.m_IsRifle = false;
         }
     }
 

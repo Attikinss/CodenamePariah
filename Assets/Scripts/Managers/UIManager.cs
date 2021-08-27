@@ -17,52 +17,78 @@ public class UIManager : MonoBehaviour
     [Tooltip("All the Magazine UI elements active on this character")]
     private List<Magazine> m_Magazines;
 
+    [SerializeField]
+    [Tooltip("All the Magazine UI elements active on this character")]
+    private List<Magazine> m_PistolMagazines;
+
+    [HideInInspector]
+    public bool m_IsRifle = true;
+
+    // this is ultra temporary dont look.
+    public Weapon m_Rifle;
+    public Weapon m_Pistol;
+
     //private static UIManager s_Instance;
-	//private void Awake()
-	//{
- //       if (!s_Instance)
- //       {
- //           s_Instance = this;
- //       }
- //       else
- //       {
- //           Debug.LogWarning("UIManager already exists in scene!");
- //           Destroy(this);
- //       }
-	//}
+    //private void Awake()
+    //{
+    //       if (!s_Instance)
+    //       {
+    //           s_Instance = this;
+    //       }
+    //       else
+    //       {
+    //           Debug.LogWarning("UIManager already exists in scene!");
+    //           Destroy(this);
+    //       }
+    //}
 
 
-	/// <summary>Disables the last magazine gameObject.</summary>
-	public void DisableMagazine()
+    /// <summary>Disables the last magazine gameObject.</summary>
+    public void DisableMagazine()
     {
-        m_Magazines[m_Magazines.Count - 1].gameObject.SetActive(false);
+        if(m_IsRifle)
+            m_Magazines[m_Magazines.Count - 1].gameObject.SetActive(false);
+        else
+            m_PistolMagazines[m_PistolMagazines.Count - 1].gameObject.SetActive(false);
     }
 
     /// <summary>Enables bullets in current magazine.</summary>
     /// <param name="i"></param>
     public void EnableBulletSprite(int i)
     {
-        m_Magazines[0].BulletSprites[i].SetActive(true);
+        if (m_IsRifle)
+            m_Magazines[0].BulletSprites[i].SetActive(true);
+        else
+            m_PistolMagazines[0].BulletSprites[i].SetActive(true);
     }
 
     /// <summary>Disables bullets in last magazine.</summary>
     /// <param name="i"></param>
     public void DisableBulletSpriteInLastMag(int i)
     {
-        m_Magazines[m_Magazines.Count - 1].BulletSprites[i].SetActive(false);
+        if(m_IsRifle)
+            m_Magazines[m_Magazines.Count - 1].BulletSprites[i].SetActive(false);
+        else
+            m_PistolMagazines[m_Magazines.Count - 1].BulletSprites[i].SetActive(false);
     }
 
     /// <summary>Disables bullets in current magazine.</summary>
     /// <param name="lastBullet"></param>
     public void DisableBulletSpriteInCurrentMag(int lastBullet)
     {
-        m_Magazines[0].BulletSprites[lastBullet].SetActive(false);
+        if(m_IsRifle)
+            m_Magazines[0].BulletSprites[lastBullet].SetActive(false);
+        else
+            m_PistolMagazines[0].BulletSprites[lastBullet].SetActive(false);
     }
 
     /// <summary>Removes last magazine from the array.</summary>
     public void RemoveMagazine()
     {
-        m_Magazines.RemoveAt(m_Magazines.Count - 1);
+        if(m_IsRifle)
+            m_Magazines.RemoveAt(m_Magazines.Count - 1);
+        else
+            m_PistolMagazines.RemoveAt(m_PistolMagazines.Count - 1);
     }
 
     //public void TotalAmmoGreaterThanMagazine(int magazineSize)
@@ -90,7 +116,10 @@ public class UIManager : MonoBehaviour
     /// <returns></returns>
     public bool FirstMagBulletSpriteActive(int i)
     {
-        return m_Magazines[0].BulletSprites[i].activeSelf;
+        if(m_IsRifle)
+            return m_Magazines[0].BulletSprites[i].activeSelf;
+        else
+            return m_PistolMagazines[0].BulletSprites[i].activeSelf;
     }
 
     /// <summary>Checks if bullet sprites in last magazine are active.</summary>
@@ -98,7 +127,10 @@ public class UIManager : MonoBehaviour
     /// <returns></returns>
     public bool LastMagBulletSpriteActive(int i)
     {
-        return m_Magazines[m_Magazines.Count - 1].BulletSprites[i].activeSelf;
+        if(m_IsRifle)
+            return m_Magazines[m_Magazines.Count - 1].BulletSprites[i].activeSelf;
+        else
+            return m_PistolMagazines[m_Magazines.Count - 1].BulletSprites[i].activeSelf;
     }
 
     /// <summary>Activates if (total ammo % magazineSize = 0).</summary>
@@ -159,16 +191,35 @@ public class UIManager : MonoBehaviour
 
     public void DisplayInventory()
     {
-        if (GetComponentInChildren<Weapon>().TotalAmmoEmpty())
-        {
-            DisableMagazine();
-        }
+        if (m_IsRifle)
+        { 
+            if (m_Rifle.TotalAmmoEmpty())
+            {
+                DisableMagazine();
+            }
 
-        m_AmmoWarning.text = "";
-        if (GetComponentInChildren<Weapon>().TotalAmmoEmpty())
-        {
             m_AmmoWarning.text = "";
-            m_AmmoWarning.text = "No Ammo";
+            if (m_Rifle.TotalAmmoEmpty())
+            {
+                m_AmmoWarning.text = "";
+                m_AmmoWarning.text = "No Ammo";
+            }
+        }
+        // ============ TEMPORARY CHECK. ============ //
+        // This check will be removed very soon. Just here to get a build out quickly.
+        else
+        { 
+            if (m_Pistol.TotalAmmoEmpty())
+            {
+                DisableMagazine();
+            }
+
+            m_AmmoWarning.text = "";
+            if (m_Pistol.TotalAmmoEmpty())
+            {
+                m_AmmoWarning.text = "";
+                m_AmmoWarning.text = "No Ammo";
+            }
         }
 
         m_AmmoDisplay.text = "";

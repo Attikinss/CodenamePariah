@@ -225,7 +225,8 @@ public class Weapon : MonoBehaviour
             if (m_RoundsInMagazine > 0/* && !m_IsReloading*/)
             {
                 // Play effects.
-                m_MuzzleFlash.Play();
+                if(m_MuzzleFlash)
+                    m_MuzzleFlash.Play();
 
                 // Currently gets rid of bullet sprite before UI has fully updated //
                 m_UIManager.DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);

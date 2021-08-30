@@ -41,9 +41,9 @@ public class PariahController : InputController
     [SerializeField]
     private float m_CameraTilt = 0.0f;
 
-    [ReadOnly]
-    [SerializeField]
-    private bool m_Dashing = false;
+    //[ReadOnly]
+    //[SerializeField]
+    //private bool m_Dashing = false;
 
     [ReadOnly]
     [SerializeField]

@@ -130,6 +130,7 @@ public class HostController : InputController
 
 
     private UIManager m_UIManager;
+    public GameObject m_HUD;
 
 	private void Awake()
 	{
@@ -336,6 +337,7 @@ public class HostController : InputController
         GetComponent<PlayerInput>().enabled = true;
         m_Active = true;
         m_Camera.enabled = true;
+        UnhideHUD();
     }
 
     public override void Disable()
@@ -343,6 +345,7 @@ public class HostController : InputController
         GetComponent<PlayerInput>().enabled = false;
         m_Active = false;
         m_Camera.enabled = false;
+        HideHUD();
     }
 
     public override void OnLook(InputAction.CallbackContext value)
@@ -781,5 +784,15 @@ public class HostController : InputController
             GetCurrentWeapon().m_IsFiring = false;
             GetCurrentWeapon().m_RecoilTestCounter = 0;
         }
+    }
+
+    public void HideHUD()
+    {
+        m_HUD.SetActive(false);
+    }
+
+    public void UnhideHUD()
+    {
+        m_HUD.SetActive(true);
     }
 }

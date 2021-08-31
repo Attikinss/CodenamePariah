@@ -75,7 +75,7 @@ public class PauseMenu : MonoBehaviour
         {
             m_PauseMenuUI[i].SetActive(false);
         }
-        Time.timeScale = 1f;
+        Time.timeScale = 1f;//
         m_GameIsPaused = false;
     }
 
@@ -85,7 +85,7 @@ public class PauseMenu : MonoBehaviour
         {
             m_PauseMenuUI[i].SetActive(true);
         }
-        Time.timeScale = 0f;
+        Time.timeScale = 0f;//
         m_GameIsPaused = true;
         //disable a bunch of things requiring input - currently a bullet gets fired on first click inside pause menu.
         //can probably do "if(... && !m_GameIsPaused) in other scripts.

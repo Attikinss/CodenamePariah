@@ -101,7 +101,7 @@ public class UIManager : MonoBehaviour
         if(m_IsRifle)
             m_Magazines[m_Magazines.Count - 1].BulletSprites[i].SetActive(false);
         else
-            m_PistolMagazines[m_Magazines.Count - 1].BulletSprites[i].SetActive(false);
+            m_PistolMagazines[m_PistolMagazines.Count - 1].BulletSprites[i].SetActive(false);
     }
 
     /// <summary>Disables bullets in current magazine.</summary>

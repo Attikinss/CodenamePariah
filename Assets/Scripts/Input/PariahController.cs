@@ -41,9 +41,9 @@ public class PariahController : InputController
     [SerializeField]
     private float m_CameraTilt = 0.0f;
 
-    [ReadOnly]
-    [SerializeField]
-    private bool m_Dashing = false;
+    //[ReadOnly]
+    //[SerializeField]
+    //private bool m_Dashing = false;
 
     [ReadOnly]
     [SerializeField]
@@ -57,6 +57,13 @@ public class PariahController : InputController
 
     private void Awake() => m_Rigidbody = GetComponent<Rigidbody>();
 
+    private void Start()
+    {
+        // Crude fix for allowing player to face any direction at start of runtime
+        var euler = transform.rotation.eulerAngles;
+        m_Rotation = new Vector2(euler.y, euler.x);
+    }
+
     private void FixedUpdate()
     {
         if (m_Active)
@@ -66,7 +73,8 @@ public class PariahController : InputController
             if (m_CurrentPossessed != null)
             {
                 transform.position = m_CurrentPossessed.transform.position + Vector3.up * 1.75f;
-                transform.rotation = Quaternion.Euler(m_CurrentPossessed.FacingDirection);
+                m_Rotation.x = m_CurrentPossessed.Orientation.localEulerAngles.y;
+                m_Rotation.y = m_CurrentPossessed.Orientation.localEulerAngles.x;
             }
         }
     }

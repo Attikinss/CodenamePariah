@@ -20,7 +20,6 @@ namespace WhiteWillow.Editor
 
         private ToolbarMenu m_FileMenu;
         private ToolbarMenu m_TreeMenu;
-        private ToolbarButton m_ScanButton;
         public BehaviourTree AssetOpenTree;
 
         /// <summary>Opens the editor window via menu item.</summary>

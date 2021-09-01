@@ -13,30 +13,28 @@ namespace WhiteWillow.Editor
     {
         private BaseNode m_SelectedNode;
         private VisualElement m_RootVisualElement;
-
         private List<VisualElement> m_FieldElements;
 
-        public NodeEditorView(Object target)
+        public void SetTarget(BaseNode targetNode)
         {
-            m_FieldElements = new List<VisualElement>();
-            m_SelectedNode = target as BaseNode;
-            m_RootVisualElement = new VisualElement();
+            m_SelectedNode = targetNode;
 
-            Debug.Log("Noice");
-        }
+            //System.Reflection.BindingFlags flags = System.Reflection.BindingFlags.Default;
+            var fields = m_SelectedNode?.GetType().GetFields().ToList();
+            Debug.Log($"Node: {fields.Count}");
 
-        public override VisualElement CreateInspectorGUI()
-        {
-            var fields = m_SelectedNode?.GetType().GetFields(System.Reflection.BindingFlags.Public).ToList();
-            var hiddenFields = fields?.Where(field => field.GetCustomAttributes(typeof(HideInInspector), true) != null).ToList();
-            hiddenFields?.ForEach(field => fields.Remove(field));
+            var hiddenFields = fields?.Where(f => f.GetCustomAttributes(typeof(HideInInspector), true) != null).ToList();
+            hiddenFields?.ForEach(f => fields.Remove(f));
+
+            Debug.Log($"Node: {fields.Count}");
 
             foreach (var field in fields)
-            {
-                Debug.Log(field.FieldType.Name);
-            }
+                Debug.Log(field.Name);
+        }
 
-            return m_RootVisualElement;
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
         }
     }
 }

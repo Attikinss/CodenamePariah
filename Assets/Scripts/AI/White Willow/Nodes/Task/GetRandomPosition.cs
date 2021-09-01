@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.AI;
 
 namespace WhiteWillow.Nodes
 {
@@ -28,7 +29,8 @@ namespace WhiteWillow.Nodes
         protected override NodeResult OnTick()
         {
             var offset = Random.insideUnitSphere * Radius;
-            if (Owner.Agent.SetDestination(new Vector3(offset.x, 0.0f, offset.y)))
+
+            if (Owner.Agent.SetDestination(offset))
                 return NodeResult.Success;
             else
             {

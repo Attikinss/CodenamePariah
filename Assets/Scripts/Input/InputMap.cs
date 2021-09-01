@@ -49,6 +49,22 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Raise"",
+                    ""type"": ""Button"",
+                    ""id"": ""bad2e9ad-e017-4bf7-8cb4-218300a5a17e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Lower"",
+                    ""type"": ""Button"",
+                    ""id"": ""16b5e56d-e5d9-43c7-b959-cb11a8cb8555"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -200,7 +216,7 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""id"": ""f32dccea-9ed7-4dc0-aa9a-3b620162022d"",
                     ""path"": ""2DVector(mode=2)"",
                     ""interactions"": """",
-                    ""processors"": ""ScaleVector2(x=3,y=3)"",
+                    ""processors"": """",
                     ""groups"": ""Controller"",
                     ""action"": ""Look"",
                     ""isComposite"": true,
@@ -255,7 +271,7 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""id"": ""5e9199ff-0f85-4845-ad15-d91b7d2195a2"",
                     ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""ScaleVector2(x=0.1,y=0.1)"",
                     ""groups"": ""KBM"",
                     ""action"": ""Look"",
                     ""isComposite"": false,
@@ -269,6 +285,50 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Controller"",
                     ""action"": ""Possession"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2ab8cc32-a24b-47f7-9384-d894f3b28e14"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Controller"",
+                    ""action"": ""Raise"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9ebf7aa5-030d-4d2c-a031-85cc4e6e69cf"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Raise"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""eb12ab1b-acbe-4082-8f3f-112500243de9"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Controller"",
+                    ""action"": ""Lower"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""03ae98bd-2f7f-4e08-9609-5fffbee8a37b"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Lower"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -346,6 +406,46 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""name"": ""Slide"",
                     ""type"": ""Button"",
                     ""id"": ""93a55832-59b9-416a-87c6-b8f78d496127"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Select1"",
+                    ""type"": ""Button"",
+                    ""id"": ""0364cb4f-20c1-4e50-829a-718426a89f84"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Select2"",
+                    ""type"": ""Button"",
+                    ""id"": ""1a369283-ec17-47f9-8107-662f60fdea79"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""RecoilTest"",
+                    ""type"": ""Button"",
+                    ""id"": ""bcf73363-bc80-4831-b974-7150f49040b0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Ability2"",
+                    ""type"": ""Button"",
+                    ""id"": ""f9c58ad8-8a77-4d56-a4a3-4075ad8b7bde"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""5b49c673-d3b1-41b6-99d5-f9d704f79ca1"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -555,7 +655,7 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""id"": ""42e55000-702b-4f15-b0f3-75eefdd353eb"",
                     ""path"": ""2DVector(mode=2)"",
                     ""interactions"": """",
-                    ""processors"": ""ScaleVector2(x=3,y=3)"",
+                    ""processors"": """",
                     ""groups"": ""Controller"",
                     ""action"": ""Look"",
                     ""isComposite"": true,
@@ -610,7 +710,7 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""id"": ""4a69d2a7-d3fb-4ec1-8307-2fd09f79b56b"",
                     ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""ScaleVector2(x=0.1,y=0.1)"",
                     ""groups"": ""KBM"",
                     ""action"": ""Look"",
                     ""isComposite"": false,
@@ -681,6 +781,61 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""action"": ""Slide"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ef6720c9-a014-4fa8-ba5c-a31f7fc09217"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Select1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cbd2250e-468b-4b91-9ca4-2f5f58d84d64"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Select2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fd18cd63-caeb-4989-aefc-5546fc2ed0b5"",
+                    ""path"": ""<Keyboard>/k"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""RecoilTest"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7cdb3b23-dc12-467b-b688-42c89ec820fb"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Ability2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c82cdf53-4342-4604-a013-40d6cd52bada"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -726,6 +881,8 @@ public class @InputMap : IInputActionCollection, IDisposable
         m_Pariah_Look = m_Pariah.FindAction("Look", throwIfNotFound: true);
         m_Pariah_Dash = m_Pariah.FindAction("Dash", throwIfNotFound: true);
         m_Pariah_Possession = m_Pariah.FindAction("Possession", throwIfNotFound: true);
+        m_Pariah_Raise = m_Pariah.FindAction("Raise", throwIfNotFound: true);
+        m_Pariah_Lower = m_Pariah.FindAction("Lower", throwIfNotFound: true);
         // Host
         m_Host = asset.FindActionMap("Host", throwIfNotFound: true);
         m_Host_Movement = m_Host.FindAction("Movement", throwIfNotFound: true);
@@ -737,6 +894,11 @@ public class @InputMap : IInputActionCollection, IDisposable
         m_Host_Fire = m_Host.FindAction("Fire", throwIfNotFound: true);
         m_Host_Jump = m_Host.FindAction("Jump", throwIfNotFound: true);
         m_Host_Slide = m_Host.FindAction("Slide", throwIfNotFound: true);
+        m_Host_Select1 = m_Host.FindAction("Select1", throwIfNotFound: true);
+        m_Host_Select2 = m_Host.FindAction("Select2", throwIfNotFound: true);
+        m_Host_RecoilTest = m_Host.FindAction("RecoilTest", throwIfNotFound: true);
+        m_Host_Ability2 = m_Host.FindAction("Ability2", throwIfNotFound: true);
+        m_Host_Reload = m_Host.FindAction("Reload", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -790,6 +952,8 @@ public class @InputMap : IInputActionCollection, IDisposable
     private readonly InputAction m_Pariah_Look;
     private readonly InputAction m_Pariah_Dash;
     private readonly InputAction m_Pariah_Possession;
+    private readonly InputAction m_Pariah_Raise;
+    private readonly InputAction m_Pariah_Lower;
     public struct PariahActions
     {
         private @InputMap m_Wrapper;
@@ -798,6 +962,8 @@ public class @InputMap : IInputActionCollection, IDisposable
         public InputAction @Look => m_Wrapper.m_Pariah_Look;
         public InputAction @Dash => m_Wrapper.m_Pariah_Dash;
         public InputAction @Possession => m_Wrapper.m_Pariah_Possession;
+        public InputAction @Raise => m_Wrapper.m_Pariah_Raise;
+        public InputAction @Lower => m_Wrapper.m_Pariah_Lower;
         public InputActionMap Get() { return m_Wrapper.m_Pariah; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -819,6 +985,12 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Possession.started -= m_Wrapper.m_PariahActionsCallbackInterface.OnPossession;
                 @Possession.performed -= m_Wrapper.m_PariahActionsCallbackInterface.OnPossession;
                 @Possession.canceled -= m_Wrapper.m_PariahActionsCallbackInterface.OnPossession;
+                @Raise.started -= m_Wrapper.m_PariahActionsCallbackInterface.OnRaise;
+                @Raise.performed -= m_Wrapper.m_PariahActionsCallbackInterface.OnRaise;
+                @Raise.canceled -= m_Wrapper.m_PariahActionsCallbackInterface.OnRaise;
+                @Lower.started -= m_Wrapper.m_PariahActionsCallbackInterface.OnLower;
+                @Lower.performed -= m_Wrapper.m_PariahActionsCallbackInterface.OnLower;
+                @Lower.canceled -= m_Wrapper.m_PariahActionsCallbackInterface.OnLower;
             }
             m_Wrapper.m_PariahActionsCallbackInterface = instance;
             if (instance != null)
@@ -835,6 +1007,12 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Possession.started += instance.OnPossession;
                 @Possession.performed += instance.OnPossession;
                 @Possession.canceled += instance.OnPossession;
+                @Raise.started += instance.OnRaise;
+                @Raise.performed += instance.OnRaise;
+                @Raise.canceled += instance.OnRaise;
+                @Lower.started += instance.OnLower;
+                @Lower.performed += instance.OnLower;
+                @Lower.canceled += instance.OnLower;
             }
         }
     }
@@ -852,6 +1030,11 @@ public class @InputMap : IInputActionCollection, IDisposable
     private readonly InputAction m_Host_Fire;
     private readonly InputAction m_Host_Jump;
     private readonly InputAction m_Host_Slide;
+    private readonly InputAction m_Host_Select1;
+    private readonly InputAction m_Host_Select2;
+    private readonly InputAction m_Host_RecoilTest;
+    private readonly InputAction m_Host_Ability2;
+    private readonly InputAction m_Host_Reload;
     public struct HostActions
     {
         private @InputMap m_Wrapper;
@@ -865,6 +1048,11 @@ public class @InputMap : IInputActionCollection, IDisposable
         public InputAction @Fire => m_Wrapper.m_Host_Fire;
         public InputAction @Jump => m_Wrapper.m_Host_Jump;
         public InputAction @Slide => m_Wrapper.m_Host_Slide;
+        public InputAction @Select1 => m_Wrapper.m_Host_Select1;
+        public InputAction @Select2 => m_Wrapper.m_Host_Select2;
+        public InputAction @RecoilTest => m_Wrapper.m_Host_RecoilTest;
+        public InputAction @Ability2 => m_Wrapper.m_Host_Ability2;
+        public InputAction @Reload => m_Wrapper.m_Host_Reload;
         public InputActionMap Get() { return m_Wrapper.m_Host; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -901,6 +1089,21 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Slide.started -= m_Wrapper.m_HostActionsCallbackInterface.OnSlide;
                 @Slide.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnSlide;
                 @Slide.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnSlide;
+                @Select1.started -= m_Wrapper.m_HostActionsCallbackInterface.OnSelect1;
+                @Select1.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnSelect1;
+                @Select1.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnSelect1;
+                @Select2.started -= m_Wrapper.m_HostActionsCallbackInterface.OnSelect2;
+                @Select2.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnSelect2;
+                @Select2.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnSelect2;
+                @RecoilTest.started -= m_Wrapper.m_HostActionsCallbackInterface.OnRecoilTest;
+                @RecoilTest.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnRecoilTest;
+                @RecoilTest.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnRecoilTest;
+                @Ability2.started -= m_Wrapper.m_HostActionsCallbackInterface.OnAbility2;
+                @Ability2.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnAbility2;
+                @Ability2.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnAbility2;
+                @Reload.started -= m_Wrapper.m_HostActionsCallbackInterface.OnReload;
+                @Reload.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnReload;
+                @Reload.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnReload;
             }
             m_Wrapper.m_HostActionsCallbackInterface = instance;
             if (instance != null)
@@ -932,6 +1135,21 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Slide.started += instance.OnSlide;
                 @Slide.performed += instance.OnSlide;
                 @Slide.canceled += instance.OnSlide;
+                @Select1.started += instance.OnSelect1;
+                @Select1.performed += instance.OnSelect1;
+                @Select1.canceled += instance.OnSelect1;
+                @Select2.started += instance.OnSelect2;
+                @Select2.performed += instance.OnSelect2;
+                @Select2.canceled += instance.OnSelect2;
+                @RecoilTest.started += instance.OnRecoilTest;
+                @RecoilTest.performed += instance.OnRecoilTest;
+                @RecoilTest.canceled += instance.OnRecoilTest;
+                @Ability2.started += instance.OnAbility2;
+                @Ability2.performed += instance.OnAbility2;
+                @Ability2.canceled += instance.OnAbility2;
+                @Reload.started += instance.OnReload;
+                @Reload.performed += instance.OnReload;
+                @Reload.canceled += instance.OnReload;
             }
         }
     }
@@ -960,6 +1178,8 @@ public class @InputMap : IInputActionCollection, IDisposable
         void OnLook(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
         void OnPossession(InputAction.CallbackContext context);
+        void OnRaise(InputAction.CallbackContext context);
+        void OnLower(InputAction.CallbackContext context);
     }
     public interface IHostActions
     {
@@ -972,5 +1192,10 @@ public class @InputMap : IInputActionCollection, IDisposable
         void OnFire(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnSlide(InputAction.CallbackContext context);
+        void OnSelect1(InputAction.CallbackContext context);
+        void OnSelect2(InputAction.CallbackContext context);
+        void OnRecoilTest(InputAction.CallbackContext context);
+        void OnAbility2(InputAction.CallbackContext context);
+        void OnReload(InputAction.CallbackContext context);
     }
 }

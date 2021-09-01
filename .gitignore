@@ -5,6 +5,7 @@
 [Bb]uild/
 [Bb]uilds/
 [Uu]serSettings/
+[Tt]elemetry/
 Assets/AssetStoreTools*
 Packages/packages-lock.json
 

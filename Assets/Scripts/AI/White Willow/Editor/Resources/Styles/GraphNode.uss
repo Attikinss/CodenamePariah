@@ -1,4 +1,4 @@
-﻿#title-label {
+﻿/*#title-label {
     font-size: 20px;
     -unity-text-align: middle-center;
     flex-grow: 1;
@@ -114,4 +114,4 @@
 {
     max-width: 16px;
     margin-left: 0;
-}
+}*/

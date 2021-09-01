@@ -26,7 +26,11 @@ public class CustomDebugUI : MonoBehaviour
     public Text m_SlideDirText;
     public Text m_SlideCounterText;
 
+    public Text m_LookInputText;
+
     private bool m_Toggle = true;
+
+
 
     //[Header("Weapon Sway")]
     //public Text m_SwayTimerText;
@@ -40,6 +44,21 @@ public class CustomDebugUI : MonoBehaviour
     public Text m_CurrentMaxHealthText;
 
     public Text m_AdditionalRecoilText;
+
+    public Text m_WeaponRecoilRotText;
+    public Text m_WeaponRecoilTransfText;
+
+    public Text m_FireHeldCounterText;
+
+
+    [Header("Recoil Patterns")]
+    public Text m_VerticalCameraRecoilText;
+    public Text m_HorizontalCameraRecoilText;
+
+    public Text m_PreviousCamXRotText;
+    public Text m_CurrentCamXRotText;
+
+    public Text m_CameraRecoilDotProductText;
 
     //public Text m_ShootHeldText;
     //public Text m_ShootHeldCounterText;
@@ -72,24 +91,46 @@ public class CustomDebugUI : MonoBehaviour
     void Update()
     {
         GraphicalDebugger.Assign<bool>(m_playerController.IsGrounded, "IsGrounded", m_isGroundedText);
-        GraphicalDebugger.Assign<float>(m_playerController.m_currentMoveSpeed, "MoveSpeed", m_moveSpeedText);
-        GraphicalDebugger.Assign<bool>(m_playerController.m_isMoving, "IsMoving", m_isMovingText);
+        GraphicalDebugger.Assign<float>(m_playerController.m_CurrentMoveSpeed, "MoveSpeed", m_moveSpeedText);
+        GraphicalDebugger.Assign<bool>(m_playerController.m_IsMoving, "IsMoving", m_isMovingText);
         //GraphicalDebugger.Assign<float>(m_playerController.m_WaveSlice, "WaveSlice", m_WaveSliceText);
         //GraphicalDebugger.Assign<float>(m_playerController.m_SwayTimer, "SwayTimer", m_SwayTimerText);
         //GraphicalDebugger.Assign<string>(PlayerManager.s_CurrentWeapon.ToString(), "CurrentWeaponSlot", m_CurrentWeaponSlotText);
         GraphicalDebugger.Assign<float>(PlayerManager.s_Health, "Health", m_CurrentHealthText);
         GraphicalDebugger.Assign<float>(PlayerManager.s_MaxHealth, "MaxHealth", m_CurrentMaxHealthText);
-        GraphicalDebugger.Assign<float>(m_playerController.m_Rigidbody.velocity.y, "YVelocity", m_YVelocityText);
+        GraphicalDebugger.Assign<float>(m_playerController.Rigidbody.velocity.y, "YVelocity", m_YVelocityText);
         GraphicalDebugger.Assign<Vector3>(m_playerController.CacheMovDir, "CacheMovDir", m_CacheMovDirText);
-        GraphicalDebugger.Assign<float>(m_playerController.m_MovementInput.x, "XAxis", m_XAxisText);
-        GraphicalDebugger.Assign<float>(m_playerController.m_MovementInput.y, "ZAxis", m_ZAxisText);
+        GraphicalDebugger.Assign<float>(m_playerController.MovementInput.x, "XAxis", m_XAxisText);
+        GraphicalDebugger.Assign<float>(m_playerController.MovementInput.y, "ZAxis", m_ZAxisText);
 
-        GraphicalDebugger.Assign<bool>(m_playerController.m_Sliding, "IsSliding", m_IsSlidingText);
-        GraphicalDebugger.Assign<Vector3>(m_playerController.m_SlideDir, "SlideDir", m_SlideDirText);
-        GraphicalDebugger.Assign<float>(m_playerController.m_SlideCounter, "SlideCounter", m_SlideCounterText);
+        GraphicalDebugger.Assign<bool>(m_playerController.IsSliding, "IsSliding", m_IsSlidingText);
+        GraphicalDebugger.Assign<Vector3>(m_playerController.SlideDir, "SlideDir", m_SlideDirText);
+        GraphicalDebugger.Assign<float>(m_playerController.SlideCounter, "SlideCounter", m_SlideCounterText);
 
-        GraphicalDebugger.Assign<Vector3>(m_playerController.m_AdditionalRecoilRotation, "AdditionalRecoilRotation", m_AdditionalRecoilText);
-        
+        GraphicalDebugger.Assign<Vector3>(m_playerController.AdditionalRecoilRotation, "AdditionalRecoilRotation", m_AdditionalRecoilText);
+
+        GraphicalDebugger.Assign<Vector3>(m_playerController.LookInput, "LookInput", m_LookInputText);
+
+        // Because there are multiple weapons, I have to get the current weapons configuration.
+        WeaponConfiguration weaponConfig = m_playerController.GetCurrentWeaponConfig();
+
+        //GraphicalDebugger.Assign<Vector3>(m_playerController.WeaponRecoilRot, "WeaponRecoilRot", m_WeaponRecoilRotText);
+        GraphicalDebugger.Assign<Vector3>(weaponConfig.m_WeaponRecoilTransform, "WeaponRecoilTransf", m_WeaponRecoilTransfText);
+
+        GraphicalDebugger.Assign<float>(m_playerController.AdditionalCameraRecoilX, "VerticalCameraRecoil", m_VerticalCameraRecoilText);
+        GraphicalDebugger.Assign<float>(m_playerController.AdditionalCameraRecoilY, "HorizontalCameraRecoil", m_HorizontalCameraRecoilText);
+
+        GraphicalDebugger.Assign<float>(Time.time - m_playerController.GetCurrentWeapon().m_FireStartTime, "FireHeldCounter", m_FireHeldCounterText);
+
+        GraphicalDebugger.Assign<float>(m_playerController.CurrentCamRot.x, "CurrentCamXRot", m_CurrentCamXRotText);
+        GraphicalDebugger.Assign<float>(m_playerController.PreviousCameraRotation.x, "PreviousCamXRot", m_PreviousCamXRotText);
+
+        // I know it's super inefficient to recalculate the dot product here but this wont be in the builds of the game so I think its okay, plus it saved me like 1 minute.
+        Vector3 modifiedCurrent = new Vector2(m_playerController.CurrentCamRot.y, 1);
+        Vector3 modifiedPrevious = new Vector2(m_playerController.PreviousCameraRotation.y, 1);
+        float dot = Vector2.Dot(modifiedCurrent.normalized, modifiedPrevious.normalized);
+        GraphicalDebugger.Assign<float>(dot, "CameraDotProduct", m_CameraRecoilDotProductText);
+
 
         //GraphicalDebugger.Assign<string>(m_AbilityController.m_Ability1.IsActive().ToString(), "Ability1Active", m_Ability1ActiveText);
         //GraphicalDebugger.Assign<float>(m_AbilityController.m_Ability1.GetCounter(), "Ability1Counter", m_Ability1CounterText);

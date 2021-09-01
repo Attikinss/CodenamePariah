@@ -19,15 +19,27 @@ public class Inventory : MonoBehaviour
 
     [SerializeField]
     [Tooltip("Weapons this character has.")]
-    private List<Weapon> m_Weapons;
+    public List<Weapon> m_Weapons;  // Has been made public so I can access it within the HostController.cs script. Only temporary.
 
     /// <summary>
     /// 
     /// </summary>
-    private Weapon m_CurrentWeapon;
+    
+    [HideInInspector]
+    public Weapon m_CurrentWeapon; // I know this wasn't public by default, but I'm going to make it publically accessible so that I can swap weapons around form the HostController.cs script.
 
-    // Update is called once per frame
-    void Update()
+
+    /// <summary>
+    /// I've added a Awake() function here because m_CurrentWeapon was always unintialised. I'm going to initialise it here.
+    /// </summary>
+	private void Awake()
+	{
+        if(m_Weapons.Count > 0)
+            m_CurrentWeapon = m_Weapons[0]; // For now, m_CurrentWeapon will always start off as the first element in the m_Weapons list.
+	}
+
+	// Update is called once per frame
+	void Update()
     {
         DisplayHealth();
 
@@ -47,16 +59,15 @@ public class Inventory : MonoBehaviour
     void DisplayHealth() //move to ui Manager
     {
         //m_HealthText.text = "";
-        m_HealthText.text = "";
-        //m_HealthSprite.SetActive(true);
-        //enable sprite (possibly only at start - until health is 0)
-        m_HealthText.text += m_Health;
+        m_HealthText?.SetText(m_Health.ToString());
     }
 
     /// <summary>Takes health away equal to the damage value.</summary>
     /// <param name="damage"></param>
-    void TakeDamage(int damage)
+    public void TakeDamage(int damage)
     {
         m_Health -= damage;
     }
+
+    public int GetHealth() { return m_Health; }
 }

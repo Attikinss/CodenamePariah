@@ -1,180 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-6117519432389280308
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 091432daeedcc32479447b2d236a1948, type: 3}
-  m_Name: GetRandomPosition
-  m_EditorClassIdentifier: 
-  Active: 0
-  Owner: {fileID: 11400000}
-  Parent: {fileID: -5410772201933474676}
-  State: 0
-  Title: GetRandomPosition
-  GUID: 48814ac0-7182-45a0-a294-c63218eeda81
-  Locked: 0
-  ExecutionOrder: 1
-  GraphDimensions:
-    serializedVersion: 2
-    x: 850
-    y: -47
-    width: 289
-    height: 96
-  Interruptable: 1
-  RangeType: 0
-  Radius: 35
---- !u!114 &-5410772201933474676
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 044444dddb989c94aa4a827c03c2c9cd, type: 3}
-  m_Name: Patrol
-  m_EditorClassIdentifier: 
-  Active: 0
-  Owner: {fileID: 11400000}
-  Parent: {fileID: -1115846829336610054}
-  State: 0
-  Title: Patrol
-  GUID: c87d0188-057d-45a2-a727-d3d1f65a1f22
-  Locked: 0
-  ExecutionOrder: 1
-  GraphDimensions:
-    serializedVersion: 2
-    x: 544
-    y: 86
-    width: 273
-    height: 96
-  RunningChild: {fileID: 0}
-  Children:
-  - {fileID: -6117519432389280308}
-  - {fileID: -4428122377625869476}
-  - {fileID: 5061679973262504165}
---- !u!114 &-4428122377625869476
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce5467acc9b767540bf2341069c2f8b6, type: 3}
-  m_Name: MoveTo
-  m_EditorClassIdentifier: 
-  Active: 0
-  Owner: {fileID: 11400000}
-  Parent: {fileID: -5410772201933474676}
-  State: 0
-  Title: MoveTo
-  GUID: 4b11f4b3-19dd-49b0-a915-27a00818dcc9
-  Locked: 0
-  ExecutionOrder: 2
-  GraphDimensions:
-    serializedVersion: 2
-    x: 858
-    y: 83
-    width: 150
-    height: 87
-  Interruptable: 0
---- !u!114 &-4230987073749678443
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2509dc9d753000940b2bb565c12f557d, type: 3}
-  m_Name: Repeat
-  m_EditorClassIdentifier: 
-  Active: 0
-  Owner: {fileID: 11400000}
-  Parent: {fileID: -1115846829336610054}
-  State: 0
-  Title: Repeat
-  GUID: a9e4519a-4c1b-498b-b7c2-43acd783f086
-  Locked: 0
-  ExecutionOrder: 2
-  GraphDimensions:
-    serializedVersion: 2
-    x: 544
-    y: 295
-    width: 273
-    height: 96
-  Child: {fileID: 9128821060454082886}
-  RepeatCondition: 1
-  Repeats: 5
-  m_CurrentRepeats: 0
---- !u!114 &-3396606788102687052
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 729f6e5e156465249afc2926c5a1fcc7, type: 3}
-  m_Name: Log
-  m_EditorClassIdentifier: 
-  Active: 0
-  Owner: {fileID: 11400000}
-  Parent: {fileID: 2853378017192661133}
-  State: 0
-  Title: Log
-  GUID: 900580f5-737f-4780-8af2-50cb8b4ee65b
-  Locked: 0
-  ExecutionOrder: 1
-  GraphDimensions:
-    serializedVersion: 2
-    x: 850
-    y: 439
-    width: 197
-    height: 96
-  Interruptable: 0
-  Message: Failed everything
---- !u!114 &-1769380902008957993
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 091432daeedcc32479447b2d236a1948, type: 3}
-  m_Name: Test node that fails
-  m_EditorClassIdentifier: 
-  Active: 0
-  Owner: {fileID: 11400000}
-  Parent: {fileID: 9128821060454082886}
-  State: 0
-  Title: Test node that fails
-  GUID: 4bd6fd52-1de8-4764-8476-daa47d4d79b0
-  Locked: 0
-  ExecutionOrder: 3
-  GraphDimensions:
-    serializedVersion: 2
-    x: 1171
-    y: 391
-    width: 289
-    height: 96
-  Interruptable: 1
-  RangeType: 0
-  Radius: 500
---- !u!114 &-1115846829336610054
+--- !u!114 &-5741321198570766867
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -188,24 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Active: 0
   Owner: {fileID: 11400000}
-  Parent: {fileID: 1021175433353818207}
+  Parent: {fileID: 6606588914338677638}
   State: 0
   Title: Selector
-  GUID: 78bbf4f8-3bb8-4379-a7f7-426844a2ec94
+  GUID: 8ec2a349-642a-4400-83f7-6c907bd48d31
   Locked: 0
   ExecutionOrder: 1
   GraphDimensions:
     serializedVersion: 2
-    x: 272
-    y: 300
-    width: 150
-    height: 111
+    x: 418
+    y: 154
+    width: 165
+    height: 82
   RunningChild: {fileID: 0}
   Children:
-  - {fileID: -5410772201933474676}
-  - {fileID: -4230987073749678443}
-  - {fileID: 2853378017192661133}
---- !u!114 &-621573217673771597
+  - {fileID: -4975319061077308685}
+--- !u!114 &-4975319061077308685
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -214,27 +38,57 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95b22965868ece94ab38ea09b046a9a0, type: 3}
-  m_Name: PlaySound
+  m_Script: {fileID: 11500000, guid: 044444dddb989c94aa4a827c03c2c9cd, type: 3}
+  m_Name: Patrol
   m_EditorClassIdentifier: 
   Active: 0
   Owner: {fileID: 11400000}
-  Parent: {fileID: 9128821060454082886}
+  Parent: {fileID: -5741321198570766867}
   State: 0
-  Title: PlaySound
-  GUID: aad4186b-382f-411f-a14c-44e14795f7bc
+  Title: Patrol
+  GUID: 6473a47c-db9a-49e9-a606-d5fa109f333a
   Locked: 0
-  ExecutionOrder: 2
+  ExecutionOrder: 1
   GraphDimensions:
     serializedVersion: 2
-    x: 1171
-    y: 295
-    width: 203
-    height: 96
+    x: 418
+    y: 236
+    width: 165
+    height: 82
+  RunningChild: {fileID: 0}
+  Children:
+  - {fileID: -4103930013878607888}
+  - {fileID: 9104404088839564936}
+  - {fileID: 640787671826220536}
+--- !u!114 &-4103930013878607888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 091432daeedcc32479447b2d236a1948, type: 3}
+  m_Name: GetRandomPosition
+  m_EditorClassIdentifier: 
+  Active: 0
+  Owner: {fileID: 11400000}
+  Parent: {fileID: -4975319061077308685}
+  State: 0
+  Title: GetRandomPosition
+  GUID: e84b4c6e-571b-49c9-a434-96d2a24a921d
+  Locked: 0
+  ExecutionOrder: 1
+  GraphDimensions:
+    serializedVersion: 2
+    x: 164
+    y: 363
+    width: 254
+    height: 81
   Interruptable: 0
-  Sound: {fileID: 8300000, guid: 937453efe07f9ba42aaa76297122f349, type: 3}
-  RunUntilFinished: 0
-  FailIfNoSound: 0
+  RangeType: 0
+  Radius: 15
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -247,23 +101,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fb2ce7e1ab57574aa04dab8805b3555, type: 3}
   m_Name: BasicAI
   m_EditorClassIdentifier: 
-  RootNode: {fileID: 1021175433353818207}
+  RootNode: {fileID: 6606588914338677638}
   Nodes:
-  - {fileID: 1021175433353818207}
-  - {fileID: -5410772201933474676}
-  - {fileID: -6117519432389280308}
-  - {fileID: -4428122377625869476}
-  - {fileID: 5061679973262504165}
-  - {fileID: -1115846829336610054}
-  - {fileID: -4230987073749678443}
-  - {fileID: 9128821060454082886}
-  - {fileID: -1769380902008957993}
-  - {fileID: 6078763476123294705}
-  - {fileID: -621573217673771597}
-  - {fileID: 2853378017192661133}
-  - {fileID: -3396606788102687052}
-  - {fileID: 6934399405348708984}
---- !u!114 &1021175433353818207
+  - {fileID: 6606588914338677638}
+  - {fileID: -5741321198570766867}
+  - {fileID: -4975319061077308685}
+  - {fileID: -4103930013878607888}
+  - {fileID: 9104404088839564936}
+  - {fileID: 640787671826220536}
+--- !u!114 &640787671826220536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8accdce1ed156214bb95375f12ef5291, type: 3}
+  m_Name: Wait
+  m_EditorClassIdentifier: 
+  Active: 0
+  Owner: {fileID: 11400000}
+  Parent: {fileID: -4975319061077308685}
+  State: 0
+  Title: Wait
+  GUID: d1ecc0b7-0f6f-49b4-bac0-e13d1a8b24cd
+  Locked: 0
+  ExecutionOrder: 3
+  GraphDimensions:
+    serializedVersion: 2
+    x: 583
+    y: 363
+    width: 165
+    height: 81
+  Interruptable: 0
+  WaitType: 0
+  Duration: 1
+  m_ElapsedTime: 0
+--- !u!114 &6606588914338677638
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -280,17 +156,17 @@ MonoBehaviour:
   Parent: {fileID: 0}
   State: 0
   Title: Root
-  GUID: 77515a52-2515-47d2-8d20-66cc3948938e
+  GUID: 9f57dc27-1f86-408f-8646-0b3a18da14a6
   Locked: 0
   ExecutionOrder: 1
   GraphDimensions:
     serializedVersion: 2
-    x: 31
-    y: 311
-    width: 150
-    height: 87
-  Child: {fileID: -1115846829336610054}
---- !u!114 &2853378017192661133
+    x: 418
+    y: 71
+    width: 165
+    height: 83
+  Child: {fileID: -5741321198570766867}
+--- !u!114 &9104404088839564936
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -299,145 +175,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 044444dddb989c94aa4a827c03c2c9cd, type: 3}
-  m_Name: Example Failstate
+  m_Script: {fileID: 11500000, guid: ce5467acc9b767540bf2341069c2f8b6, type: 3}
+  m_Name: MoveTo
   m_EditorClassIdentifier: 
   Active: 0
   Owner: {fileID: 11400000}
-  Parent: {fileID: -1115846829336610054}
+  Parent: {fileID: -4975319061077308685}
   State: 0
-  Title: Example Failstate
-  GUID: 44d43b0e-4fc0-4856-9378-7e9928d72b51
-  Locked: 0
-  ExecutionOrder: 3
-  GraphDimensions:
-    serializedVersion: 2
-    x: 544
-    y: 439
-    width: 273
-    height: 96
-  RunningChild: {fileID: 0}
-  Children:
-  - {fileID: -3396606788102687052}
-  - {fileID: 6934399405348708984}
---- !u!114 &5061679973262504165
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8accdce1ed156214bb95375f12ef5291, type: 3}
-  m_Name: Wait
-  m_EditorClassIdentifier: 
-  Active: 0
-  Owner: {fileID: 11400000}
-  Parent: {fileID: -5410772201933474676}
-  State: 0
-  Title: Wait
-  GUID: 360dde7e-e814-4dfb-84fa-8a9e3f62d0c0
-  Locked: 0
-  ExecutionOrder: 3
-  GraphDimensions:
-    serializedVersion: 2
-    x: 850
-    y: 182
-    width: 197
-    height: 96
-  Interruptable: 0
-  WaitType: 0
-  Duration: 1
-  m_ElapsedTime: 0
---- !u!114 &6078763476123294705
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8accdce1ed156214bb95375f12ef5291, type: 3}
-  m_Name: Wait
-  m_EditorClassIdentifier: 
-  Active: 0
-  Owner: {fileID: 11400000}
-  Parent: {fileID: 9128821060454082886}
-  State: 0
-  Title: Wait
-  GUID: c6f9203a-bf05-4f70-961c-44c39ef0f4a9
-  Locked: 0
-  ExecutionOrder: 1
-  GraphDimensions:
-    serializedVersion: 2
-    x: 1171
-    y: 199
-    width: 197
-    height: 96
-  Interruptable: 0
-  WaitType: 0
-  Duration: 5
-  m_ElapsedTime: 0
---- !u!114 &6934399405348708984
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8accdce1ed156214bb95375f12ef5291, type: 3}
-  m_Name: Wait
-  m_EditorClassIdentifier: 
-  Active: 0
-  Owner: {fileID: 11400000}
-  Parent: {fileID: 2853378017192661133}
-  State: 0
-  Title: Wait
-  GUID: e41e11dc-976c-455c-b7a0-69a74b2308dc
+  Title: MoveTo
+  GUID: 93c1cf45-70ea-4810-bea9-90f804f70868
   Locked: 0
   ExecutionOrder: 2
   GraphDimensions:
     serializedVersion: 2
-    x: 850
-    y: 535
-    width: 197
-    height: 96
+    x: 418
+    y: 363
+    width: 165
+    height: 81
   Interruptable: 0
-  WaitType: 0
-  Duration: 2.5
-  m_ElapsedTime: 0
---- !u!114 &9128821060454082886
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 044444dddb989c94aa4a827c03c2c9cd, type: 3}
-  m_Name: Sequence
-  m_EditorClassIdentifier: 
-  Active: 0
-  Owner: {fileID: 11400000}
-  Parent: {fileID: -4230987073749678443}
-  State: 0
-  Title: Sequence
-  GUID: 7c222e81-08c3-49d5-8394-abfb71298cfd
-  Locked: 0
-  ExecutionOrder: 1
-  GraphDimensions:
-    serializedVersion: 2
-    x: 850
-    y: 295
-    width: 273
-    height: 96
-  RunningChild: {fileID: 0}
-  Children:
-  - {fileID: -1769380902008957993}
-  - {fileID: 6078763476123294705}
-  - {fileID: -621573217673771597}

@@ -330,6 +330,14 @@ public class HostController : InputController
         Gizmos.color = cache;
 
         // ============================================================================== //
+
+
+
+
+
+        // Trying to fix dash bug.
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(transform.position, 0.25f);
     }
 
     public override void Enable()
@@ -509,7 +517,7 @@ public class HostController : InputController
                 forwardDir = m_Orientation.forward;
             
 
-            if (Physics.Raycast(transform.position, forwardDir, out RaycastHit hitInfo, m_DashDistance))
+            if (Physics.Raycast(m_Orientation.position, forwardDir, out RaycastHit hitInfo, m_DashDistance))
                 StartCoroutine(Dash(hitInfo.point, -forwardDir * 0.5f, m_DashDuration));
             else
                 StartCoroutine(Dash(transform.position + forwardDir * m_DashDistance, Vector3.zero, m_DashDuration));
@@ -794,5 +802,14 @@ public class HostController : InputController
     public void UnhideHUD()
     {
         m_HUD.SetActive(true);
+    }
+
+
+
+
+    // Experimental death incarnate ability thing
+    public void DeathIncarnate(float radius)
+    {
+        Collider[] collisions = Physics.OverlapSphere(transform.position, radius);
     }
 }

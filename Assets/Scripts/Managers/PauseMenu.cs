@@ -123,7 +123,7 @@ public class PauseMenu : MonoBehaviour
 
     public void QuitMenu()
     {
-        for (int i = 1; i < m_PauseMenuUI.Length; i++)
+        for (int i = 1; i < m_PauseMenuUI.Length - 2; i++)
         {
             m_PauseMenuUI[i].SetActive(false);
         }

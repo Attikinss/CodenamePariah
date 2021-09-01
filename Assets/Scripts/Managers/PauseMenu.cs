@@ -10,6 +10,9 @@ public class PauseMenu : MonoBehaviour
     public static bool m_GameIsPaused = false;
 
     [SerializeField]
+    private bool m_IsPauseMenu = false;
+
+    [SerializeField]
     [ReadOnly]
     private static bool m_OptionsOpen = false;
 
@@ -29,6 +32,9 @@ public class PauseMenu : MonoBehaviour
     public GameObject[] m_OptionsMenuUI;
     public GameObject[] m_QuitMenuUI;
     public GameObject m_DialogueBoxUI;
+
+    public Animator m_Transition;
+    public float m_TransitionTime = 5f;
 
     // Update is called once per frame
     void Update()
@@ -58,6 +64,10 @@ public class PauseMenu : MonoBehaviour
                 QuittingClose();
                 Pause();
             }
+            else if (!m_IsPauseMenu)
+            {
+                QuitMenu();
+            }
             else if (m_GameIsPaused)
             {
                 Resume();
@@ -79,6 +89,26 @@ public class PauseMenu : MonoBehaviour
         m_GameIsPaused = false;
     }
 
+    public void Play()
+    {
+        for (int i = 0; i < m_PauseMenuUI.Length; i++)
+        {
+            m_PauseMenuUI[i].SetActive(false);
+        }
+        //Time.timeScale = 1f;//
+        m_GameIsPaused = false;//
+        //StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex + 1));
+    }
+
+    IEnumerator LoadLevel(int levelIndex)
+    {
+        m_Transition.SetTrigger("Start");
+
+        yield return new WaitForSeconds(m_TransitionTime);
+
+        //SceneManager.LoadScene(levelIndex);
+    }
+
     public void Pause()
     {
         for (int i = 0; i < m_PauseMenuUI.Length; i++)
@@ -89,6 +119,20 @@ public class PauseMenu : MonoBehaviour
         m_GameIsPaused = true;
         //disable a bunch of things requiring input - currently a bullet gets fired on first click inside pause menu.
         //can probably do "if(... && !m_GameIsPaused) in other scripts.
+    }
+
+    public void QuitMenu()
+    {
+        for (int i = 1; i < m_PauseMenuUI.Length; i++)
+        {
+            m_PauseMenuUI[i].SetActive(false);
+        }
+
+        for (int i = 0; i < m_QuitMenuUI.Length; i++)
+        {
+            m_QuitMenuUI[i].SetActive(true);
+        }
+        QuittingOpen();
     }
 
     public void OptionsOpen()
@@ -113,6 +157,12 @@ public class PauseMenu : MonoBehaviour
 
     public void QuittingClose()
     {
+        if (!m_IsPauseMenu)
+        for (int i = 1; i < m_PauseMenuUI.Length; i++)
+        {
+            m_PauseMenuUI[i].SetActive(true);
+        }
+
         for (int i = 0; i < m_QuitMenuUI.Length; i++)
         {
             m_QuitMenuUI[i].SetActive(false);

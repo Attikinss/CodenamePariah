@@ -66,7 +66,10 @@ public class Inventory : MonoBehaviour
     /// <param name="damage"></param>
     public void TakeDamage(int damage)
     {
-        m_Health -= damage;
+        if (m_Health - damage < 0)
+            m_Health = 0;
+        else
+            m_Health -= damage;
     }
 
     public int GetHealth() { return m_Health; }

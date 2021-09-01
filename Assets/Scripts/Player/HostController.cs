@@ -132,6 +132,14 @@ public class HostController : InputController
     private UIManager m_UIManager;
     public GameObject m_HUD;
 
+    // temporary death incarnate ability stuff.
+    public int m_DeathIncarnateDamage = 100;
+    public float m_DeathIncarnateRadius = 10;
+    public float m_DeathIncarnateCooldown = 5;
+
+    // public for now so I can display it on my UI HUD thing.
+    public float m_DeathIncarnateUsedTime = 0.0f; 
+
 	private void Awake()
 	{
         m_UIManager = GetComponent<UIManager>();
@@ -346,6 +354,8 @@ public class HostController : InputController
         m_Active = true;
         m_Camera.enabled = true;
         UnhideHUD();
+
+        CustomDebugUI.s_Instance.SetController(this);
     }
 
     public override void Disable()
@@ -354,6 +364,8 @@ public class HostController : InputController
         m_Active = false;
         m_Camera.enabled = false;
         HideHUD();
+
+        CustomDebugUI.s_Instance.ClearController();
     }
 
     public override void OnLook(InputAction.CallbackContext value)
@@ -808,8 +820,34 @@ public class HostController : InputController
 
 
     // Experimental death incarnate ability thing
-    public void DeathIncarnate(float radius)
+    public void OnAbility3(InputAction.CallbackContext value)
+    {
+        if (value.performed)
+        {
+
+            m_DeathIncarnateUsedTime = Time.time;
+            Ability3(m_DeathIncarnateRadius, m_DeathIncarnateDamage);
+        }
+    }
+
+
+    // remember cooldown.
+    // this host dies. you get kicked out.
+    // remove life essence.
+    // maybe freeze player or slow them down while performing.
+    // telegraph/delay at start. small timer before it actually performs.
+    private void Ability3(float radius, int damage)
     {
         Collider[] collisions = Physics.OverlapSphere(transform.position, radius);
+
+        for (int i = 0; i < collisions.Length; i++) 
+        {
+
+            Inventory agentInv = collisions[i].GetComponent<Inventory>();
+            if (agentInv) // If they had an inventory, it means they are an agent.
+            { 
+                agentInv.TakeDamage(damage);
+            }
+        }
     }
 }

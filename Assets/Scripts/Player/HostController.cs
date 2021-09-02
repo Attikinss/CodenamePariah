@@ -147,7 +147,7 @@ public class HostController : InputController
     Vector3 m_DeathIncarnatePos = Vector3.zero; // Cached pos of last Death Incarnate.
 
     // public for now so I can display it on my UI HUD thing.
-    public float m_DeathIncarnateUsedTime = 0.0f;
+    public bool m_DeathIncarnateUsed = false;
 
     // testing couroutines.
     Coroutine test = null;
@@ -842,7 +842,7 @@ public class HostController : InputController
 
 		//test = null;
 
-		if (value.performed)
+		if (value.performed && !m_DeathIncarnateUsed)
 		{
 			test = StartCoroutine(Ability3Charge());
 
@@ -879,6 +879,9 @@ public class HostController : InputController
 
         // Storing position of time of attack.
         m_DeathIncarnatePos = m_Orientation.position;
+
+        m_DeathIncarnateUsed = true;
+        StartCoroutine(Ability3Refresh());
     }
 
     private void Ability3Gizmo()
@@ -891,6 +894,17 @@ public class HostController : InputController
 		Gizmos.color = cache;
 	}
 
+    IEnumerator Ability3Refresh()
+    {
+        float time = 0;
+        while (time < m_DeathIncarnateCooldown)
+        {
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        m_DeathIncarnateUsed = false;
+    }
 	IEnumerator Ability3Charge()
 	{
 		float time = 0.0f;

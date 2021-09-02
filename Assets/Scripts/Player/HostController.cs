@@ -840,28 +840,28 @@ public class HostController : InputController
     public void OnAbility3(InputAction.CallbackContext value)
     {
 
-        //test = null;
+		//test = null;
 
-        if (value.performed)
-        {
-            test = StartCoroutine(Ability3Charge());
+		if (value.performed)
+		{
+			test = StartCoroutine(Ability3Charge());
 
-            m_DeathIncarnateUsedTime = Time.time;
-            Ability3(m_DeathIncarnateRadius, m_DeathIncarnateDamage);
-        }
-        else if(value.canceled)
-        {
-            StopCoroutine(test); // When we let go, we stop the couritine to clear the time value in it.
-        }
-    }
+			//m_DeathIncarnateUsedTime = Time.time;
+			//Ability3(m_DeathIncarnateRadius, m_DeathIncarnateDamage);
+		}
+		else if (value.canceled)
+		{
+			StopCoroutine(test); // When we let go, we stop the couritine to clear the time value in it.
+		}
+	}
 
 
-    // remember cooldown.
-    // this host dies. you get kicked out.
-    // remove life essence.
-    // maybe freeze player or slow them down while performing.
-    // telegraph/delay at start. small timer before it actually performs.
-    private void Ability3(float radius, int damage)
+	// remember cooldown.
+	// this host dies. you get kicked out.
+	// remove life essence.
+	// maybe freeze player or slow them down while performing.
+	// telegraph/delay at start. small timer before it actually performs.
+	private void Ability3(float radius, int damage)
     {
         Collider[] collisions = Physics.OverlapSphere(m_Orientation.position, radius); // Using m_Orientation.position to be at the centre of the model.
 
@@ -875,55 +875,69 @@ public class HostController : InputController
             }
         }
 
+        StartCoroutine(Ability3Draw()); // Start timer for drawing.
+
         // Storing position of time of attack.
         m_DeathIncarnatePos = m_Orientation.position;
     }
 
     private void Ability3Gizmo()
     {
-        Color cache = Gizmos.color;
-        Gizmos.color = Color.blue;
+		Color cache = Gizmos.color;
+		Gizmos.color = Color.blue;
 
-        Gizmos.DrawSphere(m_DeathIncarnatePos, m_DeathIncarnateRadius);
+		Gizmos.DrawSphere(m_DeathIncarnatePos, m_DeathIncarnateRadius);
 
-        Gizmos.color = cache;
-    }
+		Gizmos.color = cache;
+	}
 
-    IEnumerator Ability3Charge()
-    {
-        float time = 0.0f;
+	IEnumerator Ability3Charge()
+	{
+		float time = 0.0f;
 
-        while (time < m_DeathIncarnateRequiredHold)
-        { 
-            time += Time.deltaTime;
+		while (time < m_DeathIncarnateRequiredHold)
+		{
+			time += Time.deltaTime;
 
 
-            Debug.Log(time);
+			Debug.Log(time);
 
-            yield return null;
-        }
+			yield return null;
+		}
 
-        // This means the time has now passed the required held time.
-        // We can now activate Ability3.
-        Ability3(m_DeathIncarnateRadius, m_DeathIncarnateDamage);
-        Debug.Log("Ability3 performed.");
+		// This means the time has now passed the required held time.
+		// We can now activate Ability3.
+		StartCoroutine(Ability3Delay());
+		Debug.Log("Ability3 delay started.");
 
-        StartCoroutine(Ability3Draw()); // Start timer for drawing.
-    }
-    IEnumerator Ability3Draw()
-    {
-        float time = 0.0f;
-        m_DrawingDeathIncarnate = true;
-        while (time < 10)
-        {
-            // We'll draw death incarnate for 3 seconds after it was used.
+		
+	}
 
-            Debug.Log("Drawing: at " + m_DeathIncarnatePos + " at " + time);
+	IEnumerator Ability3Delay()
+	{
+		float time = 0.0f;
+		while (time < m_DeathIncarnateDelay)
+		{
+			time += Time.deltaTime;
+			yield return null;
+		}
 
-            time += Time.deltaTime;
-            yield return null;
-        }
+		Ability3(m_DeathIncarnateRadius, m_DeathIncarnateDamage);
+	}
+	IEnumerator Ability3Draw()
+	{
+		float time = 0.0f;
+		m_DrawingDeathIncarnate = true;
+		while (time < 10)
+		{
+			// We'll draw death incarnate for 3 seconds after it was used.
 
-        m_DrawingDeathIncarnate = false;
-    }
+			Debug.Log("Drawing: at " + m_DeathIncarnatePos + " at " + time);
+
+			time += Time.deltaTime;
+			yield return null;
+		}
+
+		m_DrawingDeathIncarnate = false;
+	}
 }

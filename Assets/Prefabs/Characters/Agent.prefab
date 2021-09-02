@@ -159,7 +159,7 @@ MonoBehaviour:
   m_DeathIncarnateDamage: 100
   m_DeathIncarnateRadius: 2
   m_DeathIncarnateCooldown: 5
-  m_DeathIncarnateDelay: 0.75
+  m_DeathIncarnateDelay: 5
   m_DeathIncarnateRequiredHold: 0.75
   m_DeathIncarnateUsedTime: 0
 --- !u!114 &981726636163737741

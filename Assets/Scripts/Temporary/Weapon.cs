@@ -143,6 +143,9 @@ public class Weapon : MonoBehaviour
     // temporary muzzle flash
     public VisualEffect m_MuzzleFlash;
 
+    // bullet casing
+    public ParticleSystem m_BulletCasing;
+
 
     // temporary animation reference
     public Animator m_AssualtRifleAnimator;
@@ -233,6 +236,8 @@ public class Weapon : MonoBehaviour
                 // Play effects.
                 if(m_MuzzleFlash)
                     m_MuzzleFlash.Play();
+                if (m_BulletCasing)
+                    m_BulletCasing.Play();
 
                 // Currently gets rid of bullet sprite before UI has fully updated //
                 m_UIManager.DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);

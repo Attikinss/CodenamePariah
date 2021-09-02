@@ -157,7 +157,11 @@ MonoBehaviour:
   m_PreviousXCameraRot: 0
   m_HUD: {fileID: 4788248131841111902}
   m_DeathIncarnateDamage: 100
-  m_DeathIncarnateRadius: 10
+  m_DeathIncarnateRadius: 2
+  m_DeathIncarnateCooldown: 5
+  m_DeathIncarnateDelay: 0.75
+  m_DeathIncarnateRequiredHold: 0.75
+  m_DeathIncarnateUsedTime: 0
 --- !u!114 &981726636163737741
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -136,9 +136,21 @@ public class HostController : InputController
     public int m_DeathIncarnateDamage = 100;
     public float m_DeathIncarnateRadius = 10;
     public float m_DeathIncarnateCooldown = 5;
+    [Tooltip("The time it takes for the ability to begin after activating.")]
+    [Range(0, 5)]
+    public float m_DeathIncarnateDelay = 0.75f;
+    [Tooltip("The required time needed to hold the button before activating the ability.")]
+    [Range(0, 2)]
+    public float m_DeathIncarnateRequiredHold = 0.75f;
+
+    private bool m_DrawingDeathIncarnate = false; // Will be used to draw a sphere for death incarnate for a few seconds after being used.
+    Vector3 m_DeathIncarnatePos = Vector3.zero; // Cached pos of last Death Incarnate.
 
     // public for now so I can display it on my UI HUD thing.
-    public float m_DeathIncarnateUsedTime = 0.0f; 
+    public float m_DeathIncarnateUsedTime = 0.0f;
+
+    // testing couroutines.
+    Coroutine test = null;
 
 	private void Awake()
 	{
@@ -346,6 +358,11 @@ public class HostController : InputController
         // Trying to fix dash bug.
         Gizmos.color = Color.yellow;
         Gizmos.DrawSphere(transform.position, 0.25f);
+
+
+        // Drawing Ability3 stuff.
+        if (m_DrawingDeathIncarnate)
+            Ability3Gizmo();
     }
 
     public override void Enable()
@@ -822,11 +839,19 @@ public class HostController : InputController
     // Experimental death incarnate ability thing
     public void OnAbility3(InputAction.CallbackContext value)
     {
+
+        //test = null;
+
         if (value.performed)
         {
+            test = StartCoroutine(Ability3Charge());
 
             m_DeathIncarnateUsedTime = Time.time;
             Ability3(m_DeathIncarnateRadius, m_DeathIncarnateDamage);
+        }
+        else if(value.canceled)
+        {
+            StopCoroutine(test); // When we let go, we stop the couritine to clear the time value in it.
         }
     }
 
@@ -838,7 +863,7 @@ public class HostController : InputController
     // telegraph/delay at start. small timer before it actually performs.
     private void Ability3(float radius, int damage)
     {
-        Collider[] collisions = Physics.OverlapSphere(transform.position, radius);
+        Collider[] collisions = Physics.OverlapSphere(m_Orientation.position, radius); // Using m_Orientation.position to be at the centre of the model.
 
         for (int i = 0; i < collisions.Length; i++) 
         {
@@ -849,5 +874,56 @@ public class HostController : InputController
                 agentInv.TakeDamage(damage);
             }
         }
+
+        // Storing position of time of attack.
+        m_DeathIncarnatePos = m_Orientation.position;
+    }
+
+    private void Ability3Gizmo()
+    {
+        Color cache = Gizmos.color;
+        Gizmos.color = Color.blue;
+
+        Gizmos.DrawSphere(m_DeathIncarnatePos, m_DeathIncarnateRadius);
+
+        Gizmos.color = cache;
+    }
+
+    IEnumerator Ability3Charge()
+    {
+        float time = 0.0f;
+
+        while (time < m_DeathIncarnateRequiredHold)
+        { 
+            time += Time.deltaTime;
+
+
+            Debug.Log(time);
+
+            yield return null;
+        }
+
+        // This means the time has now passed the required held time.
+        // We can now activate Ability3.
+        Ability3(m_DeathIncarnateRadius, m_DeathIncarnateDamage);
+        Debug.Log("Ability3 performed.");
+
+        StartCoroutine(Ability3Draw()); // Start timer for drawing.
+    }
+    IEnumerator Ability3Draw()
+    {
+        float time = 0.0f;
+        m_DrawingDeathIncarnate = true;
+        while (time < 10)
+        {
+            // We'll draw death incarnate for 3 seconds after it was used.
+
+            Debug.Log("Drawing: at " + m_DeathIncarnatePos + " at " + time);
+
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        m_DrawingDeathIncarnate = false;
     }
 }

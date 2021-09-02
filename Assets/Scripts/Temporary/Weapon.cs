@@ -152,6 +152,9 @@ public class Weapon : MonoBehaviour
     public Animator m_AssualtRifleArmsAnimator;
 
 
+    // temporary thing to fix weapon reload animation stuck bug.
+    Quaternion m_OriginalLocalRot;
+
 	private void Awake()
 	{
         m_OriginalLocalPosition = transform.localPosition;
@@ -159,6 +162,10 @@ public class Weapon : MonoBehaviour
 
         m_UIManager = transform.parent.parent.parent.GetComponent<UIManager>();
 
+        // Display a warning if reload time is less than or equal to the animators reload duration.
+        // This is because the reload time needs to be slightly longer othewise the gun can become stuck in... hold this thought.
+        // I'm going to try caching the original local pos and local rotation and just set it back to that everytime the player swaps weapons.
+        m_OriginalLocalRot = transform.localRotation;
 	}
 
     // Update is called once per frame
@@ -746,4 +753,13 @@ public class Weapon : MonoBehaviour
     }
 
     public bool IsReloading() { return m_IsReloading; }
+
+    /// <summary>
+    /// ClearThings() is a temporary function which is supposed to clear things like weapon rotation, position and weapon bob location. This
+    /// is so the weapon is completely fresh when the player swaps back to it.
+    /// </summary>
+    public void ClearThings()
+    {
+       
+    }
 }

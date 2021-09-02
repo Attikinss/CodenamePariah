@@ -717,10 +717,13 @@ public class HostController : InputController
     /// <param name="index">The element of the m_Weapons List you want to swap to.</param>
     private void SelectWeapon(int index)
     {
+        // Resetting weapon rotation and location.
+        m_Inventory.m_CurrentWeapon.ClearThings();
+
         Weapon cache = m_Inventory.m_CurrentWeapon;
         m_Inventory.m_CurrentWeapon.m_IsAiming = false;
         m_Inventory.m_CurrentWeapon.m_IsFiring = false;
-        m_Inventory.m_CurrentWeapon = m_Inventory.m_Weapons[index];
+        m_Inventory.m_CurrentWeapon = m_Inventory.m_Weapons[index]; // Swapping to new weapon.
 
         // Setting them active/inactive to display the correct weapon. Eventually this will be complimented by a weapon swapping phase where it will take some time before
         // the player can shoot after swapping weapons.

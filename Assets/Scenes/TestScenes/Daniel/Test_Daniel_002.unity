@@ -5139,6 +5139,10 @@ PrefabInstance:
       propertyPath: m_HitDecal
       value: 
       objectReference: {fileID: 1354797469}
+    - target: {fileID: 8887062761945131678, guid: 915a95d1c08646a4f8c7f33c6154c0ca, type: 3}
+      propertyPath: m_ReloadTime
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 8887062762880439734, guid: 915a95d1c08646a4f8c7f33c6154c0ca, type: 3}
       propertyPath: m_HitDecal
       value: 

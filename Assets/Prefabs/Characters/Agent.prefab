@@ -1561,7 +1561,7 @@ MonoBehaviour:
   m_ReserveAmmo: 60
   m_MaxReserveAmmo: 60
   m_FireRate: 600
-  m_ReloadTime: 1.8
+  m_ReloadTime: 2.5
   m_IsReloading: 0
   m_LowAmmoWarningPercentage: 0.3
   m_BobSpeed: 5

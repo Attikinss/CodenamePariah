@@ -92,7 +92,7 @@ namespace WhiteWillow
 
         public bool SetDestination(Vector3 destination)
         {
-            m_MovePosition = destination;
+            m_MovePosition = transform.position + destination;
             return NavMesh.SamplePosition(m_MovePosition, out NavMeshHit hitInfo, 1.0f, NavMesh.AllAreas);
         }
 

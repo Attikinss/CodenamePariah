@@ -176,8 +176,8 @@ MonoBehaviour:
   m_PreviousXCameraRot: 0
   m_HUD: {fileID: 4788248131841111902}
   m_DeathIncarnateDamage: 100
-  m_DeathIncarnateRadius: 2
-  m_DeathIncarnateCooldown: 5
+  m_DeathIncarnateRadius: 15
+  m_DeathIncarnateCooldown: 10
   m_DeathIncarnateDelay: 0.1
   m_DeathIncarnateRequiredHold: 0.6
   m_DeathIncarnateUsed: 0
@@ -923,6 +923,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Camera: {fileID: 0}
+  m_BulletDamage: 0
   m_RoundsInMagazine: 0
   m_MagazineSize: 0
   m_ReserveAmmo: 0
@@ -955,6 +956,7 @@ MonoBehaviour:
   m_BulletCasing: {fileID: 0}
   m_AssualtRifleAnimator: {fileID: 0}
   m_AssualtRifleArmsAnimator: {fileID: 0}
+  m_SemiAuto: 0
 --- !u!1 &981726637825336997
 GameObject:
   m_ObjectHideFlags: 0
@@ -1399,6 +1401,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Camera: {fileID: 981726637825336994}
+  m_BulletDamage: 10
   m_RoundsInMagazine: 7
   m_MagazineSize: 7
   m_ReserveAmmo: 14
@@ -1431,6 +1434,7 @@ MonoBehaviour:
   m_BulletCasing: {fileID: 5388357421422557786}
   m_AssualtRifleAnimator: {fileID: 1826970368}
   m_AssualtRifleArmsAnimator: {fileID: 515641255}
+  m_SemiAuto: 0
 --- !u!1 &8887062762969234156
 GameObject:
   m_ObjectHideFlags: 0
@@ -1595,6 +1599,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Camera: {fileID: 981726637825336994}
+  m_BulletDamage: 15
   m_RoundsInMagazine: 30
   m_MagazineSize: 30
   m_ReserveAmmo: 60
@@ -1627,6 +1632,7 @@ MonoBehaviour:
   m_BulletCasing: {fileID: 5910608042950859195}
   m_AssualtRifleAnimator: {fileID: 700629261}
   m_AssualtRifleArmsAnimator: {fileID: 12366648}
+  m_SemiAuto: 0
 --- !u!1001 &58854934
 PrefabInstance:
   m_ObjectHideFlags: 0

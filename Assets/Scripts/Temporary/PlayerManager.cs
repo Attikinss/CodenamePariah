@@ -37,7 +37,7 @@ public class PlayerManager : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
     {
-        Debug.Assert(m_PlayerController, "Please give the PlayerManager a reference to the PlayerController.");
+        //Debug.Assert(m_PlayerController, "Please give the PlayerManager a reference to the PlayerController.");
     }
 
     // Update is called once per frame

@@ -525,6 +525,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 1c83b672-8c3a-4495-a8a6-adbde018f0a7
     m_ActionName: Host/Ability3[/Keyboard/e]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 981726636163737742}
+        m_TargetAssemblyTypeName: HostController, Assembly-CSharp
+        m_MethodName: OnDebugToggle
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: eae199af-e3a2-4a7c-b07a-7d79b6689faa
+    m_ActionName: Host/Debug[/Keyboard/f3]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: KBM
   m_DefaultActionMap: Host

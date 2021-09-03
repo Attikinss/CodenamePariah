@@ -35,7 +35,7 @@ public class CustomDebugUI : MonoBehaviour
 
     public Text m_LookInputText;
 
-    private bool m_Toggle = true;
+    private bool m_Toggle = false; // set this to false so it doesn't appear on start.
 
 
 
@@ -80,7 +80,10 @@ public class CustomDebugUI : MonoBehaviour
 
     //public Text m_Ability3ActiveText;
     //public Text m_Ability3CounterText;
-
+    private void HideOnPlay()
+    {
+        m_Canvas.enabled = false;
+    }
     private void Awake()
     {
         if (!s_Instance)
@@ -95,6 +98,7 @@ public class CustomDebugUI : MonoBehaviour
         //Debug.Assert(m_AbilityController);
         Debug.Assert(m_Canvas);
 
+        HideOnPlay();
         m_Canvas.gameObject.SetActive(false);
     }
 

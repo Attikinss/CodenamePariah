@@ -457,6 +457,14 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Debug"",
+                    ""type"": ""Button"",
+                    ""id"": ""eae199af-e3a2-4a7c-b07a-7d79b6689faa"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -855,6 +863,17 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""action"": ""Ability3"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8f60f675-66e6-4506-87e1-d9b14f5a29c3"",
+                    ""path"": ""<Keyboard>/f3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Debug"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -919,6 +938,7 @@ public class @InputMap : IInputActionCollection, IDisposable
         m_Host_Ability2 = m_Host.FindAction("Ability2", throwIfNotFound: true);
         m_Host_Reload = m_Host.FindAction("Reload", throwIfNotFound: true);
         m_Host_Ability3 = m_Host.FindAction("Ability3", throwIfNotFound: true);
+        m_Host_Debug = m_Host.FindAction("Debug", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1056,6 +1076,7 @@ public class @InputMap : IInputActionCollection, IDisposable
     private readonly InputAction m_Host_Ability2;
     private readonly InputAction m_Host_Reload;
     private readonly InputAction m_Host_Ability3;
+    private readonly InputAction m_Host_Debug;
     public struct HostActions
     {
         private @InputMap m_Wrapper;
@@ -1075,6 +1096,7 @@ public class @InputMap : IInputActionCollection, IDisposable
         public InputAction @Ability2 => m_Wrapper.m_Host_Ability2;
         public InputAction @Reload => m_Wrapper.m_Host_Reload;
         public InputAction @Ability3 => m_Wrapper.m_Host_Ability3;
+        public InputAction @Debug => m_Wrapper.m_Host_Debug;
         public InputActionMap Get() { return m_Wrapper.m_Host; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1129,6 +1151,9 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Ability3.started -= m_Wrapper.m_HostActionsCallbackInterface.OnAbility3;
                 @Ability3.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnAbility3;
                 @Ability3.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnAbility3;
+                @Debug.started -= m_Wrapper.m_HostActionsCallbackInterface.OnDebug;
+                @Debug.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnDebug;
+                @Debug.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnDebug;
             }
             m_Wrapper.m_HostActionsCallbackInterface = instance;
             if (instance != null)
@@ -1178,6 +1203,9 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Ability3.started += instance.OnAbility3;
                 @Ability3.performed += instance.OnAbility3;
                 @Ability3.canceled += instance.OnAbility3;
+                @Debug.started += instance.OnDebug;
+                @Debug.performed += instance.OnDebug;
+                @Debug.canceled += instance.OnDebug;
             }
         }
     }
@@ -1226,5 +1254,6 @@ public class @InputMap : IInputActionCollection, IDisposable
         void OnAbility2(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);
         void OnAbility3(InputAction.CallbackContext context);
+        void OnDebug(InputAction.CallbackContext context);
     }
 }

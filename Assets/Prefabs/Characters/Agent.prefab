@@ -1450,7 +1450,7 @@ MonoBehaviour:
   m_BulletCasing: {fileID: 5388357421422557786}
   m_AssualtRifleAnimator: {fileID: 1826970368}
   m_AssualtRifleArmsAnimator: {fileID: 515641255}
-  m_SemiAuto: 0
+  m_SemiAuto: 1
 --- !u!1 &8887062762969234156
 GameObject:
   m_ObjectHideFlags: 0

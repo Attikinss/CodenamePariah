@@ -242,6 +242,11 @@ public class Weapon : MonoBehaviour
         {
             if (m_RoundsInMagazine > 0/* && !m_IsReloading*/)
             {
+                // testing somethhing for semi-auto
+                if (m_SemiAuto)
+                    m_IsFiring = false;
+
+
                 // Play effects.
                 if(m_MuzzleFlash)
                     m_MuzzleFlash.Play();

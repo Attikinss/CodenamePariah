@@ -436,6 +436,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Ability3",
+                    "type": "Button",
+                    "id": "1c83b672-8c3a-4495-a8a6-adbde018f0a7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -821,6 +829,17 @@
                     "processors": "",
                     "groups": "KBM",
                     "action": "Reload",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c94af80d-b167-4b36-995e-12faa5a99128",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KBM",
+                    "action": "Ability3",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -67,7 +67,10 @@ public class Inventory : MonoBehaviour
     public void TakeDamage(int damage)
     {
         if (m_Health - damage < 0)
+        { 
             m_Health = 0;
+        
+        }
         else
             m_Health -= damage;
     }

@@ -892,7 +892,7 @@ public class HostController : InputController
 		Color cache = Gizmos.color;
 		Gizmos.color = Color.blue;
 
-		Gizmos.DrawSphere(m_DeathIncarnatePos, m_DeathIncarnateRadius);
+		Gizmos.DrawWireSphere(m_DeathIncarnatePos, m_DeathIncarnateRadius);
 
 		Gizmos.color = cache;
 	}

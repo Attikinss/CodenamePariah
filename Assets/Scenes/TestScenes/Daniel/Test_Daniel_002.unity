@@ -5047,6 +5047,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Agent (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 981726636163737742, guid: 915a95d1c08646a4f8c7f33c6154c0ca, type: 3}
+      propertyPath: m_DeathIncarnateRadius
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 981726636163737743, guid: 915a95d1c08646a4f8c7f33c6154c0ca, type: 3}
       propertyPath: m_RootOrder
       value: 4

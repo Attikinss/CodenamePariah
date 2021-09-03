@@ -152,8 +152,8 @@ public class Weapon : MonoBehaviour
     public Animator m_AssualtRifleArmsAnimator;
 
 
-    // temporary thing to fix weapon reload animation stuck bug.
-    Quaternion m_OriginalLocalRot;
+    // temporary thing to test out semi-automatic weaponry.
+    public bool m_SemiAuto = false;
 
 	private void Awake()
 	{
@@ -165,7 +165,7 @@ public class Weapon : MonoBehaviour
         // Display a warning if reload time is less than or equal to the animators reload duration.
         // This is because the reload time needs to be slightly longer othewise the gun can become stuck in... hold this thought.
         // I'm going to try caching the original local pos and local rotation and just set it back to that everytime the player swaps weapons.
-        m_OriginalLocalRot = transform.localRotation;
+        //m_OriginalLocalRot = transform.localRotation;
 	}
 
     // Update is called once per frame

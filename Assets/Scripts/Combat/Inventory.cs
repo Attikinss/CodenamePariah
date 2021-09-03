@@ -67,6 +67,11 @@ public class Inventory : MonoBehaviour
     public void TakeDamage(int damage)
     {
         m_Health -= damage;
+        if (m_Health <= 0)
+        {
+            if (TryGetComponent(out WhiteWillow.Agent agent))
+                agent.Kill();
+        }
     }
 
     public int GetHealth() { return m_Health; }

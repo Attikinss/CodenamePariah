@@ -115,5 +115,14 @@ namespace WhiteWillow
             m_HostController?.Disable();
             PariahController?.Enable();
         }
+
+        public void Kill()
+        {
+            if (m_Possessed)
+                Reliquinsh();
+
+            // TODO: Use object pooling / queued destruction system
+            Destroy(gameObject);
+        }
     }
 }

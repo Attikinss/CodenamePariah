@@ -94,12 +94,15 @@ public class CustomDebugUI : MonoBehaviour
         //Debug.Assert(m_playerController);
         //Debug.Assert(m_AbilityController);
         Debug.Assert(m_Canvas);
+
+        m_Canvas.gameObject.SetActive(false);
     }
 
     public void SetController(HostController controller) 
     {
         m_Canvas.gameObject.SetActive(true);
         m_playerController = controller; 
+        
     }
     public void ClearController()
     {
@@ -163,24 +166,18 @@ public class CustomDebugUI : MonoBehaviour
 
     }
 
-    public void Toggle(bool active)
+    public void Toggle()
     {
-        if (active)
+        if (m_Toggle)
         {
-            if (m_Toggle)
-            {
-                m_Canvas.enabled = false;
-                m_Toggle = false;
-            }
-            else
-            { 
-                m_Canvas.enabled = true;
-                m_Toggle = true;
-            }
-
-            Debug.Log("Debug Toggled.");
+            m_Canvas.enabled = false;
+            m_Toggle = false;
         }
-
+        else
+        { 
+            m_Canvas.enabled = true;
+            m_Toggle = true;
+        }
     }
     
 }

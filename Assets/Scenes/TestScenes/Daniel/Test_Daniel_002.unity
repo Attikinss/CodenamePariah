@@ -5047,10 +5047,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Agent (4)
       objectReference: {fileID: 0}
-    - target: {fileID: 981726636163737742, guid: 915a95d1c08646a4f8c7f33c6154c0ca, type: 3}
-      propertyPath: m_DeathIncarnateRadius
-      value: 15
-      objectReference: {fileID: 0}
     - target: {fileID: 981726636163737743, guid: 915a95d1c08646a4f8c7f33c6154c0ca, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -9503,6 +9499,10 @@ PrefabInstance:
     - target: {fileID: 1034263314784194633, guid: 9daaeb9819980034a816311e9b744370, type: 3}
       propertyPath: m_Name
       value: DebugHUD
+      objectReference: {fileID: 0}
+    - target: {fileID: 1034263314784194633, guid: 9daaeb9819980034a816311e9b744370, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1034263314784194637, guid: 9daaeb9819980034a816311e9b744370, type: 3}
       propertyPath: m_Pivot.x

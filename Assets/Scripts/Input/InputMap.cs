@@ -425,6 +425,30 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""RecoilTest"",
+                    ""type"": ""Button"",
+                    ""id"": ""bcf73363-bc80-4831-b974-7150f49040b0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Ability2"",
+                    ""type"": ""Button"",
+                    ""id"": ""f9c58ad8-8a77-4d56-a4a3-4075ad8b7bde"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""5b49c673-d3b1-41b6-99d5-f9d704f79ca1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -779,6 +803,39 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""action"": ""Select2"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fd18cd63-caeb-4989-aefc-5546fc2ed0b5"",
+                    ""path"": ""<Keyboard>/k"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""RecoilTest"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7cdb3b23-dc12-467b-b688-42c89ec820fb"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Ability2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c82cdf53-4342-4604-a013-40d6cd52bada"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -839,6 +896,9 @@ public class @InputMap : IInputActionCollection, IDisposable
         m_Host_Slide = m_Host.FindAction("Slide", throwIfNotFound: true);
         m_Host_Select1 = m_Host.FindAction("Select1", throwIfNotFound: true);
         m_Host_Select2 = m_Host.FindAction("Select2", throwIfNotFound: true);
+        m_Host_RecoilTest = m_Host.FindAction("RecoilTest", throwIfNotFound: true);
+        m_Host_Ability2 = m_Host.FindAction("Ability2", throwIfNotFound: true);
+        m_Host_Reload = m_Host.FindAction("Reload", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -972,6 +1032,9 @@ public class @InputMap : IInputActionCollection, IDisposable
     private readonly InputAction m_Host_Slide;
     private readonly InputAction m_Host_Select1;
     private readonly InputAction m_Host_Select2;
+    private readonly InputAction m_Host_RecoilTest;
+    private readonly InputAction m_Host_Ability2;
+    private readonly InputAction m_Host_Reload;
     public struct HostActions
     {
         private @InputMap m_Wrapper;
@@ -987,6 +1050,9 @@ public class @InputMap : IInputActionCollection, IDisposable
         public InputAction @Slide => m_Wrapper.m_Host_Slide;
         public InputAction @Select1 => m_Wrapper.m_Host_Select1;
         public InputAction @Select2 => m_Wrapper.m_Host_Select2;
+        public InputAction @RecoilTest => m_Wrapper.m_Host_RecoilTest;
+        public InputAction @Ability2 => m_Wrapper.m_Host_Ability2;
+        public InputAction @Reload => m_Wrapper.m_Host_Reload;
         public InputActionMap Get() { return m_Wrapper.m_Host; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1029,6 +1095,15 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Select2.started -= m_Wrapper.m_HostActionsCallbackInterface.OnSelect2;
                 @Select2.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnSelect2;
                 @Select2.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnSelect2;
+                @RecoilTest.started -= m_Wrapper.m_HostActionsCallbackInterface.OnRecoilTest;
+                @RecoilTest.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnRecoilTest;
+                @RecoilTest.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnRecoilTest;
+                @Ability2.started -= m_Wrapper.m_HostActionsCallbackInterface.OnAbility2;
+                @Ability2.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnAbility2;
+                @Ability2.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnAbility2;
+                @Reload.started -= m_Wrapper.m_HostActionsCallbackInterface.OnReload;
+                @Reload.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnReload;
+                @Reload.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnReload;
             }
             m_Wrapper.m_HostActionsCallbackInterface = instance;
             if (instance != null)
@@ -1066,6 +1141,15 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Select2.started += instance.OnSelect2;
                 @Select2.performed += instance.OnSelect2;
                 @Select2.canceled += instance.OnSelect2;
+                @RecoilTest.started += instance.OnRecoilTest;
+                @RecoilTest.performed += instance.OnRecoilTest;
+                @RecoilTest.canceled += instance.OnRecoilTest;
+                @Ability2.started += instance.OnAbility2;
+                @Ability2.performed += instance.OnAbility2;
+                @Ability2.canceled += instance.OnAbility2;
+                @Reload.started += instance.OnReload;
+                @Reload.performed += instance.OnReload;
+                @Reload.canceled += instance.OnReload;
             }
         }
     }
@@ -1110,5 +1194,8 @@ public class @InputMap : IInputActionCollection, IDisposable
         void OnSlide(InputAction.CallbackContext context);
         void OnSelect1(InputAction.CallbackContext context);
         void OnSelect2(InputAction.CallbackContext context);
+        void OnRecoilTest(InputAction.CallbackContext context);
+        void OnAbility2(InputAction.CallbackContext context);
+        void OnReload(InputAction.CallbackContext context);
     }
 }

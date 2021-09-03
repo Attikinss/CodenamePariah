@@ -10,6 +10,10 @@ public class Weapon : MonoBehaviour
     private Camera m_Camera;
 
     [SerializeField]
+    [Tooltip("Damage done with each shot.")]
+    public int m_BulletDamage;
+
+    [SerializeField]
     [Tooltip("Current ammo in magazine.")]
     private int m_RoundsInMagazine;
 
@@ -118,8 +122,6 @@ public class Weapon : MonoBehaviour
     // Stuff from my original Weapon.cs script.
 
     public Inventory m_Inventory;
-
-    //public float m_BulletDamage;
     public GameObject m_HitDecal;
 
     //public AnimationCurve m_VerticalRecoil;
@@ -276,19 +278,17 @@ public class Weapon : MonoBehaviour
                 {
                     if (hit.transform.gameObject != null)
                     {
-                        //Decal newDecal = new Decal(hit.transform, hit.point, hit.normal);         // No longer need this now with the all new Object Pooling Decals! - daniel
+                        if (hit.transform.TryGetComponent(out Inventory agentInventory))
+                        {
+                            agentInventory.TakeDamage(m_BulletDamage);
+                            return;
+                        }
 
-                        //if(m_HitDecal)
-                        //    GameManager.Instance?.AddDecal(hit.transform, hit.point, hit.normal, m_HitDecal);
-                        //else
-                            GameManager.Instance?.AddDecal(hit.transform, hit.point, hit.normal);
-
+                        GameManager.Instance?.AddDecal(hit.transform, hit.point, hit.normal);
 
                         // Adding a force to the hit object.
                         if (hit.rigidbody != null)
-                        {
                             hit.rigidbody.AddForce(m_Camera.transform.forward * GetCurrentWeaponConfig().m_BulletForce, ForceMode.Impulse);
-                        }
                     }
                 }
                 // ============================================================================= //

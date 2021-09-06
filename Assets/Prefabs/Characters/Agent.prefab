@@ -169,8 +169,8 @@ MonoBehaviour:
   m_DesiredX: 0
   m_CurrentMoveSpeed: 0
   m_IsMoving: 0
-  m_DrainDamage: 10
-  m_DrainRestore: 10
+  m_DrainDamage: 2
+  m_DrainRestore: 2
   m_DrainInterval: 0.15
   m_PreviousOrientationVector: {x: 0, y: 0, z: 0}
   m_PreviousXCameraRot: 0
@@ -1417,7 +1417,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Camera: {fileID: 981726637825336994}
-  m_BulletDamage: 10
+  m_BulletDamage: 20
   m_RoundsInMagazine: 7
   m_MagazineSize: 7
   m_ReserveAmmo: 14
@@ -2047,6 +2047,14 @@ PrefabInstance:
     - target: {fileID: 7815025417779377038, guid: 454cb8f16ce4d0e4eab6ae375d80931f, type: 3}
       propertyPath: m_Materials.Array.data[4]
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7815025417779377039, guid: 454cb8f16ce4d0e4eab6ae375d80931f, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[3].m_Value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7815025417779377039, guid: 454cb8f16ce4d0e4eab6ae375d80931f, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[3].m_Overridden
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 454cb8f16ce4d0e4eab6ae375d80931f, type: 3}

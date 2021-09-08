@@ -92,7 +92,7 @@ namespace WhiteWillow
 
         public bool SetDestination(Vector3 destination)
         {
-            m_MovePosition = destination;
+            m_MovePosition = transform.position + destination;
             return NavMesh.SamplePosition(m_MovePosition, out NavMeshHit hitInfo, 1.0f, NavMesh.AllAreas);
         }
 
@@ -114,6 +114,15 @@ namespace WhiteWillow
             m_NavAgent.enabled = true;
             m_HostController?.Disable();
             PariahController?.Enable();
+        }
+
+        public void Kill()
+        {
+            if (m_Possessed)
+                Reliquinsh();
+
+            // TODO: Use object pooling / queued destruction system
+            Destroy(gameObject);
         }
     }
 }

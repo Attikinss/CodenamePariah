@@ -10,6 +10,10 @@ public class Weapon : MonoBehaviour
     private Camera m_Camera;
 
     [SerializeField]
+    [Tooltip("Damage done with each shot.")]
+    public int m_BulletDamage;
+
+    [SerializeField]
     [Tooltip("Current ammo in magazine.")]
     private int m_RoundsInMagazine;
 
@@ -118,8 +122,6 @@ public class Weapon : MonoBehaviour
     // Stuff from my original Weapon.cs script.
 
     public Inventory m_Inventory;
-
-    //public float m_BulletDamage;
     public GameObject m_HitDecal;
 
     //public AnimationCurve m_VerticalRecoil;
@@ -143,11 +145,17 @@ public class Weapon : MonoBehaviour
     // temporary muzzle flash
     public VisualEffect m_MuzzleFlash;
 
+    // bullet casing
+    public ParticleSystem m_BulletCasing;
+
 
     // temporary animation reference
     public Animator m_AssualtRifleAnimator;
     public Animator m_AssualtRifleArmsAnimator;
 
+
+    // temporary thing to test out semi-automatic weaponry.
+    public bool m_SemiAuto = false;
 
 	private void Awake()
 	{
@@ -156,6 +164,10 @@ public class Weapon : MonoBehaviour
 
         m_UIManager = transform.parent.parent.parent.GetComponent<UIManager>();
 
+        // Display a warning if reload time is less than or equal to the animators reload duration.
+        // This is because the reload time needs to be slightly longer othewise the gun can become stuck in... hold this thought.
+        // I'm going to try caching the original local pos and local rotation and just set it back to that everytime the player swaps weapons.
+        //m_OriginalLocalRot = transform.localRotation;
 	}
 
     // Update is called once per frame
@@ -233,6 +245,8 @@ public class Weapon : MonoBehaviour
                 // Play effects.
                 if(m_MuzzleFlash)
                     m_MuzzleFlash.Play();
+                if (m_BulletCasing)
+                    m_BulletCasing.Play();
 
                 // Currently gets rid of bullet sprite before UI has fully updated //
                 m_UIManager.DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);
@@ -264,19 +278,17 @@ public class Weapon : MonoBehaviour
                 {
                     if (hit.transform.gameObject != null)
                     {
-                        //Decal newDecal = new Decal(hit.transform, hit.point, hit.normal);         // No longer need this now with the all new Object Pooling Decals! - daniel
+                        if (hit.transform.TryGetComponent(out Inventory agentInventory))
+                        {
+                            agentInventory.TakeDamage(m_BulletDamage);
+                            return;
+                        }
 
-                        //if(m_HitDecal)
-                        //    GameManager.Instance?.AddDecal(hit.transform, hit.point, hit.normal, m_HitDecal);
-                        //else
-                            GameManager.Instance?.AddDecal(hit.transform, hit.point, hit.normal);
-
+                        GameManager.Instance?.AddDecal(hit.transform, hit.point, hit.normal);
 
                         // Adding a force to the hit object.
                         if (hit.rigidbody != null)
-                        {
                             hit.rigidbody.AddForce(m_Camera.transform.forward * GetCurrentWeaponConfig().m_BulletForce, ForceMode.Impulse);
-                        }
                     }
                 }
                 // ============================================================================= //
@@ -741,4 +753,13 @@ public class Weapon : MonoBehaviour
     }
 
     public bool IsReloading() { return m_IsReloading; }
+
+    /// <summary>
+    /// ClearThings() is a temporary function which is supposed to clear things like weapon rotation, position and weapon bob location. This
+    /// is so the weapon is completely fresh when the player swaps back to it.
+    /// </summary>
+    public void ClearThings()
+    {
+       
+    }
 }

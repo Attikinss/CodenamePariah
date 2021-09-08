@@ -163,19 +163,17 @@ public class Weapon : MonoBehaviour
         m_OriginalGlobalPosition = transform.position;
 
         m_UIManager = transform.parent.parent.parent.GetComponent<UIManager>();
+        m_UIManager?.UpdateWeaponUI(this);
 
         // Display a warning if reload time is less than or equal to the animators reload duration.
         // This is because the reload time needs to be slightly longer othewise the gun can become stuck in... hold this thought.
         // I'm going to try caching the original local pos and local rotation and just set it back to that everytime the player swaps weapons.
         //m_OriginalLocalRot = transform.localRotation;
-	}
+    }
 
     // Update is called once per frame
     void Update()
     {
-        m_UIManager?.DisplayInventory();
-
-
         // ========================= DECREMENTING AMMO WHEN SHOOTING ========================= //
 
         // TEMP FIX so that other characters with this script dont have their ammo decrement when the player clicks.
@@ -198,12 +196,12 @@ public class Weapon : MonoBehaviour
         // This gives the advantage of reloading while holding down the mouse button will let you begin shooting again without having to re-press the mouse button.
 
         if (m_IsFiring && !m_IsReloading && !TotalAmmoEmpty())
-            Fire();
-        else if (!m_IsFiring || m_IsReloading || TotalAmmoEmpty()) // We want to recovery if we are reloading. This lets us set reloading to true and keep firing on true and the player wont shoot.
         {
-            UpdateRecoilRecovery();
-            Debug.Log("Recoil recovery.");
+            Fire();
+            m_UIManager?.UpdateWeaponUI(this);
         }
+        else if (!m_IsFiring || m_IsReloading || TotalAmmoEmpty()) // We want to recovery if we are reloading. This lets us set reloading to true and keep firing on true and the player wont shoot.
+            UpdateRecoilRecovery();
 
         
         if (m_IsAiming && !m_IsReloading)
@@ -328,10 +326,12 @@ public class Weapon : MonoBehaviour
         WeaponConfiguration weaponConfig = GetCurrentWeaponConfig();
         Transform gunTransform = GetCurrentWeaponTransform();
 
-        Vector3 centre = m_Camera.ScreenToWorldPoint(new Vector3(
-            (Screen.width / 2) + (-m_Controller.LookInput.x * weaponConfig.m_GunAimSwayStrength),
-            (Screen.height / 2) + (-m_Controller.LookInput.y * weaponConfig.m_GunSwayStrength) - (m_Controller.transform.up.y * weaponConfig.m_GunAimHeight),
-            (m_Controller.transform.forward.z * weaponConfig.m_GunAimZPos) + weaponConfig.m_WeaponRecoilTransform.z * weaponConfig.m_ADSRecoilModifier));
+        Vector3 aimPosition = Vector3.zero;
+        aimPosition.x = (Screen.width / 2) + (-m_Controller.LookInput.x * weaponConfig.m_GunAimSwayStrength);
+        aimPosition.y = (Screen.height / 2) + (-m_Controller.LookInput.y * weaponConfig.m_GunSwayStrength) - (m_Controller.transform.up.y * weaponConfig.m_GunAimHeight);
+        aimPosition.z = (m_Controller.transform.forward.z * weaponConfig.m_GunAimZPos) + weaponConfig.m_WeaponRecoilTransform.z * weaponConfig.m_ADSRecoilModifier;
+        
+        Vector3 centre = m_Camera.ScreenToWorldPoint(aimPosition);
 
         //Vector3 currentPosition = m_Gun.position;
         Vector3 currentPosition = weaponConfig.m_ScopeCentre.position;
@@ -422,8 +422,14 @@ public class Weapon : MonoBehaviour
             // build up to a high number and when the player stops shooting, the recoil will take a long time to get back to 0.
 
             // An experimental method I'd like to try is to either decrease it back to 0, or until the camera rotation is back to where it when they just started shooting.
-            Vector2 currentCamX = new Vector2(m_Controller.CurrentCamRot.y, 1);
-            Vector2 previousCamX = new Vector2(m_Controller.PreviousCameraRotation.y, 1);          // I know I'm using the new keyword here and that's bad. But for now I'm trying to see if this system will work.
+            Vector2 currentCamX = Vector2.one;
+            currentCamX.x = m_Controller.CurrentCamRot.y;
+
+            // I know I'm using the new keyword here and that's bad. But for now I'm trying to see if this system will work.
+            Vector2 previousCamX = Vector2.one;
+            previousCamX.x = m_Controller.PreviousCameraRotation.y;
+
+
             float dot = Vector3.Dot(currentCamX.normalized, previousCamX.normalized);
             if (dot < 0.9999f || dot > 1.0001f) // Such a small difference in numbers still gives quite a generous margin for error.
             {
@@ -542,6 +548,8 @@ public class Weapon : MonoBehaviour
 
         SetFireTime(); // Added so that if the player is holding down fire while reloading, they will begin firing at t=0. Without this the fire time is what is what when they
                        // originally started firing.
+
+        m_UIManager?.UpdateWeaponUI(this);
         m_IsReloading = false;
     }
 
@@ -557,10 +565,14 @@ public class Weapon : MonoBehaviour
 
             Vector3 bobStuff = WeaponBob();
 
-            Vector3 finalPosition = new Vector3(Mathf.Clamp((-x * 0.02f), -weaponConfig.m_WeaponSwayClampX, weaponConfig.m_WeaponSwayClampX) + bobStuff.x, Mathf.Clamp((-y * 0.02f), -weaponConfig.m_WeaponSwayClampY, weaponConfig.m_WeaponSwayClampY) + bobStuff.y, 0 + weaponConfig.m_WeaponRecoilTransform.z);
+            Vector3 finalPosition = Vector3.zero;
+            finalPosition.x = Mathf.Clamp(-x * 0.02f, -weaponConfig.m_WeaponSwayClampX, weaponConfig.m_WeaponSwayClampX) + bobStuff.x;
+            finalPosition.y = Mathf.Clamp((-y * 0.02f), -weaponConfig.m_WeaponSwayClampY, weaponConfig.m_WeaponSwayClampY) + bobStuff.y;
+            finalPosition.z = weaponConfig.m_WeaponRecoilTransform.z;
+
             gunTransform.localPosition = Vector3.Lerp(gunTransform.localPosition, finalPosition + gunOriginalPos, Time.deltaTime * weaponConfig.m_GunSwayReturn);
-            Quaternion xAxis = Quaternion.AngleAxis(m_WeaponRecoilRot.x, new Vector3(1, 0, 0));
-            Quaternion zAxis = Quaternion.AngleAxis(Mathf.Clamp(-x, -weaponConfig.m_WeaponSwayRotateClamp, weaponConfig.m_WeaponSwayRotateClamp), new Vector3(0, 0, 1));
+            Quaternion xAxis = Quaternion.AngleAxis(m_WeaponRecoilRot.x, Vector3.right);
+            Quaternion zAxis = Quaternion.AngleAxis(Mathf.Clamp(-x, -weaponConfig.m_WeaponSwayRotateClamp, weaponConfig.m_WeaponSwayRotateClamp), Vector3.forward);
             gunTransform.localRotation = Quaternion.Slerp(gunTransform.localRotation, zAxis * xAxis, weaponConfig.m_WeaponSwayRotateSpeed);
 
             float currentFOV = m_Camera.fieldOfView;
@@ -585,8 +597,8 @@ public class Weapon : MonoBehaviour
 
 
             // Quaternion rotate
-            Quaternion zAxis = Quaternion.AngleAxis(Mathf.Clamp(-x, -weaponConfig.m_WeaponSwayRotateClamp, weaponConfig.m_WeaponSwayRotateClamp), new Vector3(0, 0, 1));
-            Quaternion xAxis = Quaternion.AngleAxis(m_WeaponRecoilRot.x * weaponConfig.m_ADSRecoilModifier, new Vector3(1, 0, 0));
+            Quaternion zAxis = Quaternion.AngleAxis(Mathf.Clamp(-x, -weaponConfig.m_WeaponSwayRotateClamp, weaponConfig.m_WeaponSwayRotateClamp), Vector3.forward);
+            Quaternion xAxis = Quaternion.AngleAxis(m_WeaponRecoilRot.x * weaponConfig.m_ADSRecoilModifier, Vector3.right);
             gunTransform.localRotation = Quaternion.Slerp(gunTransform.localRotation, zAxis * xAxis, weaponConfig.m_WeaponSwayRotateSpeed);
         }
 

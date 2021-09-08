@@ -252,6 +252,7 @@ public class HostController : InputController
                 {
                     m_DrainCounter = 0.0f;
                     m_Inventory.TakeDamage(m_DrainDamage);
+                    m_Inventory.Owner?.PariahController.AddHealth(m_DrainRestore);
                 }
 
             }
@@ -729,6 +730,8 @@ public class HostController : InputController
         // the player can shoot after swapping weapons.
         cache.gameObject.SetActive(false);
         m_Inventory.m_CurrentWeapon.gameObject.SetActive(true);
+
+        m_UIManager?.UpdateWeaponUI(m_Inventory.m_CurrentWeapon);
     }
 
     //private Vector3 WeaponBob()

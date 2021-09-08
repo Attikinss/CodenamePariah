@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//PROBABLY NOT NEEDED ANYMORE
 public class DesktopButton : MonoBehaviour
 {
     public void Exit()

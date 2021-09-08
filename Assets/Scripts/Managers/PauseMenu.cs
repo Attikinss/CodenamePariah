@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -12,20 +13,9 @@ public class PauseMenu : MonoBehaviour
     [SerializeField]
     private bool m_IsPauseMenu = false;
 
-    [SerializeField]
-    [ReadOnly]
-    private static bool m_OptionsOpen = false;
-
-    [SerializeField]
-    [ReadOnly]
+    private bool m_OptionsOpen = false;
     private static bool m_IsQuitting = false;
-
-    [SerializeField]
-    [ReadOnly]
     private static bool m_SettingsToBeApplied = false;
-
-    [SerializeField]
-    [ReadOnly]
     private static bool m_InsideDialogueBox = false;
 
     public GameObject[] m_PauseMenuUI;
@@ -34,7 +24,9 @@ public class PauseMenu : MonoBehaviour
     public GameObject m_DialogueBoxUI;
 
     public Animator m_Transition;
-    public float m_TransitionTime = 5f;
+
+    [SerializeField]
+    private float m_TransitionTime = 2f;
 
     // Update is called once per frame
     void Update()
@@ -85,28 +77,46 @@ public class PauseMenu : MonoBehaviour
         {
             m_PauseMenuUI[i].SetActive(false);
         }
-        Time.timeScale = 1f;//
+        //Time.timeScale = 1f;// time scale affects scene animations.
         m_GameIsPaused = false;
     }
 
     public void Play()
     {
-        for (int i = 0; i < m_PauseMenuUI.Length; i++)
-        {
-            m_PauseMenuUI[i].SetActive(false);
-        }
+        //for (int i = 0; i < m_PauseMenuUI.Length; i++)
+        //{
+        //    m_PauseMenuUI[i].SetActive(false);
+        //}
         //Time.timeScale = 1f;//
         m_GameIsPaused = false;//
         //StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex + 1));
+        
+        StartCoroutine(LoadLevel());
     }
 
-    IEnumerator LoadLevel(int levelIndex)
+    IEnumerator LoadLevel(/*int levelIndex*/)
+    {
+        //SceneManager.LoadSceneAsync("Arena_001");
+
+        m_Transition.SetTrigger("Start");
+        
+        yield return new WaitForSeconds(m_TransitionTime);
+
+        //SceneManager.LoadScene(levelIndex);
+        SceneManager.LoadScene("Arena_001");
+        //while (!asyncLoad.isDone)
+        //{
+        //    yield return null;
+        //}
+    }
+
+    IEnumerator LoadMainMenu()
     {
         m_Transition.SetTrigger("Start");
 
         yield return new WaitForSeconds(m_TransitionTime);
 
-        //SceneManager.LoadScene(levelIndex);
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void Pause()
@@ -115,7 +125,7 @@ public class PauseMenu : MonoBehaviour
         {
             m_PauseMenuUI[i].SetActive(true);
         }
-        Time.timeScale = 0f;//
+        //Time.timeScale = 0f;// time scale affects scene animations.
         m_GameIsPaused = true;
         //disable a bunch of things requiring input - currently a bullet gets fired on first click inside pause menu.
         //can probably do "if(... && !m_GameIsPaused) in other scripts.
@@ -200,5 +210,19 @@ public class PauseMenu : MonoBehaviour
     {
         m_InsideDialogueBox = false;
         Debug.Log("Discarded changes.");
+    }
+
+    public void Exit()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+      Application.Quit();
+#endif
+    }
+
+    public void ExitToMenu()
+    {
+        StartCoroutine(LoadMainMenu());
     }
 }

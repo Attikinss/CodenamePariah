@@ -162,12 +162,6 @@ public class HostController : InputController
         Rigidbody = GetComponent<Rigidbody>();
     }
 
-    private void LateUpdate()
-    {
-        if (m_Active)
-            Look();
-    }
-
     private void Update()
     {
         if (!m_Active) return;
@@ -177,53 +171,14 @@ public class HostController : InputController
         if (GetCurrentWeaponConfig().m_AlwaysFiring) // Doing same here for the reason above.
             GetCurrentWeapon().m_IsFiring = true;
 
-
-        // This is now taken care of by Lauchlan's weapon system.
-
-        //if (m_HasFired)
-        //{
-        //    m_FireCounter += Time.deltaTime;
-        //    //m_fireCounter = Time.time + (60.0f / GetCurrentWeaponConfig().m_FireRate);
-        //    if (m_FireCounter >= 60.0f / GetCurrentWeaponConfig().m_FireRate)
-        //    {
-        //        m_HasFired = false;
-        //        m_FireCounter = 0;
-        //    }
-        //}
-
-        //if (m_IsFiring)
-        //{
-        //    // They are holding down the fire button.
-        //    ShootingDuration += Time.deltaTime;
-        //}
-        //else
-        //{
-            
-        //    // RECOIL RECOVERY STUFF MOVED TO WEAPON.CS SCRIPT.
-            
-
-        //}
-
         IsGrounded = CheckGrounded();
         CalculateGroundNormal();
         if (IsGrounded)
-        { 
             m_HasDoubleJumped = false;
-        }
+        
 
         m_CurrentMoveSpeed = Rigidbody.velocity.magnitude;
 
-
-        // MOVED TO WEAPON.CS SCRIPT.
-
-        //if (m_IsAiming)
-        //    Aim();
-        //UpdateSway(LookInput.x, LookInput.y);
-
-
-
-        //if (m_IsFiring)                       // CURRENTLY MOVING FUNCTIONALITY TO THE WEAPON.CS SCRIPT.
-        //    Shoot(true);
 
         // Just for debugging purposes. This variable is only used in the CustomDebugUI script.
         CurrentCamRot = m_Camera.transform.forward;
@@ -255,16 +210,12 @@ public class HostController : InputController
                 }
 
             }
-            else
-            { 
-                // TODO 
-                // Kill host if health less than 0.
-                // eject Pariah at the same time damage Pariah.
-            }
         }
-
-
-        
+    }
+    private void LateUpdate()
+    {
+        if (m_Active)
+            Look();
     }
 
     private void FixedUpdate()
@@ -273,98 +224,12 @@ public class HostController : InputController
 
         Slide();
         Move(MovementInput);
-        //UpdateRecoil();           // CURRENTLY MOVING TO WEAPON.CS SCRIPT.
 	}
 
-    private void OnDrawGizmos()
-    {
-        if (!m_EnableDebug || !m_Active) return;
-
-        Color defaultColour = Gizmos.color;
-
-        RaycastHit hit;
-        Ray ray = new Ray(transform.position + Vector3.up, Vector3.down);
-        if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckDistance))
-        {
-            Gizmos.DrawLine(transform.position, hit.point);
-
-            GraphicalDebugger.DrawSphereCast(transform.position + Vector3.up, (transform.position + Vector3.up) + Vector3.down * m_GroundCheckDistance, Color.green, m_GroundCheckRadius, m_GroundCheckDistance);
-
-            // Draw forward direction but relative to ground normal.
-            Gizmos.color = Color.black;
-            Gizmos.DrawLine(transform.position, transform.position + (Vector3.Cross(m_GroundNormal, -m_Orientation.right) * 100));
-        }
-        else
-        {
-            GraphicalDebugger.DrawSphereCast(transform.position + Vector3.up, (transform.position + Vector3.up) + Vector3.down * m_GroundCheckDistance, Color.red, m_GroundCheckRadius, m_GroundCheckDistance);
-        }
-
-        Gizmos.color = defaultColour;
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position + Vector3.up, transform.position + new Vector3(-CacheMovDir.x, CacheMovDir.y, -CacheMovDir.z));
-
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(transform.position + Vector3.up, transform.position + CacheMovDir);
-
-        // Trying to visualise true movement forward vector.
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawLine(transform.position, transform.position + m_ModifiedForward);
-
-
-
-        //Vector3 centre = m_Camera.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, transform.forward.z));
-        //Gizmos.DrawSphere(centre, 0.25f);
-        //Gizmos.DrawSphere(m_Gun.position, 0.25f);
-
-
-
-
-        Color cache = Gizmos.color;
-        // ================= Camera Forward Vectors For Recoil Recovery ================= //
-        Vector2 modifiedCurrent = new Vector2(m_Camera.transform.forward.y, 1);
-        Vector2 modifiedPrevious = new Vector2(PreviousCameraRotation.y, 1);
-
-        // Debug Lines:
-        // When the dot product is close to 1, the two lines will be GREEN.
-        // When the current forward vector is below the previous forward vector, the two lines will be PURPLE.
-        // When the current forward vector is above the previous forward vector, the two lines will be YELLOW.
-
-        float dot = Vector2.Dot(modifiedCurrent.normalized, modifiedPrevious.normalized);
-
-        if (dot < 0.9999f)
-        {
-            if (PreviousCameraRotation.y > CurrentCamRot.y)
-                Gizmos.color = Color.magenta;
-            else
-                Gizmos.color = Color.yellow;
-        }
-        else
-            Gizmos.color = Color.green;
-
-        // Trying to create the same forward vectors but only caring about x and z.
-
-        Gizmos.DrawLine(m_Camera.transform.position, m_Camera.transform.position + m_Camera.transform.forward * 100);  // Current forward vector.
-        Gizmos.DrawLine(m_Camera.transform.position, m_Camera.transform.position + PreviousCameraRotation * 100);    // Forward vector when they first clicked the fire trigger.
-
-        Gizmos.color = cache;
-
-        // ============================================================================== //
-
-
-
-
-
-        // Trying to fix dash bug.
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawSphere(transform.position, 0.25f);
-
-
-        // Drawing Ability3 stuff.
-        if (m_DrawingDeathIncarnate)
-            Ability3Gizmo();
-    }
-
+    
+    /// <summary>
+    /// Enable() is called when the player jumps into this agent.
+    /// </summary>
     public override void Enable()
     {
         GetComponent<PlayerInput>().enabled = true;
@@ -375,6 +240,9 @@ public class HostController : InputController
         CustomDebugUI.s_Instance.SetController(this);
     }
 
+    /// <summary>
+    /// Disable() is called when the player jumps out of the agent.
+    /// </summary>
     public override void Disable()
     {
         GetComponent<PlayerInput>().enabled = false;
@@ -385,6 +253,8 @@ public class HostController : InputController
         CustomDebugUI.s_Instance.ClearController();
     }
 
+    // ========================================================== Input Events ========================================================== //
+    // ================================================================================================================================== //
     public override void OnLook(InputAction.CallbackContext value)
 	{
         if (GetCurrentWeapon().m_IsRecoilTesting)
@@ -553,7 +423,50 @@ public class HostController : InputController
         }
     }
 
+    public void OnTestRecoil(InputAction.CallbackContext value)
+    {
+        if (value.performed && !GetCurrentWeapon().m_IsRecoilTesting)
+        {
+            GetCurrentWeapon().m_IsRecoilTesting = true;
+            m_PreviousOrientationVector = m_Orientation.transform.eulerAngles;
+            m_PreviousXCameraRot = m_XRotation;
 
+            GetCurrentWeapon().SetFireTime(); // Starting fire counter.
+        }
+        else if (value.performed && GetCurrentWeapon().m_IsRecoilTesting)
+        {
+            GetCurrentWeapon().m_IsRecoilTesting = false;
+            GetCurrentWeapon().m_IsTestResting = false;
+
+            GetCurrentWeapon().m_IsFiring = false;
+            GetCurrentWeapon().m_RecoilTestCounter = 0;
+        }
+    }
+
+    // Experimental death incarnate ability thing
+    public void OnAbility3(InputAction.CallbackContext value)
+    {
+        if (value.performed && !m_DeathIncarnateUsed)
+            test = StartCoroutine(Ability3Charge());
+
+        else if (value.canceled)
+            StopCoroutine(test); // When we let go, we stop the couritine to clear the time value in it.
+
+    }
+
+    public void OnDebugToggle(InputAction.CallbackContext value)
+    {
+        if (value.performed)
+            CustomDebugUI.s_Instance.Toggle();
+    }
+
+    public void OnHUDToggle(InputAction.CallbackContext value)
+    {
+        if (value.performed)
+            UIManager.s_Hide = !UIManager.s_Hide;
+    }
+
+    // ======================================================================================================================================== //
     private void Look()
     {
         
@@ -806,25 +719,7 @@ public class HostController : InputController
     public Weapon GetCurrentWeapon() => m_Inventory.m_CurrentWeapon;
 
 
-    public void OnTestRecoil(InputAction.CallbackContext value)
-    {
-        if (value.performed && !GetCurrentWeapon().m_IsRecoilTesting)
-        {
-            GetCurrentWeapon().m_IsRecoilTesting = true;
-            m_PreviousOrientationVector = m_Orientation.transform.eulerAngles;
-            m_PreviousXCameraRot = m_XRotation;
-
-            GetCurrentWeapon().SetFireTime(); // Starting fire counter.
-        }
-        else if (value.performed && GetCurrentWeapon().m_IsRecoilTesting)
-        {
-            GetCurrentWeapon().m_IsRecoilTesting = false;
-            GetCurrentWeapon().m_IsTestResting = false;
-            
-            GetCurrentWeapon().m_IsFiring = false;
-            GetCurrentWeapon().m_RecoilTestCounter = 0;
-        }
-    }
+    
 
     public void HideHUD()
     {
@@ -835,29 +730,6 @@ public class HostController : InputController
     {
         m_HUD.SetActive(true);
     }
-
-
-
-
-    // Experimental death incarnate ability thing
-    public void OnAbility3(InputAction.CallbackContext value)
-    {
-
-		//test = null;
-
-		if (value.performed && !m_DeathIncarnateUsed)
-		{
-			test = StartCoroutine(Ability3Charge());
-
-			//m_DeathIncarnateUsedTime = Time.time;
-			//Ability3(m_DeathIncarnateRadius, m_DeathIncarnateDamage);
-		}
-		else if (value.canceled)
-		{
-			StopCoroutine(test); // When we let go, we stop the couritine to clear the time value in it.
-		}
-	}
-
 
 	// remember cooldown.
 	// this host dies. you get kicked out.
@@ -873,9 +745,8 @@ public class HostController : InputController
 
             Inventory agentInv = collisions[i].GetComponent<Inventory>();
             if (agentInv) // If they had an inventory, it means they are an agent.
-            { 
                 agentInv.TakeDamage(damage);
-            }
+            
         }
 
         StartCoroutine(Ability3Draw()); // Start timer for drawing.
@@ -958,19 +829,94 @@ public class HostController : InputController
 		m_DrawingDeathIncarnate = false;
 	}
 
-    public void OnDebugToggle(InputAction.CallbackContext value)
-    {
-        if (value.performed)
-        {
-            CustomDebugUI.s_Instance.Toggle();
-        }
-    }
+    
 
-    public void OnHUDToggle(InputAction.CallbackContext value)
+    private void OnDrawGizmos()
     {
-        if (value.performed)
+        if (!m_EnableDebug || !m_Active) return;
+
+        Color defaultColour = Gizmos.color;
+
+        RaycastHit hit;
+        Ray ray = new Ray(transform.position + Vector3.up, Vector3.down);
+        if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckDistance))
         {
-            UIManager.s_Hide = !UIManager.s_Hide;
+            Gizmos.DrawLine(transform.position, hit.point);
+
+            GraphicalDebugger.DrawSphereCast(transform.position + Vector3.up, (transform.position + Vector3.up) + Vector3.down * m_GroundCheckDistance, Color.green, m_GroundCheckRadius, m_GroundCheckDistance);
+
+            // Draw forward direction but relative to ground normal.
+            Gizmos.color = Color.black;
+            Gizmos.DrawLine(transform.position, transform.position + (Vector3.Cross(m_GroundNormal, -m_Orientation.right) * 100));
         }
+        else
+        {
+            GraphicalDebugger.DrawSphereCast(transform.position + Vector3.up, (transform.position + Vector3.up) + Vector3.down * m_GroundCheckDistance, Color.red, m_GroundCheckRadius, m_GroundCheckDistance);
+        }
+
+        Gizmos.color = defaultColour;
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position + Vector3.up, transform.position + new Vector3(-CacheMovDir.x, CacheMovDir.y, -CacheMovDir.z));
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(transform.position + Vector3.up, transform.position + CacheMovDir);
+
+        // Trying to visualise true movement forward vector.
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawLine(transform.position, transform.position + m_ModifiedForward);
+
+
+
+        //Vector3 centre = m_Camera.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, transform.forward.z));
+        //Gizmos.DrawSphere(centre, 0.25f);
+        //Gizmos.DrawSphere(m_Gun.position, 0.25f);
+
+
+
+
+        Color cache = Gizmos.color;
+        // ================= Camera Forward Vectors For Recoil Recovery ================= //
+        Vector2 modifiedCurrent = new Vector2(m_Camera.transform.forward.y, 1);
+        Vector2 modifiedPrevious = new Vector2(PreviousCameraRotation.y, 1);
+
+        // Debug Lines:
+        // When the dot product is close to 1, the two lines will be GREEN.
+        // When the current forward vector is below the previous forward vector, the two lines will be PURPLE.
+        // When the current forward vector is above the previous forward vector, the two lines will be YELLOW.
+
+        float dot = Vector2.Dot(modifiedCurrent.normalized, modifiedPrevious.normalized);
+
+        if (dot < 0.9999f)
+        {
+            if (PreviousCameraRotation.y > CurrentCamRot.y)
+                Gizmos.color = Color.magenta;
+            else
+                Gizmos.color = Color.yellow;
+        }
+        else
+            Gizmos.color = Color.green;
+
+        // Trying to create the same forward vectors but only caring about x and z.
+
+        Gizmos.DrawLine(m_Camera.transform.position, m_Camera.transform.position + m_Camera.transform.forward * 100);  // Current forward vector.
+        Gizmos.DrawLine(m_Camera.transform.position, m_Camera.transform.position + PreviousCameraRotation * 100);    // Forward vector when they first clicked the fire trigger.
+
+        Gizmos.color = cache;
+
+        // ============================================================================== //
+
+
+
+
+
+        // Trying to fix dash bug.
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(transform.position, 0.25f);
+
+
+        // Drawing Ability3 stuff.
+        if (m_DrawingDeathIncarnate)
+            Ability3Gizmo();
     }
 }

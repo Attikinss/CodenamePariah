@@ -47,9 +47,6 @@ public class HostController : InputController
     public bool IsGrounded { get; private set; }
     public Vector3 CacheMovDir { get; private set; }
 
-    private float m_FireCounter = 0.0f; // time counter between shots.
-    private bool m_HasFired = false;
-
     // If this variable was once public and you had set it's value in the inspector, it will still have the value you set in the inspector even if you change its initialization here.
     public float ShootingDuration { get; set; } = 1; // time tracking since started shooting.
     
@@ -80,8 +77,6 @@ public class HostController : InputController
     public float AdditionalCameraRecoilY { get; set; } // This will be how much horizontal recoil will be applied to the camera.
 
     public float m_DesiredX = 0; // Made public because I'm moving everything to the Weapon.cs script but I still need to access it there.
-
-    private bool m_IsFiring = false;
 
     public Vector3 PreviousCameraRotation { get; private set; } // Stores rotation when the player just starts shooting. Okay, so because comparing euler angles is a terrible idea due to there being multiple numbers
                                                                 // that can describe the same thing, this variable now stores the forward vector before shooting. The idea being that I can use the dot product to

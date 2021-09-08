@@ -465,6 +465,14 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""ToggleHUD"",
+                    ""type"": ""Button"",
+                    ""id"": ""ef142069-848d-41fb-81e7-af98a812f8b8"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -874,6 +882,17 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""action"": ""Debug"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b3e6ed3e-811b-47c5-a261-13e34e8b8ea6"",
+                    ""path"": ""<Keyboard>/f4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""ToggleHUD"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -939,6 +958,7 @@ public class @InputMap : IInputActionCollection, IDisposable
         m_Host_Reload = m_Host.FindAction("Reload", throwIfNotFound: true);
         m_Host_Ability3 = m_Host.FindAction("Ability3", throwIfNotFound: true);
         m_Host_Debug = m_Host.FindAction("Debug", throwIfNotFound: true);
+        m_Host_ToggleHUD = m_Host.FindAction("ToggleHUD", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1077,6 +1097,7 @@ public class @InputMap : IInputActionCollection, IDisposable
     private readonly InputAction m_Host_Reload;
     private readonly InputAction m_Host_Ability3;
     private readonly InputAction m_Host_Debug;
+    private readonly InputAction m_Host_ToggleHUD;
     public struct HostActions
     {
         private @InputMap m_Wrapper;
@@ -1097,6 +1118,7 @@ public class @InputMap : IInputActionCollection, IDisposable
         public InputAction @Reload => m_Wrapper.m_Host_Reload;
         public InputAction @Ability3 => m_Wrapper.m_Host_Ability3;
         public InputAction @Debug => m_Wrapper.m_Host_Debug;
+        public InputAction @ToggleHUD => m_Wrapper.m_Host_ToggleHUD;
         public InputActionMap Get() { return m_Wrapper.m_Host; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1154,6 +1176,9 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Debug.started -= m_Wrapper.m_HostActionsCallbackInterface.OnDebug;
                 @Debug.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnDebug;
                 @Debug.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnDebug;
+                @ToggleHUD.started -= m_Wrapper.m_HostActionsCallbackInterface.OnToggleHUD;
+                @ToggleHUD.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnToggleHUD;
+                @ToggleHUD.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnToggleHUD;
             }
             m_Wrapper.m_HostActionsCallbackInterface = instance;
             if (instance != null)
@@ -1206,6 +1231,9 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Debug.started += instance.OnDebug;
                 @Debug.performed += instance.OnDebug;
                 @Debug.canceled += instance.OnDebug;
+                @ToggleHUD.started += instance.OnToggleHUD;
+                @ToggleHUD.performed += instance.OnToggleHUD;
+                @ToggleHUD.canceled += instance.OnToggleHUD;
             }
         }
     }
@@ -1255,5 +1283,6 @@ public class @InputMap : IInputActionCollection, IDisposable
         void OnReload(InputAction.CallbackContext context);
         void OnAbility3(InputAction.CallbackContext context);
         void OnDebug(InputAction.CallbackContext context);
+        void OnToggleHUD(InputAction.CallbackContext context);
     }
 }

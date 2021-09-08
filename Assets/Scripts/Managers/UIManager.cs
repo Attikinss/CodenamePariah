@@ -28,6 +28,13 @@ public class UIManager : MonoBehaviour
     public Weapon m_Rifle;
     public Weapon m_Pistol;
 
+
+    // again.. another temporary bool to allow for hiding the HUD. This will be static since it doesn't need to be unique to each instance.
+    public static bool s_Hide = false;
+    // The reason why there is so many temporary things is because this whole system will be revamped soon.
+
+    public Canvas m_Canvas;
+
     //private static UIManager s_Instance;
     //private void Awake()
     //{
@@ -223,39 +230,47 @@ public class UIManager : MonoBehaviour
 
     public void DisplayInventory()
     {
-        if (m_IsRifle)
-        { 
-            if (m_Rifle.TotalAmmoEmpty())
-            {
-                DisableMagazine();
-            }
-
-            m_AmmoWarning.text = "";
-            if (m_Rifle.TotalAmmoEmpty())
-            {
-                m_AmmoWarning.text = "";
-                m_AmmoWarning.text = "No Ammo";
-            }
-        }
-        // ============ TEMPORARY CHECK. ============ //
-        // This check will be removed very soon. Just here to get a build out quickly.
+        if (s_Hide)
+            m_Canvas.enabled = false;
         else
-        { 
-            if (m_Pistol.TotalAmmoEmpty())
-            {
-                DisableMagazine();
+        {
+            m_Canvas.enabled = true;
+
+            if (m_IsRifle)
+            { 
+                if (m_Rifle.TotalAmmoEmpty())
+                {
+                    DisableMagazine();
+                }
+
+                m_AmmoWarning.text = "";
+                if (m_Rifle.TotalAmmoEmpty())
+                {
+                    m_AmmoWarning.text = "";
+                    m_AmmoWarning.text = "No Ammo";
+                }
+            }
+            // ============ TEMPORARY CHECK. ============ //
+            // This check will be removed very soon. Just here to get a build out quickly.
+            else
+            { 
+                if (m_Pistol.TotalAmmoEmpty())
+                {
+                    DisableMagazine();
+                }
+
+                m_AmmoWarning.text = "";
+                if (m_Pistol.TotalAmmoEmpty())
+                {
+                    m_AmmoWarning.text = "";
+                    m_AmmoWarning.text = "No Ammo";
+                }
             }
 
-            m_AmmoWarning.text = "";
-            if (m_Pistol.TotalAmmoEmpty())
-            {
-                m_AmmoWarning.text = "";
-                m_AmmoWarning.text = "No Ammo";
-            }
+            m_AmmoDisplay.text = "";
+
+            m_AmmoDisplay.text += string.Format("{0:D2} / {1:D2}", GetComponentInChildren<Weapon>().GetRoundsInMagazine(), GetComponentInChildren<Weapon>().GetReserve());//set a gameobject in inspector to avoid getcomponent
         }
 
-        m_AmmoDisplay.text = "";
-
-        m_AmmoDisplay.text += string.Format("{0:D2} / {1:D2}", GetComponentInChildren<Weapon>().GetRoundsInMagazine(), GetComponentInChildren<Weapon>().GetReserve());//set a gameobject in inspector to avoid getcomponent
     }
 }

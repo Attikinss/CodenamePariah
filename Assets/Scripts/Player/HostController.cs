@@ -965,4 +965,12 @@ public class HostController : InputController
             CustomDebugUI.s_Instance.Toggle();
         }
     }
+
+    public void OnHUDToggle(InputAction.CallbackContext value)
+    {
+        if (value.performed)
+        {
+            UIManager.s_Hide = !UIManager.s_Hide;
+        }
+    }
 }

@@ -147,6 +147,8 @@ public class HostController : InputController
     // testing couroutines.
     Coroutine test = null;
 
+    public DrainSettings DrainTestSettings;
+
 	private void Awake()
 	{
         m_UIManager = GetComponent<UIManager>();

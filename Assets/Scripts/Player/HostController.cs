@@ -132,7 +132,7 @@ public class HostController : InputController
     // testing couroutines.
     Coroutine test = null;
 
-    public DrainAbility m_DrainAbility;
+    public DeathIncarnateAbility m_DeathIncarnateAbility;
 
 	private void Awake()
 	{
@@ -428,7 +428,7 @@ public class HostController : InputController
     // Experimental death incarnate ability thing
     public void OnAbility3(InputAction.CallbackContext value)
     {
-        if (value.performed && !m_DrainAbility.deathIncarnateUsed)
+        if (value.performed && !m_DeathIncarnateAbility.deathIncarnateUsed)
             test = StartCoroutine(Ability3Charge());
 
         else if (value.canceled)
@@ -734,9 +734,9 @@ public class HostController : InputController
         StartCoroutine(Ability3Draw()); // Start timer for drawing.
 
         // Storing position of time of attack.
-        m_DrainAbility.deathIncarnatePos = m_Orientation.position;
+        m_DeathIncarnateAbility.deathIncarnatePos = m_Orientation.position;
 
-        m_DrainAbility.deathIncarnateUsed = true;
+        m_DeathIncarnateAbility.deathIncarnateUsed = true;
         StartCoroutine(Ability3Refresh());
     }
 
@@ -745,7 +745,7 @@ public class HostController : InputController
 		Color cache = Gizmos.color;
 		Gizmos.color = Color.blue;
 
-		Gizmos.DrawWireSphere(m_DrainAbility.deathIncarnatePos, m_DrainAbility.deathIncarnateRadius);
+		Gizmos.DrawWireSphere(m_DeathIncarnateAbility.deathIncarnatePos, m_DeathIncarnateAbility.deathIncarnateRadius);
 
 		Gizmos.color = cache;
 	}
@@ -753,19 +753,19 @@ public class HostController : InputController
     IEnumerator Ability3Refresh()
     {
         float time = 0;
-        while (time < m_DrainAbility.deathIncarnateCooldown)
+        while (time < m_DeathIncarnateAbility.deathIncarnateCooldown)
         {
             time += Time.deltaTime;
             yield return null;
         }
 
-        m_DrainAbility.deathIncarnateUsed = false;
+        m_DeathIncarnateAbility.deathIncarnateUsed = false;
     }
 	IEnumerator Ability3Charge()
 	{
 		float time = 0.0f;
 
-		while (time < m_DrainAbility.deathIncarnateRequiredHold)
+		while (time < m_DeathIncarnateAbility.deathIncarnateRequiredHold)
 		{
 			time += Time.deltaTime;
 
@@ -786,29 +786,29 @@ public class HostController : InputController
 	IEnumerator Ability3Delay()
 	{
 		float time = 0.0f;
-		while (time < m_DrainAbility.deathIncarnateDelay)
+		while (time < m_DeathIncarnateAbility.deathIncarnateDelay)
 		{
 			time += Time.deltaTime;
 			yield return null;
 		}
 
-		Ability3(m_DrainAbility.deathIncarnateRadius, m_DrainAbility.deathIncarnateDamage);
+		Ability3(m_DeathIncarnateAbility.deathIncarnateRadius, m_DeathIncarnateAbility.deathIncarnateDamage);
 	}
 	IEnumerator Ability3Draw()
 	{
 		float time = 0.0f;
-		m_DrainAbility.drawingDeathIncarnate = true;
+		m_DeathIncarnateAbility.drawingDeathIncarnate = true;
 		while (time < 10)
 		{
 			// We'll draw death incarnate for 3 seconds after it was used.
 
-			Debug.Log("Drawing: at " + m_DrainAbility.deathIncarnatePos + " at " + time);
+			Debug.Log("Drawing: at " + m_DeathIncarnateAbility.deathIncarnatePos + " at " + time);
 
 			time += Time.deltaTime;
 			yield return null;
 		}
 
-		m_DrainAbility.drawingDeathIncarnate = false;
+		m_DeathIncarnateAbility.drawingDeathIncarnate = false;
 	}
 
     
@@ -898,7 +898,7 @@ public class HostController : InputController
 
 
         // Drawing Ability3 stuff.
-        if (m_DrainAbility.drawingDeathIncarnate)
+        if (m_DeathIncarnateAbility.drawingDeathIncarnate)
             Ability3Gizmo();
     }
 }

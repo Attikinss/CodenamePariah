@@ -175,7 +175,7 @@ MonoBehaviour:
   m_PreviousOrientationVector: {x: 0, y: 0, z: 0}
   m_PreviousXCameraRot: 0
   m_HUD: {fileID: 4788248131841111902}
-  m_DrainAbility:
+  m_DeathIncarnateAbility:
     deathIncarnateDamage: 100
     deathIncarnateRadius: 20
     deathIncarnateCooldown: 5

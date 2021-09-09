@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public struct DrainAbility
+public struct DeathIncarnateAbility
 {
     //DrainSettings()
     //{

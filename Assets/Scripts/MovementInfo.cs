@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class MovementInfo
 {
+	// Input Related
+	public Vector2 MovementInput = Vector3.zero;
+
 	// General Movement
 	[ReadOnly]
 	public bool m_IsGrounded;

@@ -43,42 +43,18 @@ public class HostController : InputController
 
     // ================== BOOKKEEPING STUFF ================== //
 
-    public Vector2 MovementInput { get; private set; }
-    //public bool IsGrounded { get; private set; }
-    //public Vector3 CacheMovDir { get; private set; }
+    //public Vector2 MovementInput { get; private set; }
 
     // If this variable was once public and you had set it's value in the inspector, it will still have the value you set in the inspector even if you change its initialization here.
     public float ShootingDuration { get; set; } = 1; // time tracking since started shooting.
     
     public float m_XRotation = 0;   // Made public because nowadays the Weapon.cs script needs to access it.
 
-    //private bool m_HasDoubleJumped = false;
-
-    // private bool m_HasJumped = false;
-
-    //public bool IsSliding { get; private set; }
-    //public Vector3 SlideDir { get; private set; }
-
-    //private Vector3 m_CacheSlideMove = Vector3.zero;
-
-    //public float SlideCounter { get; private set; }
-
+   
     public Vector3 LookInput { get; private set; }
 
     [HideInInspector]
     public bool m_IsAiming = false;
-
-    // ================================ ATTEMPTING TO ABSTRACT INTO OWN STRUCT ================================ //
-
-    //public Vector3 AdditionalRecoilRotation { get; set; } // Made the setter public so that I can access it in the Weapon.cs script.
-
-    ////public Vector3 WeaponRecoilRot { get; private set; }
-
-    //public float AdditionalCameraRecoilX { get; set; } // For actual recoil pattern. This will judge how much higher your camera will go while shooting.
-
-    //public float AdditionalCameraRecoilY { get; set; } // This will be how much horizontal recoil will be applied to the camera.
-
-    // ======================================================================================================== //
 
     // Here's the struct.
     public CameraRecoil m_AccumulatedRecoil = new CameraRecoil();
@@ -92,16 +68,6 @@ public class HostController : InputController
     public Vector3 CurrentCamRot { get; private set; }          // Like I mentioned above, this variable will be storing the current forward vector to be used when recovering from recoil.
     // ======================================================= //
 
-
-    //// Exposed variables for debugging.
-    //[ReadOnly]
-    //public float m_CurrentMoveSpeed;
-    //[ReadOnly]
-    //public bool m_IsMoving;
-
-    
-
-
     // Temporary ground normal thing.
     Vector3 m_GroundNormal = Vector3.zero;
 
@@ -109,15 +75,7 @@ public class HostController : InputController
     Vector3 m_ModifiedForward = Vector3.zero;
     Vector3 moveDir = Vector3.zero;
 
-    // temporary jump deactivate cooldown. to prevent m_IsJumping from being deactivated as soon as you jump.
-    //float m_JumpCounter = 0;
-
-    // ====================================================================== NOTE =======================================================================
-    // ============= A bunch of the movement and slide related variables have been commented out because they're going into their own class. =============
-    // ===================================================================================================================================================
-
     public MovementInfo m_MovInfo = new MovementInfo();
-
 
     [HideInInspector]
     public Vector3 m_PreviousOrientationVector = Vector3.zero;
@@ -204,7 +162,7 @@ public class HostController : InputController
         if (!m_Active) return;
 
         Slide();
-        Move(MovementInput);
+        Move(m_MovInfo.MovementInput);
 	}
 
     
@@ -284,7 +242,7 @@ public class HostController : InputController
 
 	public override void OnMovement(InputAction.CallbackContext value)
 	{
-        MovementInput = value.performed ? value.ReadValue<Vector2>() : Vector2.zero;
+        m_MovInfo.MovementInput = value.performed ? value.ReadValue<Vector2>() : Vector2.zero;
 	}
 
     public override void OnPossess(InputAction.CallbackContext value)

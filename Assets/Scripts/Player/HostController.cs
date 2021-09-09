@@ -264,8 +264,9 @@ public class HostController : InputController
             //PlayerManager.SetWeapon(WeaponSlot.WEAPON1);
 
 
-            m_UIManager.m_IsRifle = true;
-            m_UIManager.HideMagazine(true);
+            //m_UIManager.m_IsRifle = true;
+            m_UIManager.m_CurrentWeaponType = WEAPONTYPE.RIFLE;
+            m_UIManager.HideMagazine(m_UIManager.m_CurrentWeaponType);
         }
     }
 
@@ -279,8 +280,25 @@ public class HostController : InputController
 
             SelectWeapon(1);
 
-            m_UIManager.m_IsRifle = false;
-            m_UIManager.HideMagazine(false);
+            //m_UIManager.m_IsRifle = false;
+            m_UIManager.m_CurrentWeaponType = WEAPONTYPE.PISTOL;
+            m_UIManager.HideMagazine(m_UIManager.m_CurrentWeaponType);
+        }
+    }
+
+    public void OnWeaponSelect3(InputAction.CallbackContext value)
+    {
+        if (value.performed && !GetCurrentWeapon().IsReloading())
+        {
+            // Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
+            GetCurrentWeapon().ResetReload();
+            GetCurrentWeapon().ResetReloadAnimation();
+
+            SelectWeapon(2);
+
+            //m_UIManager.m_IsRifle = false;
+            m_UIManager.m_CurrentWeaponType = WEAPONTYPE.DUAL;
+            m_UIManager.HideMagazine(m_UIManager.m_CurrentWeaponType);
         }
     }
 

@@ -157,6 +157,9 @@ public class Weapon : MonoBehaviour
     // temporary thing to test out semi-automatic weaponry.
     public bool m_SemiAuto = false;
 
+    // temporary
+    public bool m_DualWield = false;
+
 	private void Awake()
 	{
         m_OriginalLocalPosition = transform.localPosition;

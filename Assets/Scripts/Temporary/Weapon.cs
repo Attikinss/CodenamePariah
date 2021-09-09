@@ -267,8 +267,11 @@ public class Weapon : MonoBehaviour
                 if (!currentConfig.m_DisableAllRecoil)
                 {
                     float ShootingDuration = Time.time - m_FireStartTime;
-                    m_Controller.AdditionalCameraRecoilX += currentConfig.m_VerticalRecoil.Evaluate(ShootingDuration);
-                    m_Controller.AdditionalCameraRecoilY += currentConfig.m_HorizontalRecoil.Evaluate(ShootingDuration);
+
+                    CameraRecoil cameraRecoil = m_Controller.m_AccumulatedRecoil;
+
+                    cameraRecoil.accumulatedPatternRecoilX += currentConfig.m_VerticalRecoil.Evaluate(ShootingDuration);
+                    cameraRecoil.accumulatedPatternRecoilY += currentConfig.m_HorizontalRecoil.Evaluate(ShootingDuration);
                 }
                 // =============================== //
 
@@ -394,8 +397,9 @@ public class Weapon : MonoBehaviour
         {
             WeaponConfiguration weaponConfig = GetCurrentWeaponConfig();
 
+            CameraRecoil cameraRecoil = m_Controller.m_AccumulatedRecoil;
 
-            m_Controller.AdditionalRecoilRotation += new Vector3(-weaponConfig.RecoilRotationAiming.x, Random.Range(-weaponConfig.RecoilRotationAiming.y, weaponConfig.RecoilRotationAiming.y), Random.Range(-weaponConfig.RecoilRotationAiming.z, weaponConfig.RecoilRotationAiming.z));
+            cameraRecoil.accumulatedVisualRecoil += new Vector3(-weaponConfig.RecoilRotationAiming.x, Random.Range(-weaponConfig.RecoilRotationAiming.y, weaponConfig.RecoilRotationAiming.y), Random.Range(-weaponConfig.RecoilRotationAiming.z, weaponConfig.RecoilRotationAiming.z));
             m_WeaponRecoilRot -= new Vector3(weaponConfig.m_WeaponRotRecoilVertStrength, 0, 0);
 
             // Although I am setting the recoil transform here, I have to apply it in the WeaponSway() function since I'm setting pos directly there. I want to change this but I'm unsure how right now
@@ -409,7 +413,9 @@ public class Weapon : MonoBehaviour
     {
         WeaponConfiguration weaponConfig = GetCurrentWeaponConfig();
 
-        m_Controller.AdditionalRecoilRotation = Vector3.Lerp(m_Controller.AdditionalRecoilRotation, Vector3.zero, weaponConfig.m_CameraRecoilReturnSpeed * Time.deltaTime);
+        CameraRecoil cameraRecoil = m_Controller.m_AccumulatedRecoil;
+
+        cameraRecoil.accumulatedVisualRecoil = Vector3.Lerp(cameraRecoil.accumulatedVisualRecoil, Vector3.zero, weaponConfig.m_CameraRecoilReturnSpeed * Time.deltaTime);
         m_WeaponRecoilRot = Vector3.Lerp(m_WeaponRecoilRot, Vector3.zero, weaponConfig.m_WeaponRecoilReturnSpeed * Time.deltaTime);
 
         weaponConfig.m_WeaponRecoilTransform = Vector3.Lerp(weaponConfig.m_WeaponRecoilTransform, Vector3.zero, weaponConfig.m_WeaponRecoilReturnSpeed * Time.deltaTime);
@@ -420,7 +426,9 @@ public class Weapon : MonoBehaviour
     /// </summary>
     private void UpdateRecoilRecovery()
     {
-        if (m_Controller.AdditionalCameraRecoilX > 0) // We only want to decrement AdditionCameraRecoilX if it has accumuluated recoil still in it.
+        CameraRecoil cameraRecoil = m_Controller.m_AccumulatedRecoil;
+
+        if (cameraRecoil.accumulatedPatternRecoilX > 0) // We only want to decrement AdditionCameraRecoilX if it has accumuluated recoil still in it.
         {
             // If we just keep decreasing the additional recoil until it reaches 0, it results in the camera going further down then what feels right.
             // This is because as the player is shooting, they are compensating and making the gun stand in place. While this is happening, the additional recoil could
@@ -446,25 +454,25 @@ public class Weapon : MonoBehaviour
                     // Instead I will add the AdditionalCameraRecoilX into xRotation and then set AdditionalCameraRecoilX to 0. This way I don't have to directly touch the cameras local rotation
                     // here.
 
-                    m_Controller.m_XRotation -= m_Controller.AdditionalCameraRecoilX;
-                    m_Controller.AdditionalCameraRecoilX = 0;
+                    m_Controller.m_XRotation -= cameraRecoil.accumulatedPatternRecoilX;
+                    cameraRecoil.accumulatedPatternRecoilX = 0;
                 }
                 else
                 {
                     // Otherwise, they are aiming higher than when they started, so we'll bring the gun down to where it was.
-                    m_Controller.AdditionalCameraRecoilX -= 1 * GetCurrentWeaponConfig().m_RecoilRecoveryModifier;
-                    m_Controller.AdditionalCameraRecoilX = Mathf.Clamp(m_Controller.AdditionalCameraRecoilX, 0, 85f);
+                    cameraRecoil.accumulatedPatternRecoilX -= 1 * GetCurrentWeaponConfig().m_RecoilRecoveryModifier;
+                    cameraRecoil.accumulatedPatternRecoilX = Mathf.Clamp(cameraRecoil.accumulatedPatternRecoilX, 0, 85f);
                 }
 
             }
             else
             {
                 // Since the forward vectors match, we'll clear the m_AdditionalCameraRecoilX variable just to keep things clean.
-                m_Controller.m_XRotation -= m_Controller.AdditionalCameraRecoilX;
-                m_Controller.AdditionalCameraRecoilX = 0;
+                m_Controller.m_XRotation -= cameraRecoil.accumulatedPatternRecoilX;
+                cameraRecoil.accumulatedPatternRecoilX = 0;
             }
             // The rotation on the Y Axis. So this is if the player gets turned horizontally from the recoil.
-            if (m_Controller.AdditionalCameraRecoilY != 0)
+            if (cameraRecoil.accumulatedPatternRecoilY != 0)
             {
                 // I've decided not to lerp the additional horizontal recoil to 0 since it feels disorientating.
 
@@ -472,8 +480,8 @@ public class Weapon : MonoBehaviour
                 //m_AdditionalCameraRecoilY -= 1 * GetCurrentWeaponConfig().m_RecoilRecoveryModifier;
 
                 // Just incorporating the accumulated recoil into m_DesiredX to clean up AdditionalCameraRecoilY.
-                m_Controller.m_DesiredX -= m_Controller.AdditionalCameraRecoilY;
-                m_Controller.AdditionalCameraRecoilY = 0;
+                m_Controller.m_DesiredX -= cameraRecoil.accumulatedPatternRecoilY;
+                cameraRecoil.accumulatedPatternRecoilY = 0;
             }
         }
     }

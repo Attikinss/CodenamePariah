@@ -137,7 +137,10 @@ public class CustomDebugUI : MonoBehaviour
             GraphicalDebugger.Assign<Vector3>(m_playerController.SlideDir, "SlideDir", m_SlideDirText);
             GraphicalDebugger.Assign<float>(m_playerController.SlideCounter, "SlideCounter", m_SlideCounterText);
 
-            GraphicalDebugger.Assign<Vector3>(m_playerController.AdditionalRecoilRotation, "AdditionalRecoilRotation", m_AdditionalRecoilText);
+
+            CameraRecoil cameraRecoil = m_playerController.m_AccumulatedRecoil;
+
+            GraphicalDebugger.Assign<Vector3>(cameraRecoil.accumulatedVisualRecoil, "AdditionalRecoilRotation", m_AdditionalRecoilText);
 
             GraphicalDebugger.Assign<Vector3>(m_playerController.LookInput, "LookInput", m_LookInputText);
 
@@ -147,8 +150,8 @@ public class CustomDebugUI : MonoBehaviour
             //GraphicalDebugger.Assign<Vector3>(m_playerController.WeaponRecoilRot, "WeaponRecoilRot", m_WeaponRecoilRotText);
             GraphicalDebugger.Assign<Vector3>(weaponConfig.m_WeaponRecoilTransform, "WeaponRecoilTransf", m_WeaponRecoilTransfText);
 
-            GraphicalDebugger.Assign<float>(m_playerController.AdditionalCameraRecoilX, "VerticalCameraRecoil", m_VerticalCameraRecoilText);
-            GraphicalDebugger.Assign<float>(m_playerController.AdditionalCameraRecoilY, "HorizontalCameraRecoil", m_HorizontalCameraRecoilText);
+            GraphicalDebugger.Assign<float>(cameraRecoil.accumulatedPatternRecoilX, "VerticalCameraRecoil", m_VerticalCameraRecoilText);
+            GraphicalDebugger.Assign<float>(cameraRecoil.accumulatedPatternRecoilY, "HorizontalCameraRecoil", m_HorizontalCameraRecoilText);
 
             GraphicalDebugger.Assign<float>(Time.time - m_playerController.GetCurrentWeapon().m_FireStartTime, "FireHeldCounter", m_FireHeldCounterText);
 

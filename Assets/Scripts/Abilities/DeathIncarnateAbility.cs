@@ -12,7 +12,7 @@ public struct DeathIncarnateAbility
     //    deathIncarnateCooldown = 5;
     //    deathIncarnateDelay = 0.75f;
     //    deathIncarnateRequiredHold = 0.75f;
-
+    //
     //    drawingDeathIncarnate = false;
     //    deathIncarnatePos = Vector3.zero;
     //    deathIncarnateUsed = false;

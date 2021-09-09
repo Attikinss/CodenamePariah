@@ -68,13 +68,20 @@ public class HostController : InputController
     [HideInInspector]
     public bool m_IsAiming = false;
 
-    public Vector3 AdditionalRecoilRotation { get; set; } // Made the setter public so that I can access it in the Weapon.cs script.
+    // ================================ ATTEMPTING TO ABSTRACT INTO OWN STRUCT ================================ //
 
-    //public Vector3 WeaponRecoilRot { get; private set; }
+    //public Vector3 AdditionalRecoilRotation { get; set; } // Made the setter public so that I can access it in the Weapon.cs script.
 
-    public float AdditionalCameraRecoilX { get; set; } // For actual recoil pattern. This will judge how much higher your camera will go while shooting.
+    ////public Vector3 WeaponRecoilRot { get; private set; }
 
-    public float AdditionalCameraRecoilY { get; set; } // This will be how much horizontal recoil will be applied to the camera.
+    //public float AdditionalCameraRecoilX { get; set; } // For actual recoil pattern. This will judge how much higher your camera will go while shooting.
+
+    //public float AdditionalCameraRecoilY { get; set; } // This will be how much horizontal recoil will be applied to the camera.
+
+    // ======================================================================================================== //
+
+    // Here's the struct.
+    public CameraRecoil m_AccumulatedRecoil = new CameraRecoil();
 
     public float m_DesiredX = 0; // Made public because I'm moving everything to the Weapon.cs script but I still need to access it there.
 
@@ -119,9 +126,7 @@ public class HostController : InputController
     private UIManager m_UIManager;
     public GameObject m_HUD;
 
-    
 
-    
 
     public DrainAbility m_DrainAbility;
     public DeathIncarnateAbility m_DeathIncarnateAbility;
@@ -457,8 +462,8 @@ public class HostController : InputController
         m_XRotation = Mathf.Clamp(m_XRotation, -90f, 90f);
 
         // Perform the rotations
-        m_Orientation.transform.localRotation = Quaternion.Euler(0, m_DesiredX - AdditionalCameraRecoilY, 0);
-        m_Camera.transform.localRotation = Quaternion.Euler(Mathf.Clamp((m_XRotation - AdditionalCameraRecoilX - AdditionalRecoilRotation.x), -90f, 90f), 0.0f - AdditionalRecoilRotation.y, 0 - AdditionalRecoilRotation.z);
+        m_Orientation.transform.localRotation = Quaternion.Euler(0, m_DesiredX - m_AccumulatedRecoil.accumulatedPatternRecoilY, 0);
+        m_Camera.transform.localRotation = Quaternion.Euler(Mathf.Clamp((m_XRotation - m_AccumulatedRecoil.accumulatedPatternRecoilX - m_AccumulatedRecoil.accumulatedVisualRecoil.x), -90f, 90f), 0.0f - m_AccumulatedRecoil.accumulatedVisualRecoil.y, 0 - m_AccumulatedRecoil.accumulatedVisualRecoil.z);
 
     }
 

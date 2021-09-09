@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -40,38 +39,37 @@ public class HostController : InputController
     public GameObject m_HUD;
     private UIManager m_UIManager;
 
-    public float ShootingDuration { get; set; } = 1; // time tracking since started shooting.
+    //public float ShootingDuration { get; set; } = 1; // time tracking since started shooting.
     
     public float m_XRotation = 0;   // Made public because nowadays the Weapon.cs script needs to access it.
 
     public Vector3 LookInput { get; private set; }
 
-    [HideInInspector]
-    public bool m_IsAiming = false;
+    //[HideInInspector]
+    //public bool m_IsAiming = false;
 
     
 
     public float m_DesiredX = 0; // Made public because I'm moving everything to the Weapon.cs script but I still need to access it there.
 
-    public Vector3 PreviousCameraRotation { get; private set; } // Stores rotation when the player just starts shooting. Okay, so because comparing euler angles is a terrible idea due to there being multiple numbers
-                                                                // that can describe the same thing, this variable now stores the forward vector before shooting. The idea being that I can use the dot product to
-                                                                // compare the difference in angle between the old forward vector and the new forward vector.
-
-    public Vector3 CurrentCamRot { get; private set; }          // Like I mentioned above, this variable will be storing the current forward vector to be used when recovering from recoil.
+    //public Vector3 PreviousCameraRotation { get; private set; } // Stores rotation when the player just starts shooting. Okay, so because comparing euler angles is a terrible idea due to there being multiple numbers
+    //                                                            // that can describe the same thing, this variable now stores the forward vector before shooting. The idea being that I can use the dot product to
+    //                                                            // compare the difference in angle between the old forward vector and the new forward vector.
+    //
+    //public Vector3 CurrentCamRot { get; private set; }          // Like I mentioned above, this variable will be storing the current forward vector to be used when recovering from recoil.
     // ======================================================= //
 
     public CameraRecoil m_AccumulatedRecoil = new CameraRecoil();
     public MovementInfo m_MovInfo = new MovementInfo();
+    public CombatInfo m_CombatInfo = new CombatInfo();
 
-    [HideInInspector]
-    public Vector3 m_PreviousOrientationVector = Vector3.zero;
-    [HideInInspector]
-    public float m_PreviousXCameraRot = 0;
+    //[HideInInspector]
+    //public Vector3 m_PreviousOrientationVector = Vector3.zero;
+    //[HideInInspector]
+    //public float m_PreviousXCameraRot = 0;
 
 
     
-    
-
     public DrainAbility m_DrainAbility;
     public DeathIncarnateAbility m_DeathIncarnateAbility;
 
@@ -104,7 +102,7 @@ public class HostController : InputController
 
 
         // Just for debugging purposes. This variable is only used in the CustomDebugUI script.
-        CurrentCamRot = m_Camera.transform.forward;
+        m_CombatInfo.m_camForward = m_Camera.transform.forward;
 
 
         // ================ NOTE ================ //
@@ -248,7 +246,7 @@ public class HostController : InputController
 
             // Experimental thing I'm trying.
             // I will store the original camera rotation when they first start shooting that way I can go back to this rotation when they recover from recoil.
-            PreviousCameraRotation = m_Camera.transform.forward;
+            m_CombatInfo.m_PrevCamForward = m_Camera.transform.forward;
             GetCurrentWeapon().SetFireTime();
 
         }
@@ -257,7 +255,7 @@ public class HostController : InputController
             GetCurrentWeapon().m_IsFiring = false;
 
             // Reset held counter happens regardless.
-            ShootingDuration = 0.0f;
+            m_CombatInfo.m_ShootingDuration = 0.0f;
         }
     }
 
@@ -351,8 +349,8 @@ public class HostController : InputController
         if (value.performed && !GetCurrentWeapon().m_IsRecoilTesting)
         {
             GetCurrentWeapon().m_IsRecoilTesting = true;
-            m_PreviousOrientationVector = m_Orientation.transform.eulerAngles;
-            m_PreviousXCameraRot = m_XRotation;
+            m_CombatInfo.m_PrevOrientationRot = m_Orientation.transform.eulerAngles;
+            m_CombatInfo.m_PrevXRot = m_XRotation;
 
             GetCurrentWeapon().SetFireTime(); // Starting fire counter.
         }
@@ -801,7 +799,7 @@ public class HostController : InputController
         Color cache = Gizmos.color;
         // ================= Camera Forward Vectors For Recoil Recovery ================= //
         Vector2 modifiedCurrent = new Vector2(m_Camera.transform.forward.y, 1);
-        Vector2 modifiedPrevious = new Vector2(PreviousCameraRotation.y, 1);
+        Vector2 modifiedPrevious = new Vector2(m_CombatInfo.m_PrevCamForward.y, 1);
 
         // Debug Lines:
         // When the dot product is close to 1, the two lines will be GREEN.
@@ -812,7 +810,7 @@ public class HostController : InputController
 
         if (dot < 0.9999f)
         {
-            if (PreviousCameraRotation.y > CurrentCamRot.y)
+            if (m_CombatInfo.m_PrevCamForward.y > m_CombatInfo.m_camForward.y)
                 Gizmos.color = Color.magenta;
             else
                 Gizmos.color = Color.yellow;
@@ -823,7 +821,7 @@ public class HostController : InputController
         // Trying to create the same forward vectors but only caring about x and z.
 
         Gizmos.DrawLine(m_Camera.transform.position, m_Camera.transform.position + m_Camera.transform.forward * 100);  // Current forward vector.
-        Gizmos.DrawLine(m_Camera.transform.position, m_Camera.transform.position + PreviousCameraRotation * 100);    // Forward vector when they first clicked the fire trigger.
+        Gizmos.DrawLine(m_Camera.transform.position, m_Camera.transform.position + m_CombatInfo.m_PrevCamForward * 100);    // Forward vector when they first clicked the fire trigger.
 
         Gizmos.color = cache;
 

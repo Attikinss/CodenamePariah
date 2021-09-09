@@ -164,14 +164,9 @@ MonoBehaviour:
   m_EnableDebug: 1
   m_Orientation: {fileID: 981726636721566023}
   m_Inventory: {fileID: 8887062762260392315}
-  m_XRotation: 0
-  m_IsAiming: 0
-  m_DesiredX: 0
-  m_CurrentMoveSpeed: 0
-  m_IsMoving: 0
-  m_PreviousOrientationVector: {x: 0, y: 0, z: 0}
-  m_PreviousXCameraRot: 0
   m_HUD: {fileID: 4788248131841111902}
+  m_XRotation: 0
+  m_DesiredX: 0
   m_DrainAbility:
     damage: 2
     restore: 2
@@ -1624,7 +1619,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  m_RecoilRecoveryModifier: 0
+  m_RecoilRecoveryModifier: 1
 --- !u!114 &8887062761945131678
 MonoBehaviour:
   m_ObjectHideFlags: 0

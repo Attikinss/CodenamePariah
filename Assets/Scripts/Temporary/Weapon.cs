@@ -307,10 +307,12 @@ public class Weapon : MonoBehaviour
             {
                 // Do nothing / reload automatically
                 if (!ReserveAmmoEmpty())
-                { 
+                {
+                    CombatInfo combatInfo = m_Controller.m_CombatInfo;
+
                     StartCoroutine(Reload());
                     // To prevent recoil from affecting player while reloading, we must.
-                    m_Controller.ShootingDuration = 0;
+                    combatInfo.m_ShootingDuration = 0;
                     
                     //m_IsFiring = false;
                 }
@@ -323,9 +325,10 @@ public class Weapon : MonoBehaviour
     public void StartReload()
     {
         if (!PrimaryAmmoFull() && !ReserveAmmoEmpty() && !m_IsReloading)
-        { 
+        {
+            CombatInfo combatInfo = m_Controller.m_CombatInfo;
             StartCoroutine(Reload());
-            m_Controller.ShootingDuration = 0;
+            combatInfo.m_ShootingDuration = 0;
 
             
         }
@@ -427,6 +430,7 @@ public class Weapon : MonoBehaviour
     private void UpdateRecoilRecovery()
     {
         CameraRecoil cameraRecoil = m_Controller.m_AccumulatedRecoil;
+        CombatInfo combatInfo = m_Controller.m_CombatInfo;
 
         if (cameraRecoil.accumulatedPatternRecoilX > 0) // We only want to decrement AdditionCameraRecoilX if it has accumuluated recoil still in it.
         {
@@ -435,8 +439,8 @@ public class Weapon : MonoBehaviour
             // build up to a high number and when the player stops shooting, the recoil will take a long time to get back to 0.
 
             // An experimental method I'd like to try is to either decrease it back to 0, or until the camera rotation is back to where it when they just started shooting.
-            Vector2 currentCamX = new Vector2(m_Controller.CurrentCamRot.y, 1);
-            Vector2 previousCamX = new Vector2(m_Controller.PreviousCameraRotation.y, 1);          // I know I'm using the new keyword here and that's bad. But for now I'm trying to see if this system will work.
+            Vector2 currentCamX = new Vector2(combatInfo.m_camForward.y, 1);
+            Vector2 previousCamX = new Vector2(combatInfo.m_PrevCamForward.y, 1);          // I know I'm using the new keyword here and that's bad. But for now I'm trying to see if this system will work.
             float dot = Vector3.Dot(currentCamX.normalized, previousCamX.normalized);
             if (dot < 0.9999f || dot > 1.0001f) // Such a small difference in numbers still gives quite a generous margin for error.
             {
@@ -446,7 +450,7 @@ public class Weapon : MonoBehaviour
                 // Or if the gun is already below the previous y component, we just leave the gun alone because they've over compensated for the recoil.
 
                 // If previous rotation's y is greater, it means they are looking further down then when they started firing.
-                if (m_Controller.PreviousCameraRotation.y > m_Controller.CurrentCamRot.y)
+                if (combatInfo.m_PrevCamForward.y > combatInfo.m_camForward.y)
                 {
                     // We want to incorporate the additional camera recoil into the rotation of the camera, that way we can set the variable to 0 without worrying that later we will be moving the camera downwards.
 
@@ -626,10 +630,12 @@ public class Weapon : MonoBehaviour
             }
             else if (m_IsTestResting && m_RecoilTestCounter >= m_RecoilTestRestTime) // This means were now counting the rest time.
             {
+                CombatInfo combatInfo = m_Controller.m_CombatInfo;
+
                 m_IsTestResting = false;
                 m_RecoilTestCounter = 0.0f;
-                m_Controller.m_XRotation = m_Controller.m_PreviousXCameraRot; // this might be unnessessary since the guns camera rotation goes back down through the recoil recovery system.
-                m_Controller.m_Orientation.transform.eulerAngles = m_Controller.m_PreviousOrientationVector;
+                m_Controller.m_XRotation = combatInfo.m_PrevXRot; // this might be unnessessary since the guns camera rotation goes back down through the recoil recovery system.
+                m_Controller.m_Orientation.transform.eulerAngles = combatInfo.m_PrevOrientationRot;
 
                 SetFireTime(); // This sequence of firing should be reset. It normally gets cancelled on mouse button up after firing.
             }

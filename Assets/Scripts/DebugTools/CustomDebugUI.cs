@@ -126,6 +126,7 @@ public class CustomDebugUI : MonoBehaviour
         if (m_playerController)
         {
             MovementInfo movInfo = m_playerController.m_MovInfo;
+            CombatInfo combatInfo = m_playerController.m_CombatInfo;
 
             GraphicalDebugger.Assign<bool>(movInfo.m_IsGrounded, "IsGrounded", m_isGroundedText);
             GraphicalDebugger.Assign<float>(movInfo.m_CurrentMoveSpeed, "MoveSpeed", m_moveSpeedText);
@@ -157,12 +158,12 @@ public class CustomDebugUI : MonoBehaviour
 
             GraphicalDebugger.Assign<float>(Time.time - m_playerController.GetCurrentWeapon().m_FireStartTime, "FireHeldCounter", m_FireHeldCounterText);
 
-            GraphicalDebugger.Assign<float>(m_playerController.CurrentCamRot.x, "CurrentCamXRot", m_CurrentCamXRotText);
-            GraphicalDebugger.Assign<float>(m_playerController.PreviousCameraRotation.x, "PreviousCamXRot", m_PreviousCamXRotText);
+            GraphicalDebugger.Assign<float>(combatInfo.m_camForward.x, "CurrentCamXRot", m_CurrentCamXRotText);
+            GraphicalDebugger.Assign<float>(combatInfo.m_PrevCamForward.x, "PreviousCamXRot", m_PreviousCamXRotText);
 
             // I know it's super inefficient to recalculate the dot product here but this wont be in the builds of the game so I think its okay, plus it saved me like 1 minute.
-            Vector3 modifiedCurrent = new Vector2(m_playerController.CurrentCamRot.y, 1);
-            Vector3 modifiedPrevious = new Vector2(m_playerController.PreviousCameraRotation.y, 1);
+            Vector3 modifiedCurrent = new Vector2(combatInfo.m_camForward.y, 1);
+            Vector3 modifiedPrevious = new Vector2(combatInfo.m_PrevCamForward.y, 1);
             float dot = Vector2.Dot(modifiedCurrent.normalized, modifiedPrevious.normalized);
             GraphicalDebugger.Assign<float>(dot, "CameraDotProduct", m_CameraRecoilDotProductText);
         }

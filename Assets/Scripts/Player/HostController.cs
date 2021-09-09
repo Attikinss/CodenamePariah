@@ -116,10 +116,10 @@ public class HostController : InputController
                 m_DrainAbility.drainCounter += Time.deltaTime;
                 if (m_DrainAbility.drainCounter >= m_DrainAbility.drainInterval)
                 {
+                    m_Inventory.Owner?.PariahController.AddHealth(m_DrainRestore);
                     m_DrainAbility.drainCounter = 0.0f;
                     m_Inventory.TakeDamage(m_DrainAbility.damage);
                 }
-
             }
         }
     }
@@ -552,6 +552,8 @@ public class HostController : InputController
         // the player can shoot after swapping weapons.
         cache.gameObject.SetActive(false);
         m_Inventory.m_CurrentWeapon.gameObject.SetActive(true);
+
+        m_UIManager?.UpdateWeaponUI(m_Inventory.m_CurrentWeapon);
     }
 
     //private Vector3 WeaponBob()

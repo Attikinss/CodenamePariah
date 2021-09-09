@@ -24,17 +24,6 @@ public class UIManager : MonoBehaviour
     [HideInInspector]
     public bool m_IsRifle = true;
 
-    // this is ultra temporary dont look.
-    public Weapon m_Rifle;
-    public Weapon m_Pistol;
-
-
-    // again.. another temporary bool to allow for hiding the HUD. This will be static since it doesn't need to be unique to each instance.
-    public static bool s_Hide = false;
-    // The reason why there is so many temporary things is because this whole system will be revamped soon.
-
-    public Canvas m_Canvas;
-
     //private static UIManager s_Instance;
     //private void Awake()
     //{
@@ -81,11 +70,10 @@ public class UIManager : MonoBehaviour
         }
     }
 
-
     /// <summary>Disables the last magazine gameObject.</summary>
     public void DisableMagazine()
     {
-        if(m_IsRifle)
+        if (m_IsRifle)
             m_Magazines[m_Magazines.Count - 1].gameObject.SetActive(false);
         else
             m_PistolMagazines[m_PistolMagazines.Count - 1].gameObject.SetActive(false);
@@ -177,10 +165,10 @@ public class UIManager : MonoBehaviour
     public void ModuloEqualsZero(int magazineSize)
     {
         DisableMagazine();
+
         for (int i = 0; i < magazineSize; i++)
-        {
             EnableBulletSprite(i);
-        }
+
         RemoveMagazine();
     }
 
@@ -194,83 +182,51 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < magazineSize; i++)
         {
             if (FirstMagBulletSpriteActive(i) == false)
-            {
                 currentMagazineMissingAmmoCount++;
-            }
+
             if (LastMagBulletSpriteActive(i) == false)
-            {
                 lastMagazineMissingAmmoCount++;
-            }
         }
 
         for (int i = 0; i < magazineSize; i++)
-        {
             EnableBulletSprite(i);
-        }
-        Debug.Log(magazineSize - (currentMagazineMissingAmmoCount + lastMagazineMissingAmmoCount) - 1);
+
+        //Debug.Log(magazineSize - (currentMagazineMissingAmmoCount + lastMagazineMissingAmmoCount) - 1);
         if (magazineSize - (currentMagazineMissingAmmoCount + lastMagazineMissingAmmoCount) - 1 >= 0)
         {
             for (int i = magazineSize - 1; i > magazineSize - (currentMagazineMissingAmmoCount + lastMagazineMissingAmmoCount) - 1; i--)
-            {
                 DisableBulletSpriteInLastMag(i);
-            }
         }
         else
         {
             DisableMagazine();
             RemoveMagazine();
+
             int excessBullets = lastMagazineMissingAmmoCount + currentMagazineMissingAmmoCount - magazineSize;
-            Debug.Log(excessBullets);
+            //Debug.Log(excessBullets);
+
             for (int i = magazineSize - 1; i > magazineSize - (excessBullets) - 1; i--)
-            {
                 DisableBulletSpriteInLastMag(i);
-            }
         }
     }
 
-    public void DisplayInventory()
+    public void UpdateWeaponUI(Weapon weapon)
     {
-        if (s_Hide)
-            m_Canvas.enabled = false;
-        else
-        {
-            m_Canvas.enabled = true;
+        if (!m_AmmoDisplay) return;
 
-            if (m_IsRifle)
-            { 
-                if (m_Rifle.TotalAmmoEmpty())
-                {
-                    DisableMagazine();
-                }
+        if (weapon.TotalAmmoEmpty())
+            DisableMagazine();
 
-                m_AmmoWarning.text = "";
-                if (m_Rifle.TotalAmmoEmpty())
-                {
-                    m_AmmoWarning.text = "";
-                    m_AmmoWarning.text = "No Ammo";
-                }
-            }
-            // ============ TEMPORARY CHECK. ============ //
-            // This check will be removed very soon. Just here to get a build out quickly.
-            else
-            { 
-                if (m_Pistol.TotalAmmoEmpty())
-                {
-                    DisableMagazine();
-                }
+        m_AmmoWarning?.SetText("");
+        if (weapon.TotalAmmoEmpty())
+            m_AmmoWarning?.SetText("No Ammo");
 
-                m_AmmoWarning.text = "";
-                if (m_Pistol.TotalAmmoEmpty())
-                {
-                    m_AmmoWarning.text = "";
-                    m_AmmoWarning.text = "No Ammo";
-                }
-            }
+        int currentRounds = weapon.GetRoundsInMagazine();
+        int reserveRounds = weapon.GetReserve();
 
-            m_AmmoDisplay.text = "";
-
-            m_AmmoDisplay.text += string.Format("{0:D2} / {1:D2}", GetComponentInChildren<Weapon>().GetRoundsInMagazine(), GetComponentInChildren<Weapon>().GetReserve());//set a gameobject in inspector to avoid getcomponent
-        }
-
+        string first = currentRounds >= 10 ? currentRounds.ToString() : $"0{currentRounds}";
+        string second = reserveRounds >= 10 ? reserveRounds.ToString() : $"0{reserveRounds}";
+        
+        m_AmmoDisplay.SetText($"{first} / {second}");
     }
 }

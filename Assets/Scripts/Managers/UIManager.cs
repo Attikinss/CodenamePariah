@@ -24,6 +24,9 @@ public class UIManager : MonoBehaviour
     [HideInInspector]
     public bool m_IsRifle = true;
 
+    public static bool s_Hide = false;
+    public Canvas m_Canvas;
+
     //private static UIManager s_Instance;
     //private void Awake()
     //{
@@ -212,6 +215,12 @@ public class UIManager : MonoBehaviour
 
     public void UpdateWeaponUI(Weapon weapon)
     {
+        if (s_Hide)
+            m_Canvas.enabled = false;
+        else
+            m_Canvas.enabled = true;
+
+
         if (!m_AmmoDisplay) return;
 
         if (weapon.TotalAmmoEmpty())

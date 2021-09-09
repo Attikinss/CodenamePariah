@@ -440,11 +440,11 @@ public class Weapon : MonoBehaviour
 
             // An experimental method I'd like to try is to either decrease it back to 0, or until the camera rotation is back to where it when they just started shooting.
             Vector2 currentCamX = Vector2.one;
-            currentCamX.x = m_Controller.CurrentCamRot.y;
+            currentCamX.x = combatInfo.m_camForward.y;
 
             // I know I'm using the new keyword here and that's bad. But for now I'm trying to see if this system will work.
             Vector2 previousCamX = Vector2.one;
-            previousCamX.x = m_Controller.PreviousCameraRotation.y;
+            previousCamX.x = combatInfo.m_PrevCamForward.y;
 
 
             float dot = Vector3.Dot(currentCamX.normalized, previousCamX.normalized);

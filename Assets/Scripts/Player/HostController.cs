@@ -116,7 +116,7 @@ public class HostController : InputController
                 m_DrainAbility.drainCounter += Time.deltaTime;
                 if (m_DrainAbility.drainCounter >= m_DrainAbility.drainInterval)
                 {
-                    m_Inventory.Owner?.PariahController.AddHealth(m_DrainRestore);
+                    m_Inventory.Owner?.PariahController.AddHealth(m_DrainAbility.restore);
                     m_DrainAbility.drainCounter = 0.0f;
                     m_Inventory.TakeDamage(m_DrainAbility.damage);
                 }
@@ -373,7 +373,10 @@ public class HostController : InputController
     public void OnHUDToggle(InputAction.CallbackContext value)
     {
         if (value.performed)
+        { 
             UIManager.s_Hide = !UIManager.s_Hide;
+            m_UIManager?.UpdateWeaponUI(m_Inventory.m_CurrentWeapon);
+        }
     }
 
     // ======================================================================================================================================== //

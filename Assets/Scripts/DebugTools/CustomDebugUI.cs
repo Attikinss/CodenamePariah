@@ -132,7 +132,7 @@ public class CustomDebugUI : MonoBehaviour
             GraphicalDebugger.Assign<float>(movInfo.m_CurrentMoveSpeed, "MoveSpeed", m_moveSpeedText);
             GraphicalDebugger.Assign<bool>(movInfo.m_IsMoving, "IsMoving", m_isMovingText);
             GraphicalDebugger.Assign<float>(m_playerController.Rigidbody.velocity.y, "YVelocity", m_YVelocityText);
-            GraphicalDebugger.Assign<Vector3>(movInfo.m_CacheMovDir, "CacheMovDir", m_CacheMovDirText);
+            GraphicalDebugger.Assign<Vector3>(movInfo.m_CacheMovDirection, "CacheMovDir", m_CacheMovDirText);
             GraphicalDebugger.Assign<float>(movInfo.MovementInput.x, "XAxis", m_XAxisText);
             GraphicalDebugger.Assign<float>(movInfo.MovementInput.y, "ZAxis", m_ZAxisText);
 

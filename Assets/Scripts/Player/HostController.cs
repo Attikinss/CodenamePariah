@@ -29,7 +29,6 @@ public class HostController : InputController
     public float m_SlideDuration = 0.75f;
     public float m_CameraSlideHeight = -0.5f;
 
-    
     [Header("Other References")]
     [SerializeField]
     private bool m_EnableDebug = false;
@@ -38,51 +37,30 @@ public class HostController : InputController
     public Rigidbody Rigidbody { get; private set; }
     public GameObject m_HUD;
     private UIManager m_UIManager;
-
-    //public float ShootingDuration { get; set; } = 1; // time tracking since started shooting.
     
-    public float m_XRotation = 0;   // Made public because nowadays the Weapon.cs script needs to access it.
 
     public Vector3 LookInput { get; private set; }
-
-    //[HideInInspector]
-    //public bool m_IsAiming = false;
-
-    
-
+    public float m_XRotation = 0;   // Made public because nowadays the Weapon.cs script needs to access it.
     public float m_DesiredX = 0; // Made public because I'm moving everything to the Weapon.cs script but I still need to access it there.
-
-    //public Vector3 PreviousCameraRotation { get; private set; } // Stores rotation when the player just starts shooting. Okay, so because comparing euler angles is a terrible idea due to there being multiple numbers
-    //                                                            // that can describe the same thing, this variable now stores the forward vector before shooting. The idea being that I can use the dot product to
-    //                                                            // compare the difference in angle between the old forward vector and the new forward vector.
-    //
-    //public Vector3 CurrentCamRot { get; private set; }          // Like I mentioned above, this variable will be storing the current forward vector to be used when recovering from recoil.
-    // ======================================================= //
 
     public CameraRecoil m_AccumulatedRecoil = new CameraRecoil();
     public MovementInfo m_MovInfo = new MovementInfo();
     public CombatInfo m_CombatInfo = new CombatInfo();
 
-    //[HideInInspector]
-    //public Vector3 m_PreviousOrientationVector = Vector3.zero;
-    //[HideInInspector]
-    //public float m_PreviousXCameraRot = 0;
-
-
-    
     public DrainAbility m_DrainAbility;
     public DeathIncarnateAbility m_DeathIncarnateAbility;
 
 	private void Awake()
 	{
-        m_UIManager = GetComponent<UIManager>();
-	}
-	private void Start()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-        Rigidbody = GetComponent<Rigidbody>();
-    }
+        m_AccumulatedRecoil = new CameraRecoil();
+        m_MovInfo = new MovementInfo();
+        m_CombatInfo = new CombatInfo();
 
+        m_UIManager = GetComponent<UIManager>();
+        Rigidbody = GetComponent<Rigidbody>();
+
+        Cursor.lockState = CursorLockMode.Locked;
+	}
     private void Update()
     {
         if (!m_Active) return;
@@ -101,7 +79,7 @@ public class HostController : InputController
         m_MovInfo.m_CurrentMoveSpeed = Rigidbody.velocity.magnitude;
 
 
-        // Just for debugging purposes. This variable is only used in the CustomDebugUI script.
+        // Just for debugging purposes. This variable is only used in the CustomDebugUI script. - Not true anymore, apparently I am using it now ._.
         m_CombatInfo.m_camForward = m_Camera.transform.forward;
 
 
@@ -198,12 +176,12 @@ public class HostController : InputController
 
             if (m_MovInfo.m_IsGrounded)
             {
-                m_MovInfo.m_CacheMovDir = direction;
+                m_MovInfo.m_CacheMovDirection = direction;
                 Rigidbody.velocity = direction;
             }
             else if (!m_MovInfo.m_IsGrounded && !m_MovInfo.m_HasDoubleJumped)
             {
-                m_MovInfo.m_CacheMovDir = direction;
+                m_MovInfo.m_CacheMovDirection = direction;
                 Rigidbody.velocity = direction;
 
                 // Have to tick m_HasDoubleJumped to false;
@@ -412,7 +390,7 @@ public class HostController : InputController
     private void Move(Vector2 input)
     {
         // Preserves m_Rigidbody's y velocity.
-        Vector3 direction = m_MovInfo.m_CacheMovDir;
+        Vector3 direction = m_MovInfo.m_CacheMovDirection;
         if (m_MovInfo.m_IsGrounded/* && !m_IsMoving*/)
         {
             //direction.y = 0;
@@ -441,14 +419,14 @@ public class HostController : InputController
             Vector3 velocityTowardsSurface = Vector3.Dot(Rigidbody.velocity, m_MovInfo.m_GroundNormal) * m_MovInfo.m_GroundNormal;
             direction -= velocityTowardsSurface;
         }
-        m_MovInfo.m_CacheMovDir = direction;
+        m_MovInfo.m_CacheMovDirection = direction;
 
         // Ensure the slide will never make the player move vertically.
         m_MovInfo.m_CacheSlideMove.y = 0;
 
 
         // Making sure angular velocity isn't a problem.
-        Rigidbody.velocity = m_MovInfo.m_CacheMovDir + m_MovInfo.m_CacheSlideMove;
+        Rigidbody.velocity = m_MovInfo.m_CacheMovDirection + m_MovInfo.m_CacheSlideMove;
         //Rigidbody.angularVelocity = Vector3.zero;
 
 
@@ -465,12 +443,12 @@ public class HostController : InputController
 
 
 
-        Vector3 currentVel = m_MovInfo.m_CacheMovDir;
+        Vector3 currentVel = m_MovInfo.m_CacheMovDirection;
         Vector3 desiredVel = CalculateMoveDirection(input.x, input.y, m_MovementSpeed);
         
 
         Vector3 requiredChange = desiredVel - currentVel;
-        m_MovInfo.m_CacheMovDir += requiredChange * (m_MovInfo.m_IsGrounded ? m_GroundAcceleration : m_AirAcceleration);
+        m_MovInfo.m_CacheMovDirection += requiredChange * (m_MovInfo.m_IsGrounded ? m_GroundAcceleration : m_AirAcceleration);
 
         Telemetry.TracePosition("Host-Movement", transform.position, 0.05f, 150);
     }
@@ -500,10 +478,10 @@ public class HostController : InputController
         //xMov.y = 0;
         //zMov.y = 0;
 
-        /*Vector3 */m_MovInfo.moveDir = ((xMov + zMov).normalized * speedMultiplier * Time.fixedDeltaTime) /*+ Vector3.up * Rigidbody.velocity.y*/; // i don't know why this line of code was there but without it
+        /*Vector3 */m_MovInfo.m_MoveDirection = ((xMov + zMov).normalized * speedMultiplier * Time.fixedDeltaTime) /*+ Vector3.up * Rigidbody.velocity.y*/; // i don't know why this line of code was there but without it
                                                                                                                                           // it works better.
 
-        return m_MovInfo.moveDir;
+        return m_MovInfo.m_MoveDirection;
     }
 
     private bool CheckGrounded()
@@ -778,10 +756,10 @@ public class HostController : InputController
         Gizmos.color = defaultColour;
 
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position + Vector3.up, transform.position + new Vector3(-m_MovInfo.m_CacheMovDir.x, m_MovInfo.m_CacheMovDir.y, -m_MovInfo.m_CacheMovDir.z));
+        Gizmos.DrawLine(transform.position + Vector3.up, transform.position + new Vector3(-m_MovInfo.m_CacheMovDirection.x, m_MovInfo.m_CacheMovDirection.y, -m_MovInfo.m_CacheMovDirection.z));
 
         Gizmos.color = Color.green;
-        Gizmos.DrawLine(transform.position + Vector3.up, transform.position + m_MovInfo.m_CacheMovDir);
+        Gizmos.DrawLine(transform.position + Vector3.up, transform.position + m_MovInfo.m_CacheMovDirection);
 
         // Trying to visualise true movement forward vector.
         Gizmos.color = Color.cyan;

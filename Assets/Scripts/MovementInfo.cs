@@ -2,16 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class MovementInfo
 {
 	// Input Related
+	[ReadOnly]
 	public Vector2 MovementInput = Vector3.zero;
 
 	// General Movement
 	[ReadOnly]
 	public bool m_IsGrounded;
 	[ReadOnly]
-	public Vector3 m_CacheMovDir;
+	public Vector3 m_CacheMovDirection;
 	[ReadOnly]
 	public float m_CurrentMoveSpeed = 0;
 	[ReadOnly]
@@ -37,10 +39,14 @@ public class MovementInfo
 
 	// Rigidbody Controller Hackery
 	// Temporary ground normal thing.
+	[ReadOnly]
 	public Vector3 m_GroundNormal = Vector3.zero;
+	[ReadOnly]
 	public Vector3 m_ModifiedRight = Vector3.zero;
+	[ReadOnly]
 	public Vector3 m_ModifiedForward = Vector3.zero;
-	public Vector3 moveDir = Vector3.zero;
+	[ReadOnly]
+	public Vector3 m_MoveDirection = Vector3.zero;
 
 
 	//public bool IsGrounded { get; private set; }

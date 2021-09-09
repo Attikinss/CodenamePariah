@@ -143,15 +143,16 @@ public class Weapon : MonoBehaviour
 
 
     // temporary muzzle flash
-    public VisualEffect m_MuzzleFlash;
+    //public VisualEffect m_MuzzleFlash;
+    public List<VisualEffect> m_MuzzleFlashes;
 
     // bullet casing
-    public ParticleSystem m_BulletCasing;
-
+    //public ParticleSystem m_BulletCasing;
+    public List<ParticleSystem> m_BulletCasings;
 
     // temporary animation reference
-    public Animator m_AssualtRifleAnimator;
-    public Animator m_AssualtRifleArmsAnimator;
+    public List<Animator> m_GunAnimators;
+    public List<Animator> m_ArmsAnimators;
 
 
     // temporary thing to test out semi-automatic weaponry.
@@ -207,7 +208,7 @@ public class Weapon : MonoBehaviour
             UpdateRecoilRecovery();
 
         
-        if (m_IsAiming && !m_IsReloading)
+        if (m_IsAiming && !m_IsReloading && !m_DualWield)
             Aim();
 
         UpdateSway(m_Controller.LookInput.x, m_Controller.LookInput.y);
@@ -249,10 +250,16 @@ public class Weapon : MonoBehaviour
 
 
                 // Play effects.
-                if(m_MuzzleFlash)
-                    m_MuzzleFlash.Play();
-                if (m_BulletCasing)
-                    m_BulletCasing.Play();
+                if (m_MuzzleFlashes.Count > 0)
+                {
+                    for (int i = 0; i < m_MuzzleFlashes.Count; i++)
+                        m_MuzzleFlashes[i].Play();
+                }
+                if (m_BulletCasings.Count > 0)
+                { 
+                    for(int i = 0; i < m_BulletCasings.Count; i++)
+                        m_BulletCasings[i].Play();
+                }
 
                 // Currently gets rid of bullet sprite before UI has fully updated //
                 m_UIManager.DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);
@@ -771,11 +778,21 @@ public class Weapon : MonoBehaviour
 
     private void StartReloadAnimation()
     {
-        if (m_AssualtRifleAnimator && m_AssualtRifleArmsAnimator)
-        { 
-            m_AssualtRifleAnimator.SetTrigger("OnReload");
-            m_AssualtRifleArmsAnimator.SetTrigger("OnReload");
+        if (m_GunAnimators.Count > 0)
+        {
+            for (int i = 0; i < m_GunAnimators.Count; i++)
+            {
+                m_GunAnimators[i].SetTrigger("OnReload");
+            }
         }
+        if (m_ArmsAnimators.Count > 0)
+        {
+            for (int i = 0; i < m_ArmsAnimators.Count; i++)
+            { 
+                m_ArmsAnimators[i].SetTrigger("OnReload");
+            }
+        }
+        
     }
 
     public void ResetReloadAnimation()

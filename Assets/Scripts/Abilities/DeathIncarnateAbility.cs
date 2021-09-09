@@ -35,6 +35,11 @@ public struct DeathIncarnateAbility
 
     // public for now so I can display it on my UI HUD thing.
     public bool deathIncarnateUsed;
+
+
+    // testing couroutines.
+    [HideInInspector]
+    public Coroutine chargeRoutine;
 }
 
 // damage - 100;

@@ -121,8 +121,7 @@ public class HostController : InputController
 
     
 
-    // testing couroutines.
-    Coroutine test = null;
+    
 
     public DrainAbility m_DrainAbility;
     public DeathIncarnateAbility m_DeathIncarnateAbility;
@@ -422,10 +421,10 @@ public class HostController : InputController
     public void OnAbility3(InputAction.CallbackContext value)
     {
         if (value.performed && !m_DeathIncarnateAbility.deathIncarnateUsed)
-            test = StartCoroutine(Ability3Charge());
+            m_DeathIncarnateAbility.chargeRoutine = StartCoroutine(Ability3Charge());
 
         else if (value.canceled)
-            StopCoroutine(test); // When we let go, we stop the couritine to clear the time value in it.
+            StopCoroutine(m_DeathIncarnateAbility.chargeRoutine); // When we let go, we stop the couritine to clear the time value in it.
 
     }
 

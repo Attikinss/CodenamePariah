@@ -175,12 +175,15 @@ MonoBehaviour:
   m_PreviousOrientationVector: {x: 0, y: 0, z: 0}
   m_PreviousXCameraRot: 0
   m_HUD: {fileID: 4788248131841111902}
-  m_DeathIncarnateDamage: 100
-  m_DeathIncarnateRadius: 15
-  m_DeathIncarnateCooldown: 10
-  m_DeathIncarnateDelay: 0.1
-  m_DeathIncarnateRequiredHold: 0.6
-  m_DeathIncarnateUsed: 0
+  m_DrainAbility:
+    deathIncarnateDamage: 100
+    deathIncarnateRadius: 20
+    deathIncarnateCooldown: 5
+    deathIncarnateDelay: 0.25
+    deathIncarnateRequiredHold: 0.75
+    drawingDeathIncarnate: 0
+    deathIncarnatePos: {x: 0, y: 0, z: 0}
+    deathIncarnateUsed: 0
 --- !u!114 &981726636163737741
 MonoBehaviour:
   m_ObjectHideFlags: 0

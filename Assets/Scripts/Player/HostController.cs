@@ -127,27 +127,12 @@ public class HostController : InputController
     private UIManager m_UIManager;
     public GameObject m_HUD;
 
-    // temporary death incarnate ability stuff.
-    public int m_DeathIncarnateDamage = 100;
-    public float m_DeathIncarnateRadius = 10;
-    public float m_DeathIncarnateCooldown = 5;
-    [Tooltip("The time it takes for the ability to begin after activating.")]
-    [Range(0, 5)]
-    public float m_DeathIncarnateDelay = 0.75f;
-    [Tooltip("The required time needed to hold the button before activating the ability.")]
-    [Range(0, 2)]
-    public float m_DeathIncarnateRequiredHold = 0.75f;
-
-    private bool m_DrawingDeathIncarnate = false; // Will be used to draw a sphere for death incarnate for a few seconds after being used.
-    Vector3 m_DeathIncarnatePos = Vector3.zero; // Cached pos of last Death Incarnate.
-
-    // public for now so I can display it on my UI HUD thing.
-    public bool m_DeathIncarnateUsed = false;
+    
 
     // testing couroutines.
     Coroutine test = null;
 
-    public DrainSettings DrainTestSettings;
+    public DrainAbility m_DrainAbility;
 
 	private void Awake()
 	{
@@ -443,7 +428,7 @@ public class HostController : InputController
     // Experimental death incarnate ability thing
     public void OnAbility3(InputAction.CallbackContext value)
     {
-        if (value.performed && !m_DeathIncarnateUsed)
+        if (value.performed && !m_DrainAbility.deathIncarnateUsed)
             test = StartCoroutine(Ability3Charge());
 
         else if (value.canceled)
@@ -749,9 +734,9 @@ public class HostController : InputController
         StartCoroutine(Ability3Draw()); // Start timer for drawing.
 
         // Storing position of time of attack.
-        m_DeathIncarnatePos = m_Orientation.position;
+        m_DrainAbility.deathIncarnatePos = m_Orientation.position;
 
-        m_DeathIncarnateUsed = true;
+        m_DrainAbility.deathIncarnateUsed = true;
         StartCoroutine(Ability3Refresh());
     }
 
@@ -760,7 +745,7 @@ public class HostController : InputController
 		Color cache = Gizmos.color;
 		Gizmos.color = Color.blue;
 
-		Gizmos.DrawWireSphere(m_DeathIncarnatePos, m_DeathIncarnateRadius);
+		Gizmos.DrawWireSphere(m_DrainAbility.deathIncarnatePos, m_DrainAbility.deathIncarnateRadius);
 
 		Gizmos.color = cache;
 	}
@@ -768,19 +753,19 @@ public class HostController : InputController
     IEnumerator Ability3Refresh()
     {
         float time = 0;
-        while (time < m_DeathIncarnateCooldown)
+        while (time < m_DrainAbility.deathIncarnateCooldown)
         {
             time += Time.deltaTime;
             yield return null;
         }
 
-        m_DeathIncarnateUsed = false;
+        m_DrainAbility.deathIncarnateUsed = false;
     }
 	IEnumerator Ability3Charge()
 	{
 		float time = 0.0f;
 
-		while (time < m_DeathIncarnateRequiredHold)
+		while (time < m_DrainAbility.deathIncarnateRequiredHold)
 		{
 			time += Time.deltaTime;
 
@@ -801,29 +786,29 @@ public class HostController : InputController
 	IEnumerator Ability3Delay()
 	{
 		float time = 0.0f;
-		while (time < m_DeathIncarnateDelay)
+		while (time < m_DrainAbility.deathIncarnateDelay)
 		{
 			time += Time.deltaTime;
 			yield return null;
 		}
 
-		Ability3(m_DeathIncarnateRadius, m_DeathIncarnateDamage);
+		Ability3(m_DrainAbility.deathIncarnateRadius, m_DrainAbility.deathIncarnateDamage);
 	}
 	IEnumerator Ability3Draw()
 	{
 		float time = 0.0f;
-		m_DrawingDeathIncarnate = true;
+		m_DrainAbility.drawingDeathIncarnate = true;
 		while (time < 10)
 		{
 			// We'll draw death incarnate for 3 seconds after it was used.
 
-			Debug.Log("Drawing: at " + m_DeathIncarnatePos + " at " + time);
+			Debug.Log("Drawing: at " + m_DrainAbility.deathIncarnatePos + " at " + time);
 
 			time += Time.deltaTime;
 			yield return null;
 		}
 
-		m_DrawingDeathIncarnate = false;
+		m_DrainAbility.drawingDeathIncarnate = false;
 	}
 
     
@@ -913,7 +898,7 @@ public class HostController : InputController
 
 
         // Drawing Ability3 stuff.
-        if (m_DrawingDeathIncarnate)
+        if (m_DrainAbility.drawingDeathIncarnate)
             Ability3Gizmo();
     }
 }

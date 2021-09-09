@@ -36,6 +36,10 @@ public class MovementInfo
 	public Vector3 m_CacheSlideMove = Vector3.zero;
 	[ReadOnly]
 	public float m_SlideCounter = 0;
+	[ReadOnly]
+	public float m_OriginalColliderHeight; // Slides shrink the capsule so here is where we store the original values so we can raise the player back up.
+	[ReadOnly]
+	public Vector3 m_OriginalColliderCenter;
 
 	// Rigidbody Controller Hackery
 	// Temporary ground normal thing.

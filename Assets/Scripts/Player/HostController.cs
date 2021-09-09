@@ -28,6 +28,9 @@ public class HostController : InputController
     public float m_SlideSpeed = 700;
     public float m_SlideDuration = 0.75f;
     public float m_CameraSlideHeight = -0.5f;
+    public Vector3 m_SlideColliderCentre;
+    [Range(0, 2)]
+    public float m_SlideColliderHeight;
 
     [Header("Other References")]
     [SerializeField]
@@ -37,6 +40,7 @@ public class HostController : InputController
     public Rigidbody Rigidbody { get; private set; }
     public GameObject m_HUD;
     private UIManager m_UIManager;
+    private CapsuleCollider m_Collider;
     
 
     public Vector3 LookInput { get; private set; }
@@ -60,6 +64,14 @@ public class HostController : InputController
         Rigidbody = GetComponent<Rigidbody>();
 
         Cursor.lockState = CursorLockMode.Locked;
+
+        // Caching original collider height and center point.
+        m_Collider = GetComponent<CapsuleCollider>();
+        if (m_Collider)
+        {
+            m_MovInfo.m_OriginalColliderCenter = m_Collider.center;
+            m_MovInfo.m_OriginalColliderHeight = m_Collider.height;
+        }
 	}
     private void Update()
     {
@@ -194,6 +206,8 @@ public class HostController : InputController
             Debug.Log("OnSlide called.");
             m_MovInfo.m_SlideDir = value.performed ? m_Orientation.forward : m_MovInfo.m_SlideDir;
             m_MovInfo.m_IsSliding = true;
+
+            TransformCapsuleCollider(m_SlideColliderHeight, m_SlideColliderCentre); // Shrink the collider down. (Temporarily.)
         }
     }
 
@@ -562,11 +576,12 @@ public class HostController : InputController
 			SmoothMove(m_Camera.transform, new Vector3(0, -0.5f, 0), 0.25f);
 
 			m_MovInfo.m_SlideCounter += Time.deltaTime;
-			if (m_MovInfo.m_SlideCounter >= m_SlideDuration)
+			if (m_MovInfo.m_SlideCounter >= m_SlideDuration) // Slide is complete here.
 			{
 				m_MovInfo.m_IsSliding = false;
 				m_MovInfo.m_SlideCounter = 0.0f;
 				m_MovInfo.m_SlideDir = Vector3.zero;
+                TransformCapsuleCollider(m_MovInfo.m_OriginalColliderHeight, m_MovInfo.m_OriginalColliderCenter); // Raise the collider back up.
 			}
 		}
 		else
@@ -574,6 +589,24 @@ public class HostController : InputController
 			SmoothMove(m_Camera.transform, new Vector3(0, 0.5f, 0), 0.25f);
 		}
 	}
+    /// <summary>
+    /// TransformCollider() is used when sliding. It allows us to shrink the height and centre of the capsule collider. 
+    /// </summary>
+    /// <param name="newHeight">The new height of the collider</param>
+    /// <param name="newCentre">The new centre point of the collider</param>
+    private void TransformCapsuleCollider(float newHeight, Vector3 newCentre)
+    {
+        if (m_Collider)
+        {
+            m_Collider.center = newCentre;
+            m_Collider.height = newHeight;
+        }
+        else
+        {
+            Debug.LogWarning("TransformCapsuleCollider() could not find a collider!");
+        }
+
+    }
 
 	private void SmoothMove(Transform obj, Vector3 wantedLocalPos, float t)
     {

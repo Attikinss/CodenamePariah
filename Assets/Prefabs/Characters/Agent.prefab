@@ -161,12 +161,33 @@ MonoBehaviour:
   m_SlideSpeed: 625
   m_SlideDuration: 0.55
   m_CameraSlideHeight: -0.5
+  m_SlideColliderCentre: {x: 0, y: 0.5, z: 0}
+  m_SlideColliderHeight: 1
   m_EnableDebug: 1
   m_Orientation: {fileID: 981726636721566023}
   m_Inventory: {fileID: 8887062762260392315}
   m_HUD: {fileID: 4788248131841111902}
   m_XRotation: 0
   m_DesiredX: 0
+  m_MovInfo:
+    MovementInput: {x: 0, y: 0}
+    m_IsGrounded: 0
+    m_CacheMovDirection: {x: 0, y: 0, z: 0}
+    m_CurrentMoveSpeed: 0
+    m_IsMoving: 0
+    m_HasDoubleJumped: 0
+    m_HasJumped: 0
+    m_JumpCounter: 0
+    m_IsSliding: 0
+    m_SlideDir: {x: 0, y: 0, z: 0}
+    m_CacheSlideMove: {x: 0, y: 0, z: 0}
+    m_SlideCounter: 0
+    m_OriginalColliderHeight: 0
+    m_OriginalColliderCenter: {x: 0, y: 0, z: 0}
+    m_GroundNormal: {x: 0, y: 0, z: 0}
+    m_ModifiedRight: {x: 0, y: 0, z: 0}
+    m_ModifiedForward: {x: 0, y: 0, z: 0}
+    m_MoveDirection: {x: 0, y: 0, z: 0}
   m_DrainAbility:
     damage: 2
     restore: 2

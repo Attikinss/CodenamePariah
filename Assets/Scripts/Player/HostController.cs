@@ -960,4 +960,12 @@ public class HostController : InputController
 
 		m_DrawingDeathIncarnate = false;
 	}
+
+    public void OnDebugToggle(InputAction.CallbackContext value)
+    {
+        if (value.performed)
+        {
+            CustomDebugUI.s_Instance.Toggle();
+        }
+    }
 }

@@ -125,17 +125,19 @@ public class CustomDebugUI : MonoBehaviour
     {
         if (m_playerController)
         {
-            GraphicalDebugger.Assign<bool>(m_playerController.IsGrounded, "IsGrounded", m_isGroundedText);
-            GraphicalDebugger.Assign<float>(m_playerController.m_CurrentMoveSpeed, "MoveSpeed", m_moveSpeedText);
-            GraphicalDebugger.Assign<bool>(m_playerController.m_IsMoving, "IsMoving", m_isMovingText);
+            MovementInfo movInfo = m_playerController.m_MovInfo;
+
+            GraphicalDebugger.Assign<bool>(movInfo.m_IsGrounded, "IsGrounded", m_isGroundedText);
+            GraphicalDebugger.Assign<float>(movInfo.m_CurrentMoveSpeed, "MoveSpeed", m_moveSpeedText);
+            GraphicalDebugger.Assign<bool>(movInfo.m_IsMoving, "IsMoving", m_isMovingText);
             GraphicalDebugger.Assign<float>(m_playerController.Rigidbody.velocity.y, "YVelocity", m_YVelocityText);
-            GraphicalDebugger.Assign<Vector3>(m_playerController.CacheMovDir, "CacheMovDir", m_CacheMovDirText);
+            GraphicalDebugger.Assign<Vector3>(movInfo.m_CacheMovDir, "CacheMovDir", m_CacheMovDirText);
             GraphicalDebugger.Assign<float>(m_playerController.MovementInput.x, "XAxis", m_XAxisText);
             GraphicalDebugger.Assign<float>(m_playerController.MovementInput.y, "ZAxis", m_ZAxisText);
 
-            GraphicalDebugger.Assign<bool>(m_playerController.IsSliding, "IsSliding", m_IsSlidingText);
-            GraphicalDebugger.Assign<Vector3>(m_playerController.SlideDir, "SlideDir", m_SlideDirText);
-            GraphicalDebugger.Assign<float>(m_playerController.SlideCounter, "SlideCounter", m_SlideCounterText);
+            GraphicalDebugger.Assign<bool>(movInfo.m_IsSliding, "IsSliding", m_IsSlidingText);
+            GraphicalDebugger.Assign<Vector3>(movInfo.m_SlideDir, "SlideDir", m_SlideDirText);
+            GraphicalDebugger.Assign<float>(movInfo.m_SlideCounter, "SlideCounter", m_SlideCounterText);
 
 
             CameraRecoil cameraRecoil = m_playerController.m_AccumulatedRecoil;

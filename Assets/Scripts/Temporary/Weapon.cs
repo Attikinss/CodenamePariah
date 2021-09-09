@@ -354,7 +354,7 @@ public class Weapon : MonoBehaviour
         Vector3 localPosition = GetCurrentWeaponTransform().transform.position;
         Vector3 currentWeaponMidPoint = GetCurrentWeaponOriginalPos();
 
-        if (m_Controller.m_IsMoving)
+        if (m_Controller.m_MovInfo.m_IsMoving)
         {
             // Do weapon sway stuff.
             m_SwayTimer += Time.deltaTime;

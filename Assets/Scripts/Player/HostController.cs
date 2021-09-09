@@ -44,24 +44,24 @@ public class HostController : InputController
     // ================== BOOKKEEPING STUFF ================== //
 
     public Vector2 MovementInput { get; private set; }
-    public bool IsGrounded { get; private set; }
-    public Vector3 CacheMovDir { get; private set; }
+    //public bool IsGrounded { get; private set; }
+    //public Vector3 CacheMovDir { get; private set; }
 
     // If this variable was once public and you had set it's value in the inspector, it will still have the value you set in the inspector even if you change its initialization here.
     public float ShootingDuration { get; set; } = 1; // time tracking since started shooting.
     
     public float m_XRotation = 0;   // Made public because nowadays the Weapon.cs script needs to access it.
 
-    private bool m_HasDoubleJumped = false;
+    //private bool m_HasDoubleJumped = false;
 
-    private bool m_HasJumped = false;
+    // private bool m_HasJumped = false;
 
-    public bool IsSliding { get; private set; }
-    public Vector3 SlideDir { get; private set; }
+    //public bool IsSliding { get; private set; }
+    //public Vector3 SlideDir { get; private set; }
 
-    private Vector3 m_CacheSlideMove = Vector3.zero;
+    //private Vector3 m_CacheSlideMove = Vector3.zero;
 
-    public float SlideCounter { get; private set; }
+    //public float SlideCounter { get; private set; }
 
     public Vector3 LookInput { get; private set; }
 
@@ -93,11 +93,11 @@ public class HostController : InputController
     // ======================================================= //
 
 
-    // Exposed variables for debugging.
-    [ReadOnly]
-    public float m_CurrentMoveSpeed;
-    [ReadOnly]
-    public bool m_IsMoving;
+    //// Exposed variables for debugging.
+    //[ReadOnly]
+    //public float m_CurrentMoveSpeed;
+    //[ReadOnly]
+    //public bool m_IsMoving;
 
     
 
@@ -110,13 +110,15 @@ public class HostController : InputController
     Vector3 moveDir = Vector3.zero;
 
     // temporary jump deactivate cooldown. to prevent m_IsJumping from being deactivated as soon as you jump.
-    float m_JumpCounter = 0;
+    //float m_JumpCounter = 0;
+
+    // ====================================================================== NOTE =======================================================================
+    // ============= A bunch of the movement and slide related variables have been commented out because they're going into their own class. =============
+    // ===================================================================================================================================================
+
+    public MovementInfo m_MovInfo = new MovementInfo();
 
 
-
-    
-
-    
     [HideInInspector]
     public Vector3 m_PreviousOrientationVector = Vector3.zero;
     [HideInInspector]
@@ -150,13 +152,13 @@ public class HostController : InputController
         if (GetCurrentWeaponConfig().m_AlwaysFiring) // Doing same here for the reason above.
             GetCurrentWeapon().m_IsFiring = true;
 
-        IsGrounded = CheckGrounded();
+        m_MovInfo.m_IsGrounded = CheckGrounded();
         CalculateGroundNormal();
-        if (IsGrounded)
-            m_HasDoubleJumped = false;
+        if (m_MovInfo.m_IsGrounded)
+            m_MovInfo.m_HasDoubleJumped = false;
         
 
-        m_CurrentMoveSpeed = Rigidbody.velocity.magnitude;
+        m_MovInfo.m_CurrentMoveSpeed = Rigidbody.velocity.magnitude;
 
 
         // Just for debugging purposes. This variable is only used in the CustomDebugUI script.
@@ -168,9 +170,9 @@ public class HostController : InputController
         // for now it's helping fix an issue with walking up ramps and jumping.
         // ====================================== //
 
-        if (m_HasJumped)
+        if (m_MovInfo.m_HasJumped)
         {
-            m_JumpCounter += Time.deltaTime; // how to get around having a timer for something like this?
+            m_MovInfo.m_JumpCounter += Time.deltaTime; // how to get around having a timer for something like this?
         }
 
 
@@ -247,36 +249,36 @@ public class HostController : InputController
 
         if (active)
         {
-            m_HasJumped = true;
+            m_MovInfo.m_HasJumped = true;
 
 
             Vector3 direction = Vector3.up * ControllerMaths.CalculateJumpForce(m_JumpHeight, Rigidbody.mass, m_Gravity);
             direction.x = Rigidbody.velocity.x;
             direction.z = Rigidbody.velocity.z;
 
-            if (IsGrounded)
+            if (m_MovInfo.m_IsGrounded)
             {
-                CacheMovDir = direction;
+                m_MovInfo.m_CacheMovDir = direction;
                 Rigidbody.velocity = direction;
             }
-            else if (!IsGrounded && !m_HasDoubleJumped)
+            else if (!m_MovInfo.m_IsGrounded && !m_MovInfo.m_HasDoubleJumped)
             {
-                CacheMovDir = direction;
+                m_MovInfo.m_CacheMovDir = direction;
                 Rigidbody.velocity = direction;
 
                 // Have to tick m_HasDoubleJumped to false;
-                m_HasDoubleJumped = true;
+                m_MovInfo.m_HasDoubleJumped = true;
             }
         }
     }
 
     public override void OnSlide(InputAction.CallbackContext value)
     {
-        if (value.performed && IsGrounded && m_IsMoving)
+        if (value.performed && m_MovInfo.m_IsGrounded && m_MovInfo.m_IsMoving)
         {
             Debug.Log("OnSlide called.");
-            SlideDir = value.performed ? m_Orientation.forward : SlideDir;
-            IsSliding = true;
+            m_MovInfo.m_SlideDir = value.performed ? m_Orientation.forward : m_MovInfo.m_SlideDir;
+            m_MovInfo.m_IsSliding = true;
         }
     }
 
@@ -391,7 +393,7 @@ public class HostController : InputController
         if (value.performed && !m_Dashing)
         {
             Vector3 forwardDir = m_Camera.transform.forward;
-            if (IsGrounded)
+            if (m_MovInfo.m_IsGrounded)
                 forwardDir = m_Orientation.forward;
             
 
@@ -470,8 +472,8 @@ public class HostController : InputController
     private void Move(Vector2 input)
     {
         // Preserves m_Rigidbody's y velocity.
-        Vector3 direction = CacheMovDir;
-        if (IsGrounded/* && !m_IsMoving*/)
+        Vector3 direction = m_MovInfo.m_CacheMovDir;
+        if (m_MovInfo.m_IsGrounded/* && !m_IsMoving*/)
         {
             //direction.y = 0;
             //direction.y = direction.y;
@@ -484,7 +486,7 @@ public class HostController : InputController
             //direction.y = direction.y;
             //Rigidbody.velocity = new Vector3(Rigidbody.velocity.x, 0, Rigidbody.velocity.z);
         }
-        else if (!IsGrounded)
+        else if (!m_MovInfo.m_IsGrounded)
         {
             Rigidbody.useGravity = true;
 
@@ -494,19 +496,19 @@ public class HostController : InputController
         //{
         //    Rigidbody.useGravity = false;
         //}
-        if (m_GroundNormal != Vector3.zero && !IsGrounded && !m_HasJumped)
+        if (m_GroundNormal != Vector3.zero && !m_MovInfo.m_IsGrounded && !m_MovInfo.m_HasJumped)
         { 
             Vector3 velocityTowardsSurface = Vector3.Dot(Rigidbody.velocity, m_GroundNormal) * m_GroundNormal;
             direction -= velocityTowardsSurface;
         }
-        CacheMovDir = direction;
+        m_MovInfo.m_CacheMovDir = direction;
 
         // Ensure the slide will never make the player move vertically.
-        m_CacheSlideMove.y = 0;
+        m_MovInfo.m_CacheSlideMove.y = 0;
 
 
         // Making sure angular velocity isn't a problem.
-        Rigidbody.velocity = CacheMovDir + m_CacheSlideMove;
+        Rigidbody.velocity = m_MovInfo.m_CacheMovDir + m_MovInfo.m_CacheSlideMove;
         //Rigidbody.angularVelocity = Vector3.zero;
 
 
@@ -517,18 +519,18 @@ public class HostController : InputController
         }
         // ======================================================================== //
 
-        m_IsMoving = false;
+        m_MovInfo.m_IsMoving = false;
         if (input.x != 0 || input.y != 0)
-            m_IsMoving = true;
+            m_MovInfo.m_IsMoving = true;
 
 
 
-        Vector3 currentVel = CacheMovDir;
+        Vector3 currentVel = m_MovInfo.m_CacheMovDir;
         Vector3 desiredVel = CalculateMoveDirection(input.x, input.y, m_MovementSpeed);
         
 
         Vector3 requiredChange = desiredVel - currentVel;
-        CacheMovDir += requiredChange * (IsGrounded ? m_GroundAcceleration : m_AirAcceleration);
+        m_MovInfo.m_CacheMovDir += requiredChange * (m_MovInfo.m_IsGrounded ? m_GroundAcceleration : m_AirAcceleration);
 
         Telemetry.TracePosition("Host-Movement", transform.position, 0.05f, 150);
     }
@@ -573,10 +575,10 @@ public class HostController : InputController
             //Debug.Log(hit.transform.name);
             //m_GroundNormal = hit.normal;          Moved to its own function.
 
-            if (m_JumpCounter >= 0.25f)
+            if (m_MovInfo.m_JumpCounter >= 0.25f)
             {
-                m_JumpCounter = 0.0f;
-                m_HasJumped = false;
+                m_MovInfo.m_JumpCounter = 0.0f;
+                m_MovInfo.m_HasJumped = false;
             }
 
             return true;
@@ -632,24 +634,24 @@ public class HostController : InputController
     private void Slide()
     {
 		// do slide code.
-		Vector3 currentVelocity = m_CacheSlideMove;
-		Vector3 desiredVelocity = SlideDir * m_SlideSpeed * Time.deltaTime;
+		Vector3 currentVelocity = m_MovInfo.m_CacheSlideMove;
+		Vector3 desiredVelocity = m_MovInfo.m_SlideDir * m_SlideSpeed * Time.deltaTime;
 
 		Vector3 requiredChange = desiredVelocity - currentVelocity;
-		m_CacheSlideMove += requiredChange * 0.5f;
+		m_MovInfo.m_CacheSlideMove += requiredChange * 0.5f;
 
-		if (IsSliding)
+		if (m_MovInfo.m_IsSliding)
 		{
             Debug.Log("Sliding");
 			// smoothly rotate backwards. todo
 			SmoothMove(m_Camera.transform, new Vector3(0, -0.5f, 0), 0.25f);
 
-			SlideCounter += Time.deltaTime;
-			if (SlideCounter >= m_SlideDuration)
+			m_MovInfo.m_SlideCounter += Time.deltaTime;
+			if (m_MovInfo.m_SlideCounter >= m_SlideDuration)
 			{
-				IsSliding = false;
-				SlideCounter = 0.0f;
-				SlideDir = Vector3.zero;
+				m_MovInfo.m_IsSliding = false;
+				m_MovInfo.m_SlideCounter = 0.0f;
+				m_MovInfo.m_SlideDir = Vector3.zero;
 			}
 		}
 		else
@@ -836,10 +838,10 @@ public class HostController : InputController
         Gizmos.color = defaultColour;
 
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position + Vector3.up, transform.position + new Vector3(-CacheMovDir.x, CacheMovDir.y, -CacheMovDir.z));
+        Gizmos.DrawLine(transform.position + Vector3.up, transform.position + new Vector3(-m_MovInfo.m_CacheMovDir.x, m_MovInfo.m_CacheMovDir.y, -m_MovInfo.m_CacheMovDir.z));
 
         Gizmos.color = Color.green;
-        Gizmos.DrawLine(transform.position + Vector3.up, transform.position + CacheMovDir);
+        Gizmos.DrawLine(transform.position + Vector3.up, transform.position + m_MovInfo.m_CacheMovDir);
 
         // Trying to visualise true movement forward vector.
         Gizmos.color = Color.cyan;

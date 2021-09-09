@@ -107,15 +107,7 @@ public class HostController : InputController
 
 
 
-    // Temporary host drain ability stuff.
-    // These are integers because the Inventory.cs script has health stored as an integer.
-    public int m_DrainDamage = 10;         // By setting them to the same value, its a 1:1 ratio of drain/restoration.
-    public int m_DrainRestore = 10;
-    [Range(0,2)]
-    public float m_DrainInterval = 0.15f;
-
-    private float m_DrainCounter = 0.0f;
-    private bool m_IsDraining = false;
+    
 
     
     [HideInInspector]
@@ -132,6 +124,7 @@ public class HostController : InputController
     // testing couroutines.
     Coroutine test = null;
 
+    public DrainAbility m_DrainAbility;
     public DeathIncarnateAbility m_DeathIncarnateAbility;
 
 	private void Awake()
@@ -179,16 +172,16 @@ public class HostController : InputController
 
         // While draining, the player is not allowed to interact with their weapons.
         // ;-;
-        if (m_IsDraining)
+        if (m_DrainAbility.isDraining)
         {
             if (m_Inventory.GetHealth() > 0)
             {
                 // timed event. have adjustable drain speed.
-                m_DrainCounter += Time.deltaTime;
-                if (m_DrainCounter >= m_DrainInterval)
+                m_DrainAbility.drainCounter += Time.deltaTime;
+                if (m_DrainAbility.drainCounter >= m_DrainAbility.drainInterval)
                 {
-                    m_DrainCounter = 0.0f;
-                    m_Inventory.TakeDamage(m_DrainDamage);
+                    m_DrainAbility.drainCounter = 0.0f;
+                    m_Inventory.TakeDamage(m_DrainAbility.damage);
                 }
 
             }
@@ -373,11 +366,11 @@ public class HostController : InputController
         // Do ability 2 stuff.
         if (value.performed)
         {
-            m_IsDraining = true;
+            m_DrainAbility.isDraining = true;
         }
         else if (value.canceled)
         {
-            m_IsDraining = false;
+            m_DrainAbility.isDraining = false;
         }
     }
 

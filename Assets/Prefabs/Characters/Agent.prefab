@@ -169,12 +169,15 @@ MonoBehaviour:
   m_DesiredX: 0
   m_CurrentMoveSpeed: 0
   m_IsMoving: 0
-  m_DrainDamage: 2
-  m_DrainRestore: 2
-  m_DrainInterval: 0.15
   m_PreviousOrientationVector: {x: 0, y: 0, z: 0}
   m_PreviousXCameraRot: 0
   m_HUD: {fileID: 4788248131841111902}
+  m_DrainAbility:
+    damage: 2
+    restore: 2
+    drainInterval: 0.15
+    drainCounter: 0
+    isDraining: 0
   m_DeathIncarnateAbility:
     deathIncarnateDamage: 100
     deathIncarnateRadius: 20

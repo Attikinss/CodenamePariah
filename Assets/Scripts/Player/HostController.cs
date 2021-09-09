@@ -161,21 +161,18 @@ public class HostController : InputController
         LookInput = value.ReadValue<Vector2>();
 	}
 
-    public override void OnJump(InputAction.CallbackContext context)
+    public override void OnJump(InputAction.CallbackContext value)
     {
-        bool active = context.performed;
-
-        if (active)
+        if (value.performed)
         {
-            m_MovInfo.m_HasJumped = true;
-
-
             Vector3 direction = Vector3.up * ControllerMaths.CalculateJumpForce(m_JumpHeight, Rigidbody.mass, m_Gravity);
             direction.x = Rigidbody.velocity.x;
             direction.z = Rigidbody.velocity.z;
 
-            if (m_MovInfo.m_IsGrounded)
+            if (/*m_MovInfo.m_IsGrounded*/!m_MovInfo.m_HasJumped)
             {
+                m_MovInfo.m_HasJumped = true;
+
                 m_MovInfo.m_CacheMovDirection = direction;
                 Rigidbody.velocity = direction;
             }

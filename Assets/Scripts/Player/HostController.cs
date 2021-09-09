@@ -37,27 +37,19 @@ public class HostController : InputController
     public Transform m_Orientation;
     public Inventory m_Inventory;
     public Rigidbody Rigidbody { get; private set; }
-    
-    
-  
+    public GameObject m_HUD;
+    private UIManager m_UIManager;
 
-    // ================== BOOKKEEPING STUFF ================== //
-
-    //public Vector2 MovementInput { get; private set; }
-
-    // If this variable was once public and you had set it's value in the inspector, it will still have the value you set in the inspector even if you change its initialization here.
     public float ShootingDuration { get; set; } = 1; // time tracking since started shooting.
     
     public float m_XRotation = 0;   // Made public because nowadays the Weapon.cs script needs to access it.
 
-   
     public Vector3 LookInput { get; private set; }
 
     [HideInInspector]
     public bool m_IsAiming = false;
 
-    // Here's the struct.
-    public CameraRecoil m_AccumulatedRecoil = new CameraRecoil();
+    
 
     public float m_DesiredX = 0; // Made public because I'm moving everything to the Weapon.cs script but I still need to access it there.
 
@@ -68,13 +60,7 @@ public class HostController : InputController
     public Vector3 CurrentCamRot { get; private set; }          // Like I mentioned above, this variable will be storing the current forward vector to be used when recovering from recoil.
     // ======================================================= //
 
-    // Temporary ground normal thing.
-    Vector3 m_GroundNormal = Vector3.zero;
-
-    Vector3 m_ModifiedRight = Vector3.zero;
-    Vector3 m_ModifiedForward = Vector3.zero;
-    Vector3 moveDir = Vector3.zero;
-
+    public CameraRecoil m_AccumulatedRecoil = new CameraRecoil();
     public MovementInfo m_MovInfo = new MovementInfo();
 
     [HideInInspector]
@@ -83,10 +69,8 @@ public class HostController : InputController
     public float m_PreviousXCameraRot = 0;
 
 
-    private UIManager m_UIManager;
-    public GameObject m_HUD;
-
-
+    
+    
 
     public DrainAbility m_DrainAbility;
     public DeathIncarnateAbility m_DeathIncarnateAbility;
@@ -454,9 +438,9 @@ public class HostController : InputController
         //{
         //    Rigidbody.useGravity = false;
         //}
-        if (m_GroundNormal != Vector3.zero && !m_MovInfo.m_IsGrounded && !m_MovInfo.m_HasJumped)
+        if (m_MovInfo.m_GroundNormal != Vector3.zero && !m_MovInfo.m_IsGrounded && !m_MovInfo.m_HasJumped)
         { 
-            Vector3 velocityTowardsSurface = Vector3.Dot(Rigidbody.velocity, m_GroundNormal) * m_GroundNormal;
+            Vector3 velocityTowardsSurface = Vector3.Dot(Rigidbody.velocity, m_MovInfo.m_GroundNormal) * m_MovInfo.m_GroundNormal;
             direction -= velocityTowardsSurface;
         }
         m_MovInfo.m_CacheMovDir = direction;
@@ -497,16 +481,16 @@ public class HostController : InputController
     {
 
         
-        m_ModifiedForward = Vector3.Cross(m_GroundNormal, -m_Orientation.right);
-        m_ModifiedRight = Vector3.Cross(m_GroundNormal, m_Orientation.forward);
+        m_MovInfo.m_ModifiedForward = Vector3.Cross(m_MovInfo.m_GroundNormal, -m_Orientation.right);
+        m_MovInfo.m_ModifiedRight = Vector3.Cross(m_MovInfo.m_GroundNormal, m_Orientation.forward);
 
         Vector3 xMov;
         Vector3 zMov;
 
-        if (m_GroundNormal != Vector3.zero)
+        if (m_MovInfo.m_GroundNormal != Vector3.zero)
         {
-            xMov = m_ModifiedRight * x;
-            zMov = m_ModifiedForward * z;
+            xMov = m_MovInfo.m_ModifiedRight * x;
+            zMov = m_MovInfo.m_ModifiedForward * z;
         }
         else
         { 
@@ -518,10 +502,10 @@ public class HostController : InputController
         //xMov.y = 0;
         //zMov.y = 0;
 
-        /*Vector3 */moveDir = ((xMov + zMov).normalized * speedMultiplier * Time.fixedDeltaTime) /*+ Vector3.up * Rigidbody.velocity.y*/; // i don't know why this line of code was there but without it
+        /*Vector3 */m_MovInfo.moveDir = ((xMov + zMov).normalized * speedMultiplier * Time.fixedDeltaTime) /*+ Vector3.up * Rigidbody.velocity.y*/; // i don't know why this line of code was there but without it
                                                                                                                                           // it works better.
 
-        return moveDir;
+        return m_MovInfo.moveDir;
     }
 
     private bool CheckGrounded()
@@ -555,11 +539,11 @@ public class HostController : InputController
         Ray ray = new Ray(transform.position + Vector3.up, Vector3.down);
         if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckDistance * 1.04f))
         {
-            m_GroundNormal = hit.normal;
+            m_MovInfo.m_GroundNormal = hit.normal;
         }
         else
         {
-            m_GroundNormal = Vector3.zero;
+            m_MovInfo.m_GroundNormal = Vector3.zero;
         }
     }
 
@@ -786,7 +770,7 @@ public class HostController : InputController
 
             // Draw forward direction but relative to ground normal.
             Gizmos.color = Color.black;
-            Gizmos.DrawLine(transform.position, transform.position + (Vector3.Cross(m_GroundNormal, -m_Orientation.right) * 100));
+            Gizmos.DrawLine(transform.position, transform.position + (Vector3.Cross(m_MovInfo.m_GroundNormal, -m_Orientation.right) * 100));
         }
         else
         {
@@ -803,7 +787,7 @@ public class HostController : InputController
 
         // Trying to visualise true movement forward vector.
         Gizmos.color = Color.cyan;
-        Gizmos.DrawLine(transform.position, transform.position + m_ModifiedForward);
+        Gizmos.DrawLine(transform.position, transform.position + m_MovInfo.m_ModifiedForward);
 
 
 

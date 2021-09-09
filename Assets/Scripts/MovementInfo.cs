@@ -35,7 +35,13 @@ public class MovementInfo
 	[ReadOnly]
 	public float m_SlideCounter = 0;
 
-	
+	// Rigidbody Controller Hackery
+	// Temporary ground normal thing.
+	public Vector3 m_GroundNormal = Vector3.zero;
+	public Vector3 m_ModifiedRight = Vector3.zero;
+	public Vector3 m_ModifiedForward = Vector3.zero;
+	public Vector3 moveDir = Vector3.zero;
+
 
 	//public bool IsGrounded { get; private set; }
 	//public Vector3 CacheMovDir { get; private set; }

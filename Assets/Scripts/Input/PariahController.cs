@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Tweening;
 using WhiteWillow;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PariahController : InputController
@@ -11,7 +12,23 @@ public class PariahController : InputController
     [SerializeField]
     private float m_Acceleration = 0.75f;
 
-    
+    // TODO: Move these somewhere more appropriate
+    [Header("<[Temporary]>")]
+    [Min(0)]
+    [SerializeField]
+    private int m_Health = 100;
+
+    [Min(0)]
+    [SerializeField]
+    private int m_MaxHealth = 100;
+
+    [Min(0)]
+    [SerializeField]
+    private int m_HealthDrainAmount = 1;
+
+    [Min(0.0f)]
+    [SerializeField]
+    private float m_HealthDrainDelay = 0.1f;
 
     [Header("Inputs")]
 
@@ -41,10 +58,6 @@ public class PariahController : InputController
     [SerializeField]
     private float m_CameraTilt = 0.0f;
 
-    //[ReadOnly]
-    //[SerializeField]
-    //private bool m_Dashing = false;
-
     [ReadOnly]
     [SerializeField]
     private bool m_Possessing = false;
@@ -62,6 +75,8 @@ public class PariahController : InputController
         // Crude fix for allowing player to face any direction at start of runtime
         var euler = transform.rotation.eulerAngles;
         m_Rotation = new Vector2(euler.y, euler.x);
+
+        StartCoroutine(DrainHealth(m_HealthDrainDelay));
     }
 
     private void FixedUpdate()
@@ -147,9 +162,7 @@ public class PariahController : InputController
             if (Physics.Raycast(m_Camera.transform.position, m_Camera.transform.forward, out RaycastHit hitInfo, m_DashDistance))
             {
                 if (hitInfo.transform.TryGetComponent(out Agent agent))
-                {
                     StartCoroutine(Possess(agent));
-                }
             }
         }
     }
@@ -208,5 +221,46 @@ public class PariahController : InputController
         target.Possess();
         m_CurrentPossessed = target;
         m_Possessing = false;
+    }
+
+    //TODO: Move all functions below into a more suitable location
+
+    public void AddHealth(int amount)
+    {
+        m_Health = Mathf.Clamp(m_Health + amount, 0, m_MaxHealth);
+    }
+
+    public void TakeDamage(int amount)
+    {
+        m_Health = Mathf.Clamp(m_Health - amount, 0, m_MaxHealth);
+        if (m_Health == 0)
+        {
+            // TODO: Kill pariah
+            // Temporary: Reloads the current scene
+            SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+        }
+    }
+
+    private IEnumerator DrainHealth(float delay)
+    {
+        while (true)
+        {
+            if (m_Active && !m_Possessing)
+            {
+                m_Health -= m_HealthDrainAmount;
+                if (m_Health <= 0)
+                {
+                    m_Health = 0;
+
+                    // TODO: Kill pariah
+                    // Temporary: Reloads the current scene
+                    SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+                }
+
+                yield return new WaitForSeconds(delay);
+            }
+
+            yield return null;
+        }
     }
 }

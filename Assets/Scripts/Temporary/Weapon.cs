@@ -143,19 +143,23 @@ public class Weapon : MonoBehaviour
 
 
     // temporary muzzle flash
-    public VisualEffect m_MuzzleFlash;
+    //public VisualEffect m_MuzzleFlash;
+    public List<VisualEffect> m_MuzzleFlashes;
 
     // bullet casing
-    public ParticleSystem m_BulletCasing;
-
+    //public ParticleSystem m_BulletCasing;
+    public List<ParticleSystem> m_BulletCasings;
 
     // temporary animation reference
-    public Animator m_AssualtRifleAnimator;
-    public Animator m_AssualtRifleArmsAnimator;
+    public List<Animator> m_GunAnimators;
+    public List<Animator> m_ArmsAnimators;
 
 
     // temporary thing to test out semi-automatic weaponry.
     public bool m_SemiAuto = false;
+
+    // temporary
+    public bool m_DualWield = false;
 
 	private void Awake()
 	{
@@ -163,19 +167,17 @@ public class Weapon : MonoBehaviour
         m_OriginalGlobalPosition = transform.position;
 
         m_UIManager = transform.parent.parent.parent.GetComponent<UIManager>();
-
-        // Display a warning if reload time is less than or equal to the animators reload duration.
-        // This is because the reload time needs to be slightly longer othewise the gun can become stuck in... hold this thought.
-        // I'm going to try caching the original local pos and local rotation and just set it back to that everytime the player swaps weapons.
-        //m_OriginalLocalRot = transform.localRotation;
-	}
+        m_UIManager?.UpdateWeaponUI(this);
+
+        // Display a warning if reload time is less than or equal to the animators reload duration.
+        // This is because the reload time needs to be slightly longer othewise the gun can become stuck in... hold this thought.
+        // I'm going to try caching the original local pos and local rotation and just set it back to that everytime the player swaps weapons.
+        //m_OriginalLocalRot = transform.localRotation;
+    }
 
     // Update is called once per frame
     void Update()
     {
-        m_UIManager?.DisplayInventory();
-
-
         // ========================= DECREMENTING AMMO WHEN SHOOTING ========================= //
 
         // TEMP FIX so that other characters with this script dont have their ammo decrement when the player clicks.
@@ -197,16 +199,16 @@ public class Weapon : MonoBehaviour
         // I've added m_IsReloading checks to prevent shooting while reloading and also to activate recoil recovery even if m_IsFiring is still true.
         // This gives the advantage of reloading while holding down the mouse button will let you begin shooting again without having to re-press the mouse button.
 
-        if (m_IsFiring && !m_IsReloading && !TotalAmmoEmpty())
+        if (m_IsFiring && !m_IsReloading && !TotalAmmoEmpty())
+        {
             Fire();
-        else if (!m_IsFiring || m_IsReloading || TotalAmmoEmpty()) // We want to recovery if we are reloading. This lets us set reloading to true and keep firing on true and the player wont shoot.
-        {
-            UpdateRecoilRecovery();
-            Debug.Log("Recoil recovery.");
+            m_UIManager?.UpdateWeaponUI(this);
         }
+        else if (!m_IsFiring || m_IsReloading || TotalAmmoEmpty()) // We want to recovery if we are reloading. This lets us set reloading to true and keep firing on true and the player wont shoot.
+            UpdateRecoilRecovery();
 
         
-        if (m_IsAiming && !m_IsReloading)
+        if (m_IsAiming && !m_IsReloading && !m_DualWield)
             Aim();
 
         UpdateSway(m_Controller.LookInput.x, m_Controller.LookInput.y);
@@ -242,11 +244,28 @@ public class Weapon : MonoBehaviour
         {
             if (m_RoundsInMagazine > 0/* && !m_IsReloading*/)
             {
+                // testing somethhing for semi-auto
+                if (m_SemiAuto)
+                    m_IsFiring = false;
+
+
                 // Play effects.
-                if(m_MuzzleFlash)
-                    m_MuzzleFlash.Play();
-                if (m_BulletCasing)
-                    m_BulletCasing.Play();
+                if (m_MuzzleFlashes.Count > 0)
+                {
+                    for (int i = 0; i < m_MuzzleFlashes.Count; i++)
+                        m_MuzzleFlashes[i].Play();
+                }
+                if (m_BulletCasings.Count > 0)
+                { 
+                    for(int i = 0; i < m_BulletCasings.Count; i++)
+                        m_BulletCasings[i].Play();
+                }
+                if (m_GunAnimators.Count > 0)
+                    for (int i = 0; i < m_GunAnimators.Count; i++)
+                        m_GunAnimators[i].SetTrigger("IsFiring");
+                if (m_ArmsAnimators.Count > 0)
+                    for (int i = 0; i < m_ArmsAnimators.Count; i++)
+                        m_ArmsAnimators[i].SetTrigger("IsFiring");
 
                 // Currently gets rid of bullet sprite before UI has fully updated //
                 m_UIManager.DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);
@@ -262,8 +281,11 @@ public class Weapon : MonoBehaviour
                 if (!currentConfig.m_DisableAllRecoil)
                 {
                     float ShootingDuration = Time.time - m_FireStartTime;
-                    m_Controller.AdditionalCameraRecoilX += currentConfig.m_VerticalRecoil.Evaluate(ShootingDuration);
-                    m_Controller.AdditionalCameraRecoilY += currentConfig.m_HorizontalRecoil.Evaluate(ShootingDuration);
+
+                    CameraRecoil cameraRecoil = m_Controller.m_AccumulatedRecoil;
+
+                    cameraRecoil.accumulatedPatternRecoilX += currentConfig.m_VerticalRecoil.Evaluate(ShootingDuration);
+                    cameraRecoil.accumulatedPatternRecoilY += currentConfig.m_HorizontalRecoil.Evaluate(ShootingDuration);
                 }
                 // =============================== //
 
@@ -278,10 +300,10 @@ public class Weapon : MonoBehaviour
                 {
                     if (hit.transform.gameObject != null)
                     {
-                        if (hit.transform.TryGetComponent(out Inventory agentInventory))
-                        {
-                            agentInventory.TakeDamage(m_BulletDamage);
-                            return;
+                        if (hit.transform.TryGetComponent(out Inventory agentInventory))
+                        {
+                            agentInventory.TakeDamage(m_BulletDamage);
+                            return;
                         }
 
                         GameManager.Instance?.AddDecal(hit.transform, hit.point, hit.normal);
@@ -299,10 +321,12 @@ public class Weapon : MonoBehaviour
             {
                 // Do nothing / reload automatically
                 if (!ReserveAmmoEmpty())
-                { 
+                {
+                    CombatInfo combatInfo = m_Controller.m_CombatInfo;
+
                     StartCoroutine(Reload());
                     // To prevent recoil from affecting player while reloading, we must.
-                    m_Controller.ShootingDuration = 0;
+                    combatInfo.m_ShootingDuration = 0;
                     
                     //m_IsFiring = false;
                 }
@@ -315,9 +339,10 @@ public class Weapon : MonoBehaviour
     public void StartReload()
     {
         if (!PrimaryAmmoFull() && !ReserveAmmoEmpty() && !m_IsReloading)
-        { 
+        {
+            CombatInfo combatInfo = m_Controller.m_CombatInfo;
             StartCoroutine(Reload());
-            m_Controller.ShootingDuration = 0;
+            combatInfo.m_ShootingDuration = 0;
 
             
         }
@@ -328,10 +353,12 @@ public class Weapon : MonoBehaviour
         WeaponConfiguration weaponConfig = GetCurrentWeaponConfig();
         Transform gunTransform = GetCurrentWeaponTransform();
 
-        Vector3 centre = m_Camera.ScreenToWorldPoint(new Vector3(
-            (Screen.width / 2) + (-m_Controller.LookInput.x * weaponConfig.m_GunAimSwayStrength),
-            (Screen.height / 2) + (-m_Controller.LookInput.y * weaponConfig.m_GunSwayStrength) - (m_Controller.transform.up.y * weaponConfig.m_GunAimHeight),
-            (m_Controller.transform.forward.z * weaponConfig.m_GunAimZPos) + weaponConfig.m_WeaponRecoilTransform.z * weaponConfig.m_ADSRecoilModifier));
+        Vector3 aimPosition = Vector3.zero;
+        aimPosition.x = (Screen.width / 2) + (-m_Controller.LookInput.x * weaponConfig.m_GunAimSwayStrength);
+        aimPosition.y = (Screen.height / 2) + (-m_Controller.LookInput.y * weaponConfig.m_GunSwayStrength) - (m_Controller.transform.up.y * weaponConfig.m_GunAimHeight);
+        aimPosition.z = (m_Controller.transform.forward.z * weaponConfig.m_GunAimZPos) + weaponConfig.m_WeaponRecoilTransform.z * weaponConfig.m_ADSRecoilModifier;
+        
+        Vector3 centre = m_Camera.ScreenToWorldPoint(aimPosition);
 
         //Vector3 currentPosition = m_Gun.position;
         Vector3 currentPosition = weaponConfig.m_ScopeCentre.position;
@@ -346,7 +373,7 @@ public class Weapon : MonoBehaviour
         Vector3 localPosition = GetCurrentWeaponTransform().transform.position;
         Vector3 currentWeaponMidPoint = GetCurrentWeaponOriginalPos();
 
-        if (m_Controller.m_IsMoving)
+        if (m_Controller.m_MovInfo.m_IsMoving)
         {
             // Do weapon sway stuff.
             m_SwayTimer += Time.deltaTime;
@@ -389,8 +416,9 @@ public class Weapon : MonoBehaviour
         {
             WeaponConfiguration weaponConfig = GetCurrentWeaponConfig();
 
+            CameraRecoil cameraRecoil = m_Controller.m_AccumulatedRecoil;
 
-            m_Controller.AdditionalRecoilRotation += new Vector3(-weaponConfig.RecoilRotationAiming.x, Random.Range(-weaponConfig.RecoilRotationAiming.y, weaponConfig.RecoilRotationAiming.y), Random.Range(-weaponConfig.RecoilRotationAiming.z, weaponConfig.RecoilRotationAiming.z));
+            cameraRecoil.accumulatedVisualRecoil += new Vector3(-weaponConfig.RecoilRotationAiming.x, Random.Range(-weaponConfig.RecoilRotationAiming.y, weaponConfig.RecoilRotationAiming.y), Random.Range(-weaponConfig.RecoilRotationAiming.z, weaponConfig.RecoilRotationAiming.z));
             m_WeaponRecoilRot -= new Vector3(weaponConfig.m_WeaponRotRecoilVertStrength, 0, 0);
 
             // Although I am setting the recoil transform here, I have to apply it in the WeaponSway() function since I'm setting pos directly there. I want to change this but I'm unsure how right now
@@ -404,7 +432,9 @@ public class Weapon : MonoBehaviour
     {
         WeaponConfiguration weaponConfig = GetCurrentWeaponConfig();
 
-        m_Controller.AdditionalRecoilRotation = Vector3.Lerp(m_Controller.AdditionalRecoilRotation, Vector3.zero, weaponConfig.m_CameraRecoilReturnSpeed * Time.deltaTime);
+        CameraRecoil cameraRecoil = m_Controller.m_AccumulatedRecoil;
+
+        cameraRecoil.accumulatedVisualRecoil = Vector3.Lerp(cameraRecoil.accumulatedVisualRecoil, Vector3.zero, weaponConfig.m_CameraRecoilReturnSpeed * Time.deltaTime);
         m_WeaponRecoilRot = Vector3.Lerp(m_WeaponRecoilRot, Vector3.zero, weaponConfig.m_WeaponRecoilReturnSpeed * Time.deltaTime);
 
         weaponConfig.m_WeaponRecoilTransform = Vector3.Lerp(weaponConfig.m_WeaponRecoilTransform, Vector3.zero, weaponConfig.m_WeaponRecoilReturnSpeed * Time.deltaTime);
@@ -415,15 +445,24 @@ public class Weapon : MonoBehaviour
     /// </summary>
     private void UpdateRecoilRecovery()
     {
-        if (m_Controller.AdditionalCameraRecoilX > 0) // We only want to decrement AdditionCameraRecoilX if it has accumuluated recoil still in it.
+        CameraRecoil cameraRecoil = m_Controller.m_AccumulatedRecoil;
+        CombatInfo combatInfo = m_Controller.m_CombatInfo;
+
+        if (cameraRecoil.accumulatedPatternRecoilX > 0) // We only want to decrement AdditionCameraRecoilX if it has accumuluated recoil still in it.
         {
             // If we just keep decreasing the additional recoil until it reaches 0, it results in the camera going further down then what feels right.
             // This is because as the player is shooting, they are compensating and making the gun stand in place. While this is happening, the additional recoil could
             // build up to a high number and when the player stops shooting, the recoil will take a long time to get back to 0.
 
             // An experimental method I'd like to try is to either decrease it back to 0, or until the camera rotation is back to where it when they just started shooting.
-            Vector2 currentCamX = new Vector2(m_Controller.CurrentCamRot.y, 1);
-            Vector2 previousCamX = new Vector2(m_Controller.PreviousCameraRotation.y, 1);          // I know I'm using the new keyword here and that's bad. But for now I'm trying to see if this system will work.
+            Vector2 currentCamX = Vector2.one;
+            currentCamX.x = combatInfo.m_camForward.y;
+
+            // I know I'm using the new keyword here and that's bad. But for now I'm trying to see if this system will work.
+            Vector2 previousCamX = Vector2.one;
+            previousCamX.x = combatInfo.m_PrevCamForward.y;
+
+
             float dot = Vector3.Dot(currentCamX.normalized, previousCamX.normalized);
             if (dot < 0.9999f || dot > 1.0001f) // Such a small difference in numbers still gives quite a generous margin for error.
             {
@@ -433,7 +472,7 @@ public class Weapon : MonoBehaviour
                 // Or if the gun is already below the previous y component, we just leave the gun alone because they've over compensated for the recoil.
 
                 // If previous rotation's y is greater, it means they are looking further down then when they started firing.
-                if (m_Controller.PreviousCameraRotation.y > m_Controller.CurrentCamRot.y)
+                if (combatInfo.m_PrevCamForward.y > combatInfo.m_camForward.y)
                 {
                     // We want to incorporate the additional camera recoil into the rotation of the camera, that way we can set the variable to 0 without worrying that later we will be moving the camera downwards.
 
@@ -441,25 +480,25 @@ public class Weapon : MonoBehaviour
                     // Instead I will add the AdditionalCameraRecoilX into xRotation and then set AdditionalCameraRecoilX to 0. This way I don't have to directly touch the cameras local rotation
                     // here.
 
-                    m_Controller.m_XRotation -= m_Controller.AdditionalCameraRecoilX;
-                    m_Controller.AdditionalCameraRecoilX = 0;
+                    m_Controller.m_XRotation -= cameraRecoil.accumulatedPatternRecoilX;
+                    cameraRecoil.accumulatedPatternRecoilX = 0;
                 }
                 else
                 {
                     // Otherwise, they are aiming higher than when they started, so we'll bring the gun down to where it was.
-                    m_Controller.AdditionalCameraRecoilX -= 1 * GetCurrentWeaponConfig().m_RecoilRecoveryModifier;
-                    m_Controller.AdditionalCameraRecoilX = Mathf.Clamp(m_Controller.AdditionalCameraRecoilX, 0, 85f);
+                    cameraRecoil.accumulatedPatternRecoilX -= 1 * GetCurrentWeaponConfig().m_RecoilRecoveryModifier;
+                    cameraRecoil.accumulatedPatternRecoilX = Mathf.Clamp(cameraRecoil.accumulatedPatternRecoilX, 0, 85f);
                 }
 
             }
             else
             {
                 // Since the forward vectors match, we'll clear the m_AdditionalCameraRecoilX variable just to keep things clean.
-                m_Controller.m_XRotation -= m_Controller.AdditionalCameraRecoilX;
-                m_Controller.AdditionalCameraRecoilX = 0;
+                m_Controller.m_XRotation -= cameraRecoil.accumulatedPatternRecoilX;
+                cameraRecoil.accumulatedPatternRecoilX = 0;
             }
             // The rotation on the Y Axis. So this is if the player gets turned horizontally from the recoil.
-            if (m_Controller.AdditionalCameraRecoilY != 0)
+            if (cameraRecoil.accumulatedPatternRecoilY != 0)
             {
                 // I've decided not to lerp the additional horizontal recoil to 0 since it feels disorientating.
 
@@ -467,8 +506,8 @@ public class Weapon : MonoBehaviour
                 //m_AdditionalCameraRecoilY -= 1 * GetCurrentWeaponConfig().m_RecoilRecoveryModifier;
 
                 // Just incorporating the accumulated recoil into m_DesiredX to clean up AdditionalCameraRecoilY.
-                m_Controller.m_DesiredX -= m_Controller.AdditionalCameraRecoilY;
-                m_Controller.AdditionalCameraRecoilY = 0;
+                m_Controller.m_DesiredX -= cameraRecoil.accumulatedPatternRecoilY;
+                cameraRecoil.accumulatedPatternRecoilY = 0;
             }
         }
     }
@@ -478,6 +517,15 @@ public class Weapon : MonoBehaviour
     {
         if (Time.time >= m_NextTimeToFire && !m_IsReloading)//(time.time or time.deltatime)
         {
+            if (m_SemiAuto) // If the gun is semi auto, we have one other check to do.
+            {
+                // To prevent people from being able to spam semi automatic guns really fast, I'm going to prevent them from firing unless the animation is complete.
+                if (!m_GunAnimators[0].GetCurrentAnimatorStateInfo(0).IsName("Idle")) // Only semi automatic weapons in the game are not dual wielded so we don't have to check the whole list of gun animators.
+                {
+                    return false;
+                }
+            }
+
             // Defines the firing rate as rounds per minute (hard coded 60s)
             m_NextTimeToFire = Time.time + (60.0f / m_FireRate);
             return true;
@@ -540,8 +588,10 @@ public class Weapon : MonoBehaviour
             m_ReserveAmmo -= ammoRequired;
         }
 
-        SetFireTime(); // Added so that if the player is holding down fire while reloading, they will begin firing at t=0. Without this the fire time is what is what when they
-                       // originally started firing.
+        SetFireTime(); // Added so that if the player is holding down fire while reloading, they will begin firing at t=0. Without this the fire time is what is what when they
+                       // originally started firing.
+
+        m_UIManager?.UpdateWeaponUI(this);
         m_IsReloading = false;
     }
 
@@ -557,10 +607,14 @@ public class Weapon : MonoBehaviour
 
             Vector3 bobStuff = WeaponBob();
 
-            Vector3 finalPosition = new Vector3(Mathf.Clamp((-x * 0.02f), -weaponConfig.m_WeaponSwayClampX, weaponConfig.m_WeaponSwayClampX) + bobStuff.x, Mathf.Clamp((-y * 0.02f), -weaponConfig.m_WeaponSwayClampY, weaponConfig.m_WeaponSwayClampY) + bobStuff.y, 0 + weaponConfig.m_WeaponRecoilTransform.z);
+            Vector3 finalPosition = Vector3.zero;
+            finalPosition.x = Mathf.Clamp(-x * 0.02f, -weaponConfig.m_WeaponSwayClampX, weaponConfig.m_WeaponSwayClampX) + bobStuff.x;
+            finalPosition.y = Mathf.Clamp((-y * 0.02f), -weaponConfig.m_WeaponSwayClampY, weaponConfig.m_WeaponSwayClampY) + bobStuff.y;
+            finalPosition.z = weaponConfig.m_WeaponRecoilTransform.z;
+
             gunTransform.localPosition = Vector3.Lerp(gunTransform.localPosition, finalPosition + gunOriginalPos, Time.deltaTime * weaponConfig.m_GunSwayReturn);
-            Quaternion xAxis = Quaternion.AngleAxis(m_WeaponRecoilRot.x, new Vector3(1, 0, 0));
-            Quaternion zAxis = Quaternion.AngleAxis(Mathf.Clamp(-x, -weaponConfig.m_WeaponSwayRotateClamp, weaponConfig.m_WeaponSwayRotateClamp), new Vector3(0, 0, 1));
+            Quaternion xAxis = Quaternion.AngleAxis(m_WeaponRecoilRot.x, Vector3.right);
+            Quaternion zAxis = Quaternion.AngleAxis(Mathf.Clamp(-x, -weaponConfig.m_WeaponSwayRotateClamp, weaponConfig.m_WeaponSwayRotateClamp), Vector3.forward);
             gunTransform.localRotation = Quaternion.Slerp(gunTransform.localRotation, zAxis * xAxis, weaponConfig.m_WeaponSwayRotateSpeed);
 
             float currentFOV = m_Camera.fieldOfView;
@@ -585,8 +639,8 @@ public class Weapon : MonoBehaviour
 
 
             // Quaternion rotate
-            Quaternion zAxis = Quaternion.AngleAxis(Mathf.Clamp(-x, -weaponConfig.m_WeaponSwayRotateClamp, weaponConfig.m_WeaponSwayRotateClamp), new Vector3(0, 0, 1));
-            Quaternion xAxis = Quaternion.AngleAxis(m_WeaponRecoilRot.x * weaponConfig.m_ADSRecoilModifier, new Vector3(1, 0, 0));
+            Quaternion zAxis = Quaternion.AngleAxis(Mathf.Clamp(-x, -weaponConfig.m_WeaponSwayRotateClamp, weaponConfig.m_WeaponSwayRotateClamp), Vector3.forward);
+            Quaternion xAxis = Quaternion.AngleAxis(m_WeaponRecoilRot.x * weaponConfig.m_ADSRecoilModifier, Vector3.right);
             gunTransform.localRotation = Quaternion.Slerp(gunTransform.localRotation, zAxis * xAxis, weaponConfig.m_WeaponSwayRotateSpeed);
         }
 
@@ -613,10 +667,12 @@ public class Weapon : MonoBehaviour
             }
             else if (m_IsTestResting && m_RecoilTestCounter >= m_RecoilTestRestTime) // This means were now counting the rest time.
             {
+                CombatInfo combatInfo = m_Controller.m_CombatInfo;
+
                 m_IsTestResting = false;
                 m_RecoilTestCounter = 0.0f;
-                m_Controller.m_XRotation = m_Controller.m_PreviousXCameraRot; // this might be unnessessary since the guns camera rotation goes back down through the recoil recovery system.
-                m_Controller.m_Orientation.transform.eulerAngles = m_Controller.m_PreviousOrientationVector;
+                m_Controller.m_XRotation = combatInfo.m_PrevXRot; // this might be unnessessary since the guns camera rotation goes back down through the recoil recovery system.
+                m_Controller.m_Orientation.transform.eulerAngles = combatInfo.m_PrevOrientationRot;
 
                 SetFireTime(); // This sequence of firing should be reset. It normally gets cancelled on mouse button up after firing.
             }
@@ -737,11 +793,21 @@ public class Weapon : MonoBehaviour
 
     private void StartReloadAnimation()
     {
-        if (m_AssualtRifleAnimator && m_AssualtRifleArmsAnimator)
-        { 
-            m_AssualtRifleAnimator.SetTrigger("OnReload");
-            m_AssualtRifleArmsAnimator.SetTrigger("OnReload");
+        if (m_GunAnimators.Count > 0)
+        {
+            for (int i = 0; i < m_GunAnimators.Count; i++)
+            {
+                m_GunAnimators[i].SetTrigger("OnReload");
+            }
         }
+        if (m_ArmsAnimators.Count > 0)
+        {
+            for (int i = 0; i < m_ArmsAnimators.Count; i++)
+            { 
+                m_ArmsAnimators[i].SetTrigger("OnReload");
+            }
+        }
+        
     }
 
     public void ResetReloadAnimation()

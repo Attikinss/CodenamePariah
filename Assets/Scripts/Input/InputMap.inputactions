@@ -414,6 +414,14 @@
                     "interactions": ""
                 },
                 {
+                    "name": "Select3",
+                    "type": "Button",
+                    "id": "34ac542d-357c-4a6b-a6aa-2be3b09a062e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
                     "name": "RecoilTest",
                     "type": "Button",
                     "id": "bcf73363-bc80-4831-b974-7150f49040b0",
@@ -449,6 +457,14 @@
                     "name": "Debug",
                     "type": "Button",
                     "id": "eae199af-e3a2-4a7c-b07a-7d79b6689faa",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "ToggleHUD",
+                    "type": "Button",
+                    "id": "ef142069-848d-41fb-81e7-af98a812f8b8",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -859,6 +875,28 @@
                     "processors": "",
                     "groups": "KBM",
                     "action": "Debug",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b3e6ed3e-811b-47c5-a261-13e34e8b8ea6",
+                    "path": "<Keyboard>/f4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KBM",
+                    "action": "ToggleHUD",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "95045599-4679-4d11-813e-37f2645a4094",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KBM",
+                    "action": "Select3",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

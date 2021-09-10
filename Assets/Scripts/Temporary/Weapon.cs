@@ -161,6 +161,8 @@ public class Weapon : MonoBehaviour
     // temporary
     public bool m_DualWield = false;
 
+    public WeaponConfiguration m_Config;
+
 	private void Awake()
 	{
         m_OriginalLocalPosition = transform.localPosition;
@@ -169,6 +171,9 @@ public class Weapon : MonoBehaviour
         m_UIManager = transform.parent.parent.parent.GetComponent<UIManager>();
         m_UIManager?.UpdateWeaponUI(this);
 
+        m_Config = GetComponent<WeaponConfiguration>();
+
+
         // Display a warning if reload time is less than or equal to the animators reload duration.
         // This is because the reload time needs to be slightly longer othewise the gun can become stuck in... hold this thought.
         // I'm going to try caching the original local pos and local rotation and just set it back to that everytime the player swaps weapons.
@@ -249,26 +254,26 @@ public class Weapon : MonoBehaviour
                     m_IsFiring = false;
 
 
-                // Play effects.
-                if (m_MuzzleFlashes.Count > 0)
-                {
-                    for (int i = 0; i < m_MuzzleFlashes.Count; i++)
-                        m_MuzzleFlashes[i].Play();
-                }
-                if (m_BulletCasings.Count > 0)
-                { 
-                    for(int i = 0; i < m_BulletCasings.Count; i++)
-                        m_BulletCasings[i].Play();
-                }
-                if (m_GunAnimators.Count > 0)
-                    for (int i = 0; i < m_GunAnimators.Count; i++)
-                        m_GunAnimators[i].SetTrigger("IsFiring");
-                if (m_ArmsAnimators.Count > 0)
-                    for (int i = 0; i < m_ArmsAnimators.Count; i++)
-                        m_ArmsAnimators[i].SetTrigger("IsFiring");
+				// Play effects.
+				if (m_MuzzleFlashes.Count > 0)
+				{
+					for (int i = 0; i < m_MuzzleFlashes.Count; i++)
+						m_MuzzleFlashes[i].Play();
+				}
+				if (m_BulletCasings.Count > 0)
+				{
+					for (int i = 0; i < m_BulletCasings.Count; i++)
+						m_BulletCasings[i].Play();
+				}
+				if (m_GunAnimators.Count > 0)
+					for (int i = 0; i < m_GunAnimators.Count; i++)
+						m_GunAnimators[i].SetTrigger("IsFiring");
+				if (m_ArmsAnimators.Count > 0)
+					for (int i = 0; i < m_ArmsAnimators.Count; i++)
+						m_ArmsAnimators[i].SetTrigger("IsFiring");
 
-                // Currently gets rid of bullet sprite before UI has fully updated //
-                m_UIManager.DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);
+				// Currently gets rid of bullet sprite before UI has fully updated //
+				m_UIManager.DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);
                 m_RoundsInMagazine--;
 
 
@@ -768,7 +773,7 @@ public class Weapon : MonoBehaviour
 
     private WeaponConfiguration GetCurrentWeaponConfig()
     {
-        return m_Inventory.m_CurrentWeapon.GetComponent<WeaponConfiguration>();
+        return m_Inventory.m_CurrentWeapon.m_Config;
     }
     private Transform GetCurrentWeaponTransform() => m_Inventory.m_CurrentWeapon.transform;
     private Vector3 GetCurrentWeaponOriginalPos() => m_Inventory.m_CurrentWeapon.m_OriginalLocalPosition;

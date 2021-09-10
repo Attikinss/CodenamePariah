@@ -306,7 +306,7 @@ public class Weapon : MonoBehaviour
                     if (hit.transform.gameObject != null)
                     {
                         if (hit.transform.TryGetComponent(out Inventory agentInventory))
-                        {
+                        {                            Debug.Log("BAD");
                             agentInventory.TakeDamage(m_BulletDamage);
                             return;
                         }
@@ -423,11 +423,31 @@ public class Weapon : MonoBehaviour
 
             CameraRecoil cameraRecoil = m_Controller.m_AccumulatedRecoil;
 
-            cameraRecoil.accumulatedVisualRecoil += new Vector3(-weaponConfig.RecoilRotationAiming.x, Random.Range(-weaponConfig.RecoilRotationAiming.y, weaponConfig.RecoilRotationAiming.y), Random.Range(-weaponConfig.RecoilRotationAiming.z, weaponConfig.RecoilRotationAiming.z));
-            m_WeaponRecoilRot -= new Vector3(weaponConfig.m_WeaponRotRecoilVertStrength, 0, 0);
+            Vector3 camVisRecoil = Vector3.zero;
+            camVisRecoil.x = -weaponConfig.RecoilRotationAiming.x;
+            camVisRecoil.y = Random.Range(-weaponConfig.RecoilRotationAiming.y, weaponConfig.RecoilRotationAiming.y);
+            camVisRecoil.z = Random.Range(-weaponConfig.RecoilRotationAiming.z, weaponConfig.RecoilRotationAiming.z);
+
+            //cameraRecoil.accumulatedVisualRecoil += new Vector3(-weaponConfig.RecoilRotationAiming.x, Random.Range(-weaponConfig.RecoilRotationAiming.y, weaponConfig.RecoilRotationAiming.y), Random.Range(-weaponConfig.RecoilRotationAiming.z, weaponConfig.RecoilRotationAiming.z));
+            cameraRecoil.accumulatedVisualRecoil += camVisRecoil;
+
+            Vector3 gunVisRecoil = Vector3.zero;
+            gunVisRecoil.x = weaponConfig.m_WeaponRotRecoilVertStrength;
+            gunVisRecoil.y = 0;
+            gunVisRecoil.z = 0;
+            //m_WeaponRecoilRot -= new Vector3(weaponConfig.m_WeaponRotRecoilVertStrength, 0, 0);
+            m_WeaponRecoilRot -= gunVisRecoil;
+
+            Vector3 weaponPosChange = Vector3.zero;
+            weaponPosChange.x = 0;
+            weaponPosChange.y = 0;
+            weaponPosChange.z = weaponConfig.m_WeaponTransformRecoilZStrength;
+            weaponConfig.m_WeaponRecoilTransform -= weaponPosChange;
 
             // Although I am setting the recoil transform here, I have to apply it in the WeaponSway() function since I'm setting pos directly there. I want to change this but I'm unsure how right now
-            weaponConfig.m_WeaponRecoilTransform -= new Vector3(0, 0, weaponConfig.m_WeaponTransformRecoilZStrength);
+            //weaponConfig.m_WeaponRecoilTransform -= new Vector3(0, 0, weaponConfig.m_WeaponTransformRecoilZStrength);
+
+
         }
     }
     /// <summary>
@@ -524,6 +544,7 @@ public class Weapon : MonoBehaviour
         {
             if (m_SemiAuto) // If the gun is semi auto, we have one other check to do.
             {
+                Debug.Log("is this bad?");
                 // To prevent people from being able to spam semi automatic guns really fast, I'm going to prevent them from firing unless the animation is complete.
                 if (!m_GunAnimators[0].GetCurrentAnimatorStateInfo(0).IsName("Idle")) // Only semi automatic weapons in the game are not dual wielded so we don't have to check the whole list of gun animators.
                 {

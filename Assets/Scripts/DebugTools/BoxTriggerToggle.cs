@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WhiteWillow;
 
 public class BoxTriggerToggle : MonoBehaviour
 {
@@ -92,6 +93,15 @@ public class BoxTriggerToggle : MonoBehaviour
             foreach (var target in m_TargetEntities)
             {
                 if (other.gameObject == target)
+                {
+                    Trigger();
+                    return;
+                }
+            }
+
+            if (other.TryGetComponent(out Agent agent))
+            {
+                if (agent.Possessed)
                     Trigger();
             }
         }
@@ -104,6 +114,16 @@ public class BoxTriggerToggle : MonoBehaviour
             foreach (var target in m_TargetEntities)
             {
                 if (other.gameObject == target)
+                {
+                    Trigger();
+                    return;
+                }
+
+            }
+
+            if (other.TryGetComponent(out Agent agent))
+            {
+                if (agent.Possessed)
                     Trigger();
             }
         }
@@ -116,6 +136,15 @@ public class BoxTriggerToggle : MonoBehaviour
             foreach (var target in m_TargetEntities)
             {
                 if (other.gameObject == target)
+                {
+                    Trigger();
+                    return;
+                }
+            }
+
+            if (other.TryGetComponent(out Agent agent))
+            {
+                if (agent.Possessed)
                     Trigger();
             }
         }

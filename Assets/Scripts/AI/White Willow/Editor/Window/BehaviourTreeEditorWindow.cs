@@ -14,7 +14,7 @@ namespace WhiteWillow.Editor
     {
         public static BehaviourTreeEditorWindow Instance { get; private set; }
 
-        private BehaviourTreeGraphView m_GraphView;
+        public BehaviourTreeGraphView GraphView { get; private set; }
         private InspectorView m_Inspector;
         public Vector2 MousePosition = Vector2.zero;
 
@@ -61,8 +61,8 @@ namespace WhiteWillow.Editor
         {
             m_FileMenu = rootVisualElement.Q<ToolbarMenu>("FileMenu");
 
-            m_FileMenu.menu.AppendAction("New", ctx => { m_GraphView.NewTree(); AddTreesToTreeMenu(); });
-            m_FileMenu.menu.AppendAction("Save As New", ctx => { m_GraphView.NewTree(); AddTreesToTreeMenu(); });
+            m_FileMenu.menu.AppendAction("New", ctx => { GraphView.NewTree(); AddTreesToTreeMenu(); });
+            m_FileMenu.menu.AppendAction("Save As New", ctx => { GraphView.NewTree(); AddTreesToTreeMenu(); });
         }
 
         private void CreateTreeMenu()
@@ -72,9 +72,9 @@ namespace WhiteWillow.Editor
 
         private void CreateGraphView()
         {
-            m_GraphView = null;
-            m_GraphView = rootVisualElement.Q<BehaviourTreeGraphView>();
-            m_GraphView.Construct(this);
+            GraphView = null;
+            GraphView = rootVisualElement.Q<BehaviourTreeGraphView>();
+            GraphView.Construct(this);
         }
 
         private void AddTreesToTreeMenu()
@@ -82,12 +82,70 @@ namespace WhiteWillow.Editor
             m_TreeMenu.menu.MenuItems().Clear();
 
             var trees = FindAllTrees();
-            trees.ForEach(tree => m_TreeMenu.menu.AppendAction(tree.name, ctx => m_GraphView.LoadTree(tree)));
+            trees.ForEach(tree => m_TreeMenu.menu.AppendAction(tree.name, ctx =>
+            {
+                GraphView.LoadTree(tree);
+                m_Inspector.CreateBlackboardView();
+            }));
+        }
+
+        private void CreateInspectorPanel()
+        {
+            ToolbarToggle properties = rootVisualElement.Q<ToolbarToggle>("PropertiesToggle");
+            ToolbarToggle blackboard = rootVisualElement.Q<ToolbarToggle>("BlackboardToggle");
+            ToolbarToggle settings = rootVisualElement.Q<ToolbarToggle>("SettingsToggle");
+
+            properties?.RegisterValueChangedCallback(evt =>
+            {
+                if (evt.newValue)
+                {
+                    blackboard.value = false;
+                    settings.value = false;
+                    m_Inspector.SelectPropertyEditor();
+                }
+                else
+                {
+                    if (!blackboard.value && !settings.value)
+                        properties.SetValueWithoutNotify(true);
+                }
+            });
+
+            blackboard?.RegisterValueChangedCallback(evt =>
+            {
+                if (evt.newValue)
+                {
+                    properties.value = false;
+                    settings.value = false;
+                    m_Inspector.SelectBlackboardEditor();
+                }
+                else
+                {
+                    if (!properties.value && !settings.value)
+                        blackboard.SetValueWithoutNotify(true);
+                }
+            });
+
+            settings?.RegisterValueChangedCallback(evt =>
+            {
+                if (evt.newValue)
+                {
+                    properties.value = false;
+                    blackboard.value = false;
+                    m_Inspector.SelectSettingsEditor();
+                }
+                else
+                {
+                    if (!properties.value && !blackboard.value)
+                        settings.SetValueWithoutNotify(true);
+                }
+            });
+
+            m_Inspector.SelectPropertyEditor();
         }
 
         public void OnNodeSelectionChanged(NodeView node)
         {
-            m_Inspector.UpdateSelection(node);
+            m_Inspector.UpdateNodeSelection(node);
         }
 
         private void OnEnable()
@@ -102,32 +160,50 @@ namespace WhiteWillow.Editor
             // Query for graph view and inspector
             m_Inspector = rootVisualElement.Q<InspectorView>();
 
+            // Ensures that if the editor window is opening after Unity recompiles
+            // the instance isn't lost/reset and dependents don't freak out
+            if (Instance == null)
+                Instance = this;
+
+            Rebuild();
+        }
+
+        private void Rebuild()
+        {
             CreateGraphView();
             CreateToolbarMenu();
             CreateTreeMenu();
             AddTreesToTreeMenu();
+            CreateInspectorPanel();
 
             EditorApplication.playModeStateChanged += ModeChanged;
         }
 
         private void ModeChanged(PlayModeStateChange change)
         {
-            m_GraphView.CurrentTree = null;
-            m_GraphView.ClearGraph();
+            GraphView.CurrentTree = null;
+            GraphView.ClearGraph();
             AddTreesToTreeMenu();
+            CreateInspectorPanel();
         }
 
         private void Update()
         {
-            m_GraphView?.UpdateNodeStates();
+            GraphView?.UpdateNodeStates();
+        }
 
+        public void OnInspectorUpdate()
+        {
             Repaint();
         }
 
         private void OnGUI()
         {
             if (AssetOpenTree != null)
-                m_GraphView.LoadTree(AssetOpenTree);
+            {
+                GraphView.LoadTree(AssetOpenTree);
+                CreateInspectorPanel();
+            }
 
             AssetOpenTree = null;
             MousePosition = Event.current.mousePosition;
@@ -137,26 +213,22 @@ namespace WhiteWillow.Editor
         {
             BehaviourTree tree = Selection.activeObject as BehaviourTree;
             if (tree != null)
-                m_GraphView.LoadTree(tree);
+            {
+                GraphView.LoadTree(tree);
+                CreateInspectorPanel();
+            }
         }
 
         private List<BehaviourTree> FindAllTrees()
         {
-            List<BehaviourTree> assets = new List<BehaviourTree>();
+            List<BehaviourTree> assets;
             
             if (!EditorApplication.isPlaying)
-            {
-                string[] guids = AssetDatabase.FindAssets(string.Format("t:{0}", typeof(BehaviourTree)));
-                for (int i = 0; i < guids.Length; i++)
-                {
-                    string assetPath = AssetDatabase.GUIDToAssetPath(guids[i]);
-                    BehaviourTree asset = AssetDatabase.LoadAssetAtPath<BehaviourTree>(assetPath);
-                    if (asset != null)
-                        assets.Add(asset);
-                }
-            }
+                assets = Utility.GetAllAssetsOfType<BehaviourTree>();
             else
             {
+                assets = new List<BehaviourTree>();
+
                 Assembly defaultAssembly = AppDomain.CurrentDomain.GetAssemblies().SingleOrDefault(assembly => assembly.GetName().Name == "Assembly-CSharp");
                 List<Type> scriptsWithTrees = defaultAssembly?.GetTypes().Where(script => script.IsClass && script.IsSubclassOf(typeof(UnityEngine.Object))).ToList();
 
@@ -169,6 +241,7 @@ namespace WhiteWillow.Editor
                         field.FieldType == typeof(BehaviourTree) && field.Name == "m_RuntimeTree").FirstOrDefault();
                         if (treeField != null)
                         {
+                            Debug.Log(item);
                             var tree = treeField.GetValue(item);
                             assets.Add(tree as BehaviourTree);
                         }

@@ -28,9 +28,6 @@ namespace WhiteWillow.Nodes
 
         protected override NodeResult OnTick()
         {
-            // Prevents traversal of this node while it's locked
-            if (Locked) return NodeResult.Locked;
-
             // No point doing anything
             if (Child == null)
             {

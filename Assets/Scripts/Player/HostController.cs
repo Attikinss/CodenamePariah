@@ -442,7 +442,7 @@ public class HostController : InputController
         if (value.performed)
         {
             if (TryGetComponent(out WhiteWillow.Agent agent))
-                agent.Reliquinsh();
+                agent.Release();
         }
     }
 

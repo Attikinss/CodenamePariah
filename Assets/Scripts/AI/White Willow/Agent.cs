@@ -9,6 +9,9 @@ namespace WhiteWillow
     public class Agent : MonoBehaviour
     {
         public BehaviourTree InputTree;
+        public GameObject Target;
+        [Min(0.0f)]
+        public float m_ViewRange = 15.0f;
 
         [ReadOnly]
         [SerializeField]
@@ -16,9 +19,12 @@ namespace WhiteWillow
 
         private BehaviourTree m_RuntimeTree;
         private NavMeshAgent m_NavAgent;
-        private HostController m_HostController;
+        public Query CurrentQuery { get; set; }
+        public Weapon m_Weapon;
+        
         [HideInInspector]
         public PariahController PariahController;
+        private HostController m_HostController;
 
         private Vector3 m_MovePosition = Vector3.positiveInfinity;
         private Vector3 m_LastPosition;
@@ -30,9 +36,11 @@ namespace WhiteWillow
         {
             m_RuntimeTree = InputTree?.Clone(gameObject.name);
             m_RuntimeTree?.SetAgent(this);
+            m_RuntimeTree?.Blackboard?.UpdateEntryValue<GameObject>("Target", Target);
+            m_LastPosition = transform.position;
+
             m_NavAgent = GetComponent<NavMeshAgent>();
             m_HostController = GetComponent<HostController>();
-            m_LastPosition = transform.position;
 
             PariahController = FindObjectOfType<PariahController>();
         }
@@ -61,8 +69,6 @@ namespace WhiteWillow
                     }
                 }
             }
-
-            m_LastPosition = transform.position;
         }
         
         private bool TargetInRange(Transform target)
@@ -92,12 +98,14 @@ namespace WhiteWillow
 
         public bool SetDestination(Vector3 destination)
         {
-            m_MovePosition = transform.position + destination;
-            return NavMesh.SamplePosition(m_MovePosition, out NavMeshHit hitInfo, 1.0f, NavMesh.AllAreas);
+            m_LastPosition = transform.position;
+            m_MovePosition = destination;
+            return true;
         }
 
         public bool MovingToPosition() => m_NavAgent.destination == m_MovePosition && transform.position != m_LastPosition;
         public bool AtPosition() => m_NavAgent.remainingDistance <= m_NavAgent.stoppingDistance;
+        public bool Stuck() => false;
 
         public void Possess()
         {
@@ -108,7 +116,7 @@ namespace WhiteWillow
             m_HostController?.Enable();
         }
 
-        public void Reliquinsh()
+        public void Release()
         {
             m_Possessed = false;
             m_NavAgent.enabled = true;
@@ -119,10 +127,18 @@ namespace WhiteWillow
         public void Kill()
         {
             if (m_Possessed)
-                Reliquinsh();
+                Release();
 
             // TODO: Use object pooling / queued destruction system
             Destroy(gameObject);
+        }
+
+        private void OnDrawGizmos()
+        {
+            Color gizmoColour = Color.cyan;
+            gizmoColour.a = 0.5f;
+            Gizmos.color = gizmoColour;
+            Gizmos.DrawSphere(m_MovePosition, 0.65f);
         }
     }
 }

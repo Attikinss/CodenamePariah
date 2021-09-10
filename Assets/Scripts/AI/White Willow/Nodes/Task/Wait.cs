@@ -17,7 +17,7 @@ namespace WhiteWillow.Nodes
         public float Duration = 1.0f;
 
         [SerializeField]
-        [ReadOnly]
+        //[ReadOnly]
         private float m_ElapsedTime = 0.0f;
         private float m_StartTime = 0.0f;
 

@@ -260,6 +260,12 @@ public class Weapon : MonoBehaviour
                     for(int i = 0; i < m_BulletCasings.Count; i++)
                         m_BulletCasings[i].Play();
                 }
+                if (m_GunAnimators.Count > 0)
+                    for (int i = 0; i < m_GunAnimators.Count; i++)
+                        m_GunAnimators[i].SetTrigger("IsFiring");
+                if (m_ArmsAnimators.Count > 0)
+                    for (int i = 0; i < m_ArmsAnimators.Count; i++)
+                        m_ArmsAnimators[i].SetTrigger("IsFiring");
 
                 // Currently gets rid of bullet sprite before UI has fully updated //
                 m_UIManager.DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);

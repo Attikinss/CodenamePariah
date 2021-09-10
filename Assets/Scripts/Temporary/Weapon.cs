@@ -254,23 +254,33 @@ public class Weapon : MonoBehaviour
                     m_IsFiring = false;
 
 
-				// Play effects.
-				if (m_MuzzleFlashes.Count > 0)
-				{
-					for (int i = 0; i < m_MuzzleFlashes.Count; i++)
-						m_MuzzleFlashes[i].Play();
-				}
-				if (m_BulletCasings.Count > 0)
-				{
-					for (int i = 0; i < m_BulletCasings.Count; i++)
-						m_BulletCasings[i].Play();
-				}
-				if (m_GunAnimators.Count > 0)
-					for (int i = 0; i < m_GunAnimators.Count; i++)
-						m_GunAnimators[i].SetTrigger("IsFiring");
-				if (m_ArmsAnimators.Count > 0)
-					for (int i = 0; i < m_ArmsAnimators.Count; i++)
-						m_ArmsAnimators[i].SetTrigger("IsFiring");
+                // Play effects.
+                if (m_DualWield)
+                {
+                    if (m_MuzzleFlashes.Count > 0)
+                    {
+                        for (int i = 0; i < m_MuzzleFlashes.Count; i++)
+                            m_MuzzleFlashes[i].Play();
+                    }
+                    if (m_BulletCasings.Count > 0)
+                    {
+                        for (int i = 0; i < m_BulletCasings.Count; i++)
+                            m_BulletCasings[i].Play();
+                    }
+                    if (m_GunAnimators.Count > 0)
+                        for (int i = 0; i < m_GunAnimators.Count; i++)
+                            m_GunAnimators[i].SetTrigger("IsFiring");
+                    if (m_ArmsAnimators.Count > 0)
+                        for (int i = 0; i < m_ArmsAnimators.Count; i++)
+                            m_ArmsAnimators[i].SetTrigger("IsFiring");
+                }
+                else
+                {
+                    m_MuzzleFlashes[0].Play();
+                    m_BulletCasings[0].Play();
+                    m_GunAnimators[0].SetTrigger("IsFiring");
+                    m_ArmsAnimators[0].SetTrigger("IsFiring");
+                }
 
 				// Currently gets rid of bullet sprite before UI has fully updated //
 				m_UIManager.DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);
@@ -305,6 +315,7 @@ public class Weapon : MonoBehaviour
                 {
                     if (hit.transform.gameObject != null)
                     {
+                        //Debug.Log("Bad");
                         if (hit.transform.TryGetComponent(out Inventory agentInventory))
                         {                            Debug.Log("BAD");
                             agentInventory.TakeDamage(m_BulletDamage);

@@ -517,6 +517,16 @@ public class Weapon : MonoBehaviour
     {
         if (Time.time >= m_NextTimeToFire && !m_IsReloading)//(time.time or time.deltatime)
         {
+            if (m_SemiAuto) // If the gun is semi auto, we have one other check to do.
+            {
+                // To prevent people from being able to spam semi automatic guns really fast, I'm going to prevent them from firing unless the animation is complete.
+                if (!m_GunAnimators[0].GetCurrentAnimatorStateInfo(0).IsName("Idle")) // Only semi automatic weapons in the game are not dual wielded so we don't have to check the whole list of gun animators.
+                {
+                    Debug.Log("Pistol not allowed to shoot since it wasn't in an idle frame.");
+                    return false;
+                }
+            }
+
             // Defines the firing rate as rounds per minute (hard coded 60s)
             m_NextTimeToFire = Time.time + (60.0f / m_FireRate);
             return true;

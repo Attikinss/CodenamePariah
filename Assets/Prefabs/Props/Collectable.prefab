@@ -98,6 +98,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_RotationSpeed: 60
+  m_BobHeight: 0.125
+  m_BobSpeed: 2
 --- !u!135 &7088882978088968656
 SphereCollider:
   m_ObjectHideFlags: 0

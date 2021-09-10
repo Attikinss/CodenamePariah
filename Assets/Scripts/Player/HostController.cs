@@ -662,7 +662,7 @@ public class HostController : InputController
         // script to have another list that compliments the m_Weapons list. This new list would match
         // each element in the m_Weapons list and store the corresponding weapons WeaponConfiguration script.
 
-        return m_Inventory.m_CurrentWeapon.gameObject.GetComponent<WeaponConfiguration>();
+        return m_Inventory.m_CurrentWeapon.m_Config;
     }
 
     private Transform GetCurrentWeaponTransform() => m_Inventory.m_CurrentWeapon.transform;

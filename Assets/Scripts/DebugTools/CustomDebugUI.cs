@@ -125,19 +125,25 @@ public class CustomDebugUI : MonoBehaviour
     {
         if (m_playerController)
         {
-            GraphicalDebugger.Assign<bool>(m_playerController.IsGrounded, "IsGrounded", m_isGroundedText);
-            GraphicalDebugger.Assign<float>(m_playerController.m_CurrentMoveSpeed, "MoveSpeed", m_moveSpeedText);
-            GraphicalDebugger.Assign<bool>(m_playerController.m_IsMoving, "IsMoving", m_isMovingText);
+            MovementInfo movInfo = m_playerController.m_MovInfo;
+            CombatInfo combatInfo = m_playerController.m_CombatInfo;
+
+            GraphicalDebugger.Assign<bool>(movInfo.m_IsGrounded, "IsGrounded", m_isGroundedText);
+            GraphicalDebugger.Assign<float>(movInfo.m_CurrentMoveSpeed, "MoveSpeed", m_moveSpeedText);
+            GraphicalDebugger.Assign<bool>(movInfo.m_IsMoving, "IsMoving", m_isMovingText);
             GraphicalDebugger.Assign<float>(m_playerController.Rigidbody.velocity.y, "YVelocity", m_YVelocityText);
-            GraphicalDebugger.Assign<Vector3>(m_playerController.CacheMovDir, "CacheMovDir", m_CacheMovDirText);
-            GraphicalDebugger.Assign<float>(m_playerController.MovementInput.x, "XAxis", m_XAxisText);
-            GraphicalDebugger.Assign<float>(m_playerController.MovementInput.y, "ZAxis", m_ZAxisText);
+            GraphicalDebugger.Assign<Vector3>(movInfo.m_CacheMovDirection, "CacheMovDir", m_CacheMovDirText);
+            GraphicalDebugger.Assign<float>(movInfo.MovementInput.x, "XAxis", m_XAxisText);
+            GraphicalDebugger.Assign<float>(movInfo.MovementInput.y, "ZAxis", m_ZAxisText);
 
-            GraphicalDebugger.Assign<bool>(m_playerController.IsSliding, "IsSliding", m_IsSlidingText);
-            GraphicalDebugger.Assign<Vector3>(m_playerController.SlideDir, "SlideDir", m_SlideDirText);
-            GraphicalDebugger.Assign<float>(m_playerController.SlideCounter, "SlideCounter", m_SlideCounterText);
+            GraphicalDebugger.Assign<bool>(movInfo.m_IsSliding, "IsSliding", m_IsSlidingText);
+            GraphicalDebugger.Assign<Vector3>(movInfo.m_SlideDir, "SlideDir", m_SlideDirText);
+            GraphicalDebugger.Assign<float>(movInfo.m_SlideCounter, "SlideCounter", m_SlideCounterText);
 
-            GraphicalDebugger.Assign<Vector3>(m_playerController.AdditionalRecoilRotation, "AdditionalRecoilRotation", m_AdditionalRecoilText);
+
+            CameraRecoil cameraRecoil = m_playerController.m_AccumulatedRecoil;
+
+            GraphicalDebugger.Assign<Vector3>(cameraRecoil.accumulatedVisualRecoil, "AdditionalRecoilRotation", m_AdditionalRecoilText);
 
             GraphicalDebugger.Assign<Vector3>(m_playerController.LookInput, "LookInput", m_LookInputText);
 
@@ -147,17 +153,17 @@ public class CustomDebugUI : MonoBehaviour
             //GraphicalDebugger.Assign<Vector3>(m_playerController.WeaponRecoilRot, "WeaponRecoilRot", m_WeaponRecoilRotText);
             GraphicalDebugger.Assign<Vector3>(weaponConfig.m_WeaponRecoilTransform, "WeaponRecoilTransf", m_WeaponRecoilTransfText);
 
-            GraphicalDebugger.Assign<float>(m_playerController.AdditionalCameraRecoilX, "VerticalCameraRecoil", m_VerticalCameraRecoilText);
-            GraphicalDebugger.Assign<float>(m_playerController.AdditionalCameraRecoilY, "HorizontalCameraRecoil", m_HorizontalCameraRecoilText);
+            GraphicalDebugger.Assign<float>(cameraRecoil.accumulatedPatternRecoilX, "VerticalCameraRecoil", m_VerticalCameraRecoilText);
+            GraphicalDebugger.Assign<float>(cameraRecoil.accumulatedPatternRecoilY, "HorizontalCameraRecoil", m_HorizontalCameraRecoilText);
 
             GraphicalDebugger.Assign<float>(Time.time - m_playerController.GetCurrentWeapon().m_FireStartTime, "FireHeldCounter", m_FireHeldCounterText);
 
-            GraphicalDebugger.Assign<float>(m_playerController.CurrentCamRot.x, "CurrentCamXRot", m_CurrentCamXRotText);
-            GraphicalDebugger.Assign<float>(m_playerController.PreviousCameraRotation.x, "PreviousCamXRot", m_PreviousCamXRotText);
+            GraphicalDebugger.Assign<float>(combatInfo.m_camForward.x, "CurrentCamXRot", m_CurrentCamXRotText);
+            GraphicalDebugger.Assign<float>(combatInfo.m_PrevCamForward.x, "PreviousCamXRot", m_PreviousCamXRotText);
 
             // I know it's super inefficient to recalculate the dot product here but this wont be in the builds of the game so I think its okay, plus it saved me like 1 minute.
-            Vector3 modifiedCurrent = new Vector2(m_playerController.CurrentCamRot.y, 1);
-            Vector3 modifiedPrevious = new Vector2(m_playerController.PreviousCameraRotation.y, 1);
+            Vector3 modifiedCurrent = new Vector2(combatInfo.m_camForward.y, 1);
+            Vector3 modifiedPrevious = new Vector2(combatInfo.m_PrevCamForward.y, 1);
             float dot = Vector2.Dot(modifiedCurrent.normalized, modifiedPrevious.normalized);
             GraphicalDebugger.Assign<float>(dot, "CameraDotProduct", m_CameraRecoilDotProductText);
         }

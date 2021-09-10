@@ -427,6 +427,14 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
+                    ""name"": ""Select3"",
+                    ""type"": ""Button"",
+                    ""id"": ""34ac542d-357c-4a6b-a6aa-2be3b09a062e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
                     ""name"": ""RecoilTest"",
                     ""type"": ""Button"",
                     ""id"": ""bcf73363-bc80-4831-b974-7150f49040b0"",
@@ -462,6 +470,14 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""name"": ""Debug"",
                     ""type"": ""Button"",
                     ""id"": ""eae199af-e3a2-4a7c-b07a-7d79b6689faa"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""ToggleHUD"",
+                    ""type"": ""Button"",
+                    ""id"": ""ef142069-848d-41fb-81e7-af98a812f8b8"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -874,6 +890,28 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""action"": ""Debug"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b3e6ed3e-811b-47c5-a261-13e34e8b8ea6"",
+                    ""path"": ""<Keyboard>/f4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""ToggleHUD"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""95045599-4679-4d11-813e-37f2645a4094"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Select3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -934,11 +972,13 @@ public class @InputMap : IInputActionCollection, IDisposable
         m_Host_Slide = m_Host.FindAction("Slide", throwIfNotFound: true);
         m_Host_Select1 = m_Host.FindAction("Select1", throwIfNotFound: true);
         m_Host_Select2 = m_Host.FindAction("Select2", throwIfNotFound: true);
+        m_Host_Select3 = m_Host.FindAction("Select3", throwIfNotFound: true);
         m_Host_RecoilTest = m_Host.FindAction("RecoilTest", throwIfNotFound: true);
         m_Host_Ability2 = m_Host.FindAction("Ability2", throwIfNotFound: true);
         m_Host_Reload = m_Host.FindAction("Reload", throwIfNotFound: true);
         m_Host_Ability3 = m_Host.FindAction("Ability3", throwIfNotFound: true);
         m_Host_Debug = m_Host.FindAction("Debug", throwIfNotFound: true);
+        m_Host_ToggleHUD = m_Host.FindAction("ToggleHUD", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1072,11 +1112,13 @@ public class @InputMap : IInputActionCollection, IDisposable
     private readonly InputAction m_Host_Slide;
     private readonly InputAction m_Host_Select1;
     private readonly InputAction m_Host_Select2;
+    private readonly InputAction m_Host_Select3;
     private readonly InputAction m_Host_RecoilTest;
     private readonly InputAction m_Host_Ability2;
     private readonly InputAction m_Host_Reload;
     private readonly InputAction m_Host_Ability3;
     private readonly InputAction m_Host_Debug;
+    private readonly InputAction m_Host_ToggleHUD;
     public struct HostActions
     {
         private @InputMap m_Wrapper;
@@ -1092,11 +1134,13 @@ public class @InputMap : IInputActionCollection, IDisposable
         public InputAction @Slide => m_Wrapper.m_Host_Slide;
         public InputAction @Select1 => m_Wrapper.m_Host_Select1;
         public InputAction @Select2 => m_Wrapper.m_Host_Select2;
+        public InputAction @Select3 => m_Wrapper.m_Host_Select3;
         public InputAction @RecoilTest => m_Wrapper.m_Host_RecoilTest;
         public InputAction @Ability2 => m_Wrapper.m_Host_Ability2;
         public InputAction @Reload => m_Wrapper.m_Host_Reload;
         public InputAction @Ability3 => m_Wrapper.m_Host_Ability3;
         public InputAction @Debug => m_Wrapper.m_Host_Debug;
+        public InputAction @ToggleHUD => m_Wrapper.m_Host_ToggleHUD;
         public InputActionMap Get() { return m_Wrapper.m_Host; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1139,6 +1183,9 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Select2.started -= m_Wrapper.m_HostActionsCallbackInterface.OnSelect2;
                 @Select2.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnSelect2;
                 @Select2.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnSelect2;
+                @Select3.started -= m_Wrapper.m_HostActionsCallbackInterface.OnSelect3;
+                @Select3.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnSelect3;
+                @Select3.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnSelect3;
                 @RecoilTest.started -= m_Wrapper.m_HostActionsCallbackInterface.OnRecoilTest;
                 @RecoilTest.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnRecoilTest;
                 @RecoilTest.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnRecoilTest;
@@ -1154,6 +1201,9 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Debug.started -= m_Wrapper.m_HostActionsCallbackInterface.OnDebug;
                 @Debug.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnDebug;
                 @Debug.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnDebug;
+                @ToggleHUD.started -= m_Wrapper.m_HostActionsCallbackInterface.OnToggleHUD;
+                @ToggleHUD.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnToggleHUD;
+                @ToggleHUD.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnToggleHUD;
             }
             m_Wrapper.m_HostActionsCallbackInterface = instance;
             if (instance != null)
@@ -1191,6 +1241,9 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Select2.started += instance.OnSelect2;
                 @Select2.performed += instance.OnSelect2;
                 @Select2.canceled += instance.OnSelect2;
+                @Select3.started += instance.OnSelect3;
+                @Select3.performed += instance.OnSelect3;
+                @Select3.canceled += instance.OnSelect3;
                 @RecoilTest.started += instance.OnRecoilTest;
                 @RecoilTest.performed += instance.OnRecoilTest;
                 @RecoilTest.canceled += instance.OnRecoilTest;
@@ -1206,6 +1259,9 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Debug.started += instance.OnDebug;
                 @Debug.performed += instance.OnDebug;
                 @Debug.canceled += instance.OnDebug;
+                @ToggleHUD.started += instance.OnToggleHUD;
+                @ToggleHUD.performed += instance.OnToggleHUD;
+                @ToggleHUD.canceled += instance.OnToggleHUD;
             }
         }
     }
@@ -1250,10 +1306,12 @@ public class @InputMap : IInputActionCollection, IDisposable
         void OnSlide(InputAction.CallbackContext context);
         void OnSelect1(InputAction.CallbackContext context);
         void OnSelect2(InputAction.CallbackContext context);
+        void OnSelect3(InputAction.CallbackContext context);
         void OnRecoilTest(InputAction.CallbackContext context);
         void OnAbility2(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);
         void OnAbility3(InputAction.CallbackContext context);
         void OnDebug(InputAction.CallbackContext context);
+        void OnToggleHUD(InputAction.CallbackContext context);
     }
 }

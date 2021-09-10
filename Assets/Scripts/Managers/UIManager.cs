@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+public enum WEAPONTYPE
+{ 
+    RIFLE,
+    PISTOL,
+    DUAL,
+    NONE
+}
 public class UIManager : MonoBehaviour
 {
     [SerializeField]
@@ -21,8 +28,17 @@ public class UIManager : MonoBehaviour
     [Tooltip("All the Magazine UI elements active on this character")]
     private List<Magazine> m_PistolMagazines;
 
+    [SerializeField]
+    [Tooltip("The dual wielding Magazine UI elements.")]
+    private List<Magazine> m_DualMagazines;
+
     [HideInInspector]
-    public bool m_IsRifle = true;
+    //public bool m_IsRifle = true;
+    // Because I'm adding dual weapons I can't rely on this temporary bool, so I'll make a new temporary enum instead!
+    public WEAPONTYPE m_CurrentWeaponType = WEAPONTYPE.RIFLE;
+
+    public static bool s_Hide = false;
+    public Canvas m_Canvas;
 
     //private static UIManager s_Instance;
     //private void Awake()
@@ -42,10 +58,10 @@ public class UIManager : MonoBehaviour
     /// HideMagazine() is a veeery temporary function just so the apporpriate magazines appear when the player switches weapons.
     /// </summary>
     /// <param name="rifle"></param>
-    public void HideMagazine(bool rifle)
+    public void HideMagazine(WEAPONTYPE type)
     {
         // When rifle is held, hide the pistol magazines.
-        if (rifle)
+        if (type == WEAPONTYPE.RIFLE)
         {
             for (int i = 0; i < m_Magazines.Count; i++)
             {
@@ -55,9 +71,13 @@ public class UIManager : MonoBehaviour
             {
                 m_PistolMagazines[i].gameObject.SetActive(false);
             }
+            for (int i = 0; i < m_DualMagazines.Count; i++)
+            {
+                m_DualMagazines[i].gameObject.SetActive(false);
+            }
         }
         // When pistol is held, hide the rifle magazines.
-        else
+        else if (type == WEAPONTYPE.PISTOL)
         {
             for (int i = 0; i < m_Magazines.Count; i++)
             {
@@ -67,55 +87,79 @@ public class UIManager : MonoBehaviour
             {
                 m_PistolMagazines[i].gameObject.SetActive(true);
             }
+            for (int i = 0; i < m_DualMagazines.Count; i++)
+            {
+                m_DualMagazines[i].gameObject.SetActive(false);
+            }
+        }
+        else if (type == WEAPONTYPE.DUAL)
+        {
+            for (int i = 0; i < m_Magazines.Count; i++)
+                m_Magazines[i].gameObject.SetActive(false);
+            for (int i = 0; i < m_PistolMagazines.Count; i++)
+                m_PistolMagazines[i].gameObject.SetActive(false);
+            for (int i = 0; i < m_DualMagazines.Count; i++)
+                m_DualMagazines[i].gameObject.SetActive(true);
         }
     }
 
     /// <summary>Disables the last magazine gameObject.</summary>
     public void DisableMagazine()
     {
-        if (m_IsRifle)
+        if (m_CurrentWeaponType == WEAPONTYPE.RIFLE)
             m_Magazines[m_Magazines.Count - 1].gameObject.SetActive(false);
-        else
+        else if (m_CurrentWeaponType == WEAPONTYPE.PISTOL)
             m_PistolMagazines[m_PistolMagazines.Count - 1].gameObject.SetActive(false);
+        else if (m_CurrentWeaponType == WEAPONTYPE.DUAL)
+            m_DualMagazines[m_DualMagazines.Count - 1].gameObject.SetActive(false);
+
     }
 
     /// <summary>Enables bullets in current magazine.</summary>
     /// <param name="i"></param>
     public void EnableBulletSprite(int i)
     {
-        if (m_IsRifle)
+        if (m_CurrentWeaponType == WEAPONTYPE.RIFLE)
             m_Magazines[0].BulletSprites[i].SetActive(true);
-        else
+        else if (m_CurrentWeaponType == WEAPONTYPE.PISTOL)
             m_PistolMagazines[0].BulletSprites[i].SetActive(true);
+        else if (m_CurrentWeaponType == WEAPONTYPE.DUAL)
+            m_DualMagazines[0].BulletSprites[i].SetActive(true);
     }
 
     /// <summary>Disables bullets in last magazine.</summary>
     /// <param name="i"></param>
     public void DisableBulletSpriteInLastMag(int i)
     {
-        if(m_IsRifle)
+        if (m_CurrentWeaponType == WEAPONTYPE.RIFLE)
             m_Magazines[m_Magazines.Count - 1].BulletSprites[i].SetActive(false);
-        else
+        else if (m_CurrentWeaponType == WEAPONTYPE.PISTOL)
             m_PistolMagazines[m_PistolMagazines.Count - 1].BulletSprites[i].SetActive(false);
+        else if (m_CurrentWeaponType == WEAPONTYPE.DUAL)
+            m_DualMagazines[m_DualMagazines.Count - 1].BulletSprites[i].SetActive(false);
     }
 
     /// <summary>Disables bullets in current magazine.</summary>
     /// <param name="lastBullet"></param>
     public void DisableBulletSpriteInCurrentMag(int lastBullet)
     {
-        if(m_IsRifle)
+        if (m_CurrentWeaponType == WEAPONTYPE.RIFLE)
             m_Magazines[0].BulletSprites[lastBullet].SetActive(false);
-        else
+        else if (m_CurrentWeaponType == WEAPONTYPE.PISTOL)
             m_PistolMagazines[0].BulletSprites[lastBullet].SetActive(false);
+        else if (m_CurrentWeaponType == WEAPONTYPE.DUAL)
+            m_DualMagazines[0].BulletSprites[lastBullet].SetActive(false);
     }
 
     /// <summary>Removes last magazine from the array.</summary>
     public void RemoveMagazine()
     {
-        if(m_IsRifle)
+        if (m_CurrentWeaponType == WEAPONTYPE.RIFLE)
             m_Magazines.RemoveAt(m_Magazines.Count - 1);
-        else
+        else if (m_CurrentWeaponType == WEAPONTYPE.PISTOL)
             m_PistolMagazines.RemoveAt(m_PistolMagazines.Count - 1);
+        else if (m_CurrentWeaponType == WEAPONTYPE.DUAL)
+            m_DualMagazines.RemoveAt(m_DualMagazines.Count - 1);
     }
 
     //public void TotalAmmoGreaterThanMagazine(int magazineSize)
@@ -143,10 +187,14 @@ public class UIManager : MonoBehaviour
     /// <returns></returns>
     public bool FirstMagBulletSpriteActive(int i)
     {
-        if(m_IsRifle)
+        if (m_CurrentWeaponType == WEAPONTYPE.RIFLE)
             return m_Magazines[0].BulletSprites[i].activeSelf;
-        else
+        else if (m_CurrentWeaponType == WEAPONTYPE.PISTOL)
             return m_PistolMagazines[0].BulletSprites[i].activeSelf;
+        else if (m_CurrentWeaponType == WEAPONTYPE.DUAL)
+            return m_DualMagazines[0].BulletSprites[i].activeSelf;
+        else
+            return false; // eh not really error checking but whateva!
     }
 
     /// <summary>Checks if bullet sprites in last magazine are active.</summary>
@@ -154,10 +202,14 @@ public class UIManager : MonoBehaviour
     /// <returns></returns>
     public bool LastMagBulletSpriteActive(int i)
     {
-        if(m_IsRifle)
+        if (m_CurrentWeaponType == WEAPONTYPE.RIFLE)
             return m_Magazines[m_Magazines.Count - 1].BulletSprites[i].activeSelf;
-        else
+        else if (m_CurrentWeaponType == WEAPONTYPE.PISTOL)
             return m_PistolMagazines[m_PistolMagazines.Count - 1].BulletSprites[i].activeSelf;
+        else if (m_CurrentWeaponType == WEAPONTYPE.DUAL)
+            return m_DualMagazines[m_DualMagazines.Count - 1].BulletSprites[i].activeSelf;
+        else
+            return false;
     }
 
     /// <summary>Activates if (total ammo % magazineSize = 0).</summary>
@@ -212,6 +264,12 @@ public class UIManager : MonoBehaviour
 
     public void UpdateWeaponUI(Weapon weapon)
     {
+        if (s_Hide)
+            m_Canvas.enabled = false;
+        else
+            m_Canvas.enabled = true;
+
+
         if (!m_AmmoDisplay) return;
 
         if (weapon.TotalAmmoEmpty())

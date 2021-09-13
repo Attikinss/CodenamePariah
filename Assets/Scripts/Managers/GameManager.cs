@@ -94,9 +94,9 @@ public class GameManager : MonoBehaviour
 
 	private void OnDrawGizmos()
 	{
-        for (int i = 0; i < m_decalPool.Count; i++)
-        {
-            m_decalPool[i].DrawGizmo();
-        }
+        //for (int i = 0; i < m_decalPool.Count; i++)
+        //{
+        //    m_decalPool[i].DrawGizmo();
+        //}
     }
 }

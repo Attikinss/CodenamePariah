@@ -449,6 +449,9 @@ public class Weapon : MonoBehaviour
             //m_WeaponRecoilRot -= new Vector3(weaponConfig.m_WeaponRotRecoilVertStrength, 0, 0);
             m_WeaponRecoilRot -= gunVisRecoil;
 
+            // Clamping because the gun recoils a bit to high currently.
+            m_WeaponRecoilRot.x = Mathf.Clamp(m_WeaponRecoilRot.x, -weaponConfig.m_WeaponVisualRecoilClamp, weaponConfig.m_WeaponVisualRecoilClamp);
+
             Vector3 weaponPosChange = Vector3.zero;
             weaponPosChange.x = 0;
             weaponPosChange.y = 0;

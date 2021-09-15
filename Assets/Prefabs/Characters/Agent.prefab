@@ -1375,6 +1375,7 @@ MonoBehaviour:
   m_WeaponTransformRecoilZStrength: 0.01
   m_ADSRecoilModifier: 0.15
   m_WeaponRecoilTransform: {x: 0, y: 0, z: -7e-45}
+  m_WeaponVisualRecoilClamp: 10
   m_VerticalRecoil:
     serializedVersion: 2
     m_Curve:
@@ -8946,6 +8947,7 @@ MonoBehaviour:
   m_WeaponTransformRecoilZStrength: 0.01
   m_ADSRecoilModifier: 0.15
   m_WeaponRecoilTransform: {x: 0, y: 0, z: -0.00003173851}
+  m_WeaponVisualRecoilClamp: 10
   m_VerticalRecoil:
     serializedVersion: 2
     m_Curve:
@@ -9150,6 +9152,7 @@ MonoBehaviour:
   m_WeaponTransformRecoilZStrength: 0.01
   m_ADSRecoilModifier: 0.15
   m_WeaponRecoilTransform: {x: 0, y: 0, z: -7e-45}
+  m_WeaponVisualRecoilClamp: 10
   m_VerticalRecoil:
     serializedVersion: 2
     m_Curve:
@@ -9340,6 +9343,10 @@ PrefabInstance:
       propertyPath: m_LocalRotation.x
       value: -0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 0b0f9a58bbfb9064098d14dcf43f0480, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4a1a9ae80b175e646ac02bde7d27260c, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0b0f9a58bbfb9064098d14dcf43f0480, type: 3}
 --- !u!4 &543450653674924541 stripped

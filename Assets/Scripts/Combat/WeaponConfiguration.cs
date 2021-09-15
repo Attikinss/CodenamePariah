@@ -48,6 +48,8 @@ public class WeaponConfiguration : MonoBehaviour
     public float m_ADSRecoilModifier = 1;
     [HideInInspector]
     public Vector3 m_WeaponRecoilTransform;
+    [Tooltip("Clamps the x rotation for the weapons visual recoil.")]
+    public float m_WeaponVisualRecoilClamp = 10;
 
     [Header("Camera Recoil Pattern")]
     public AnimationCurve m_VerticalRecoil;

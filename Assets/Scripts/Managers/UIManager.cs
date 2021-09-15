@@ -47,22 +47,26 @@ public class UIManager : MonoBehaviour
     public List<Image> m_AssaultMag1Bullets = new List<Image>();
     public List<Image> m_AssaultMag2Bullets = new List<Image>();
     public List<Image> m_AssaultMag3Bullets = new List<Image>();
+    // same for dual wielded weapon.
+    public List<Image> m_DualMag1Bullets = new List<Image>();
+    public List<Image> m_DualMag2Bullets = new List<Image>();
+    public List<Image> m_DualMag3Bullets = new List<Image>();
 
-	//private static UIManager s_Instance;
-	//private void Awake()
-	//{
-	//       if (!s_Instance)
-	//       {
-	//           s_Instance = this;
-	//       }
-	//       else
-	//       {
-	//           Debug.LogWarning("UIManager already exists in scene!");
-	//           Destroy(this);
-	//       }
-	//}
+    //private static UIManager s_Instance;
+    //private void Awake()
+    //{
+    //       if (!s_Instance)
+    //       {
+    //           s_Instance = this;
+    //       }
+    //       else
+    //       {
+    //           Debug.LogWarning("UIManager already exists in scene!");
+    //           Destroy(this);
+    //       }
+    //}
 
-	public void Awake()
+    public void Awake()
 	{
         // Temporarily getting all the Bullet Image components because I've discovered setting game objects to false is slow if you do it a lot of times.
         // Also I'm getting the components through code so I don't change the player prefab.
@@ -72,6 +76,14 @@ public class UIManager : MonoBehaviour
             m_AssaultMag1Bullets.Add(m_Magazines[0].BulletSprites[i].GetComponent<Image>());
             m_AssaultMag2Bullets.Add(m_Magazines[1].BulletSprites[i].GetComponent<Image>());
             m_AssaultMag3Bullets.Add(m_Magazines[2].BulletSprites[i].GetComponent<Image>());
+        }
+
+        // Same temporary fix for dual wielded weapon.
+        for (int i = m_DualMagazines[0].BulletSprites.Length - 1; i >= 0; i--)
+        {
+            m_DualMag1Bullets.Add(m_DualMagazines[0].BulletSprites[i].GetComponent<Image>());
+            m_DualMag2Bullets.Add(m_DualMagazines[1].BulletSprites[i].GetComponent<Image>());
+            m_DualMag3Bullets.Add(m_DualMagazines[2].BulletSprites[i].GetComponent<Image>());
         }
 	}
 
@@ -141,7 +153,7 @@ public class UIManager : MonoBehaviour
     public void EnableBulletSprite(int i)
     {
         if (m_CurrentWeaponType == WEAPONTYPE.RIFLE)
-        { 
+        {
             // Because of my lag fix of using .enabled rather than SetActive, we have to .enable = true here just incase.
             m_Magazines[0].BulletSprites[i].SetActive(true);
             m_AssaultMag1Bullets[i].enabled = true;
@@ -149,7 +161,11 @@ public class UIManager : MonoBehaviour
         else if (m_CurrentWeaponType == WEAPONTYPE.PISTOL)
             m_PistolMagazines[0].BulletSprites[i].SetActive(true);
         else if (m_CurrentWeaponType == WEAPONTYPE.DUAL)
+        { 
             m_DualMagazines[0].BulletSprites[i].SetActive(true);
+            // Same temporary fix like for the rifle.
+            m_DualMag1Bullets[i].enabled = true;
+        }
     }
 
     /// <summary>Disables bullets in last magazine.</summary>
@@ -176,7 +192,11 @@ public class UIManager : MonoBehaviour
         else if (m_CurrentWeaponType == WEAPONTYPE.PISTOL)
             m_PistolMagazines[0].BulletSprites[lastBullet].SetActive(false);
         else if (m_CurrentWeaponType == WEAPONTYPE.DUAL)
-            m_DualMagazines[0].BulletSprites[lastBullet].SetActive(false);
+        //    m_DualMagazines[0].BulletSprites[lastBullet].SetActive(false);
+        {
+            // Same fix like for rifle. .enabled is much faster than SetActive().
+            m_DualMag1Bullets[lastBullet].enabled = false;
+        }
     }
 
     /// <summary>Removes last magazine from the array.</summary>

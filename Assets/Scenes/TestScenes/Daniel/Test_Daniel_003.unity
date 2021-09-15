@@ -10041,6 +10041,10 @@ PrefabInstance:
       value: Puzzle_001_Floor
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 908a44062395eb84891a038bc65ba35c, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 908a44062395eb84891a038bc65ba35c, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}

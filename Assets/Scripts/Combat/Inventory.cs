@@ -53,13 +53,25 @@ public class Inventory : MonoBehaviour
 
     /// <summary>Takes health away equal to the damage value.</summary>
     /// <param name="damage"></param>
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, bool fromAbility = false)
     {
         m_Health -= damage;
         if (m_Health <= 0)
         {
             if (TryGetComponent(out WhiteWillow.Agent agent))
+            {
+                if (agent.Possessed)
+                {
+                    if (fromAbility)
+                        Telemetry.TracePosition("Agent-PlayerKill", transform.position);
+                    else
+                        Telemetry.TracePosition("Agent-Death", transform.position);
+                }
+                else
+                    Telemetry.TracePosition("Agent-PlayerKill", transform.position);
+
                 agent.Kill();
+            }
         }
 
         UpdateHealthUI();

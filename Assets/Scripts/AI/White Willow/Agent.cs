@@ -10,7 +10,6 @@ namespace WhiteWillow
     {
         public BehaviourTree InputTree;
 
-        
         public bool Possessed { get; private set; } = false;
 
         private BehaviourTree m_RuntimeTree;

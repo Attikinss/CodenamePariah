@@ -1505,6 +1505,7 @@ MonoBehaviour:
   m_ArmsAnimators: []
   m_SemiAuto: 0
   m_DualWield: 1
+  m_Config: {fileID: 0}
 --- !u!1 &364557065
 GameObject:
   m_ObjectHideFlags: 0
@@ -7710,7 +7711,7 @@ MonoBehaviour:
   m_MovementSpeed: 650
   m_LookSensitivity: 40
   m_DashDuration: 0.5
-  m_DashDistance: 5
+  m_DashDistance: 12.5
   m_PlayerInput: {fileID: 981726636163737739}
   m_Active: 0
   m_Dashing: 0
@@ -8597,6 +8598,7 @@ MonoBehaviour:
   m_ArmsAnimators: []
   m_SemiAuto: 0
   m_DualWield: 0
+  m_Config: {fileID: 0}
 --- !u!1 &981726637825336997
 GameObject:
   m_ObjectHideFlags: 0
@@ -8834,7 +8836,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8887062761979784835}
   m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.02549, y: 0.05686, z: 0.0309}
+  m_LocalPosition: {x: -0.0244, y: 0.05686, z: 0.0309}
   m_LocalScale: {x: 0.08883584, y: 0.08883584, z: 0.08883584}
   m_Children: []
   m_Father: {fileID: 8887062762880439753}
@@ -9033,7 +9035,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Camera: {fileID: 981726637825336994}
-  m_BulletDamage: 20
+  m_BulletDamage: 26
   m_RoundsInMagazine: 7
   m_MagazineSize: 7
   m_ReserveAmmo: 14
@@ -9072,6 +9074,7 @@ MonoBehaviour:
   - {fileID: 515641255}
   m_SemiAuto: 1
   m_DualWield: 0
+  m_Config: {fileID: 0}
 --- !u!1 &8887062762969234156
 GameObject:
   m_ObjectHideFlags: 0
@@ -9275,6 +9278,7 @@ MonoBehaviour:
   - {fileID: 12366648}
   m_SemiAuto: 0
   m_DualWield: 0
+  m_Config: {fileID: 0}
 --- !u!1001 &29291955
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10522,7 +10526,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7224660724667928220, guid: 1fe699f3df13d44469464804be6a0ffd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.0442
+      value: -0.0086
       objectReference: {fileID: 0}
     - target: {fileID: 7224660724667928220, guid: 1fe699f3df13d44469464804be6a0ffd, type: 3}
       propertyPath: m_LocalPosition.y

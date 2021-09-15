@@ -322,7 +322,7 @@ public class Weapon : MonoBehaviour
                             return;
                         }
 
-                        GameManager.Instance?.AddDecal(hit.transform, hit.point, hit.normal);
+                        GameManager.Instance?.PlaceDecal(hit.transform, hit.point, hit.normal);
 
                         // Adding a force to the hit object.
                         if (hit.rigidbody != null)

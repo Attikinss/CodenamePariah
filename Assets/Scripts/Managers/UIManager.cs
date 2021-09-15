@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-
+using UnityEngine.UI;
 public enum WEAPONTYPE
 { 
     RIFLE,
@@ -40,25 +40,46 @@ public class UIManager : MonoBehaviour
     public static bool s_Hide = false;
     public Canvas m_Canvas;
 
-    //private static UIManager s_Instance;
-    //private void Awake()
-    //{
-    //       if (!s_Instance)
-    //       {
-    //           s_Instance = this;
-    //       }
-    //       else
-    //       {
-    //           Debug.LogWarning("UIManager already exists in scene!");
-    //           Destroy(this);
-    //       }
-    //}
 
-    /// <summary>
-    /// HideMagazine() is a veeery temporary function just so the apporpriate magazines appear when the player switches weapons.
-    /// </summary>
-    /// <param name="rifle"></param>
-    public void HideMagazine(WEAPONTYPE type)
+    // These are super temporary. We really should rework the ui system.
+    // I'm only bothering for assault rifle because the pistol is semi automatic and doesn't really call set active that much.
+    // Might have to do it for the dual wield weapon but that's still being developed anyway.
+    public List<Image> m_AssaultMag1Bullets = new List<Image>();
+    public List<Image> m_AssaultMag2Bullets = new List<Image>();
+    public List<Image> m_AssaultMag3Bullets = new List<Image>();
+
+	//private static UIManager s_Instance;
+	//private void Awake()
+	//{
+	//       if (!s_Instance)
+	//       {
+	//           s_Instance = this;
+	//       }
+	//       else
+	//       {
+	//           Debug.LogWarning("UIManager already exists in scene!");
+	//           Destroy(this);
+	//       }
+	//}
+
+	public void Awake()
+	{
+        // Temporarily getting all the Bullet Image components because I've discovered setting game objects to false is slow if you do it a lot of times.
+        // Also I'm getting the components through code so I don't change the player prefab.
+        for (int i = m_Magazines[0].BulletSprites.Length - 1; i >= 0; i--) // Very risky only checking the first magazine and trusting all the other magazines will have the same amount
+        {                                                             // of bullet sprites but this is temporary so whatever.
+
+            m_AssaultMag1Bullets.Add(m_Magazines[0].BulletSprites[i].GetComponent<Image>());
+            m_AssaultMag2Bullets.Add(m_Magazines[1].BulletSprites[i].GetComponent<Image>());
+            m_AssaultMag3Bullets.Add(m_Magazines[2].BulletSprites[i].GetComponent<Image>());
+        }
+	}
+
+	/// <summary>
+	/// HideMagazine() is a veeery temporary function just so the apporpriate magazines appear when the player switches weapons.
+	/// </summary>
+	/// <param name="rifle"></param>
+	public void HideMagazine(WEAPONTYPE type)
     {
         // When rifle is held, hide the pistol magazines.
         if (type == WEAPONTYPE.RIFLE)
@@ -120,7 +141,11 @@ public class UIManager : MonoBehaviour
     public void EnableBulletSprite(int i)
     {
         if (m_CurrentWeaponType == WEAPONTYPE.RIFLE)
+        { 
+            // Because of my lag fix of using .enabled rather than SetActive, we have to .enable = true here just incase.
             m_Magazines[0].BulletSprites[i].SetActive(true);
+            m_AssaultMag1Bullets[i].enabled = true;
+        }
         else if (m_CurrentWeaponType == WEAPONTYPE.PISTOL)
             m_PistolMagazines[0].BulletSprites[i].SetActive(true);
         else if (m_CurrentWeaponType == WEAPONTYPE.DUAL)
@@ -144,7 +169,10 @@ public class UIManager : MonoBehaviour
     public void DisableBulletSpriteInCurrentMag(int lastBullet)
     {
         if (m_CurrentWeaponType == WEAPONTYPE.RIFLE)
-            m_Magazines[0].BulletSprites[lastBullet].SetActive(false);
+        //m_Magazines[0].BulletSprites[lastBullet].SetActive(false);
+        {
+            m_AssaultMag1Bullets[lastBullet].enabled = false; // Much faster than SetActive(), atleast in the editor.
+        }
         else if (m_CurrentWeaponType == WEAPONTYPE.PISTOL)
             m_PistolMagazines[0].BulletSprites[lastBullet].SetActive(false);
         else if (m_CurrentWeaponType == WEAPONTYPE.DUAL)

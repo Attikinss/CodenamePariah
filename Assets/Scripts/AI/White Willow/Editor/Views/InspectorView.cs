@@ -33,10 +33,5 @@ namespace WhiteWillow.Editor
             container.style.minWidth = 250;
             Add(container);
         }
-
-        public void Update()
-        {
-            m_PropertyEditor?.Repaint();
-        }
     }
 }

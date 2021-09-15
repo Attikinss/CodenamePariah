@@ -19,7 +19,6 @@ namespace WhiteWillow.Editor
         {
             m_SelectedNode = targetNode;
 
-            //System.Reflection.BindingFlags flags = System.Reflection.BindingFlags.Default;
             var fields = m_SelectedNode?.GetType().GetFields().ToList();
             Debug.Log($"Node: {fields.Count}");
 

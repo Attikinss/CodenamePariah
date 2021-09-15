@@ -28,37 +28,26 @@ public class Inventory : MonoBehaviour
     [HideInInspector]
     public Weapon m_CurrentWeapon; // I know this wasn't public by default, but I'm going to make it publically accessible so that I can swap weapons around form the HostController.cs script.
 
+    public WhiteWillow.Agent Owner { get; private set; }
 
     /// <summary>
     /// I've added a Awake() function here because m_CurrentWeapon was always unintialised. I'm going to initialise it here.
     /// </summary>
 	private void Awake()
 	{
-        if(m_Weapons.Count > 0)
+        Owner = GetComponent<WhiteWillow.Agent>();
+
+        if (m_Weapons.Count > 0)
             m_CurrentWeapon = m_Weapons[0]; // For now, m_CurrentWeapon will always start off as the first element in the m_Weapons list.
 	}
 
-	// Update is called once per frame
-	void Update()
-    {
-        DisplayHealth();
-
-        if (m_Health > 100)
-        {
-            m_Health = 100;
-            m_HealthSprite.SetActive(true);
-        }
-        if (m_Health < 0)
-        {
-            m_Health = 0;
-            m_HealthSprite.SetActive(false);
-        }
-    }
-
     /// <summary>Displays the current health.</summary>
-    void DisplayHealth() //move to ui Manager
+    void UpdateHealthUI() //move to ui Manager
     {
-        //m_HealthText.text = "";
+        // Doesn't matter that much given agents are
+        // destroyed along with everything attached
+        m_HealthSprite.SetActive(m_Health > 0);
+
         m_HealthText?.SetText(m_Health.ToString());
     }
 
@@ -84,6 +73,16 @@ public class Inventory : MonoBehaviour
                 agent.Kill();
             }
         }
+
+        UpdateHealthUI();
+    }
+
+    public void AddHealth(int amount)
+    {
+        // TODO: Replace hard coded max health
+        m_Health = (int)Mathf.Clamp(m_Health + amount, 0, 100);
+
+        UpdateHealthUI();
     }
 
     public int GetHealth() { return m_Health; }

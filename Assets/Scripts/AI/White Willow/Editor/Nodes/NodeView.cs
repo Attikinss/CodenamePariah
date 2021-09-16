@@ -255,6 +255,12 @@ namespace WhiteWillow.Editor
             OnNodeSelected?.Invoke(this);
         }
 
+        public bool IsMouseOver(Vector2 mousePos)
+        {
+            return (mousePos.x > Position.xMin && mousePos.y > Position.yMin &&
+                mousePos.x < Position.xMax && mousePos.y < Position.yMax);
+        }
+
         public void OnActive()
         {
             m_Highlight = true;

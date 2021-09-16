@@ -7,7 +7,7 @@ public class ArenaManager : MonoBehaviour
     public GameObject[] m_ArenaAgents;
     public GameObject m_OpenDoor;
     public GameObject m_ClosedDoor;
-    private int m_MinimumKills = 5;
+    public int m_MinimumKills = 5;
     int counter = 0;
 
     private void Update()

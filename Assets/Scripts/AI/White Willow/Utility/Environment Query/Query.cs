@@ -2,9 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[System.Serializable]
 public class Query
 {
+    public string ID { get; }
+
     public struct QueryValue
     {
         public Vector3 Position;
@@ -16,8 +17,9 @@ public class Query
     public List<QueryValue> Values { get; private set; }
     private bool m_DataInvalid = false;
 
-    public Query()
+    public Query(string id)
     {
+        ID = id;
         Values = new List<QueryValue>();
     }
 

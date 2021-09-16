@@ -79,6 +79,7 @@ public class PauseMenu : MonoBehaviour
         }
         //Time.timeScale = 1f;// time scale affects scene animations.
         m_GameIsPaused = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     public void Play()
@@ -103,7 +104,12 @@ public class PauseMenu : MonoBehaviour
         yield return new WaitForSeconds(m_TransitionTime);
 
         //SceneManager.LoadScene(levelIndex);
+#if UNITY_EDITOR
+        SceneManager.LoadScene("Test_Lauchlan_002");
+#else
         SceneManager.LoadScene("Arena_001");
+#endif
+
         //while (!asyncLoad.isDone)
         //{
         //    yield return null;
@@ -121,6 +127,7 @@ public class PauseMenu : MonoBehaviour
 
     public void Pause()
     {
+        Cursor.lockState = CursorLockMode.None;
         for (int i = 0; i < m_PauseMenuUI.Length; i++)
         {
             m_PauseMenuUI[i].SetActive(true);

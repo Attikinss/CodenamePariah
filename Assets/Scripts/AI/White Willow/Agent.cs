@@ -124,7 +124,7 @@ namespace WhiteWillow
 
         public void Kill()
         {
-            if (m_Possessed)
+            if (Possessed)
                 Release();
 
             // TODO: Use object pooling / queued destruction system

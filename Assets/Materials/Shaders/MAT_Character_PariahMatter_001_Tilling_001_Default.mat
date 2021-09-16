@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MAT_Character_PariahMatter_001_Tilling_001_Default
+  m_Name: Mat_Character_PariahMatter_001_Tilling_001_Default
   m_Shader: {fileID: -6465566751694194690, guid: a4dd1d5d8f00a394e81fe46621aaf00e, type: 3}
   m_ShaderKeywords: _DOUBLESIDED_ON _ENABLE_FOG_ON_TRANSPARENT _SURFACE_TYPE_TRANSPARENT
   m_LightmapFlags: 4

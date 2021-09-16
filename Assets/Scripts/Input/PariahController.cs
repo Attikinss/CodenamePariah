@@ -263,4 +263,11 @@ public class PariahController : InputController
             yield return null;
         }
     }
+
+    /// <summary>
+    /// GetHealth() gets around the private health.
+    /// Sorry for adding code into this script. It's just that health was private and I needed to access it from a UI script.
+    /// </summary>
+    /// <returns></returns>
+    public int GetHealth() { return m_Health; }
 }

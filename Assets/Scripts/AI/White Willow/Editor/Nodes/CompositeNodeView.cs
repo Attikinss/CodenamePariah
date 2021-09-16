@@ -8,7 +8,7 @@ namespace WhiteWillow.Editor
     public class CompositeNodeView : NodeView
     {
         /// <summary>Children of the composite node.</summary>
-        public HashSet<NodeView> Children { get; protected set; } = new HashSet<NodeView>();
+        public new HashSet<NodeView> Children { get; protected set; } = new HashSet<NodeView>();
 
         protected override void Construct()
         {

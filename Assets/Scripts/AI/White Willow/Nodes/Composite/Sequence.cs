@@ -7,7 +7,7 @@ namespace WhiteWillow.Nodes
     ///<br>until one returns a failure or all nodes are successful.</br>
     ///</summary>
     [Category("Composites")]
-    public class Sequence : Composite
+    public sealed class Sequence : Composite
     {
         public override string IconPath { get; } = "Icons/Sequence";
 
@@ -23,9 +23,6 @@ namespace WhiteWillow.Nodes
 
         protected override NodeResult OnTick()
         {
-            // Prevents traversal of this node while it's locked
-            if (Locked) return NodeResult.Locked;
-
             // No point doing anything
             if (Children.Count == 0) return NodeResult.Failure;
 

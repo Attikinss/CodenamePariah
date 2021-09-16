@@ -5,3 +5,96 @@ GridBackground {
     --spacing: 20;
     flex-grow: 1;
 }
+
+#Toolbar {
+    flex-direction: row;
+    justify-content: center;
+}
+
+.unity-toggle__label {
+    flex-grow: 1;
+    align-items: stretch;
+    justify-content: center;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    position: relative;
+    opacity: 1;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    max-width: none;
+}
+
+.unity-toggle__input {
+    flex-grow: 0;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#PropertiesToggle {
+    flex-grow: 0;
+    -unity-text-align: middle-center;
+    -unity-font-style: normal;
+    flex-shrink: 1;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    border-left-color: rgb(0, 0, 0);
+    border-right-color: rgb(0, 0, 0);
+    border-top-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(0, 0, 0);
+    flex-direction: row;
+    justify-content: center;
+}
+
+#BlackboardToggle {
+    flex-grow: 0;
+    -unity-text-align: middle-center;
+    -unity-font-style: normal;
+    flex-shrink: 1;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    border-left-color: rgb(0, 0, 0);
+    border-right-color: rgb(0, 0, 0);
+    border-top-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(0, 0, 0);
+    flex-direction: row;
+    justify-content: center;
+}
+
+#SettingsToggle {
+    flex-grow: 0;
+    -unity-text-align: middle-center;
+    -unity-font-style: normal;
+    flex-shrink: 1;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    border-left-color: rgb(0, 0, 0);
+    border-right-color: rgb(0, 0, 0);
+    border-top-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(0, 0, 0);
+    flex-direction: row;
+    justify-content: center;
+}

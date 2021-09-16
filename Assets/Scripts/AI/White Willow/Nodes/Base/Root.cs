@@ -4,7 +4,7 @@ using System.Collections;
 namespace WhiteWillow.Nodes
 {
     ///<summary>The root node of a behaviour tree. All computation begins from this node.</summary>
-    public class Root : BaseNode
+    public sealed class Root : BaseNode
     {
         public override string IconPath { get; } = "Icons/Root";
 

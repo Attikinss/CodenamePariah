@@ -1,0 +1,77 @@
+VisualElement {
+}
+
+#Title {
+    color: rgba(255, 255, 255, 255);
+    -unity-font-style: bold;
+    font-size: 20px;
+    -unity-text-align: middle-center;
+    text-shadow: 0 0 0 rgba(0, 0, 0, 255);
+    padding-bottom: 8px;
+    padding-top: 4px;
+}
+
+#Toolbar {
+    flex-direction: row;
+    justify-content: center;
+}
+
+#BlackboardToggle {
+    flex-grow: 0;
+    -unity-text-align: middle-center;
+    -unity-font-style: normal;
+    flex-shrink: 1;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    border-left-color: rgba(0, 0, 0, 255);
+    border-right-color: rgba(0, 0, 0, 255);
+    border-top-color: rgba(0, 0, 0, 255);
+    border-bottom-color: rgba(0, 0, 0, 255);
+}
+
+.unity-toggle__label {
+    flex-grow: 1;
+    align-items: stretch;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    position: relative;
+    opacity: 1;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.unity-toggle__input {
+    flex-grow: 0;
+}
+
+#PropertiesToggle {
+    flex-grow: 0;
+    -unity-text-align: middle-center;
+    -unity-font-style: normal;
+    flex-shrink: 1;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    border-left-color: rgb(0, 0, 0);
+    border-right-color: rgb(0, 0, 0);
+    border-top-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(0, 0, 0);
+}

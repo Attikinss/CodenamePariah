@@ -868,4 +868,29 @@ public class Weapon : MonoBehaviour
     {
        
     }
+
+    public void SetWeaponLayerRecursively(int layer)
+    {
+        // I'm not allowed to edit the agent prefab right now, so to get around the issue of
+        // m_Config being set in Awake(), and the second and third guns not being Awoken.. until after the player
+        // swaps to them, I'll just set them here. This is pretty bad but as soon as I can edit the Agent prefab I'll fix this properly.
+        if (!m_Config)
+        {
+            m_Config = GetComponent<WeaponConfiguration>();
+        }
+
+        Transform parent = m_Config.m_Gun;
+
+
+
+
+        foreach (Transform trans in parent.GetComponentsInChildren<Transform>(true))
+        {
+            trans.gameObject.layer = layer;
+        }
+
+        //GameObject gunMesh = m_Config.m_Gun.gameObject;
+        //GameObject[] children = gunMesh.GetComponentsInChildren<GameObject>();
+        //for(int i = 0; i <)
+    }
 }

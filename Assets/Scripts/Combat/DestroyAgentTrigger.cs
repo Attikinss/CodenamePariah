@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DestroyAgentTrigger : MonoBehaviour
 {
+    public PariahController m_Pariah;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,6 +30,7 @@ public class DestroyAgentTrigger : MonoBehaviour
         {
             // Thing that entered was either an agent or a player controlling an agent since it has an inventory.
             human.TakeDamage(1000);
+            m_Pariah.TakeDamage(1000);
         }
 	}
 }

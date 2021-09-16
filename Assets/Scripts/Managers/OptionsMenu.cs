@@ -8,6 +8,10 @@ public class OptionsMenu : MonoBehaviour
 {
     public TMP_InputField m_InputField;
     public Slider m_Slider;
+    public Slider m_MouseSensitivitySlider;
+    public TMP_InputField m_MouseInputField;
+    public Slider m_ControllerSensitivitySlider;
+    public TMP_InputField m_ControllerInputField;
     [SerializeField]
     private PlayerPreferences m_PlayerPrefs;
 
@@ -19,10 +23,19 @@ public class OptionsMenu : MonoBehaviour
     [ReadOnly]
     private static float m_ControllerSensitivity;//or multiply looksensitivity by this. convert each value of 1-8 to a float??
 
-    //private void Awake()
-    //{
-    //    m_MouseSensitivity = InputController.m_LookSensitivity;
-    //}
+    private void Awake()
+    {
+        //THIS IS VERY BAD
+        m_MouseSensitivity = m_PlayerPrefs.GameplayConfig.MouseSensitivity;
+        m_MouseSensitivitySlider.value = m_MouseSensitivity;
+        m_MouseInputField.text = m_MouseSensitivity.ToString("F2");
+
+        m_ControllerSensitivity = m_PlayerPrefs.GameplayConfig.ControllerSensitivity;
+        m_ControllerSensitivitySlider.value = m_ControllerSensitivity;
+        m_ControllerInputField.text = m_ControllerSensitivity.ToString("F2");
+        //m_Slider.value = m_MouseSensitivity;                  //TEMPORARY
+        //m_InputField.text = m_MouseSensitivity.ToString("F2");//TEMPORARY
+    }
 
     public void SetMasterVolume(float value)
     {

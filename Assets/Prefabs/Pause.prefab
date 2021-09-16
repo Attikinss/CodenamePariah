@@ -1284,7 +1284,7 @@ MonoBehaviour:
   m_MinValue: 5
   m_MaxValue: 100
   m_WholeNumbers: 0
-  m_Value: 60
+  m_Value: 40
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -1338,6 +1338,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InputField: {fileID: 8481638729773392118}
   m_Slider: {fileID: 8481638729090264859}
+  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
+  m_MouseInputField: {fileID: 8481638729773392118}
+  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
+  m_ControllerInputField: {fileID: 8481638729128731076}
   m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &8481638729104298118
 GameObject:
@@ -1732,7 +1736,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: 60
+  m_Text: 40
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -1758,6 +1762,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InputField: {fileID: 8481638729128731076}
   m_Slider: {fileID: 8481638729329750737}
+  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
+  m_MouseInputField: {fileID: 8481638729773392118}
+  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
+  m_ControllerInputField: {fileID: 8481638729128731076}
   m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &8481638729140426439
 GameObject:
@@ -2621,6 +2629,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InputField: {fileID: 8481638730195082988}
   m_Slider: {fileID: 8481638729276735296}
+  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
+  m_MouseInputField: {fileID: 8481638729773392118}
+  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
+  m_ControllerInputField: {fileID: 8481638729128731076}
   m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &8481638729284638114
 GameObject:
@@ -3346,6 +3358,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InputField: {fileID: 8481638729302415249}
   m_Slider: {fileID: 8481638730178675004}
+  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
+  m_MouseInputField: {fileID: 8481638729773392118}
+  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
+  m_ControllerInputField: {fileID: 8481638729128731076}
   m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &8481638729305886667
 GameObject:
@@ -3919,7 +3935,7 @@ MonoBehaviour:
   m_MinValue: 5
   m_MaxValue: 100
   m_WholeNumbers: 0
-  m_Value: 60
+  m_Value: 40
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -3973,6 +3989,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InputField: {fileID: 8481638729128731076}
   m_Slider: {fileID: 8481638729329750737}
+  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
+  m_MouseInputField: {fileID: 8481638729773392118}
+  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
+  m_ControllerInputField: {fileID: 8481638729128731076}
   m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &8481638729347006969
 GameObject:
@@ -8677,7 +8697,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: 60
+  m_Text: 40
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -8703,6 +8723,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InputField: {fileID: 8481638729773392118}
   m_Slider: {fileID: 8481638729090264859}
+  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
+  m_MouseInputField: {fileID: 8481638729773392118}
+  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
+  m_ControllerInputField: {fileID: 8481638729128731076}
   m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &8481638729774825606
 GameObject:
@@ -13001,6 +13025,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InputField: {fileID: 8481638729302415249}
   m_Slider: {fileID: 8481638730178675004}
+  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
+  m_MouseInputField: {fileID: 8481638729773392118}
+  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
+  m_ControllerInputField: {fileID: 8481638729128731076}
   m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &8481638730189127149
 GameObject:
@@ -13467,6 +13495,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InputField: {fileID: 8481638730195082988}
   m_Slider: {fileID: 8481638729276735296}
+  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
+  m_MouseInputField: {fileID: 8481638729773392118}
+  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
+  m_ControllerInputField: {fileID: 8481638729128731076}
   m_PlayerPrefs: {fileID: 0}
 --- !u!1 &8481638730196737866
 GameObject:
@@ -17256,6 +17288,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InputField: {fileID: 8481638730502390269}
   m_Slider: {fileID: 8481638730948384392}
+  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
+  m_MouseInputField: {fileID: 8481638729773392118}
+  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
+  m_ControllerInputField: {fileID: 8481638729128731076}
   m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &8481638730528172806
 GameObject:
@@ -18613,6 +18649,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InputField: {fileID: 8481638730651673875}
   m_Slider: {fileID: 8481638730773664270}
+  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
+  m_MouseInputField: {fileID: 8481638729773392118}
+  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
+  m_ControllerInputField: {fileID: 8481638729128731076}
   m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &8481638730671660529
 GameObject:
@@ -19802,6 +19842,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InputField: {fileID: 8481638730651673875}
   m_Slider: {fileID: 8481638730773664270}
+  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
+  m_MouseInputField: {fileID: 8481638729773392118}
+  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
+  m_ControllerInputField: {fileID: 8481638729128731076}
   m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &8481638730775026128
 GameObject:
@@ -22332,6 +22376,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InputField: {fileID: 8481638730502390269}
   m_Slider: {fileID: 8481638730948384392}
+  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
+  m_MouseInputField: {fileID: 8481638729773392118}
+  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
+  m_ControllerInputField: {fileID: 8481638729128731076}
   m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &8481638730951061885
 GameObject:

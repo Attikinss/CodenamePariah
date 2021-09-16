@@ -868,4 +868,17 @@ public class Weapon : MonoBehaviour
     {
        
     }
+
+    public void SetWeaponLayerRecursively(int layer)
+    {
+        Transform parent = m_Config.m_Gun;
+        foreach (Transform trans in parent.GetComponentsInChildren<Transform>(true))
+        {
+            trans.gameObject.layer = layer;
+        }
+
+        //GameObject gunMesh = m_Config.m_Gun.gameObject;
+        //GameObject[] children = gunMesh.GetComponentsInChildren<GameObject>();
+        //for(int i = 0; i <)
+    }
 }

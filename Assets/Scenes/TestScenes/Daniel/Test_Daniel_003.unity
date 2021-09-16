@@ -20520,6 +20520,63 @@ PrefabInstance:
       objectReference: {fileID: 1273534065}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7c8d520a6107278489c3c671ad8269e2, type: 3}
+--- !u!1001 &1624038588578186343
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1624038588698210240, guid: 6a8e263fa92195d47b1a145484ed81bd, type: 3}
+      propertyPath: m_RootOrder
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624038588698210240, guid: 6a8e263fa92195d47b1a145484ed81bd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 50.692818
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624038588698210240, guid: 6a8e263fa92195d47b1a145484ed81bd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 10.719329
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624038588698210240, guid: 6a8e263fa92195d47b1a145484ed81bd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 28.806177
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624038588698210240, guid: 6a8e263fa92195d47b1a145484ed81bd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624038588698210240, guid: 6a8e263fa92195d47b1a145484ed81bd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624038588698210240, guid: 6a8e263fa92195d47b1a145484ed81bd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624038588698210240, guid: 6a8e263fa92195d47b1a145484ed81bd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624038588698210240, guid: 6a8e263fa92195d47b1a145484ed81bd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624038588698210240, guid: 6a8e263fa92195d47b1a145484ed81bd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624038588698210240, guid: 6a8e263fa92195d47b1a145484ed81bd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624038588698210242, guid: 6a8e263fa92195d47b1a145484ed81bd, type: 3}
+      propertyPath: m_Name
+      value: WeaponOverlayPass
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6a8e263fa92195d47b1a145484ed81bd, type: 3}
 --- !u!1001 &6972698995803825568
 PrefabInstance:
   m_ObjectHideFlags: 0

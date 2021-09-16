@@ -149,6 +149,13 @@ public class HostController : InputController
         UnhideHUD();
 
         CustomDebugUI.s_Instance.SetController(this);
+
+
+        // When the player is controlling a unit, we set the weapons to be overlayed so they don't stick inside walls and stuff. It's reverted back in Disable().
+        for (int i = 0; i < m_Inventory.m_Weapons.Count; i++)
+        { 
+            m_Inventory.m_Weapons[0].SetWeaponLayerRecursively(12); // If we ever rearrange layer orders this will have to change!                      ===================== IMPORTANT =====================
+        }
     }
 
     /// <summary>
@@ -162,6 +169,12 @@ public class HostController : InputController
         HideHUD();
 
         CustomDebugUI.s_Instance.ClearController();
+
+        // Reverting the layer back to what it was.
+        for (int i = 0; i < m_Inventory.m_Weapons.Count; i++)
+        {
+            m_Inventory.m_Weapons[0].SetWeaponLayerRecursively(10); // If we ever rearrange layer orders this will have to change!                      ===================== IMPORTANT =====================
+        }
     }
 
     // ========================================================== Input Events ========================================================== //

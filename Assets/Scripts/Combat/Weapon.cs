@@ -37,10 +37,6 @@ public class Weapon : MonoBehaviour
     [Tooltip("Time it takes to reload.")]
     private float m_ReloadTime = 1.8f;
 
-    //[SerializeField]
-    //[Tooltip("Whether gun is currently reloading.")]
-    //private bool m_IsReloading = false;
-
     [SerializeField]
     [Tooltip("The percentage of a full magazine required before warning to reload.")]
     private float m_LowAmmoWarningPercentage = 0.3f;
@@ -48,51 +44,8 @@ public class Weapon : MonoBehaviour
     /// <summary>An accumulative value used to determine when the next round should be fired.</summary>
     private float m_NextTimeToFire = 0f;
 
-
-    // ================================= Added things from HostController. ================================= //
-    //public Transform m_Weapon;
-    //public Transform m_Weapon2;
-
-    // These are references to the weapons that the controller has.
-    //public WeaponConfiguration m_WeaponConfig;
-   // public WeaponConfiguration m_WeaponConfig2;
-
-    //[Header("Old Bobbing Controls")]
-    //public float m_BobSpeed = 5;                                  // Commented out bobbing controls, default values savedi n WeaponStructs.cs
-    //[Range(0, 1)]
-    //public float m_BobDistance = 0.05f;
-
-    //public bool m_IsFiring = false;
-    //public bool m_IsAiming = false;
-
-    // Recoil variables.
-    // These two recoil's are the actual shot pattern related recoils.
-    //public float m_AdditionalCameraRecoilX;                                           // Im going to try keep them in HostController.cs since they aren't weapon specific.
-    //public float m_AdditionalCameraRecoilY;
-
-    // This recoil is the camera shake recoil. It rotates the camera by a very small amount. Not intended to effect shooting patterns.
-    //public Vector3 m_AdditionalRecoilRotation;                                                                                            // Going to try and also keep this in HostController.cs since it effects the camera.
-
-    // This recoil is to move the gun model up and down. Just a visual effect.
-    //public Vector3 m_WeaponRecoilRot;
-
-
     // Because we're not in the HostController.cs script, we need a reference to it to access some things.
     public HostController m_Controller;
-
-
-    // ========================== TEMPORARY WEAPON BOBBING ========================== //
-    // This weapon sway stuff is here for now since we haven't got animations in yet.
-    // It will be replaced soon.
-
-    //[HideInInspector]                                                                 // These all start at zero so I can comment them out before saving inspector values.
-    //public float m_SwayTimer = 0.0f;
-    //[HideInInspector]
-    //public float m_WaveSlice = 0.0f;
-    //[HideInInspector]
-    //public float m_WaveSliceX = 0.0f;
-    // ========================================================================== //
-
 
     // Because I'm trying to move away from the technique of having timers in Update(), I need a new
     // way of getting the total firing duration. I'm going to record the time when you start firing
@@ -100,60 +53,13 @@ public class Weapon : MonoBehaviour
     [HideInInspector]
     public float m_FireStartTime = 0.0f;
 
-
-
-    // ================== TEMPORARY RECOIL TESTING ================== //
-    //[Header("Recoil Testing")]
-    //public float m_RecoilTestIntervals = 3.0f;                                    // Commented out and saved default values in WeaponStructs script.
-    //public float m_RecoilTestRestTime = 2.0f;
-
-    //[HideInInspector]
-    //public bool m_IsRecoilTesting = false;  // Public because I've been moving things into Weapon.cs script.
-    //[HideInInspector]
-    //public bool m_IsTestResting = false;
-    //[HideInInspector]
-    //public float m_RecoilTestCounter = 0;
-
-
-
-
-    // ===================================================================================================== //
-
     // Stuff from my original Weapon.cs script.
 
     public Inventory m_Inventory;
     public GameObject m_HitDecal;
 
-    //public AnimationCurve m_VerticalRecoil;
-
-    // ============= INTERNAL BOOKKEEPING ============= //                                              // Can comment this out because its all non inspector stuff.
-    //[HideInInspector]
-    //public float m_VerticalProgress = 0.0f; // To track position on the recoil curve.
-
-    //[HideInInspector]
-    //public Vector3 m_OriginalLocalPosition; // Public so that HostController.cs can access it when lerping back to the weapons original pos.
-    //[HideInInspector]
-    //public Vector3 m_OriginalGlobalPosition;
-
-    // ================================================ //
-
-
     // temporary ui thing
     private UIManager m_UIManager;
-
-
-    //// temporary muzzle flash                                                  // Can comment out these ones because I can remmeber how to rehook them up.       
-    ////public VisualEffect m_MuzzleFlash;
-    //public List<VisualEffect> m_MuzzleFlashes;
-
-    //// bullet casing
-    ////public ParticleSystem m_BulletCasing;
-    //public List<ParticleSystem> m_BulletCasings;
-
-    //// temporary animation reference
-    //public List<Animator> m_GunAnimators;
-    //public List<Animator> m_ArmsAnimators;
-
 
     // temporary thing to test out semi-automatic weaponry.
     public bool m_SemiAuto = false;
@@ -193,24 +99,6 @@ public class Weapon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // ========================= DECREMENTING AMMO WHEN SHOOTING ========================= //
-
-        // TEMP FIX so that other characters with this script dont have their ammo decrement when the player clicks.
-        //if (m_Camera.gameObject.activeSelf == true)
-        //{
-        //// need to make sure this is only active when possessing
-        //if (Mouse.current.leftButton.isPressed && this.CompareTag("AssaultRifle"))
-        //{
-        //    Fire();
-        //}
-        //
-        // need to make sure this is only active when possessing
-
-        // =================================================================================== //
-
-
-
-        
         // I've added m_IsReloading checks to prevent shooting while reloading and also to activate recoil recovery even if m_IsFiring is still true.
         // This gives the advantage of reloading while holding down the mouse button will let you begin shooting again without having to re-press the mouse button.
 
@@ -229,18 +117,6 @@ public class Weapon : MonoBehaviour
         UpdateSway(m_Controller.LookInput.x, m_Controller.LookInput.y);
 
         UpdateRecoilTest();
-
-
-        // Reloading. Going to leave it out for now just while I get the system back in working order. 
-
-        //else if (Keyboard.current.rKey.wasPressedThisFrame) //
-        //{
-        //    if (!PrimaryAmmoFull() && !ReserveAmmoEmpty() && !m_IsReloading)
-        //        StartCoroutine(Reload());
-        //}
-
-
-        // Update and other functions from HostController.cs
     }
 
 	private void FixedUpdate()
@@ -423,13 +299,6 @@ public class Weapon : MonoBehaviour
         {
             return Vector3.zero;
         }
-        //else
-        //{
-        //    m_SwayTimer = 0.0f;
-        //    localPosition.y = currentWeaponMidPoint.y;
-        //    localPosition.x = currentWeaponMidPoint.x;
-        //    currentWeapon.transform.localPosition = Vector3.Lerp(currentWeapon.transform.localPosition, currentWeapon.m_MidPoint, 0.01f);
-        //}
     }
 
     /// <summary>

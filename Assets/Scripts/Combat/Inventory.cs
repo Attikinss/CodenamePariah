@@ -29,6 +29,9 @@ public class Inventory : MonoBehaviour
 
     UIManager m_UIManager;
 
+    public Transform m_Camera; // This transform will be used when we add new weapons to the inventory.
+    private HostController m_Controller;
+
     /// <summary>
     /// I've added a Awake() function here because m_CurrentWeapon was always unintialised. I'm going to initialise it here.
     /// </summary>
@@ -38,11 +41,15 @@ public class Inventory : MonoBehaviour
 
         if (m_Weapons.Count > 0)
             m_CurrentWeapon = m_Weapons[0]; // For now, m_CurrentWeapon will always start off as the first element in the m_Weapons list.
+
+        if (!m_Camera)
+            Debug.LogError("This inventory script is missing a reference to a camera transform!");
 	}
 
 	private void Start()
 	{
         m_UIManager = UIManager.s_Instance;
+        m_Controller = GetComponent<HostController>(); // This assumes the inventory is on the same object as the HostController.cs script.
 	}
 
 
@@ -110,6 +117,28 @@ public class Inventory : MonoBehaviour
     }
     public void UnhideWeapon(int wep) { m_Weapons[wep].gameObject.SetActive(true); }
     public void HideWeapon(int wep) { m_Weapons[wep].gameObject.SetActive(false); }
+    /// <summary>
+    /// AddWeapon() pushes a new weapon to the back of the list.
+    /// </summary>
+    public void AddWeapon(GameObject weaponPrefab)
+    {
+        Weapon prefabWeaponComponent;
+        if (weaponPrefab.TryGetComponent<Weapon>(out prefabWeaponComponent))
+        {
+            GameObject newWeapon = Instantiate(weaponPrefab);                               // The problem with adding a new prefab is that the position might not be in the bottom right hand corner (typical FPS gun
+            newWeapon.transform.SetParent(m_Camera); // --> Thing we attach the weapons to. // position). Hopefully if the prefab's position is set properly it's position will be correct.
+
+            Weapon weaponComponent = newWeapon.GetComponent<Weapon>();
+            weaponComponent.m_Inventory = this;
+            weaponComponent.m_Controller = m_Controller;
+            weaponComponent.SetCamera(m_Camera.GetComponent<Camera>());
+
+            m_Weapons.Add(weaponComponent);
+        }
+        else
+            Debug.LogError("Attempted to AddWeapon() but the passed in prefab is not a weapon!");
+
+    }
     public void RemoveWeapon(int wep)
     {
         if (!HasWeapon(wep))
@@ -154,25 +183,25 @@ public class Inventory : MonoBehaviour
 
         m_UIManager.UpdateWeaponUI(m_CurrentWeapon);
     }
-    public void UpgradeWeapon(int weapon, GameObject newPrefab, Weapon newWeapon, WeaponConfiguration newConfig)
+    public void UpgradeWeapon(int weapon, GameObject newPrefab)
     {
         if (!HasWeapon(weapon))
             return;
 
-        GameObject holder = m_Weapons[weapon].gameObject; // --> GunHolder object;
-        GameObject camera = holder.gameObject; // --> Thing we will attach new weapon prefab to.
+        // Remove old weapon since we are upgrading it.
+        RemoveWeapon(weapon);
 
-        GameObject newWeaponPrefab = Instantiate(newPrefab);
-        newWeaponPrefab.transform.SetParent(camera.transform); // The problem with adding a new prefab is that the position might not be in the bottom right hand corner (typical FPS gun
-                                                               // position). Hopefully if the prefab's position is set properly it's position will be correct.
+        // Add a new weapon according to the parameters.
+        AddWeapon(newPrefab);
+
+        // Since the new weapon is on the end of the list, we'll swap to the last element to make it seem like they are still holding on to the same gun.
+        SetWeapon(m_Weapons.Count - 1);
     }
 
     public WeaponConfiguration GetCurrentConfig() 
     {
         if (m_CurrentWeapon)
-        {
             return m_CurrentWeapon.m_Config;
-        }
         else
             return null;
     }

@@ -468,6 +468,38 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "DeleteWep1",
+                    "type": "Button",
+                    "id": "d4f92224-f67a-4ec1-8d7c-d353b6c6f058",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "DeleteWep2",
+                    "type": "Button",
+                    "id": "630e96d2-a3cb-4c30-8700-0a6a05ded641",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "DeleteWep3",
+                    "type": "Button",
+                    "id": "14bf4d4b-0f9b-4ff7-9c9e-b85a42b08bcf",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "TestAddWeapon",
+                    "type": "Button",
+                    "id": "f316d8a8-f58e-4861-988e-db0f9c79e3ea",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -897,6 +929,50 @@
                     "processors": "",
                     "groups": "KBM",
                     "action": "Select3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5059b056-3b53-48a5-a3b5-1d9206de3a24",
+                    "path": "<Keyboard>/7",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KBM",
+                    "action": "DeleteWep1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c88e9ef8-82f5-44d1-8a29-7df577ae3f4b",
+                    "path": "<Keyboard>/8",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KBM",
+                    "action": "DeleteWep2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "61b2ff82-d5e4-42bd-801b-3562ec0f5203",
+                    "path": "<Keyboard>/9",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KBM",
+                    "action": "DeleteWep3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "632e677c-766c-4999-a2a9-f0e5c9a355c7",
+                    "path": "<Keyboard>/o",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KBM",
+                    "action": "TestAddWeapon",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

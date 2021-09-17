@@ -742,4 +742,6 @@ public class Weapon : MonoBehaviour
     public bool GetRecoilTestState() { return m_RecoilTesting.m_IsRecoilTesting; }
     public bool CanFire() {return (GetFireState() && !GetReloadState() && !TotalAmmoEmpty());}
     public bool CanAim() { return (GetAimState() && !GetReloadState() && !m_DualWield); }
+    public void SetCamera(Camera camera) { m_Camera = camera; }
+
 }

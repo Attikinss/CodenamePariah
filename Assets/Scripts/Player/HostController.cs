@@ -280,7 +280,7 @@ public class HostController : InputController
 
     public void OnWeaponSelect1(InputAction.CallbackContext value)
     {
-		if (value.performed && !GetCurrentWeapon().IsReloading())
+		if (value.performed && GetCurrentWeapon() && !GetCurrentWeapon().IsReloading())
 		{
             //     if (m_Inventory.HasWeapon(0))
             //     { 
@@ -289,7 +289,7 @@ public class HostController : InputController
             ////GetCurrentWeapon().ResetReloadAnimation(); dont need here because pistol doesnt have animation yet.
 
 
-            //SelectWeapon(0);
+            SelectWeapon(0);
 
             //// Previously I was tracking weapon states in PlayerManager in an attempt to free up space in this controller script. However, now that we have an Inventory script that tracks weapons and
             //// the players current weapon, I'll leave that stuff in there.
@@ -300,57 +300,61 @@ public class HostController : InputController
             //m_UIManager.m_CurrentWeaponType = WEAPONTYPE.RIFLE;
             //m_UIManager.HideMagazine(m_UIManager.m_CurrentWeaponType);
             //     }
-            m_Inventory.RemoveWeapon(0);
 		}
 	}
 
     public void OnWeaponSelect2(InputAction.CallbackContext value)
     {
-		if (value.performed && !GetCurrentWeapon().IsReloading())
+		if (value.performed && GetCurrentWeapon() && !GetCurrentWeapon().IsReloading())
 		{
             //     if (m_Inventory.HasWeapon(1))
             //     { 
             //// Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
             //GetCurrentWeapon().ResetReload();
 
-            //SelectWeapon(1);
+            SelectWeapon(1);
 
             ////m_UIManager.m_IsRifle = false;
             //m_UIManager.m_CurrentWeaponType = WEAPONTYPE.PISTOL;
             //m_UIManager.HideMagazine(m_UIManager.m_CurrentWeaponType);
             //     }
-            m_Inventory.RemoveWeapon(1);
+            
 		}
 	}
 
     public void OnWeaponSelect3(InputAction.CallbackContext value)
     {
-		if (value.performed && !GetCurrentWeapon().IsReloading())
+		if (value.performed && GetCurrentWeapon() && !GetCurrentWeapon().IsReloading())
 		{
             //     if (m_Inventory.HasWeapon(2))
             //     { 
             //// Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
             //GetCurrentWeapon().ResetReload();
 
-            //SelectWeapon(2);
+            SelectWeapon(2);
 
             ////m_UIManager.m_IsRifle = false;
             //m_UIManager.m_CurrentWeaponType = WEAPONTYPE.DUAL;
             //m_UIManager.HideMagazine(m_UIManager.m_CurrentWeaponType);
             //     }
-            m_Inventory.RemoveWeapon(2);
+            
 		}
 	}
 
     public void OnAim(InputAction.CallbackContext context)
     {
-        if (context.performed)
-        {
-            GetCurrentWeapon().m_WeaponActions.m_IsAiming = true;
-        }
-        else if (context.canceled)
-        {
-            GetCurrentWeapon().m_WeaponActions.m_IsAiming = false;
+        Weapon weapon = GetCurrentWeapon();
+
+        if (weapon)
+        { 
+            if (context.performed)
+            {
+                GetCurrentWeapon().m_WeaponActions.m_IsAiming = true;
+            }
+            else if (context.canceled)
+            {
+                GetCurrentWeapon().m_WeaponActions.m_IsAiming = false;
+            }
         }
     }
 
@@ -910,4 +914,34 @@ public class HostController : InputController
         if (m_DeathIncarnateAbility.drawingDeathIncarnate)
             Ability3Gizmo();
     }
+
+
+
+
+    // Testing new weapon features out.
+
+    public void OnDeleteWep1(InputAction.CallbackContext value)
+    {
+        if(value.performed)
+            m_Inventory.RemoveWeapon(0);
+    }
+    public void OnDeleteWep2(InputAction.CallbackContext value)
+    {
+        if (value.performed)
+            m_Inventory.RemoveWeapon(1);
+    }
+    public void OnDeleteWep3(InputAction.CallbackContext value)
+    {
+        if (value.performed)
+            m_Inventory.RemoveWeapon(2);
+    }
+
+    public void OnAddWeapon(InputAction.CallbackContext value)
+    {
+        if (value.performed)
+        {
+            m_Inventory.AddWeapon(Resources.Load<GameObject>("AssaultRifle"));
+        }
+    }
+
 }

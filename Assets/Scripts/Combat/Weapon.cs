@@ -594,6 +594,49 @@ public class Weapon : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// SetFireTime() is a helper function that allows the HostController script to set the time when the player
+    /// starts to hold down the mouse button.
+    /// </summary>
+    public void SetFireTime()
+    {
+        m_FireStartTime = Time.time;
+    }
+    private void StartReloadAnimation()
+    {
+        if (m_Animators.m_GunAnimators.Count > 0)
+        {
+            for (int i = 0; i < m_Animators.m_GunAnimators.Count; i++)
+            {
+                m_Animators.m_GunAnimators[i].SetTrigger("OnReload");
+            }
+        }
+        if (m_Animators.m_ArmsAnimators.Count > 0)
+        {
+            for (int i = 0; i < m_Animators.m_ArmsAnimators.Count; i++)
+            {
+                m_Animators.m_ArmsAnimators[i].SetTrigger("OnReload");
+            }
+        }
+    }
+
+    public void SetWeaponLayerRecursively(int layer)
+    {
+        // I'm not allowed to edit the agent prefab right now, so to get around the issue of
+        // m_Config being set in Awake(), and the second and third guns not being Awoken.. until after the player
+        // swaps to them, I'll just set them here. This is pretty bad but as soon as I can edit the Agent prefab I'll fix this properly.
+        if (!m_Config)
+        {
+            m_Config = GetComponent<WeaponConfiguration>();
+        }
+
+        Transform parent = m_Config.m_Gun;
+        foreach (Transform trans in parent.GetComponentsInChildren<Transform>(true))
+        {
+            trans.gameObject.layer = layer;
+        }
+    }
+
     /// <summary>Refills both the primary and reserve ammo pools.</summary>
     public void RefillAmmo()
     {
@@ -681,96 +724,13 @@ public class Weapon : MonoBehaviour
         return m_ReserveAmmo;
     }
 
-    private WeaponConfiguration GetCurrentWeaponConfig()
-    {
-        return m_Inventory.m_CurrentWeapon.m_Config;
-    }
+    private WeaponConfiguration GetCurrentWeaponConfig() { return m_Inventory.m_CurrentWeapon.m_Config; }
     private Transform GetCurrentWeaponTransform() => m_Inventory.m_CurrentWeapon.transform;
     private Vector3 GetCurrentWeaponOriginalPos() => m_Inventory.m_CurrentWeapon.m_TransformInfo.m_OriginalLocalPosition;
-    private HostController GetController()
-    {
-        // Maybe we'll have a function to do this but for now I'm just going to make the 
-        // controller a public variable that can be set in the inspector.
-
-        return null;
-    }
-
-    /// <summary>
-    /// SetFireTime() is a helper function that allows the HostController script to set the time when the player
-    /// starts to hold down the mouse button.
-    /// </summary>
-    public void SetFireTime()
-    {
-        m_FireStartTime = Time.time;
-    }
-
-    public void ResetReload() { m_WeaponActions.m_IsReloading = false; }
-
-    private void StartReloadAnimation()
-    {
-        if (m_Animators.m_GunAnimators.Count > 0)
-        {
-            for (int i = 0; i < m_Animators.m_GunAnimators.Count; i++)
-            {
-                m_Animators.m_GunAnimators[i].SetTrigger("OnReload");
-            }
-        }
-        if (m_Animators.m_ArmsAnimators.Count > 0)
-        {
-            for (int i = 0; i < m_Animators.m_ArmsAnimators.Count; i++)
-            { 
-                m_Animators.m_ArmsAnimators[i].SetTrigger("OnReload");
-            }
-        }
-        
-    }
-
-    public void ResetReloadAnimation()
-    {
-        // okay this isn't working so for now I will just prevent players from swapping weapons while reloading.
-
-        //m_AssualtRifleAnimator.enabled = false;
-        //m_AssualtRifleAnimator.enabled = true;
-    }
-
-    public bool IsReloading() { return m_WeaponActions.m_IsReloading; }
-
-    /// <summary>
-    /// ClearThings() is a temporary function which is supposed to clear things like weapon rotation, position and weapon bob location. This
-    /// is so the weapon is completely fresh when the player swaps back to it.
-    /// </summary>
-    public void ClearThings()
-    {
-       
-    }
-
-    public void SetWeaponLayerRecursively(int layer)
-    {
-        // I'm not allowed to edit the agent prefab right now, so to get around the issue of
-        // m_Config being set in Awake(), and the second and third guns not being Awoken.. until after the player
-        // swaps to them, I'll just set them here. This is pretty bad but as soon as I can edit the Agent prefab I'll fix this properly.
-        if (!m_Config)
-        {
-            m_Config = GetComponent<WeaponConfiguration>();
-        }
-
-        Transform parent = m_Config.m_Gun;
-
-
-
-
-        foreach (Transform trans in parent.GetComponentsInChildren<Transform>(true))
-        {
-            trans.gameObject.layer = layer;
-        }
-
-        //GameObject gunMesh = m_Config.m_Gun.gameObject;
-        //GameObject[] children = gunMesh.GetComponentsInChildren<GameObject>();
-        //for(int i = 0; i <)
-    }
-
     public bool GetFireState() { return m_WeaponActions.m_IsFiring; }
     public bool GetReloadState() { return m_WeaponActions.m_IsReloading; }
+    public void ResetReload() { m_WeaponActions.m_IsReloading = false; }
+    public bool IsReloading() { return m_WeaponActions.m_IsReloading; }
     public bool GetAimState() { return m_WeaponActions.m_IsAiming; }
     public bool GetRecoilTestState() { return m_RecoilTesting.m_IsRecoilTesting; }
     public bool CanFire() {return (GetFireState() && !GetReloadState() && !TotalAmmoEmpty());}

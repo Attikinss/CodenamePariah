@@ -112,4 +112,53 @@ public class Inventory : MonoBehaviour
     }
     public void UnhideWeapon(int wep) { m_Weapons[wep].gameObject.SetActive(true); }
     public void HideWeapon(int wep) { m_Weapons[wep].gameObject.SetActive(false); }
+    public void RemoveWeapon(int wep)
+    {
+        if (!HasWeapon(wep))
+            return;
+
+        if (m_CurrentWeaponNum == wep) // We are removing the weapon we are holding.
+        {
+            // If we are the last gun in the list, we have to tell the player to hold the previous weapon in the list, if there is one.
+            if (m_CurrentWeaponNum == m_Weapons.Count - 1)
+            {
+                if (m_Weapons.Count > 1) // If there is atleast more than 1 gun we can move to the previous gun.
+                {
+                    m_CurrentWeaponNum--;
+                }
+                else
+                {
+                    // Do nothing. m_CurrentWeaponNum will be left at 0.
+                }
+            }
+            // We are holding the gun we are removing, but it's not the last in the list. We don't have to move to the previous gun in this case.
+            else if (m_CurrentWeaponNum < m_Weapons.Count - 1)
+            { 
+                // Do nothing.
+            }
+            
+        }
+
+        else if (m_CurrentWeaponNum > wep) // We are holding a weapon further up in the list than the one we are removing.
+        {
+            // We have to subtract - to current weapon num since we are being the list is getting smaller.
+            m_CurrentWeaponNum--;
+        }
+        HideWeapon(wep); // Hiding the weapon we will remove. We wont destroy it, we'll just hide it.
+        m_Weapons.RemoveAt(wep);
+
+        m_CurrentWeapon = m_Weapons[m_CurrentWeaponNum]; // Setting the current weapon to the updated list.
+    }
+    public void UpgradeWeapon(int weapon, GameObject newPrefab, Weapon newWeapon, WeaponConfiguration newConfig)
+    {
+        if (!HasWeapon(weapon))
+            return;
+
+        GameObject holder = m_Weapons[weapon].gameObject; // --> GunHolder object;
+        GameObject camera = holder.gameObject; // --> Thing we will attach new weapon prefab to.
+
+        GameObject newWeaponPrefab = Instantiate(newPrefab);
+        newWeaponPrefab.transform.SetParent(camera.transform); // The problem with adding a new prefab is that the position might not be in the bottom right hand corner (typical FPS gun
+                                                               // position). Hopefully if the prefab's position is set properly it's position will be correct.
+    }
 }

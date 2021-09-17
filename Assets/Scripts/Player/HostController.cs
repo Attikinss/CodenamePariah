@@ -263,56 +263,54 @@ public class HostController : InputController
 
     public void OnWeaponSelect1(InputAction.CallbackContext value)
     {
-        if (value.performed && !GetCurrentWeapon().IsReloading())
-        {
-            // Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
-            GetCurrentWeapon().ResetReload();
-            //GetCurrentWeapon().ResetReloadAnimation(); dont need here because pistol doesnt have animation yet.
+        //if (value.performed && !GetCurrentWeapon().IsReloading())
+        //{
+        //    // Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
+        //    GetCurrentWeapon().ResetReload();
+        //    //GetCurrentWeapon().ResetReloadAnimation(); dont need here because pistol doesnt have animation yet.
 
 
-            SelectWeapon(0);
+        //    SelectWeapon(0);
 
-            // Previously I was tracking weapon states in PlayerManager in an attempt to free up space in this controller script. However, now that we have an Inventory script that tracks weapons and
-            // the players current weapon, I'll leave that stuff in there.
-            //PlayerManager.SetWeapon(WeaponSlot.WEAPON1);
+        //    // Previously I was tracking weapon states in PlayerManager in an attempt to free up space in this controller script. However, now that we have an Inventory script that tracks weapons and
+        //    // the players current weapon, I'll leave that stuff in there.
+        //    //PlayerManager.SetWeapon(WeaponSlot.WEAPON1);
 
 
-            //m_UIManager.m_IsRifle = true;
-            m_UIManager.m_CurrentWeaponType = WEAPONTYPE.RIFLE;
-            m_UIManager.HideMagazine(m_UIManager.m_CurrentWeaponType);
-        }
+        //    //m_UIManager.m_IsRifle = true;
+        //    m_UIManager.m_CurrentWeaponType = WEAPONTYPE.RIFLE;
+        //    m_UIManager.HideMagazine(m_UIManager.m_CurrentWeaponType);
+        //}
     }
 
     public void OnWeaponSelect2(InputAction.CallbackContext value)
     {
-        if (value.performed && !GetCurrentWeapon().IsReloading())
-        {
-            // Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
-            GetCurrentWeapon().ResetReload();
-            GetCurrentWeapon().ResetReloadAnimation();
+        //if (value.performed && !GetCurrentWeapon().IsReloading())
+        //{
+        //    // Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
+        //    GetCurrentWeapon().ResetReload();
 
-            SelectWeapon(1);
+        //    SelectWeapon(1);
 
-            //m_UIManager.m_IsRifle = false;
-            m_UIManager.m_CurrentWeaponType = WEAPONTYPE.PISTOL;
-            m_UIManager.HideMagazine(m_UIManager.m_CurrentWeaponType);
-        }
+        //    //m_UIManager.m_IsRifle = false;
+        //    m_UIManager.m_CurrentWeaponType = WEAPONTYPE.PISTOL;
+        //    m_UIManager.HideMagazine(m_UIManager.m_CurrentWeaponType);
+        //}
     }
 
     public void OnWeaponSelect3(InputAction.CallbackContext value)
     {
-        if (value.performed && !GetCurrentWeapon().IsReloading())
-        {
-            // Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
-            GetCurrentWeapon().ResetReload();
-            GetCurrentWeapon().ResetReloadAnimation();
+        //if (value.performed && !GetCurrentWeapon().IsReloading())
+        //{
+        //    // Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
+        //    GetCurrentWeapon().ResetReload();
 
-            SelectWeapon(2);
+        //    SelectWeapon(2);
 
-            //m_UIManager.m_IsRifle = false;
-            m_UIManager.m_CurrentWeaponType = WEAPONTYPE.DUAL;
-            m_UIManager.HideMagazine(m_UIManager.m_CurrentWeaponType);
-        }
+        //    //m_UIManager.m_IsRifle = false;
+        //    m_UIManager.m_CurrentWeaponType = WEAPONTYPE.DUAL;
+        //    m_UIManager.HideMagazine(m_UIManager.m_CurrentWeaponType);
+        //}
     }
 
     public void OnAim(InputAction.CallbackContext context)
@@ -574,9 +572,6 @@ public class HostController : InputController
     /// <param name="index">The element of the m_Weapons List you want to swap to.</param>
     private void SelectWeapon(int index)
     {
-        // Resetting weapon rotation and location.
-        m_Inventory.m_CurrentWeapon.ClearThings();
-
         Weapon cache = m_Inventory.m_CurrentWeapon;
         m_Inventory.m_CurrentWeapon.m_WeaponActions.m_IsAiming = false;
         m_Inventory.m_CurrentWeapon.m_WeaponActions.m_IsFiring = false;

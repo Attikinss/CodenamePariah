@@ -56,7 +56,6 @@ public class Weapon : MonoBehaviour
     // Stuff from my original Weapon.cs script.
 
     public Inventory m_Inventory;
-    public GameObject m_HitDecal;
 
     // temporary ui thing
     private UIManager m_UIManager;

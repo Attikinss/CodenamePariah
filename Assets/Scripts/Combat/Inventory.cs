@@ -147,7 +147,11 @@ public class Inventory : MonoBehaviour
         HideWeapon(wep); // Hiding the weapon we will remove. We wont destroy it, we'll just hide it.
         m_Weapons.RemoveAt(wep);
 
-        m_CurrentWeapon = m_Weapons[m_CurrentWeaponNum]; // Setting the current weapon to the updated list.
+        if (m_Weapons.Count > 0) // If we haven't removed every single weapon from the list.
+        { 
+            m_CurrentWeapon = m_Weapons[m_CurrentWeaponNum]; // Setting the current weapon to the updated list.
+            UnhideWeapon(m_CurrentWeaponNum); // If we have moved weapons, we should unhide the newly equipped weapon. Sometimes this will be redundant.
+        }
     }
     public void UpgradeWeapon(int weapon, GameObject newPrefab, Weapon newWeapon, WeaponConfiguration newConfig)
     {

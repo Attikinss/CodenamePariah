@@ -102,27 +102,25 @@ public class Weapon : MonoBehaviour
         // I've added m_IsReloading checks to prevent shooting while reloading and also to activate recoil recovery even if m_IsFiring is still true.
         // This gives the advantage of reloading while holding down the mouse button will let you begin shooting again without having to re-press the mouse button.
 
-        if (m_WeaponActions.m_IsFiring && !m_WeaponActions.m_IsReloading && !TotalAmmoEmpty())
-        {
+        //Time.time >= m_NextTimeToFire && !m_WeaponActions.m_IsReloading
+        if (CanFire()/*(m_WeaponActions.m_IsFiring && !m_WeaponActions.m_IsReloading*//* && !TotalAmmoEmpty()*/)
+        {
             Fire();
             m_UIManager?.UpdateWeaponUI(this);
         }
-        else if (!m_WeaponActions.m_IsFiring || m_WeaponActions.m_IsReloading || TotalAmmoEmpty()) // We want to recovery if we are reloading. This lets us set reloading to true and keep firing on true and the player wont shoot.
+        else if (!GetFireState() || GetReloadState() || TotalAmmoEmpty()/*!m_WeaponActions.m_IsFiring || m_WeaponActions.m_IsReloading || TotalAmmoEmpty()*/) // We want to recovery if we are reloading. This lets us set reloading to true and keep firing on true and the player wont shoot.
             UpdateRecoilRecovery();
 
-        
-        if (m_WeaponActions.m_IsAiming && !m_WeaponActions.m_IsReloading && !m_DualWield)
+        if (CanAim()/*m_WeaponActions.m_IsAiming && !m_WeaponActions.m_IsReloading && !m_DualWield*/)
             Aim();
 
         UpdateSway(m_Controller.LookInput.x, m_Controller.LookInput.y);
-
         UpdateRecoilTest();
     }
 
 	private void FixedUpdate()
 	{
         UpdateRecoil();
-		
 	}
 
 	public void Fire()
@@ -240,13 +238,11 @@ public class Weapon : MonoBehaviour
 
     public void StartReload()
     {
-        if (!PrimaryAmmoFull() && !ReserveAmmoEmpty() && !m_WeaponActions.m_IsReloading)
-        {
+        if (!PrimaryAmmoFull() && !ReserveAmmoEmpty() && !GetReloadState())
+        {
             CombatInfo combatInfo = m_Controller.m_CombatInfo;
             StartCoroutine(Reload());
             combatInfo.m_ShootingDuration = 0;
-
-            
         }
     }
 
@@ -433,7 +429,7 @@ public class Weapon : MonoBehaviour
     /// <summary>Defines whether or not the weapon can fire the next round.</summary>
     private bool ReadyToFire()
     {
-        if (Time.time >= m_NextTimeToFire && !m_WeaponActions.m_IsReloading)//(time.time or time.deltatime)
+        if (Time.time >= m_NextTimeToFire && !GetReloadState())//(time.time or time.deltatime)
         {
             if (m_SemiAuto) // If the gun is semi auto, we have one other check to do.
             {
@@ -520,7 +516,7 @@ public class Weapon : MonoBehaviour
 
         WeaponConfiguration weaponConfig = GetCurrentWeaponConfig();
         Transform gunTransform = GetCurrentWeaponTransform();
-        if (!m_WeaponActions.m_IsAiming || m_WeaponActions.m_IsReloading)
+        if (!GetAimState() || GetReloadState())
         {
             Vector3 gunOriginalPos = GetCurrentWeaponOriginalPos();
 
@@ -543,7 +539,7 @@ public class Weapon : MonoBehaviour
             m_Camera.fieldOfView += requiredChange * 0.45f;
 
         }
-        else if (m_WeaponActions.m_IsAiming)
+        else if (GetAimState())
         {
             // Had to put the sway code with the Aim() function since it was easier to just add the neccessary values to the calculations over there rather than try and split up the equations.
 
@@ -552,7 +548,7 @@ public class Weapon : MonoBehaviour
 
             float requiredChange = desiredFOV - currentFOV;
 
-            if(!m_WeaponActions.m_IsReloading) // Wont zoom in if we are reloading.
+            if(!GetReloadState()) // Wont zoom in if we are reloading.
             m_Camera.fieldOfView += requiredChange * 0.45f;
 
 
@@ -569,7 +565,7 @@ public class Weapon : MonoBehaviour
     private void UpdateRecoilTest()
     {
         // ============== EXPERIMENTAL RECOIL TESTING STUFF ============== //
-        if (m_RecoilTesting.m_IsRecoilTesting)
+        if (GetRecoilTestState())
         {
             if (!m_RecoilTesting.m_IsTestResting)
                 m_WeaponActions.m_IsFiring = true;
@@ -772,4 +768,11 @@ public class Weapon : MonoBehaviour
         //GameObject[] children = gunMesh.GetComponentsInChildren<GameObject>();
         //for(int i = 0; i <)
     }
+
+    public bool GetFireState() { return m_WeaponActions.m_IsFiring; }
+    public bool GetReloadState() { return m_WeaponActions.m_IsReloading; }
+    public bool GetAimState() { return m_WeaponActions.m_IsAiming; }
+    public bool GetRecoilTestState() { return m_RecoilTesting.m_IsRecoilTesting; }
+    public bool CanFire() {return (GetFireState() && !GetReloadState() && !TotalAmmoEmpty());}
+    public bool CanAim() { return (GetAimState() && !GetReloadState() && !m_DualWield); }
 }

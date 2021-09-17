@@ -60,7 +60,7 @@ public class HostController : InputController
         m_MovInfo = new MovementInfo();
         m_CombatInfo = new CombatInfo();
 
-        m_UIManager = GetComponent<UIManager>();
+        m_UIManager = UIManager.s_Instance;
         Rigidbody = GetComponent<Rigidbody>();
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -146,7 +146,7 @@ public class HostController : InputController
         GetComponent<PlayerInput>().enabled = true;
         m_Active = true;
         m_Camera.enabled = true;
-        UnhideHUD();
+        //UnhideHUD();
 
         CustomDebugUI.s_Instance.SetController(this);
 
@@ -156,6 +156,10 @@ public class HostController : InputController
         { 
             m_Inventory.m_Weapons[i].SetWeaponLayerRecursively(12); // If we ever rearrange layer orders this will have to change!                      ===================== IMPORTANT =====================
         }
+
+        m_UIManager.UnhideCanvas();
+        m_UIManager.SetInventory(m_Inventory);
+        m_UIManager.UpdateHealthUI();
     }
 
     /// <summary>
@@ -166,7 +170,7 @@ public class HostController : InputController
         GetComponent<PlayerInput>().enabled = false;
         m_Active = false;
         m_Camera.enabled = false;
-        HideHUD();
+        //HideHUD();
 
         CustomDebugUI.s_Instance.ClearController();
 
@@ -175,6 +179,8 @@ public class HostController : InputController
         {
             m_Inventory.m_Weapons[i].SetWeaponLayerRecursively(10); // If we ever rearrange layer orders this will have to change!                      ===================== IMPORTANT =====================
         }
+
+        m_UIManager.HideCanvas();
     }
 
     // ========================================================== Input Events ========================================================== //
@@ -695,15 +701,15 @@ public class HostController : InputController
 
     
 
-    public void HideHUD()
-    {
-        m_HUD.SetActive(false);
-    }
+    //public void HideHUD()
+    //{
+    //    m_HUD.SetActive(false);
+    //}
 
-    public void UnhideHUD()
-    {
-        m_HUD.SetActive(true);
-    }
+    //public void UnhideHUD()
+    //{
+    //    m_HUD.SetActive(true);
+    //}
 
 	// remember cooldown.
 	// this host dies. you get kicked out.

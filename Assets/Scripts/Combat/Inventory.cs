@@ -9,13 +9,13 @@ public class Inventory : MonoBehaviour
     [Tooltip("Current health.")]
     private int m_Health = 100;
 
-    [SerializeField]
-    [Tooltip("Health Text UI.")]//
-    private TextMeshProUGUI m_HealthText;
+    //[SerializeField]
+    //[Tooltip("Health Text UI.")]//
+    //private TextMeshProUGUI m_HealthText;
 
-    [SerializeField]
-    [Tooltip("Health Sprite UI")]
-    private GameObject m_HealthSprite;
+    //[SerializeField]
+    //[Tooltip("Health Sprite UI")]
+    //private GameObject m_HealthSprite;
 
     [SerializeField]
     [Tooltip("Weapons this character has.")]
@@ -26,6 +26,8 @@ public class Inventory : MonoBehaviour
     private int m_CurrentWeaponNum = 0;
 
     public WhiteWillow.Agent Owner { get; private set; }
+
+    UIManager m_UIManager;
 
     /// <summary>
     /// I've added a Awake() function here because m_CurrentWeapon was always unintialised. I'm going to initialise it here.
@@ -38,19 +40,15 @@ public class Inventory : MonoBehaviour
             m_CurrentWeapon = m_Weapons[0]; // For now, m_CurrentWeapon will always start off as the first element in the m_Weapons list.
 	}
 
-    /// <summary>Displays the current health.</summary>
-    void UpdateHealthUI() //move to ui Manager
-    {
-        // Doesn't matter that much given agents are
-        // destroyed along with everything attached
-        m_HealthSprite.SetActive(m_Health > 0);
+	private void Start()
+	{
+        m_UIManager = UIManager.s_Instance;
+	}
 
-        m_HealthText?.SetText(m_Health.ToString());
-    }
 
-    /// <summary>Takes health away equal to the damage value.</summary>
-    /// <param name="damage"></param>
-    public void TakeDamage(int damage, bool fromAbility = false)
+	/// <summary>Takes health away equal to the damage value.</summary>
+	/// <param name="damage"></param>
+	public void TakeDamage(int damage, bool fromAbility = false)
     {
         m_Health -= damage;
         if (m_Health <= 0)
@@ -71,7 +69,7 @@ public class Inventory : MonoBehaviour
             }
         }
 
-        UpdateHealthUI();
+        m_UIManager.UpdateHealthUI();
     }
 
     public void AddHealth(int amount)
@@ -79,7 +77,7 @@ public class Inventory : MonoBehaviour
         // TODO: Replace hard coded max health
         m_Health = (int)Mathf.Clamp(m_Health + amount, 0, 100);
 
-        UpdateHealthUI();
+        m_UIManager.UpdateHealthUI();
     }
 
     public int GetHealth() { return m_Health; }

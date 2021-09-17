@@ -78,9 +78,9 @@ public class HostController : InputController
         if (!m_Active) return;
 
         if (GetCurrentWeaponConfig().m_AlwaysADS) // The reason why I do this is so I don't have to check for the m_AlwaysADS bool everywhere. This way I can still just check for m_IsAiming in all functions.
-            GetCurrentWeapon().m_IsAiming = true;
+            GetCurrentWeapon().m_WeaponActions.m_IsAiming = true;
         if (GetCurrentWeaponConfig().m_AlwaysFiring) // Doing same here for the reason above.
-            GetCurrentWeapon().m_IsFiring = true;
+            GetCurrentWeapon().m_WeaponActions.m_IsFiring = true;
 
         m_MovInfo.m_IsGrounded = CheckGrounded();
         CalculateGroundNormal();
@@ -181,7 +181,7 @@ public class HostController : InputController
     // ================================================================================================================================== //
     public override void OnLook(InputAction.CallbackContext value)
 	{
-        if (GetCurrentWeapon().m_IsRecoilTesting)
+        if (GetCurrentWeapon().m_RecoilTesting.m_IsRecoilTesting)
             return; // early out to prevent mouse movement while testing recoil.
         LookInput = value.ReadValue<Vector2>();
 	}
@@ -243,7 +243,7 @@ public class HostController : InputController
         if (value.control.IsPressed(0)) // Have to use this otherwise mouse button gets triggered on release aswell.
         {
             // Now we have to access the weapon script to call weapon functions.
-            GetCurrentWeapon().m_IsFiring = true;
+            GetCurrentWeapon().m_WeaponActions.m_IsFiring = true;
             
 
             // Experimental thing I'm trying.
@@ -254,7 +254,7 @@ public class HostController : InputController
         }
         else
         {
-            GetCurrentWeapon().m_IsFiring = false;
+            GetCurrentWeapon().m_WeaponActions.m_IsFiring = false;
 
             // Reset held counter happens regardless.
             m_CombatInfo.m_ShootingDuration = 0.0f;
@@ -319,11 +319,11 @@ public class HostController : InputController
     {
         if (context.performed)
         {
-            GetCurrentWeapon().m_IsAiming = true;
+            GetCurrentWeapon().m_WeaponActions.m_IsAiming = true;
         }
         else if (context.canceled)
         {
-            GetCurrentWeapon().m_IsAiming = false;
+            GetCurrentWeapon().m_WeaponActions.m_IsAiming = false;
         }
     }
 
@@ -366,21 +366,21 @@ public class HostController : InputController
 
     public void OnTestRecoil(InputAction.CallbackContext value)
     {
-        if (value.performed && !GetCurrentWeapon().m_IsRecoilTesting)
+        if (value.performed && !GetCurrentWeapon().m_RecoilTesting.m_IsRecoilTesting)
         {
-            GetCurrentWeapon().m_IsRecoilTesting = true;
+            GetCurrentWeapon().m_RecoilTesting.m_IsRecoilTesting = true;
             m_CombatInfo.m_PrevOrientationRot = m_Orientation.transform.eulerAngles;
             m_CombatInfo.m_PrevXRot = m_XRotation;
 
             GetCurrentWeapon().SetFireTime(); // Starting fire counter.
         }
-        else if (value.performed && GetCurrentWeapon().m_IsRecoilTesting)
+        else if (value.performed && GetCurrentWeapon().m_RecoilTesting.m_IsRecoilTesting)
         {
-            GetCurrentWeapon().m_IsRecoilTesting = false;
-            GetCurrentWeapon().m_IsTestResting = false;
+            GetCurrentWeapon().m_RecoilTesting.m_IsRecoilTesting = false;
+            GetCurrentWeapon().m_RecoilTesting.m_IsTestResting = false;
 
-            GetCurrentWeapon().m_IsFiring = false;
-            GetCurrentWeapon().m_RecoilTestCounter = 0;
+            GetCurrentWeapon().m_WeaponActions.m_IsFiring = false;
+            GetCurrentWeapon().m_RecoilTesting.m_RecoilTestCounter = 0;
         }
     }
 
@@ -578,8 +578,8 @@ public class HostController : InputController
         m_Inventory.m_CurrentWeapon.ClearThings();
 
         Weapon cache = m_Inventory.m_CurrentWeapon;
-        m_Inventory.m_CurrentWeapon.m_IsAiming = false;
-        m_Inventory.m_CurrentWeapon.m_IsFiring = false;
+        m_Inventory.m_CurrentWeapon.m_WeaponActions.m_IsAiming = false;
+        m_Inventory.m_CurrentWeapon.m_WeaponActions.m_IsFiring = false;
         m_Inventory.m_CurrentWeapon = m_Inventory.m_Weapons[index]; // Swapping to new weapon.
 
         // Setting them active/inactive to display the correct weapon. Eventually this will be complimented by a weapon swapping phase where it will take some time before
@@ -679,8 +679,8 @@ public class HostController : InputController
     }
 
     private Transform GetCurrentWeaponTransform() => m_Inventory.m_CurrentWeapon.transform;
-    private Vector3 GetCurrentWeaponOriginalPos() => m_Inventory.m_CurrentWeapon.m_OriginalLocalPosition;
-    private Vector3 GetCurrentWeaponOriginalGlobalPos() => m_Inventory.m_CurrentWeapon.m_OriginalGlobalPosition;
+    private Vector3 GetCurrentWeaponOriginalPos() => m_Inventory.m_CurrentWeapon.m_TransformInfo.m_OriginalLocalPosition;
+    private Vector3 GetCurrentWeaponOriginalGlobalPos() => m_Inventory.m_CurrentWeapon.m_TransformInfo.m_OriginalGlobalPosition;
     public Weapon GetCurrentWeapon() => m_Inventory.m_CurrentWeapon;
 
 

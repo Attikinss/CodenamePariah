@@ -86,7 +86,9 @@ public class Inventory : MonoBehaviour
 
     public bool HasWeapon(int wep) 
     {
-        if (m_Weapons[wep] != null)
+        if (wep > m_Weapons.Count - 1 || wep < 0)
+            return false;
+        else if (m_Weapons[wep] != null)
             return true;
         else
             return false;

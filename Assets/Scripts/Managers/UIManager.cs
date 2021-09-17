@@ -380,6 +380,12 @@ public class UIManager : MonoBehaviour
             m_HealthText?.SetText(GetHealth().ToString());
         }
     }
+
+    public void UpdateAllUI(Weapon currentWeapon)
+    {
+        UpdateHealthUI();
+        UpdateWeaponUI(currentWeapon);
+    }
     public void UnhideCanvas() { m_Canvas.gameObject.SetActive(true); }
     public void HideCanvas() { m_Canvas.gameObject.SetActive(false); }
     public void HideHealth() { m_HealthSprite.SetActive(false); m_HealthText.gameObject.SetActive(false); }

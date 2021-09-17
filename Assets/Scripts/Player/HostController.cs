@@ -162,7 +162,7 @@ public class HostController : InputController
 
         m_UIManager.UnhideCanvas();
         m_UIManager.SetInventory(m_Inventory);
-        m_UIManager.UpdateHealthUI();
+        m_UIManager.UpdateAllUI(GetCurrentWeapon());
     }
 
     /// <summary>
@@ -268,10 +268,13 @@ public class HostController : InputController
         }
         else
         {
-            weapon.SetFireState(false);
+            if (weapon)
+            { 
+                weapon.SetFireState(false);
 
-            // Reset held counter happens regardless.
-            m_CombatInfo.m_ShootingDuration = 0.0f;
+                // Reset held counter happens regardless.
+                m_CombatInfo.m_ShootingDuration = 0.0f;
+            }
         }
     }
 

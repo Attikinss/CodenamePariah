@@ -83,8 +83,8 @@ public class Weapon : MonoBehaviour
         m_TransformInfo.m_OriginalLocalPosition = transform.localPosition;
         m_TransformInfo.m_OriginalGlobalPosition = transform.position;
 
-        m_UIManager = transform.parent.parent.parent.GetComponent<UIManager>();
-        m_UIManager?.UpdateWeaponUI(this);
+        //m_UIManager = transform.parent.parent.parent.GetComponent<UIManager>();
+        //m_UIManager?.UpdateWeaponUI(this);
 
         m_Config = GetComponent<WeaponConfiguration>();
 
@@ -94,9 +94,14 @@ public class Weapon : MonoBehaviour
         // I'm going to try caching the original local pos and local rotation and just set it back to that everytime the player swaps weapons.
         //m_OriginalLocalRot = transform.localRotation;
     }
+	private void Start()
+	{
+        m_UIManager = UIManager.s_Instance;
+        m_UIManager?.UpdateWeaponUI(this);
+	}
 
-    // Update is called once per frame
-    void Update()
+	// Update is called once per frame
+	void Update()
     {
         // I've added m_IsReloading checks to prevent shooting while reloading and also to activate recoil recovery even if m_IsFiring is still true.
         // This gives the advantage of reloading while holding down the mouse button will let you begin shooting again without having to re-press the mouse button.
@@ -727,6 +732,7 @@ public class Weapon : MonoBehaviour
     private Transform GetCurrentWeaponTransform() => m_Inventory.m_CurrentWeapon.transform;
     private Vector3 GetCurrentWeaponOriginalPos() => m_Inventory.m_CurrentWeapon.m_TransformInfo.m_OriginalLocalPosition;
     public bool GetFireState() { return m_WeaponActions.m_IsFiring; }
+    public void SetFireState(bool state) { m_WeaponActions.m_IsFiring = state; }
     public void ResetFire() { m_WeaponActions.m_IsFiring = false; }
     public bool GetReloadState() { return m_WeaponActions.m_IsReloading; }
     public void ResetReload() { m_WeaponActions.m_IsReloading = false; }

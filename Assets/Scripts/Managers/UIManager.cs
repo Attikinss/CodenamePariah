@@ -340,28 +340,33 @@ public class UIManager : MonoBehaviour
 
     public void UpdateWeaponUI(Weapon weapon)
     {
-        if (s_Hide)
-            m_Canvas.enabled = false;
+        if (!weapon)
+        {
+            // There is no weapon to display, so hide the canvas.
+            HideCanvas();
+        }
         else
-            m_Canvas.enabled = true;
+        {
+            if (!m_Canvas.gameObject.activeSelf)
+                UnhideCanvas(); // If it was hidden for some reason, unhide it.
+            if (!m_AmmoDisplay) return;
 
+            //if (weapon.TotalAmmoEmpty())
+            //    DisableMagazine();
 
-        if (!m_AmmoDisplay) return;
+            m_AmmoWarning?.SetText("");
+            if (weapon.TotalAmmoEmpty())
+                m_AmmoWarning?.SetText("No Ammo");
 
-        //if (weapon.TotalAmmoEmpty())
-        //    DisableMagazine();
+            int currentRounds = weapon.GetRoundsInMagazine();
+            int reserveRounds = weapon.GetReserve();
 
-        m_AmmoWarning?.SetText("");
-        if (weapon.TotalAmmoEmpty())
-            m_AmmoWarning?.SetText("No Ammo");
+            string first = currentRounds >= 10 ? currentRounds.ToString() : $"0{currentRounds}";
+            string second = reserveRounds >= 10 ? reserveRounds.ToString() : $"0{reserveRounds}";
+            
+            m_AmmoDisplay.SetText($"{first} / {second}");
+        }
 
-        int currentRounds = weapon.GetRoundsInMagazine();
-        int reserveRounds = weapon.GetReserve();
-
-        string first = currentRounds >= 10 ? currentRounds.ToString() : $"0{currentRounds}";
-        string second = reserveRounds >= 10 ? reserveRounds.ToString() : $"0{reserveRounds}";
-        
-        m_AmmoDisplay.SetText($"{first} / {second}");
     }
 
     /// <summary>Displays the current health.</summary>

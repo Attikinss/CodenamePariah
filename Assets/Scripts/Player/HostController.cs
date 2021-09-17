@@ -77,10 +77,13 @@ public class HostController : InputController
     {
         if (!m_Active) return;
 
-        if (GetCurrentWeaponConfig().m_AlwaysADS) // The reason why I do this is so I don't have to check for the m_AlwaysADS bool everywhere. This way I can still just check for m_IsAiming in all functions.
-            GetCurrentWeapon().m_WeaponActions.m_IsAiming = true;
-        if (GetCurrentWeaponConfig().m_AlwaysFiring) // Doing same here for the reason above.
-            GetCurrentWeapon().m_WeaponActions.m_IsFiring = true;
+        if (GetCurrentWeaponConfig()) // If we have a weapon. We may not have any weapons so thats why we check this.
+        { 
+            if (GetCurrentWeaponConfig().m_AlwaysADS) // The reason why I do this is so I don't have to check for the m_AlwaysADS bool everywhere. This way I can still just check for m_IsAiming in all functions.
+                GetCurrentWeapon().m_WeaponActions.m_IsAiming = true;
+            if (GetCurrentWeaponConfig().m_AlwaysFiring) // Doing same here for the reason above.
+                GetCurrentWeapon().m_WeaponActions.m_IsFiring = true;
+        }
 
         m_MovInfo.m_IsGrounded = CheckGrounded();
         CalculateGroundNormal();
@@ -187,8 +190,10 @@ public class HostController : InputController
     // ================================================================================================================================== //
     public override void OnLook(InputAction.CallbackContext value)
 	{
-        if (GetCurrentWeapon().m_RecoilTesting.m_IsRecoilTesting)
-            return; // early out to prevent mouse movement while testing recoil.
+        Weapon weapon = GetCurrentWeapon();
+        if(weapon)
+            if (weapon.GetRecoilTestState())
+                return; // early out to prevent mouse movement while testing recoil.
         LookInput = value.ReadValue<Vector2>();
 	}
 
@@ -246,21 +251,24 @@ public class HostController : InputController
 
     public void OnShoot(InputAction.CallbackContext value)
     {
+        Debug.Log("Very bad OnShoot spam.");
+        Weapon weapon = GetCurrentWeapon();
         if (value.control.IsPressed(0)) // Have to use this otherwise mouse button gets triggered on release aswell.
         {
             // Now we have to access the weapon script to call weapon functions.
-            GetCurrentWeapon().m_WeaponActions.m_IsFiring = true;
-            
+            if (weapon)
+            {
+                weapon.SetFireState(true);
 
-            // Experimental thing I'm trying.
-            // I will store the original camera rotation when they first start shooting that way I can go back to this rotation when they recover from recoil.
-            m_CombatInfo.m_PrevCamForward = m_Camera.transform.forward;
-            GetCurrentWeapon().SetFireTime();
-
+                // Experimental thing I'm trying.
+                // I will store the original camera rotation when they first start shooting that way I can go back to this rotation when they recover from recoil.
+                m_CombatInfo.m_PrevCamForward = m_Camera.transform.forward;
+                weapon.SetFireTime();
+            }
         }
         else
         {
-            GetCurrentWeapon().m_WeaponActions.m_IsFiring = false;
+            weapon.SetFireState(false);
 
             // Reset held counter happens regardless.
             m_CombatInfo.m_ShootingDuration = 0.0f;
@@ -690,7 +698,7 @@ public class HostController : InputController
         // script to have another list that compliments the m_Weapons list. This new list would match
         // each element in the m_Weapons list and store the corresponding weapons WeaponConfiguration script.
 
-        return m_Inventory.m_CurrentWeapon.m_Config;
+        return m_Inventory.GetCurrentConfig();
     }
 
     private Transform GetCurrentWeaponTransform() => m_Inventory.m_CurrentWeapon.transform;

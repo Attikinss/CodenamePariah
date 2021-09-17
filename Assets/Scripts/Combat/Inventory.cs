@@ -144,12 +144,15 @@ public class Inventory : MonoBehaviour
         }
         HideWeapon(wep); // Hiding the weapon we will remove. We wont destroy it, we'll just hide it.
         m_Weapons.RemoveAt(wep);
+        m_CurrentWeapon = null; // Resetting the current weapon reference.
 
         if (m_Weapons.Count > 0) // If we haven't removed every single weapon from the list.
         { 
             m_CurrentWeapon = m_Weapons[m_CurrentWeaponNum]; // Setting the current weapon to the updated list.
             UnhideWeapon(m_CurrentWeaponNum); // If we have moved weapons, we should unhide the newly equipped weapon. Sometimes this will be redundant.
         }
+
+        m_UIManager.UpdateWeaponUI(m_CurrentWeapon);
     }
     public void UpgradeWeapon(int weapon, GameObject newPrefab, Weapon newWeapon, WeaponConfiguration newConfig)
     {
@@ -162,5 +165,15 @@ public class Inventory : MonoBehaviour
         GameObject newWeaponPrefab = Instantiate(newPrefab);
         newWeaponPrefab.transform.SetParent(camera.transform); // The problem with adding a new prefab is that the position might not be in the bottom right hand corner (typical FPS gun
                                                                // position). Hopefully if the prefab's position is set properly it's position will be correct.
+    }
+
+    public WeaponConfiguration GetCurrentConfig() 
+    {
+        if (m_CurrentWeapon)
+        {
+            return m_CurrentWeapon.m_Config;
+        }
+        else
+            return null;
     }
 }

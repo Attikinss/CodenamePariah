@@ -68,6 +68,8 @@ public class PariahController : InputController
 
     private Rigidbody m_Rigidbody;
 
+    bool dead = false;
+
     private void Awake() => m_Rigidbody = GetComponent<Rigidbody>();
 
     private void Start()
@@ -256,12 +258,15 @@ public class PariahController : InputController
 
     public void TakeDamage(int amount)
     {
+        if (dead) return;
+
         m_Health = Mathf.Clamp(m_Health - amount, 0, m_MaxHealth);
         if (m_Health == 0)
         {
             // TODO: Kill pariah
             // Temporary: Reloads the current scene
-            SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+            dead = true;
+            StartCoroutine(ReloadLevel());
         }
     }
 
@@ -269,16 +274,14 @@ public class PariahController : InputController
     {
         while (true)
         {
-            if (m_Active && !m_Possessing)
+            if (!dead && m_Active && !m_Possessing)
             {
                 m_Health -= m_HealthDrainAmount;
                 if (m_Health <= 0)
                 {
                     m_Health = 0;
-
-                    // TODO: Kill pariah
-                    // Temporary: Reloads the current scene
-                    SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+                    dead = true;
+                    StartCoroutine(ReloadLevel());
                 }
 
                 yield return new WaitForSeconds(delay);
@@ -286,6 +289,27 @@ public class PariahController : InputController
 
             yield return null;
         }
+    }
+
+    // ****** Highly temporary ******
+    private IEnumerator ReloadLevel()
+    {
+        yield return null;
+
+        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+        asyncOperation.allowSceneActivation = false;
+
+        while (!asyncOperation.isDone)
+        {
+            Debug.Log($"Progress: {asyncOperation.progress * 100}%");
+            if (asyncOperation.progress >= 0.9f)
+            {
+                asyncOperation.allowSceneActivation = true;
+            }
+            yield return null;
+        }
+
+        
     }
 
     /// <summary>

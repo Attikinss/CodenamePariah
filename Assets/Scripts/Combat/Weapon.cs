@@ -727,10 +727,12 @@ public class Weapon : MonoBehaviour
     private Transform GetCurrentWeaponTransform() => m_Inventory.m_CurrentWeapon.transform;
     private Vector3 GetCurrentWeaponOriginalPos() => m_Inventory.m_CurrentWeapon.m_TransformInfo.m_OriginalLocalPosition;
     public bool GetFireState() { return m_WeaponActions.m_IsFiring; }
+    public void ResetFire() { m_WeaponActions.m_IsFiring = false; }
     public bool GetReloadState() { return m_WeaponActions.m_IsReloading; }
     public void ResetReload() { m_WeaponActions.m_IsReloading = false; }
     public bool IsReloading() { return m_WeaponActions.m_IsReloading; }
     public bool GetAimState() { return m_WeaponActions.m_IsAiming; }
+    public void ResetAim() { m_WeaponActions.m_IsAiming = false; }
     public bool GetRecoilTestState() { return m_RecoilTesting.m_IsRecoilTesting; }
     public bool CanFire() {return (GetFireState() && !GetReloadState() && !TotalAmmoEmpty());}
     public bool CanAim() { return (GetAimState() && !GetReloadState() && !m_DualWield); }

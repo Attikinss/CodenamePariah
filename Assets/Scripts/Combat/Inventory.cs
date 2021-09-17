@@ -20,13 +20,10 @@ public class Inventory : MonoBehaviour
     [SerializeField]
     [Tooltip("Weapons this character has.")]
     public List<Weapon> m_Weapons;  // Has been made public so I can access it within the HostController.cs script. Only temporary.
-
-    /// <summary>
-    /// 
-    /// </summary>
     
     [HideInInspector]
     public Weapon m_CurrentWeapon; // I know this wasn't public by default, but I'm going to make it publically accessible so that I can swap weapons around form the HostController.cs script.
+    private int m_CurrentWeaponNum = 0;
 
     public WhiteWillow.Agent Owner { get; private set; }
 
@@ -86,4 +83,31 @@ public class Inventory : MonoBehaviour
     }
 
     public int GetHealth() { return m_Health; }
+
+    public bool HasWeapon(int wep) 
+    {
+        if (m_Weapons[wep] != null)
+            return true;
+        else
+            return false;
+    }
+    public void SetWeapon(int wep)
+    {
+        if (wep < m_Weapons.Count && wep >= 0) // It's a valid wep number.
+        {
+            m_CurrentWeapon.ResetFire();
+            m_CurrentWeapon.ResetAim();
+
+            // Hiding old weapon.
+            HideWeapon(m_CurrentWeaponNum);
+
+            m_CurrentWeaponNum = wep;
+            m_CurrentWeapon = m_Weapons[wep]; // Reassigning m_CurrentWeapon to match new weapon.
+
+            // Unhiding new weapon.
+            UnhideWeapon(m_CurrentWeaponNum);
+        }
+    }
+    public void UnhideWeapon(int wep) { m_Weapons[wep].gameObject.SetActive(true); }
+    public void HideWeapon(int wep) { m_Weapons[wep].gameObject.SetActive(false); }
 }

@@ -70,7 +70,7 @@ public class UIManager : MonoBehaviour
 	{
         // Temporarily getting all the Bullet Image components because I've discovered setting game objects to false is slow if you do it a lot of times.
         // Also I'm getting the components through code so I don't change the player prefab.
-        for (int i = m_Magazines[0].BulletSprites.Length - 1; i >= 0; i--) // Very risky only checking the first magazine and trusting all the other magazines will have the same amount
+        for (int i = 0; i < m_Magazines[0].BulletSprites.Length; i++) // Very risky only checking the first magazine and trusting all the other magazines will have the same amount
         {                                                             // of bullet sprites but this is temporary so whatever.
 
             m_AssaultMag1Bullets.Add(m_Magazines[0].BulletSprites[i].GetComponent<Image>());
@@ -79,7 +79,7 @@ public class UIManager : MonoBehaviour
         }
 
         // Same temporary fix for dual wielded weapon.
-        for (int i = m_DualMagazines[0].BulletSprites.Length - 1; i >= 0; i--)
+        for (int i = 0; i < m_DualMagazines[0].BulletSprites.Length; i++)
         {
             m_DualMag1Bullets.Add(m_DualMagazines[0].BulletSprites[i].GetComponent<Image>());
             m_DualMag2Bullets.Add(m_DualMagazines[1].BulletSprites[i].GetComponent<Image>());
@@ -173,11 +173,17 @@ public class UIManager : MonoBehaviour
     public void DisableBulletSpriteInLastMag(int i)
     {
         if (m_CurrentWeaponType == WEAPONTYPE.RIFLE)
+        {
             m_Magazines[m_Magazines.Count - 1].BulletSprites[i].SetActive(false);
+            m_AssaultMag3Bullets[i].enabled = false;
+        }
         else if (m_CurrentWeaponType == WEAPONTYPE.PISTOL)
             m_PistolMagazines[m_PistolMagazines.Count - 1].BulletSprites[i].SetActive(false);
         else if (m_CurrentWeaponType == WEAPONTYPE.DUAL)
+        { 
             m_DualMagazines[m_DualMagazines.Count - 1].BulletSprites[i].SetActive(false);
+            m_DualMag3Bullets[i].enabled = false;
+        }
     }
 
     /// <summary>Disables bullets in current magazine.</summary>
@@ -236,11 +242,17 @@ public class UIManager : MonoBehaviour
     public bool FirstMagBulletSpriteActive(int i)
     {
         if (m_CurrentWeaponType == WEAPONTYPE.RIFLE)
-            return m_Magazines[0].BulletSprites[i].activeSelf;
+        {
+            return m_AssaultMag1Bullets[i].enabled;
+            //return m_Magazines[0].BulletSprites[i].activeSelf;
+        }
         else if (m_CurrentWeaponType == WEAPONTYPE.PISTOL)
             return m_PistolMagazines[0].BulletSprites[i].activeSelf;
         else if (m_CurrentWeaponType == WEAPONTYPE.DUAL)
-            return m_DualMagazines[0].BulletSprites[i].activeSelf;
+        {
+            return m_DualMag1Bullets[i].enabled;
+            //return m_DualMagazines[0].BulletSprites[i].activeSelf;
+        }
         else
             return false; // eh not really error checking but whateva!
     }
@@ -251,11 +263,17 @@ public class UIManager : MonoBehaviour
     public bool LastMagBulletSpriteActive(int i)
     {
         if (m_CurrentWeaponType == WEAPONTYPE.RIFLE)
-            return m_Magazines[m_Magazines.Count - 1].BulletSprites[i].activeSelf;
+        {
+            return m_AssaultMag3Bullets[i].enabled;
+            //return m_Magazines[m_Magazines.Count - 1].BulletSprites[i].activeSelf;
+        }
         else if (m_CurrentWeaponType == WEAPONTYPE.PISTOL)
             return m_PistolMagazines[m_PistolMagazines.Count - 1].BulletSprites[i].activeSelf;
         else if (m_CurrentWeaponType == WEAPONTYPE.DUAL)
-            return m_DualMagazines[m_DualMagazines.Count - 1].BulletSprites[i].activeSelf;
+        {
+            return m_DualMag3Bullets[i].enabled;
+            //return m_DualMagazines[m_DualMagazines.Count - 1].BulletSprites[i].activeSelf;
+        }
         else
             return false;
     }

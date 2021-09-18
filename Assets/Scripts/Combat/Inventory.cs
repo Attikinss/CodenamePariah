@@ -218,4 +218,6 @@ public class Inventory : MonoBehaviour
         else
             return null;
     }
+
+    public int GetWeaponNum() { return m_CurrentWeaponNum; }
 }

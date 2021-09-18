@@ -293,6 +293,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 782e265ca3eabf54ab9f81dee17cc001, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_TypeTag: 2
   m_Camera: {fileID: 0}
   m_BulletDamage: 15
   m_RoundsInMagazine: 30

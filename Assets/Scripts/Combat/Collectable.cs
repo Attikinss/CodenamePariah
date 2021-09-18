@@ -15,6 +15,8 @@ public class Collectable : MonoBehaviour
 
     public GameObject m_ItemPrefab;
 
+    public WEAPONTYPE m_RequiredTarget;
+
     [SerializeField]
     private float m_RotationSpeed = 60f;
 
@@ -65,7 +67,7 @@ public class Collectable : MonoBehaviour
             case CollectableAction.PICKUP:
                 return inv.AddWeapon(m_ItemPrefab);
             case CollectableAction.UPGRADE_WEAPON:
-                return inv.UpgradeWeapon(inv.GetWeaponNum(), m_ItemPrefab);
+                return inv.UpgradeWeapon(inv.GetWeaponNum(), m_ItemPrefab, m_RequiredTarget);
             default:
                 return false;
         }

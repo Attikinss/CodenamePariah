@@ -201,10 +201,24 @@ public class Inventory : MonoBehaviour
 
         m_UIManager.UpdateWeaponUI(m_CurrentWeapon);
     }
-    public bool UpgradeWeapon(int weapon, GameObject newPrefab)
+    public bool UpgradeWeapon(int weapon, GameObject newPrefab, WEAPONTYPE requiredPrequisiteWep)
     {
         if (!HasWeapon(weapon))
             return false;
+
+        // We can only allow them to upgrade if they hold the prequiste weapon. Let's check if they are holding it.
+        bool hasPrerequisite = false;
+        for (int i = 0; i < m_Weapons.Count; i++)
+        {
+            if (m_Weapons[i].m_TypeTag == requiredPrequisiteWep)
+            { 
+                hasPrerequisite = true;
+                break;
+            }
+
+        }
+        if (!hasPrerequisite)
+            return false; // Early out, they don't have the required prerequisite.
 
         // Remove old weapon since we are upgrading it.
         RemoveWeapon(weapon);

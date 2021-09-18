@@ -3,8 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
+public enum WEAPONTYPE
+{
+    RIFLE,
+    PISTOL,
+    DUAL,
+    NONE
+}
 public class Weapon : MonoBehaviour
 {
+    public WEAPONTYPE m_TypeTag;
+
     [SerializeField]
     [Tooltip("The character's camera.")]
     private Camera m_Camera;

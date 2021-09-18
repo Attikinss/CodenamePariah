@@ -3,13 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-public enum WEAPONTYPE
-{ 
-    RIFLE,
-    PISTOL,
-    DUAL,
-    NONE
-}
+
 public class UIManager : MonoBehaviour
 {
     [SerializeField]

@@ -42,8 +42,8 @@ public class Collectable : MonoBehaviour
                 if (!inv)
                     Debug.LogError("You walked over a pickup but you are missing an Inventory.cs script!");
 
-                Activate(inv);
-                Destroy(gameObject);
+                if(Activate(inv))
+                    Destroy(gameObject);
             }
         }
     }
@@ -58,17 +58,16 @@ public class Collectable : MonoBehaviour
         transform.position = currentPosition;
     }
 
-    private void Activate(Inventory inv)
+    private bool Activate(Inventory inv)
     {
         switch (m_Action)
         {
             case CollectableAction.PICKUP:
-                inv.AddWeapon(m_ItemPrefab);
-                break;
+                return inv.AddWeapon(m_ItemPrefab);
             case CollectableAction.UPGRADE_WEAPON:
-                inv.UpgradeWeapon(inv.GetWeaponNum(), m_ItemPrefab);
-                break;
-
+                return inv.UpgradeWeapon(inv.GetWeaponNum(), m_ItemPrefab);
+            default:
+                return false;
         }
     }
 }

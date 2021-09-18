@@ -123,7 +123,7 @@ public class Inventory : MonoBehaviour
     /// <summary>
     /// AddWeapon() pushes a new weapon to the back of the list.
     /// </summary>
-    public void AddWeapon(GameObject weaponPrefab)
+    public bool AddWeapon(GameObject weaponPrefab)
     {
         Weapon prefabWeaponComponent;
         if (weaponPrefab.TryGetComponent<Weapon>(out prefabWeaponComponent))
@@ -147,9 +147,14 @@ public class Inventory : MonoBehaviour
             if (m_Weapons.Count == 1) // If we just added the only weapon we have, set current weapon to this weapon and update UI.
                 SetWeapon(0);
 
+            return true;
+
         }
         else
+        { 
             Debug.LogError("Attempted to AddWeapon() but the passed in prefab is not a weapon!");
+            return false;
+        }
 
     }
     public void RemoveWeapon(int wep)
@@ -196,10 +201,10 @@ public class Inventory : MonoBehaviour
 
         m_UIManager.UpdateWeaponUI(m_CurrentWeapon);
     }
-    public void UpgradeWeapon(int weapon, GameObject newPrefab)
+    public bool UpgradeWeapon(int weapon, GameObject newPrefab)
     {
         if (!HasWeapon(weapon))
-            return;
+            return false;
 
         // Remove old weapon since we are upgrading it.
         RemoveWeapon(weapon);
@@ -209,6 +214,8 @@ public class Inventory : MonoBehaviour
 
         // Since the new weapon is on the end of the list, we'll swap to the last element to make it seem like they are still holding on to the same gun.
         SetWeapon(m_Weapons.Count - 1);
+
+        return true;
     }
 
     public WeaponConfiguration GetCurrentConfig() 

@@ -128,8 +128,8 @@ public class Inventory : MonoBehaviour
         Weapon prefabWeaponComponent;
         if (weaponPrefab.TryGetComponent<Weapon>(out prefabWeaponComponent))
         {
-            GameObject newWeapon = Instantiate(weaponPrefab);                               // The problem with adding a new prefab is that the position might not be in the bottom right hand corner (typical FPS gun
-            newWeapon.transform.SetParent(m_Camera); // --> Thing we attach the weapons to. // position). Hopefully if the prefab's position is set properly it's position will be correct.
+            GameObject newWeapon = Instantiate(weaponPrefab, m_Camera);                               // The problem with adding a new prefab is that the position might not be in the bottom right hand corner (typical FPS gun
+            //newWeapon.transform.SetParent(m_Camera); // --> Thing we attach the weapons to. // position). Hopefully if the prefab's position is set properly it's position will be correct.
 
             Weapon weaponComponent = newWeapon.GetComponent<Weapon>();
             weaponComponent.m_Inventory = this;

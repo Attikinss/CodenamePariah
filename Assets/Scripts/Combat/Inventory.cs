@@ -102,11 +102,14 @@ public class Inventory : MonoBehaviour
     {
         if (wep < m_Weapons.Count && wep >= 0) // It's a valid wep number.
         {
-            m_CurrentWeapon.ResetFire();
-            m_CurrentWeapon.ResetAim();
+            if (m_CurrentWeapon) // If we have a current weapon, hide it and get ready to swap to the new one.
+            { 
+                m_CurrentWeapon.ResetFire();
+                m_CurrentWeapon.ResetAim();
 
-            // Hiding old weapon.
-            HideWeapon(m_CurrentWeaponNum);
+                // Hiding old weapon.
+                HideWeapon(m_CurrentWeaponNum);
+            }
 
             m_CurrentWeaponNum = wep;
             m_CurrentWeapon = m_Weapons[wep]; // Reassigning m_CurrentWeapon to match new weapon.
@@ -133,7 +136,17 @@ public class Inventory : MonoBehaviour
             weaponComponent.m_Controller = m_Controller;
             weaponComponent.SetCamera(m_Camera.GetComponent<Camera>());
 
+            weaponComponent.m_TransformInfo.m_OriginalLocalPosition = newWeapon.transform.localPosition;
+            weaponComponent.m_TransformInfo.m_OriginalGlobalPosition = newWeapon.transform.position;
+
             m_Weapons.Add(weaponComponent);
+
+            // New weapon has to be deactivated be default.
+            newWeapon.SetActive(false);
+
+            if (m_Weapons.Count == 1) // If we just added the only weapon we have, set current weapon to this weapon and update UI.
+                SetWeapon(0);
+
         }
         else
             Debug.LogError("Attempted to AddWeapon() but the passed in prefab is not a weapon!");

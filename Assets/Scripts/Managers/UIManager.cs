@@ -364,7 +364,8 @@ public class UIManager : MonoBehaviour
             string first = currentRounds >= 10 ? currentRounds.ToString() : $"0{currentRounds}";
             string second = reserveRounds >= 10 ? reserveRounds.ToString() : $"0{reserveRounds}";
             
-            m_AmmoDisplay.SetText($"{first} / {second}");
+            //m_AmmoDisplay.SetText($"{first} / {second}");
+            m_AmmoDisplay.SetText(first + " / " + second);
         }
 
     }

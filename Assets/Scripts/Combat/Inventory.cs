@@ -29,7 +29,7 @@ public class Inventory : MonoBehaviour
 
     UIManager m_UIManager;
 
-    public Transform m_Camera; // This transform will be used when we add new weapons to the inventory.
+    public Camera m_Camera; // This transform will be used when we add new weapons to the inventory.
     private HostController m_Controller;
 
     /// <summary>
@@ -128,13 +128,13 @@ public class Inventory : MonoBehaviour
         Weapon prefabWeaponComponent;
         if (weaponPrefab.TryGetComponent<Weapon>(out prefabWeaponComponent))
         {
-            GameObject newWeapon = Instantiate(weaponPrefab, m_Camera);                               // The problem with adding a new prefab is that the position might not be in the bottom right hand corner (typical FPS gun
+            GameObject newWeapon = Instantiate(weaponPrefab, m_Camera.transform);                               // The problem with adding a new prefab is that the position might not be in the bottom right hand corner (typical FPS gun
             //newWeapon.transform.SetParent(m_Camera); // --> Thing we attach the weapons to. // position). Hopefully if the prefab's position is set properly it's position will be correct.
 
             Weapon weaponComponent = newWeapon.GetComponent<Weapon>();
             weaponComponent.m_Inventory = this;
             weaponComponent.m_Controller = m_Controller;
-            weaponComponent.SetCamera(m_Camera.GetComponent<Camera>());
+            weaponComponent.SetCamera(m_Camera);
 
             weaponComponent.m_TransformInfo.m_OriginalLocalPosition = newWeapon.transform.localPosition;
             weaponComponent.m_TransformInfo.m_OriginalGlobalPosition = newWeapon.transform.position;

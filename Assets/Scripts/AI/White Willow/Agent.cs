@@ -13,9 +13,7 @@ namespace WhiteWillow
         [Min(0.0f)]
         public float m_ViewRange = 15.0f;
 
-        [ReadOnly]
-        [SerializeField]
-        private bool m_Possessed = false;
+        public bool Possessed { get; private set; } = false;
 
         private BehaviourTree m_RuntimeTree;
         private NavMeshAgent m_NavAgent;
@@ -47,7 +45,7 @@ namespace WhiteWillow
 
         private void Update()
         {
-            if (m_Possessed)
+            if (Possessed)
             {
                 FacingDirection = m_HostController.m_Orientation.rotation * m_HostController.m_Orientation.forward;
             }
@@ -109,7 +107,7 @@ namespace WhiteWillow
 
         public void Possess()
         {
-            m_Possessed = true;
+            Possessed = true;
             m_NavAgent.ResetPath();
             m_NavAgent.enabled = false;
             PariahController?.Disable();
@@ -118,7 +116,7 @@ namespace WhiteWillow
 
         public void Release()
         {
-            m_Possessed = false;
+            Possessed = false;
             m_NavAgent.enabled = true;
             m_HostController?.Disable();
             PariahController?.Enable();
@@ -126,7 +124,7 @@ namespace WhiteWillow
 
         public void Kill()
         {
-            if (m_Possessed)
+            if (Possessed)
                 Release();
 
             // TODO: Use object pooling / queued destruction system

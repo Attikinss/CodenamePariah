@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcf384b154398e341b6b29969c078198, type: 3}
   m_Name: MotionBlur
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
+  m_AdvancedMode: 0
   quality:
     m_OverrideState: 1
     m_Value: 2
@@ -73,6 +74,7 @@ MonoBehaviour:
   m_Name: Bloom
   m_EditorClassIdentifier: 
   active: 1
+  m_AdvancedMode: 0
   quality:
     m_OverrideState: 1
     m_Value: 2
@@ -128,6 +130,7 @@ MonoBehaviour:
   m_Name: HDRISky
   m_EditorClassIdentifier: 
   active: 1
+  m_AdvancedMode: 0
   rotation:
     m_OverrideState: 1
     m_Value: 116
@@ -274,6 +277,7 @@ MonoBehaviour:
   m_Name: FilmGrain
   m_EditorClassIdentifier: 
   active: 1
+  m_AdvancedMode: 0
   type:
     m_OverrideState: 1
     m_Value: 0
@@ -303,12 +307,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   active: 1
+  m_AdvancedMode: 0
   skyType:
     m_OverrideState: 1
     m_Value: 1
-  cloudType:
-    m_OverrideState: 0
-    m_Value: 0
   skyAmbientMode:
     m_OverrideState: 1
     m_Value: 1
@@ -328,6 +330,7 @@ MonoBehaviour:
   m_Name: ContactShadows
   m_EditorClassIdentifier: 
   active: 1
+  m_AdvancedMode: 0
   quality:
     m_OverrideState: 1
     m_Value: 2
@@ -393,6 +396,7 @@ MonoBehaviour:
   m_Name: Fog
   m_EditorClassIdentifier: 
   active: 1
+  m_AdvancedMode: 0
   quality:
     m_OverrideState: 1
     m_Value: 1
@@ -511,6 +515,7 @@ MonoBehaviour:
   m_Name: ScreenSpaceRefraction
   m_EditorClassIdentifier: 
   active: 1
+  m_AdvancedMode: 0
   screenFadeDistance:
     m_OverrideState: 1
     m_Value: 0.001
@@ -529,6 +534,7 @@ MonoBehaviour:
   m_Name: AmbientOcclusion
   m_EditorClassIdentifier: 
   active: 1
+  m_AdvancedMode: 0
   quality:
     m_OverrideState: 1
     m_Value: 2
@@ -624,6 +630,7 @@ MonoBehaviour:
   m_Name: Exposure
   m_EditorClassIdentifier: 
   active: 1
+  m_AdvancedMode: 0
   mode:
     m_OverrideState: 1
     m_Value: 4
@@ -780,6 +787,7 @@ MonoBehaviour:
   m_Name: Tonemapping
   m_EditorClassIdentifier: 
   active: 1
+  m_AdvancedMode: 0
   mode:
     m_OverrideState: 1
     m_Value: 2
@@ -832,6 +840,7 @@ MonoBehaviour:
   m_Name: HDShadowSettings
   m_EditorClassIdentifier: 
   active: 1
+  m_AdvancedMode: 0
   maxShadowDistance:
     m_OverrideState: 1
     m_Value: 70

@@ -75,66 +75,76 @@ public class HostController : InputController
 	}
     private void Update()
     {
-        if (!m_Active) return;
-
-        if (GetCurrentWeaponConfig().m_AlwaysADS) // The reason why I do this is so I don't have to check for the m_AlwaysADS bool everywhere. This way I can still just check for m_IsAiming in all functions.
-            GetCurrentWeapon().m_IsAiming = true;
-        if (GetCurrentWeaponConfig().m_AlwaysFiring) // Doing same here for the reason above.
-            GetCurrentWeapon().m_IsFiring = true;
-
-        m_MovInfo.m_IsGrounded = CheckGrounded();
-        CalculateGroundNormal();
-        if (m_MovInfo.m_IsGrounded)
-            m_MovInfo.m_HasDoubleJumped = false;
-        
-
-        m_MovInfo.m_CurrentMoveSpeed = Rigidbody.velocity.magnitude;
-
-
-        // Just for debugging purposes. This variable is only used in the CustomDebugUI script. - Not true anymore, apparently I am using it now ._.
-        m_CombatInfo.m_camForward = m_Camera.transform.forward;
-
-
-        // ================ NOTE ================ //
-        // It's really weird and bad to have a counter like this. I'll try find a way around it but
-        // for now it's helping fix an issue with walking up ramps and jumping.
-        // ====================================== //
-
-        if (m_MovInfo.m_HasJumped)
+        if (!PauseMenu.m_GameIsPaused)
         {
-            m_MovInfo.m_JumpCounter += Time.deltaTime; // how to get around having a timer for something like this?
-        }
+            if (!m_Active) return;
+
+            if (GetCurrentWeaponConfig().m_AlwaysADS) // The reason why I do this is so I don't have to check for the m_AlwaysADS bool everywhere. This way I can still just check for m_IsAiming in all functions.
+                GetCurrentWeapon().m_IsAiming = true;
+            if (GetCurrentWeaponConfig().m_AlwaysFiring) // Doing same here for the reason above.
+                GetCurrentWeapon().m_IsFiring = true;
+
+            m_MovInfo.m_IsGrounded = CheckGrounded();
+            CalculateGroundNormal();
+            if (m_MovInfo.m_IsGrounded)
+                m_MovInfo.m_HasDoubleJumped = false;
 
 
-        // While draining, the player is not allowed to interact with their weapons.
-        // ;-;
-        if (m_DrainAbility.isDraining)
-        {
-            if (m_Inventory.GetHealth() > 0)
+            m_MovInfo.m_CurrentMoveSpeed = Rigidbody.velocity.magnitude;
+
+
+            // Just for debugging purposes. This variable is only used in the CustomDebugUI script. - Not true anymore, apparently I am using it now ._.
+            m_CombatInfo.m_camForward = m_Camera.transform.forward;
+
+
+            // ================ NOTE ================ //
+            // It's really weird and bad to have a counter like this. I'll try find a way around it but
+            // for now it's helping fix an issue with walking up ramps and jumping.
+            // ====================================== //
+
+            if (m_MovInfo.m_HasJumped)
             {
-                // timed event. have adjustable drain speed.
-                m_DrainAbility.drainCounter += Time.deltaTime;
-                if (m_DrainAbility.drainCounter >= m_DrainAbility.drainInterval)
+                m_MovInfo.m_JumpCounter += Time.deltaTime; // how to get around having a timer for something like this?
+            }
+
+
+            // While draining, the player is not allowed to interact with their weapons.
+            // ;-;
+            if (m_DrainAbility.isDraining)
+            {
+                if (m_Inventory.GetHealth() > 0)
                 {
-                    m_Inventory.Owner?.PariahController.AddHealth(m_DrainAbility.restore);
-                    m_DrainAbility.drainCounter = 0.0f;
-                    m_Inventory.TakeDamage(m_DrainAbility.damage);
+                    // timed event. have adjustable drain speed.
+                    m_DrainAbility.drainCounter += Time.deltaTime;
+                    if (m_DrainAbility.drainCounter >= m_DrainAbility.drainInterval)
+                    {
+                        m_Inventory.Owner?.PariahController.AddHealth(m_DrainAbility.restore);
+
+                        m_DrainAbility.drainCounter = 0.0f;
+                        m_Inventory.TakeDamage(m_DrainAbility.damage);
+                    }
                 }
             }
         }
     }
     private void LateUpdate()
     {
-        if (m_Active)
-            Look();
+        if (!PauseMenu.m_GameIsPaused)
+        {
+            if (m_Active)
+                Look();
+        }
     }
 
     private void FixedUpdate()
 	{
-        if (!m_Active) return;
+        if (!PauseMenu.m_GameIsPaused)
+        {
+            if (!m_Active) return;
 
-        Slide();
-        Move(m_MovInfo.MovementInput);
+            Slide();
+            Move(m_MovInfo.MovementInput);
+        }
 	}
 
     
@@ -149,6 +159,13 @@ public class HostController : InputController
         UnhideHUD();
 
         CustomDebugUI.s_Instance.SetController(this);
+
+
+        // When the player is controlling a unit, we set the weapons to be overlayed so they don't stick inside walls and stuff. It's reverted back in Disable().
+        for (int i = 0; i < m_Inventory.m_Weapons.Count; i++)
+        { 
+            m_Inventory.m_Weapons[i].SetWeaponLayerRecursively(12); // If we ever rearrange layer orders this will have to change!                      ===================== IMPORTANT =====================
+        }
     }
 
     /// <summary>
@@ -162,39 +179,51 @@ public class HostController : InputController
         HideHUD();
 
         CustomDebugUI.s_Instance.ClearController();
+
+        // Reverting the layer back to what it was.
+        for (int i = 0; i < m_Inventory.m_Weapons.Count; i++)
+        {
+            m_Inventory.m_Weapons[i].SetWeaponLayerRecursively(10); // If we ever rearrange layer orders this will have to change!                      ===================== IMPORTANT =====================
+        }
     }
 
     // ========================================================== Input Events ========================================================== //
     // ================================================================================================================================== //
     public override void OnLook(InputAction.CallbackContext value)
 	{
-        if (GetCurrentWeapon().m_IsRecoilTesting)
-            return; // early out to prevent mouse movement while testing recoil.
-        LookInput = value.ReadValue<Vector2>();
+        if (!PauseMenu.m_GameIsPaused)
+        {
+            if (GetCurrentWeapon().m_IsRecoilTesting)
+                return; // early out to prevent mouse movement while testing recoil.
+            LookInput = value.ReadValue<Vector2>();
+        }
 	}
 
     public override void OnJump(InputAction.CallbackContext value)
     {
-        if (value.performed)
+        if (!PauseMenu.m_GameIsPaused)
         {
-            Vector3 direction = Vector3.up * ControllerMaths.CalculateJumpForce(m_JumpHeight, Rigidbody.mass, m_Gravity);
-            direction.x = Rigidbody.velocity.x;
-            direction.z = Rigidbody.velocity.z;
-
-            if (/*m_MovInfo.m_IsGrounded*/!m_MovInfo.m_HasJumped)
+            if (value.performed)
             {
-                m_MovInfo.m_HasJumped = true;
+                Vector3 direction = Vector3.up * ControllerMaths.CalculateJumpForce(m_JumpHeight, Rigidbody.mass, m_Gravity);
+                direction.x = Rigidbody.velocity.x;
+                direction.z = Rigidbody.velocity.z;
 
-                m_MovInfo.m_CacheMovDirection = direction;
-                Rigidbody.velocity = direction;
-            }
-            else if (!m_MovInfo.m_IsGrounded && !m_MovInfo.m_HasDoubleJumped)
-            {
-                m_MovInfo.m_CacheMovDirection = direction;
-                Rigidbody.velocity = direction;
+                if (/*m_MovInfo.m_IsGrounded*/!m_MovInfo.m_HasJumped)
+                {
+                    m_MovInfo.m_HasJumped = true;
 
-                // Have to tick m_HasDoubleJumped to false;
-                m_MovInfo.m_HasDoubleJumped = true;
+                    m_MovInfo.m_CacheMovDirection = direction;
+                    Rigidbody.velocity = direction;
+                }
+                else if (!m_MovInfo.m_IsGrounded && !m_MovInfo.m_HasDoubleJumped)
+                {
+                    m_MovInfo.m_CacheMovDirection = direction;
+                    Rigidbody.velocity = direction;
+
+                    // Have to tick m_HasDoubleJumped to false;
+                    m_MovInfo.m_HasDoubleJumped = true;
+                }
             }
         }
     }
@@ -227,24 +256,27 @@ public class HostController : InputController
 
     public void OnShoot(InputAction.CallbackContext value)
     {
-        if (value.control.IsPressed(0)) // Have to use this otherwise mouse button gets triggered on release aswell.
+        if (!PauseMenu.m_GameIsPaused)
         {
-            // Now we have to access the weapon script to call weapon functions.
-            GetCurrentWeapon().m_IsFiring = true;
-            
+            if (value.control.IsPressed(0)) // Have to use this otherwise mouse button gets triggered on release aswell.
+            {
+                // Now we have to access the weapon script to call weapon functions.
+                GetCurrentWeapon().m_IsFiring = true;
 
-            // Experimental thing I'm trying.
-            // I will store the original camera rotation when they first start shooting that way I can go back to this rotation when they recover from recoil.
-            m_CombatInfo.m_PrevCamForward = m_Camera.transform.forward;
-            GetCurrentWeapon().SetFireTime();
 
-        }
-        else
-        {
-            GetCurrentWeapon().m_IsFiring = false;
+                // Experimental thing I'm trying.
+                // I will store the original camera rotation when they first start shooting that way I can go back to this rotation when they recover from recoil.
+                m_CombatInfo.m_PrevCamForward = m_Camera.transform.forward;
+                GetCurrentWeapon().SetFireTime();
 
-            // Reset held counter happens regardless.
-            m_CombatInfo.m_ShootingDuration = 0.0f;
+            }
+            else
+            {
+                GetCurrentWeapon().m_IsFiring = false;
+
+                // Reset held counter happens regardless.
+                m_CombatInfo.m_ShootingDuration = 0.0f;
+            }
         }
     }
 
@@ -304,13 +336,16 @@ public class HostController : InputController
 
     public void OnAim(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (!PauseMenu.m_GameIsPaused)
         {
-            GetCurrentWeapon().m_IsAiming = true;
-        }
-        else if (context.canceled)
-        {
-            GetCurrentWeapon().m_IsAiming = false;
+            if (context.performed)
+            {
+                GetCurrentWeapon().m_IsAiming = true;
+            }
+            else if (context.canceled)
+            {
+                GetCurrentWeapon().m_IsAiming = false;
+            }
         }
     }
 
@@ -329,15 +364,20 @@ public class HostController : InputController
 
     public void OnReload(InputAction.CallbackContext value)
     {
-        if (value.performed)
-        { 
-            GetCurrentWeapon().StartReload();
+        if (!PauseMenu.m_GameIsPaused)
+        {
+            if (value.performed)
+            {
+                GetCurrentWeapon().StartReload();
+            }
         }
     }
 
     public override void OnDash(InputAction.CallbackContext value)
     {
-        if (value.performed && !m_Dashing)
+        if (!PauseMenu.m_GameIsPaused)
+        {
+            if (value.performed && !m_Dashing)
         {
             Vector3 forwardDir = m_Camera.transform.forward;
             if (m_MovInfo.m_IsGrounded)
@@ -349,6 +389,7 @@ public class HostController : InputController
             else
                 StartCoroutine(Dash(transform.position + forwardDir * m_DashDistance, Vector3.zero, m_DashDuration));
         }
+            }
     }
 
     public void OnTestRecoil(InputAction.CallbackContext value)
@@ -402,8 +443,8 @@ public class HostController : InputController
     {
         
 
-        float mouseX = LookInput.x * m_LookSensitivity * Time.deltaTime;
-        float mouseY = LookInput.y * m_LookSensitivity * Time.deltaTime;
+        float mouseX = LookInput.x * m_PlayerPrefs.GameplayConfig.MouseSensitivity * Time.deltaTime;
+        float mouseY = LookInput.y * m_PlayerPrefs.GameplayConfig.MouseSensitivity * Time.deltaTime;
 
         // Finding current look rotation
         Vector3 rot = m_Orientation.transform.localRotation.eulerAngles;
@@ -662,7 +703,7 @@ public class HostController : InputController
         // script to have another list that compliments the m_Weapons list. This new list would match
         // each element in the m_Weapons list and store the corresponding weapons WeaponConfiguration script.
 
-        return m_Inventory.m_CurrentWeapon.gameObject.GetComponent<WeaponConfiguration>();
+        return m_Inventory.m_CurrentWeapon.m_Config;
     }
 
     private Transform GetCurrentWeaponTransform() => m_Inventory.m_CurrentWeapon.transform;

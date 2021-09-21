@@ -161,6 +161,8 @@ public class Weapon : MonoBehaviour
     // temporary
     public bool m_DualWield = false;
 
+    public WeaponConfiguration m_Config;
+
 	private void Awake()
 	{
         m_OriginalLocalPosition = transform.localPosition;
@@ -169,6 +171,9 @@ public class Weapon : MonoBehaviour
         m_UIManager = transform.parent.parent.parent.GetComponent<UIManager>();
         m_UIManager?.UpdateWeaponUI(this);
 
+        m_Config = GetComponent<WeaponConfiguration>();
+
+
         // Display a warning if reload time is less than or equal to the animators reload duration.
         // This is because the reload time needs to be slightly longer othewise the gun can become stuck in... hold this thought.
         // I'm going to try caching the original local pos and local rotation and just set it back to that everytime the player swaps weapons.
@@ -250,19 +255,35 @@ public class Weapon : MonoBehaviour
 
 
                 // Play effects.
-                if (m_MuzzleFlashes.Count > 0)
+                if (m_DualWield)
                 {
-                    for (int i = 0; i < m_MuzzleFlashes.Count; i++)
-                        m_MuzzleFlashes[i].Play();
+                    if (m_MuzzleFlashes.Count > 0)
+                    {
+                        for (int i = 0; i < m_MuzzleFlashes.Count; i++)
+                            m_MuzzleFlashes[i].Play();
+                    }
+                    if (m_BulletCasings.Count > 0)
+                    {
+                        for (int i = 0; i < m_BulletCasings.Count; i++)
+                            m_BulletCasings[i].Play();
+                    }
+                    if (m_GunAnimators.Count > 0)
+                        for (int i = 0; i < m_GunAnimators.Count; i++)
+                            m_GunAnimators[i].SetTrigger("IsFiring");
+                    if (m_ArmsAnimators.Count > 0)
+                        for (int i = 0; i < m_ArmsAnimators.Count; i++)
+                            m_ArmsAnimators[i].SetTrigger("IsFiring");
                 }
-                if (m_BulletCasings.Count > 0)
-                { 
-                    for(int i = 0; i < m_BulletCasings.Count; i++)
-                        m_BulletCasings[i].Play();
+                else
+                {
+                    m_MuzzleFlashes[0].Play();
+                    m_BulletCasings[0].Play();
+                    m_GunAnimators[0].SetTrigger("IsFiring");
+                    m_ArmsAnimators[0].SetTrigger("IsFiring");
                 }
 
-                // Currently gets rid of bullet sprite before UI has fully updated //
-                m_UIManager.DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);
+				// Currently gets rid of bullet sprite before UI has fully updated //
+				m_UIManager.DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);
                 m_RoundsInMagazine--;
 
 
@@ -294,13 +315,14 @@ public class Weapon : MonoBehaviour
                 {
                     if (hit.transform.gameObject != null)
                     {
+                        //Debug.Log("Bad");
                         if (hit.transform.TryGetComponent(out Inventory agentInventory))
-                        {
+                        {                            Debug.Log("BAD");
                             agentInventory.TakeDamage(m_BulletDamage);
                             return;
                         }
 
-                        GameManager.Instance?.AddDecal(hit.transform, hit.point, hit.normal);
+                        GameManager.Instance?.PlaceDecal(hit.transform, hit.point, hit.normal);
 
                         // Adding a force to the hit object.
                         if (hit.rigidbody != null)
@@ -412,11 +434,34 @@ public class Weapon : MonoBehaviour
 
             CameraRecoil cameraRecoil = m_Controller.m_AccumulatedRecoil;
 
-            cameraRecoil.accumulatedVisualRecoil += new Vector3(-weaponConfig.RecoilRotationAiming.x, Random.Range(-weaponConfig.RecoilRotationAiming.y, weaponConfig.RecoilRotationAiming.y), Random.Range(-weaponConfig.RecoilRotationAiming.z, weaponConfig.RecoilRotationAiming.z));
-            m_WeaponRecoilRot -= new Vector3(weaponConfig.m_WeaponRotRecoilVertStrength, 0, 0);
+            Vector3 camVisRecoil = Vector3.zero;
+            camVisRecoil.x = -weaponConfig.RecoilRotationAiming.x;
+            camVisRecoil.y = Random.Range(-weaponConfig.RecoilRotationAiming.y, weaponConfig.RecoilRotationAiming.y);
+            camVisRecoil.z = Random.Range(-weaponConfig.RecoilRotationAiming.z, weaponConfig.RecoilRotationAiming.z);
+
+            //cameraRecoil.accumulatedVisualRecoil += new Vector3(-weaponConfig.RecoilRotationAiming.x, Random.Range(-weaponConfig.RecoilRotationAiming.y, weaponConfig.RecoilRotationAiming.y), Random.Range(-weaponConfig.RecoilRotationAiming.z, weaponConfig.RecoilRotationAiming.z));
+            cameraRecoil.accumulatedVisualRecoil += camVisRecoil;
+
+            Vector3 gunVisRecoil = Vector3.zero;
+            gunVisRecoil.x = weaponConfig.m_WeaponRotRecoilVertStrength;
+            gunVisRecoil.y = 0;
+            gunVisRecoil.z = 0;
+            //m_WeaponRecoilRot -= new Vector3(weaponConfig.m_WeaponRotRecoilVertStrength, 0, 0);
+            m_WeaponRecoilRot -= gunVisRecoil;
+
+            // Clamping because the gun recoils a bit to high currently.
+            m_WeaponRecoilRot.x = Mathf.Clamp(m_WeaponRecoilRot.x, -weaponConfig.m_WeaponVisualRecoilClamp, weaponConfig.m_WeaponVisualRecoilClamp);
+
+            Vector3 weaponPosChange = Vector3.zero;
+            weaponPosChange.x = 0;
+            weaponPosChange.y = 0;
+            weaponPosChange.z = weaponConfig.m_WeaponTransformRecoilZStrength;
+            weaponConfig.m_WeaponRecoilTransform -= weaponPosChange;
 
             // Although I am setting the recoil transform here, I have to apply it in the WeaponSway() function since I'm setting pos directly there. I want to change this but I'm unsure how right now
-            weaponConfig.m_WeaponRecoilTransform -= new Vector3(0, 0, weaponConfig.m_WeaponTransformRecoilZStrength);
+            //weaponConfig.m_WeaponRecoilTransform -= new Vector3(0, 0, weaponConfig.m_WeaponTransformRecoilZStrength);
+
+
         }
     }
     /// <summary>
@@ -511,6 +556,16 @@ public class Weapon : MonoBehaviour
     {
         if (Time.time >= m_NextTimeToFire && !m_IsReloading)//(time.time or time.deltatime)
         {
+            if (m_SemiAuto) // If the gun is semi auto, we have one other check to do.
+            {
+                Debug.Log("is this bad?");
+                // To prevent people from being able to spam semi automatic guns really fast, I'm going to prevent them from firing unless the animation is complete.
+                if (!m_GunAnimators[0].GetCurrentAnimatorStateInfo(0).IsName("Idle")) // Only semi automatic weapons in the game are not dual wielded so we don't have to check the whole list of gun animators.
+                {
+                    return false;
+                }
+            }
+
             // Defines the firing rate as rounds per minute (hard coded 60s)
             m_NextTimeToFire = Time.time + (60.0f / m_FireRate);
             return true;
@@ -753,7 +808,7 @@ public class Weapon : MonoBehaviour
 
     private WeaponConfiguration GetCurrentWeaponConfig()
     {
-        return m_Inventory.m_CurrentWeapon.GetComponent<WeaponConfiguration>();
+        return m_Inventory.m_CurrentWeapon.m_Config;
     }
     private Transform GetCurrentWeaponTransform() => m_Inventory.m_CurrentWeapon.transform;
     private Vector3 GetCurrentWeaponOriginalPos() => m_Inventory.m_CurrentWeapon.m_OriginalLocalPosition;
@@ -812,5 +867,30 @@ public class Weapon : MonoBehaviour
     public void ClearThings()
     {
        
+    }
+
+    public void SetWeaponLayerRecursively(int layer)
+    {
+        // I'm not allowed to edit the agent prefab right now, so to get around the issue of
+        // m_Config being set in Awake(), and the second and third guns not being Awoken.. until after the player
+        // swaps to them, I'll just set them here. This is pretty bad but as soon as I can edit the Agent prefab I'll fix this properly.
+        if (!m_Config)
+        {
+            m_Config = GetComponent<WeaponConfiguration>();
+        }
+
+        Transform parent = m_Config.m_Gun;
+
+
+
+
+        foreach (Transform trans in parent.GetComponentsInChildren<Transform>(true))
+        {
+            trans.gameObject.layer = layer;
+        }
+
+        //GameObject gunMesh = m_Config.m_Gun.gameObject;
+        //GameObject[] children = gunMesh.GetComponentsInChildren<GameObject>();
+        //for(int i = 0; i <)
     }
 }

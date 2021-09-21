@@ -68,6 +68,8 @@ public class PariahController : InputController
 
     private Rigidbody m_Rigidbody;
 
+    bool dead = false;
+
     private void Awake() => m_Rigidbody = GetComponent<Rigidbody>();
 
     private void Start()
@@ -81,26 +83,32 @@ public class PariahController : InputController
 
     private void FixedUpdate()
     {
-        if (m_Active)
-            Move();
-        else
+        if (!PauseMenu.m_GameIsPaused)
         {
-            if (m_CurrentPossessed != null)
+            if (m_Active)
+                Move();
+            else
             {
-                transform.position = m_CurrentPossessed.transform.position + Vector3.up * 1.75f;
-                m_Rotation.x = m_CurrentPossessed.Orientation.localEulerAngles.y;
-                m_Rotation.y = m_CurrentPossessed.Orientation.localEulerAngles.x;
+                if (m_CurrentPossessed != null)
+                {
+                    transform.position = m_CurrentPossessed.transform.position + Vector3.up * 1.75f;
+                    m_Rotation.x = m_CurrentPossessed.Orientation.localEulerAngles.y;
+                    m_Rotation.y = m_CurrentPossessed.Orientation.localEulerAngles.x;
+                }
             }
         }
     }
 
     private void LateUpdate()
     {
-        if (m_Active)
-            Look();
-        else
+        if (!PauseMenu.m_GameIsPaused)
         {
+            if (m_Active)
+                Look();
+            else
+            {
 
+            }
         }
     }
 
@@ -122,47 +130,65 @@ public class PariahController : InputController
 
     public override void OnLook(InputAction.CallbackContext value)
     {
-        m_LookInput = value.ReadValue<Vector2>();
+        if (!PauseMenu.m_GameIsPaused)
+        {
+            m_LookInput = value.ReadValue<Vector2>();
+        }
     }
 
     public override void OnMovement(InputAction.CallbackContext value)
     {
-        Vector2 input = value.ReadValue<Vector2>();
-        m_MovementInput.x = input.x;
-        m_MovementInput.z = input.y;
+        if (!PauseMenu.m_GameIsPaused)
+        {
+            Vector2 input = value.ReadValue<Vector2>();
+            m_MovementInput.x = input.x;
+            m_MovementInput.z = input.y;
+        }
     }
 
     public override void OnDash(InputAction.CallbackContext value)
     {
-        if (value.performed && !m_Dashing && !m_Possessing)
+        if (!PauseMenu.m_GameIsPaused)
         {
-            if (Physics.Raycast(m_Camera.transform.position, m_Camera.transform.forward, out RaycastHit hitInfo, m_DashDistance))
-                StartCoroutine(Dash(hitInfo.point, - m_Camera.transform.forward * 0.5f, m_DashDuration));
-            else
-                StartCoroutine(Dash(m_Camera.transform.position + m_Camera.transform.forward * m_DashDistance, Vector3.zero, m_DashDuration));
+            if (value.performed && !m_Dashing && !m_Possessing)
+            {
+                if (Physics.Raycast(m_Camera.transform.position, m_Camera.transform.forward, out RaycastHit hitInfo, m_DashDistance))
+                    StartCoroutine(Dash(hitInfo.point, -m_Camera.transform.forward * 0.5f, m_DashDuration));
+                else
+                    StartCoroutine(Dash(m_Camera.transform.position + m_Camera.transform.forward * m_DashDistance, Vector3.zero, m_DashDuration));
+            }
         }
     }
 
     public override void OnJump(InputAction.CallbackContext value)
     {
-        m_MovementInput.y += value.canceled ? -1.0f : 1.0f;
-        m_MovementInput.y = Mathf.Clamp(m_MovementInput.y, -1.0f, 1.0f);
+        if (!PauseMenu.m_GameIsPaused)
+        {
+            m_MovementInput.y += value.canceled ? -1.0f : 1.0f;
+            m_MovementInput.y = Mathf.Clamp(m_MovementInput.y, -1.0f, 1.0f);
+        }
     }
 
     public override void OnSlide(InputAction.CallbackContext value)
     {
-        m_MovementInput.y += value.canceled ? 1.0f : -1.0f;
-        m_MovementInput.y = Mathf.Clamp(m_MovementInput.y, -1.0f, 1.0f);
+        if (!PauseMenu.m_GameIsPaused)
+        {
+            m_MovementInput.y += value.canceled ? 1.0f : -1.0f;
+            m_MovementInput.y = Mathf.Clamp(m_MovementInput.y, -1.0f, 1.0f);
+        }
     }
 
     public override void OnPossess(InputAction.CallbackContext value)
     {
-        if (value.performed && !m_Possessing)
+        if (!PauseMenu.m_GameIsPaused)
         {
-            if (Physics.Raycast(m_Camera.transform.position, m_Camera.transform.forward, out RaycastHit hitInfo, m_DashDistance))
+            if (value.performed && !m_Possessing)
             {
-                if (hitInfo.transform.TryGetComponent(out Agent agent))
-                    StartCoroutine(Possess(agent));
+                if (Physics.Raycast(m_Camera.transform.position, m_Camera.transform.forward, out RaycastHit hitInfo, m_DashDistance))
+                {
+                    if (hitInfo.transform.TryGetComponent(out Agent agent))
+                        StartCoroutine(Possess(agent));
+                }
             }
         }
     }
@@ -184,7 +210,7 @@ public class PariahController : InputController
     {
         CameraTilt();
 
-        m_Rotation += m_LookInput * m_LookSensitivity * Time.deltaTime;
+        m_Rotation += m_LookInput * m_PlayerPrefs.GameplayConfig.MouseSensitivity * Time.deltaTime;
         m_Rotation.y = Mathf.Clamp(m_Rotation.y, -90.0f, 90.0f);
         transform.rotation = Quaternion.Euler(-m_Rotation.y, m_Rotation.x, 0.0f);
     }
@@ -232,12 +258,15 @@ public class PariahController : InputController
 
     public void TakeDamage(int amount)
     {
+        if (dead) return;
+
         m_Health = Mathf.Clamp(m_Health - amount, 0, m_MaxHealth);
         if (m_Health == 0)
         {
             // TODO: Kill pariah
             // Temporary: Reloads the current scene
-            SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+            dead = true;
+            StartCoroutine(ReloadLevel());
         }
     }
 
@@ -245,16 +274,14 @@ public class PariahController : InputController
     {
         while (true)
         {
-            if (m_Active && !m_Possessing)
+            if (!dead && m_Active && !m_Possessing)
             {
                 m_Health -= m_HealthDrainAmount;
                 if (m_Health <= 0)
                 {
                     m_Health = 0;
-
-                    // TODO: Kill pariah
-                    // Temporary: Reloads the current scene
-                    SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+                    dead = true;
+                    StartCoroutine(ReloadLevel());
                 }
 
                 yield return new WaitForSeconds(delay);
@@ -263,4 +290,32 @@ public class PariahController : InputController
             yield return null;
         }
     }
+
+    // ****** Highly temporary ******
+    private IEnumerator ReloadLevel()
+    {
+        yield return null;
+
+        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+        asyncOperation.allowSceneActivation = false;
+
+        while (!asyncOperation.isDone)
+        {
+            Debug.Log($"Progress: {asyncOperation.progress * 100}%");
+            if (asyncOperation.progress >= 0.9f)
+            {
+                asyncOperation.allowSceneActivation = true;
+            }
+            yield return null;
+        }
+
+        
+    }
+
+    /// <summary>
+    /// GetHealth() gets around the private health.
+    /// Sorry for adding code into this script. It's just that health was private and I needed to access it from a UI script.
+    /// </summary>
+    /// <returns></returns>
+    public int GetHealth() { return m_Health; }
 }

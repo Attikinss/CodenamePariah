@@ -25,6 +25,9 @@ public abstract class InputController : MonoBehaviour
     protected float m_DashDistance = 5.0f;
 
     [SerializeField]
+    protected PlayerPreferences m_PlayerPrefs;
+
+    [SerializeField]
     private PlayerInput m_PlayerInput;
 
     [SerializeField]

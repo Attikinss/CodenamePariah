@@ -102,6 +102,7 @@ MonoBehaviour:
   m_Name: BasicAI
   m_EditorClassIdentifier: 
   RootNode: {fileID: 6606588914338677638}
+  Blackboard: {fileID: 0}
   Nodes:
   - {fileID: 6606588914338677638}
   - {fileID: -5741321198570766867}
@@ -193,3 +194,8 @@ MonoBehaviour:
     width: 165
     height: 81
   Interruptable: 0
+  Position:
+    BlackboardValue: 0
+    Value: {x: 0, y: 0, z: 0}
+    Expand: 0
+    Selection: 0

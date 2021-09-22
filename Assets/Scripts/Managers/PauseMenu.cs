@@ -8,24 +8,42 @@ public class PauseMenu : MonoBehaviour
 {
     //should probably all be inside gamemanager or something.
     [ReadOnly]
+    [Tooltip("Current state of the game.")]
     public static bool m_GameIsPaused = false;
 
     [SerializeField]
+    [Tooltip("Whether this gameobject is the pausemenu.")]
     private bool m_IsPauseMenu = false;
 
+    [Tooltip("Whether the options menu is open.")]
     private bool m_OptionsOpen = false;
+
+    [Tooltip("Whether the player is in the process of quitting the game (quit menu).")]
     private static bool m_IsQuitting = false;
+
+    [Tooltip("Whether their are settings to be applied.")]
     private static bool m_SettingsToBeApplied = false;
+
+    [Tooltip("Whether the player has a dialogue box active.")]
     private static bool m_InsideDialogueBox = false;
 
+    [Tooltip("All the gameobjects that need to be turned on or off when pausing or resuming the game.")]
     public GameObject[] m_PauseMenuUI;
+
+    [Tooltip("All the gameobjects that need to be turned on or off when opening or closing the options menu.")]
     public GameObject[] m_OptionsMenuUI;
+
+    [Tooltip("All the gameobjects that need to be turned on or off when in the process of quitting the game.")]
     public GameObject[] m_QuitMenuUI;
+
+    [Tooltip("Gameobject that needs to be turned on or off when a dialogue box should appear.")]
     public GameObject m_DialogueBoxUI;
 
+    [Tooltip("Animator for menu transitions.")]
     public Animator m_Transition;
 
     [SerializeField]
+    [Tooltip("Time it takes for transition between scenes.")]
     private float m_TransitionTime = 2f;
 
     // Update is called once per frame
@@ -71,6 +89,7 @@ public class PauseMenu : MonoBehaviour
         }
     }
 
+    /// <summary>Resumes gameplay.</summary>
     public void Resume()
     {
         for (int i = 0; i < m_PauseMenuUI.Length; i++)
@@ -82,6 +101,7 @@ public class PauseMenu : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 
+    /// <summary>Starts the game.</summary>
     public void Play()
     {
         //for (int i = 0; i < m_PauseMenuUI.Length; i++)
@@ -95,6 +115,8 @@ public class PauseMenu : MonoBehaviour
         StartCoroutine(LoadLevel());
     }
 
+    /// <summary>Loads the gameplay scene.</summary>
+    /// <returns></returns>
     IEnumerator LoadLevel(/*int levelIndex*/)
     {
         //SceneManager.LoadSceneAsync("Arena_001");
@@ -104,11 +126,11 @@ public class PauseMenu : MonoBehaviour
         yield return new WaitForSeconds(m_TransitionTime);
 
         //SceneManager.LoadScene(levelIndex);
-#if UNITY_EDITOR
-        SceneManager.LoadScene("Test_Lauchlan_002");
-#else
+//#if UNITY_EDITOR
+//        SceneManager.LoadScene("Test_Lauchlan_002");
+//#else
         SceneManager.LoadScene("Arena_001");
-#endif
+//#endif
 
         //while (!asyncLoad.isDone)
         //{
@@ -116,6 +138,8 @@ public class PauseMenu : MonoBehaviour
         //}
     }
 
+    /// <summary>Loads the main menu scene.</summary>
+    /// <returns></returns>
     IEnumerator LoadMainMenu()
     {
         m_Transition.SetTrigger("Start");
@@ -125,6 +149,7 @@ public class PauseMenu : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
+    /// <summary>Pauses the game.</summary>
     public void Pause()
     {
         Cursor.lockState = CursorLockMode.None;
@@ -138,6 +163,7 @@ public class PauseMenu : MonoBehaviour
         //can probably do "if(... && !m_GameIsPaused) in other scripts.
     }
 
+    /// <summary>Opens the quit menu.</summary>
     public void QuitMenu()
     {
         for (int i = 1; i < m_PauseMenuUI.Length - 2; i++)
@@ -152,11 +178,13 @@ public class PauseMenu : MonoBehaviour
         QuittingOpen();
     }
 
+    /// <summary>Upon opening the options menu, sets optionsopen to true.</summary>
     public void OptionsOpen()
     {
         m_OptionsOpen = true;
     }
 
+    /// <summary>Upon closing the options menu, sets optionsopen to false.</summary>
     public void OptionsClose()
     {
         for (int i = 0; i < m_OptionsMenuUI.Length; i++)
@@ -167,11 +195,13 @@ public class PauseMenu : MonoBehaviour
         m_SettingsToBeApplied = false;
     }
     
+    /// <summary>Upon opening the quit menu, sets isquitting to true.</summary>
     public void QuittingOpen()
     {
         m_IsQuitting = true;
     }
 
+    /// <summary>Upon closing the quit menu, sets isquitting to false.</summary>
     public void QuittingClose()
     {
         if (!m_IsPauseMenu)
@@ -187,11 +217,13 @@ public class PauseMenu : MonoBehaviour
         m_IsQuitting = false;
     }
 
+    /// <summary>Upon settings being changed, sets settings to be applied to true. NEED TO FIX.</summary>
     public void SettingsChanged()
     {
         m_SettingsToBeApplied = true;
     }
 
+    /// <summary>Changes settings and disable dialogue box, then sets settings to be applied to false.</summary>
     public void SettingsApplied()
     {
         //do all these changes.
@@ -199,6 +231,7 @@ public class PauseMenu : MonoBehaviour
         m_SettingsToBeApplied = false;
     }
 
+    /// <summary>Opens a dialogue box and sets insidedialoguebox to true.</summary>
     public void OpenDialogueBox()
     {
         m_DialogueBoxUI.SetActive(true);
@@ -206,6 +239,7 @@ public class PauseMenu : MonoBehaviour
         Debug.Log("Discard Changes?");
     }
 
+    /// <summary>Closes a dialogue box and sets insidedialoguebox to false.</summary>
     public void CloseDialogueBox()
     {
         m_DialogueBoxUI.SetActive(false);
@@ -213,12 +247,14 @@ public class PauseMenu : MonoBehaviour
         Debug.Log("Settings still to be applied so cancelled.");
     }
 
+    /// <summary>Discards changes. DOESN'T CURRENTLY WORK.</summary>
     public void DiscardChanges()
     {
         m_InsideDialogueBox = false;
         Debug.Log("Discarded changes.");
     }
 
+    /// <summary>Exits the game to desktop.</summary>
     public void Exit()
     {
 #if UNITY_EDITOR
@@ -228,6 +264,7 @@ public class PauseMenu : MonoBehaviour
 #endif
     }
 
+    /// <summary>Exits the game to main menu.</summary>
     public void ExitToMenu()
     {
         StartCoroutine(LoadMainMenu());

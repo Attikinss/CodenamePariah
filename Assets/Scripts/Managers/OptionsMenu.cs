@@ -6,12 +6,30 @@ using TMPro;
 
 public class OptionsMenu : MonoBehaviour
 {
+    [SerializeField]
+    [Tooltip("Input field of this option.")]
     public TMP_InputField m_InputField;
+
+    [SerializeField]
+    [Tooltip("Slider of this option.")]
     public Slider m_Slider;
+
+    [SerializeField]
+    [Tooltip("Mouse sensitivity slider.")]
     public Slider m_MouseSensitivitySlider;
+
+    [SerializeField]
+    [Tooltip("Mouse sensitivity input field.")]
     public TMP_InputField m_MouseInputField;
+
+    [SerializeField]
+    [Tooltip("Controller sensitivity slider.")]
     public Slider m_ControllerSensitivitySlider;
+
+    [SerializeField]
+    [Tooltip("Controller sensitivity input field.")]
     public TMP_InputField m_ControllerInputField;
+
     [SerializeField]
     private PlayerPreferences m_PlayerPrefs;
 
@@ -57,6 +75,7 @@ public class OptionsMenu : MonoBehaviour
         //AudioManager.instance.SetVolume(value, AudioManager.AudioChannel.Music);
     }
 
+    /// <summary>Gets called when an audio slider value has changed. NEED TO MAKE SURE TO IGNORE ON AWAKE/START.</summary>
     public void SliderValueChanged()
     {
         //if (m_Slider) m_Slider.value = value;
@@ -65,6 +84,7 @@ public class OptionsMenu : MonoBehaviour
         //controller sensitivity - may need an override as this is also used for audio volumes.
     }
 
+    /// <summary>Gets called when the controller sensitivity has been changed.</summary>
     public void ControllerSensitivitySliderValueChanged()
     {
         if (m_InputField)
@@ -73,6 +93,7 @@ public class OptionsMenu : MonoBehaviour
         m_PlayerPrefs.GameplayConfig.ControllerSensitivity = m_ControllerSensitivity;
     }
 
+    /// <summary>Gets called when the mouse sensitivity has been changed.</summary>
     public void MouseSensitivitySliderChanged()
     {
         //if (m_Slider) m_Slider.value = value;
@@ -82,6 +103,7 @@ public class OptionsMenu : MonoBehaviour
         m_PlayerPrefs.GameplayConfig.MouseSensitivity = m_MouseSensitivity;
     }
 
+    /// <summary>Gets called when a volume input field value has been changed.</summary>
     public void VolumeInputValueChanged()
     {
         if (m_InputField.text.Length > 0 && m_InputField.text[0] == '-')//
@@ -102,6 +124,7 @@ public class OptionsMenu : MonoBehaviour
         //if (m_InputField) m_InputField.text = value;
     }
 
+    /// <summary>Gets called when the controller sensitivity input field value has been changed.</summary>
     public void ControllerSensitivityInputValueChanged()
     {
         if (m_InputField.text.Length > 0 && m_InputField.text[0] == '-')//
@@ -124,6 +147,7 @@ public class OptionsMenu : MonoBehaviour
         //if (m_InputField) m_InputField.text = value;
     }
 
+    /// <summary>Gets called when the mouse sensitivity input field value has been changed.</summary>
     public void MouseSensitivityInputValueChanged()
     {
         if (m_InputField.text.Length > 0 && m_InputField.text[0] == '-')//

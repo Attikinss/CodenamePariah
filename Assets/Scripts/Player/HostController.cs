@@ -60,7 +60,7 @@ public class HostController : InputController
         m_MovInfo = new MovementInfo();
         m_CombatInfo = new CombatInfo();
 
-        m_UIManager = UIManager.s_Instance;
+        
         Rigidbody = GetComponent<Rigidbody>();
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -73,7 +73,12 @@ public class HostController : InputController
             m_MovInfo.m_OriginalColliderHeight = m_Collider.height;
         }
 	}
-    private void Update()
+
+	private void Start()
+	{
+        m_UIManager = UIManager.s_Instance;
+    }
+	private void Update()
     {
         if (!m_Active) return;
 

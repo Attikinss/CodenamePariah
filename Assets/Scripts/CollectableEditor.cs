@@ -35,7 +35,7 @@ public class CollectableEditor : Editor
 
 		//EditorGUILayout.BeginToggleGroup("Target To Upgrade", script.m_Action == CollectableAction.UPGRADE_WEAPON);
 		if (script.m_Action == CollectableAction.UPGRADE_WEAPON)
-		EditorGUILayout.PropertyField(m_RequiredTargetProp, new GUIContent("Required Target to Upgrade"));
+		EditorGUILayout.PropertyField(m_RequiredTargetProp, new GUIContent("Prerquisite"));
 		//EditorGUILayout.EndToggleGroup();
 
 		EditorGUILayout.Space(20);

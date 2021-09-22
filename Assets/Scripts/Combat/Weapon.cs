@@ -643,10 +643,21 @@ public class Weapon : MonoBehaviour
             m_Config = GetComponent<WeaponConfiguration>();
         }
 
-        Transform parent = m_Config.m_Gun;
-        foreach (Transform trans in parent.GetComponentsInChildren<Transform>(true))
+        for (int i = 0; i < m_Config.m_Gun.Count; i++)
+        { 
+            Transform parent = m_Config.m_Gun[i];
+            foreach (Transform trans in parent.GetComponentsInChildren<Transform>(true))
+            {
+                trans.gameObject.layer = layer;
+            }
+        }
+        for (int i = 0; i < m_Config.m_Arms.Count; i++)
         {
-            trans.gameObject.layer = layer;
+            Transform parent = m_Config.m_Arms[i];
+            foreach (Transform trans in parent.GetComponentsInChildren<Transform>(true))
+            {
+                trans.gameObject.layer = layer;
+            }
         }
     }
 

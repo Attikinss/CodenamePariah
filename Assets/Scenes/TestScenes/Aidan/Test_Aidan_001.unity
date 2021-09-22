@@ -13658,21 +13658,185 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[5].m_Name
+      value: Blood Spawn Chance
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[6].m_Name
+      value: Y Strength
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[7].m_Name
+      value: XZ Strength
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[0].m_Value
+      value: 0.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[1].m_Value
+      value: 0.195
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[2].m_Value
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[3].m_Value
+      value: 2.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[4].m_Value
+      value: 0.61
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[5].m_Value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[6].m_Value
+      value: 1.38
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[7].m_Value
+      value: 0.73
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[1].m_Name
+      value: BloodSpray Color
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[2].m_Name
+      value: BloodSpray Colour 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[3].m_Name
+      value: BloodSpray Colour 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[0].m_Overridden
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[1].m_Overridden
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[2].m_Overridden
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[3].m_Overridden
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[4].m_Overridden
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[5].m_Overridden
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[6].m_Overridden
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[7].m_Overridden
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Value.x
+      value: 0.6392157
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Value.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Value.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[1].m_Value.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[1].m_Value.x
+      value: 2.9960785
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[1].m_Value.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[1].m_Value.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[2].m_Value.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[2].m_Value.x
+      value: 2.524
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[2].m_Value.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[3].m_Value.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[3].m_Value.x
+      value: 3.3760002
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[3].m_Value.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Overridden
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[1].m_Overridden
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[2].m_Overridden
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413599561210883104, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[3].m_Overridden
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4413599561210883105, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
       propertyPath: m_RootOrder
       value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 4413599561210883105, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1
+      value: 4.4752
       objectReference: {fileID: 0}
     - target: {fileID: 4413599561210883105, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1
+      value: 4.4752
       objectReference: {fileID: 0}
     - target: {fileID: 4413599561210883105, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1
+      value: 4.4752
       objectReference: {fileID: 0}
     - target: {fileID: 4413599561210883105, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
       propertyPath: m_LocalPosition.x

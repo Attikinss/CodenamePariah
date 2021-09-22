@@ -6229,9 +6229,13 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 7088882978088968657, guid: fe7cdd7011009724ca4a39bec5868075, type: 3}
+      propertyPath: m_Action
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7088882978088968657, guid: fe7cdd7011009724ca4a39bec5868075, type: 3}
       propertyPath: m_ItemPrefab
       value: 
-      objectReference: {fileID: 8557315744390728888, guid: db2a7dce86567b548977e248deeed374, type: 3}
+      objectReference: {fileID: 4112493245389595605, guid: f73b75574fad6894ba36d47f828aab6d, type: 3}
     - target: {fileID: 7088882978088968659, guid: fe7cdd7011009724ca4a39bec5868075, type: 3}
       propertyPath: m_Name
       value: Collectable
@@ -6396,7 +6400,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5843942088656128038, guid: a4d8a055299982d449464eef6354e4b7, type: 3}
       propertyPath: m_Action
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5843942088656128038, guid: a4d8a055299982d449464eef6354e4b7, type: 3}
       propertyPath: m_RequiredTarget

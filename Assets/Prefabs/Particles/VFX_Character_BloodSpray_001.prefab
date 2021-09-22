@@ -49,7 +49,7 @@ VisualEffect:
   m_PropertySheet:
     m_Float:
       m_Array:
-      - m_Value: 0.33
+      - m_Value: 0.21
         m_Name: Lifetime (Speed)
         m_Overridden: 0
       - m_Value: 0.195
@@ -63,6 +63,9 @@ VisualEffect:
         m_Overridden: 0
       - m_Value: 0.61
         m_Name: Size
+        m_Overridden: 0
+      - m_Value: 1.38
+        m_Name: Y Strength
         m_Overridden: 0
     m_Vector2f:
       m_Array: []

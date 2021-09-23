@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-
+// hi
 [CustomEditor(typeof(Collectable))]
 public class CollectableEditor : Editor
 {

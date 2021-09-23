@@ -25,7 +25,10 @@ namespace WhiteWillow.Editor
         public override void ConnectNodes(Port port, Direction connectionDirection)
         {
             if (connectionDirection == Direction.Output)
+            {
+                RecaluclateExecutionOrder();
                 SetChild((port as EditorPort).Owner);
+            }
         }
 
         /// <summary>Handles the deletion/removal of the node from the graph view.</summary>

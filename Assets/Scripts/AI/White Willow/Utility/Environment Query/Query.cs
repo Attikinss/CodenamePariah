@@ -14,13 +14,14 @@ public class Query
     }
 
 
-    public List<QueryValue> Values { get; private set; }
+    public List<EnvironmentQuerySystem.EQSNode> Values { get; private set; }
+    //public List<QueryValue> Values { get; private set; }
     private bool m_DataInvalid = false;
 
     public Query(string id)
     {
         ID = id;
-        Values = new List<QueryValue>();
+        Values = new List<EnvironmentQuerySystem.EQSNode>();
     }
 
     public bool Invalid()
@@ -35,13 +36,26 @@ public class Query
 
     public void AddPosition(Vector3 position)
     {
-        if (!Values.Any(node => node.Position == position))
-            Values.Add(new QueryValue() { Position = position, Active = true });
+        //if (!Values.Any(node => node.Position == position))
+        //    Values.Add(new QueryValue() { Position = position, Active = true });
+    }
+
+    public void AddNode(EnvironmentQuerySystem.EQSNode node)
+    {
+        if (!Values.Any(n => n == node))
+            Values.Add(node);
     }
 
     public void RemovePosition(Vector3 position)
     {
-        QueryValue node = Values.First(node => node.Position == position);
+        //QueryValue node = Values.First(node => node.Position == position);
+        //
+        //Values.Remove(node);
+    }
+
+    public void RemoveNode(EnvironmentQuerySystem.EQSNode node)
+    {
+        var nodeToRemove = Values.First(n => n == node);
 
         Values.Remove(node);
     }

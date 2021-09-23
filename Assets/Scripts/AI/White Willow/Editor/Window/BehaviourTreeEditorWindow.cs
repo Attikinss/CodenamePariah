@@ -241,7 +241,6 @@ namespace WhiteWillow.Editor
                         field.FieldType == typeof(BehaviourTree) && field.Name == "m_RuntimeTree").FirstOrDefault();
                         if (treeField != null)
                         {
-                            Debug.Log(item);
                             var tree = treeField.GetValue(item);
                             assets.Add(tree as BehaviourTree);
                         }

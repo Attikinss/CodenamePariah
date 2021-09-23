@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using UnityEngine;
 
 namespace WhiteWillow.Nodes
 {
@@ -13,7 +14,7 @@ namespace WhiteWillow.Nodes
 
         protected override void OnEnter()
         {
-            
+
         }
 
         protected override void OnExit()

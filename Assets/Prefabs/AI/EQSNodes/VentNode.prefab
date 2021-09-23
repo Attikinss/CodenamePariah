@@ -40,15 +40,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 3625264750517222519}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 986dde2e21d68464a81d2457c9755638, type: 3}
+  m_Script: {fileID: 11500000, guid: 5355f8a6b40bcef4581de02997dde348, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EQSNode:
-    ID: f3ed6db8-3a52-4e1c-9006-3d76c6f4683e
+  EQSNode:
+    ID: 
     Taken: 0
+    CurrentOwner: {fileID: 0}
     NodeType: 0
-    VacantColour: {r: 0, g: 0.47050858, b: 1, a: 0.6862745}
-    TakenColour: {r: 0, g: 0, b: 0, a: 0}
+    VacantColour: {r: 0.1573993, g: 1, b: 0, a: 1}
+    TakenColour: {r: 1, g: 0, b: 0, a: 1}
     Size: 0.5
     Position: {x: 0, y: 0, z: 0}
-  m_DrawAlways: 1
+  m_DrawAlways: 0

@@ -59,15 +59,6 @@ namespace WhiteWillow
                     decorator.ClearChild();
                     decorator.SetChild(childNode);
                 }
-
-                //System.Reflection.FieldInfo[] fields = node.GetType().GetFields();
-                //foreach (var field in fields)
-                //{
-                //    if (field.FieldType.Name.Contains("NodeMember"))
-                //    {
-                //        //field.SetValue(node, );
-                //    }
-                //}
             });
 
             return newTree;

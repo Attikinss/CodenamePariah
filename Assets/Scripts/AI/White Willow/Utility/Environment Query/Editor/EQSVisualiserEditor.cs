@@ -29,7 +29,6 @@ public class EQSVisualiserEditor : Editor
         Agent = Visualiser.GetComponent<WhiteWillow.Agent>();
 
         Query agentQuery = Agent?.CurrentQuery;
-
         if (agentQuery != null)
         {
             foreach (var node in agentQuery.Values)

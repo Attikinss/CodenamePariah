@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MAT_Character_PariahMatter_001_Tilling_002_VeinLayer
+  m_Name: Mat_Character_PariahMatter_001_Tilling_002_VeinLayer
   m_Shader: {fileID: -6465566751694194690, guid: d77b245743d575d468d74035e2169a93, type: 3}
   m_ShaderKeywords: _DOUBLESIDED_ON _ENABLE_FOG_ON_TRANSPARENT _SURFACE_TYPE_TRANSPARENT
   m_LightmapFlags: 4

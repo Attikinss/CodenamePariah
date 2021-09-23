@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -45,8 +46,13 @@ public class Weapon : MonoBehaviour
     [Tooltip("The percentage of a full magazine required before warning to reload.")]
     private float m_LowAmmoWarningPercentage = 0.3f;
 
+    [SerializeField]
+    [Tooltip("Defines the position at which bullets spawn during firing.")]
+    private Transform m_FiringPosition;
+
     /// <summary>An accumulative value used to determine when the next round should be fired.</summary>
     private float m_NextTimeToFire = 0f;
+
 
 
     // ================================= Added things from HostController. ================================= //
@@ -170,7 +176,6 @@ public class Weapon : MonoBehaviour
 
         m_UIManager = transform.parent.parent.parent.GetComponent<UIManager>();
         m_UIManager?.UpdateWeaponUI(this);
-
         m_Config = GetComponent<WeaponConfiguration>();
 
 
@@ -204,10 +209,10 @@ public class Weapon : MonoBehaviour
         // I've added m_IsReloading checks to prevent shooting while reloading and also to activate recoil recovery even if m_IsFiring is still true.
         // This gives the advantage of reloading while holding down the mouse button will let you begin shooting again without having to re-press the mouse button.
 
-        if (m_IsFiring && !m_IsReloading && !TotalAmmoEmpty())
-        {
+        if (m_IsFiring && !m_IsReloading)
+        {
             Fire();
-            m_UIManager?.UpdateWeaponUI(this);
+            m_UIManager?.UpdateWeaponUI(this);
         }
         else if (!m_IsFiring || m_IsReloading || TotalAmmoEmpty()) // We want to recovery if we are reloading. This lets us set reloading to true and keep firing on true and the player wont shoot.
             UpdateRecoilRecovery();
@@ -236,8 +241,7 @@ public class Weapon : MonoBehaviour
 	private void FixedUpdate()
 	{
         UpdateRecoil();
-		
-	}
+    }
 
 	public void Fire()
     {
@@ -252,7 +256,6 @@ public class Weapon : MonoBehaviour
                 // testing somethhing for semi-auto
                 if (m_SemiAuto)
                     m_IsFiring = false;
-
 
                 // Play effects.
                 if (m_DualWield)
@@ -286,52 +289,64 @@ public class Weapon : MonoBehaviour
 				m_UIManager.DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);
                 m_RoundsInMagazine--;
 
+                //m_FireSoundEmitter?.Trigger();
 
                 // I'll add my shoot code in here.
-                Ray ray = new Ray(m_Camera.transform.position, m_Camera.transform.forward);
-                RaycastHit hit;
-
-                WeaponConfiguration currentConfig = GetCurrentWeaponConfig();
-                // =========== TESTING =========== //
-                if (!currentConfig.m_DisableAllRecoil)
+                Ray ray;
+                if (m_Inventory.Owner.Possessed)
                 {
-                    float ShootingDuration = Time.time - m_FireStartTime;
-
-                    CameraRecoil cameraRecoil = m_Controller.m_AccumulatedRecoil;
-
-                    cameraRecoil.accumulatedPatternRecoilX += currentConfig.m_VerticalRecoil.Evaluate(ShootingDuration);
-                    cameraRecoil.accumulatedPatternRecoilY += currentConfig.m_HorizontalRecoil.Evaluate(ShootingDuration);
-                }
-                // =============================== //
-
-                //m_HasFired = true;
-
-                AddVisualRecoil();
-
-
-                // ========================= TEMPORARY SHOOT COLLISION ========================= //
-
-                if (Physics.Raycast(ray, out hit))
-                {
-                    if (hit.transform.gameObject != null)
+                    ray = new Ray(m_Camera.transform.position, m_Camera.transform.forward);
+                    WeaponConfiguration currentConfig = GetCurrentWeaponConfig();
+                    // =========== TESTING =========== //
+                    if (!currentConfig.m_DisableAllRecoil && m_Inventory.Owner.Possessed)
                     {
-                        //Debug.Log("Bad");
-                        if (hit.transform.TryGetComponent(out Inventory agentInventory))
-                        {                            Debug.Log("BAD");
-                            agentInventory.TakeDamage(m_BulletDamage);
-                            return;
-                        }
+                        float ShootingDuration = Time.time - m_FireStartTime;
 
-                        GameManager.Instance?.PlaceDecal(hit.transform, hit.point, hit.normal);
+                        CameraRecoil cameraRecoil = m_Controller.m_AccumulatedRecoil;
 
-                        // Adding a force to the hit object.
-                        if (hit.rigidbody != null)
-                            hit.rigidbody.AddForce(m_Camera.transform.forward * GetCurrentWeaponConfig().m_BulletForce, ForceMode.Impulse);
+                        cameraRecoil.accumulatedPatternRecoilX += currentConfig.m_VerticalRecoil.Evaluate(ShootingDuration);
+                        cameraRecoil.accumulatedPatternRecoilY += currentConfig.m_HorizontalRecoil.Evaluate(ShootingDuration);
                     }
+                    // =============================== //
+
+                    //m_HasFired = true;
+
+                    AddVisualRecoil();
+
+                    // ========================= TEMPORARY SHOOT COLLISION ========================= //
+
+                    if (Physics.Raycast(ray, out RaycastHit hitInfo))
+                    {
+                        if (hitInfo.transform.gameObject != null)
+                        {
+                            //Debug.Log("Bad");
+                            if (hitInfo.transform.TryGetComponent(out Inventory agentInventory))
+
+                            {
+                                //Debug.Log("BAD");
+                                agentInventory.TakeDamage(m_BulletDamage);
+
+                                return;
+
+                            }
+
+                            GameManager.Instance?.PlaceDecal(hitInfo.transform, hitInfo.point, hitInfo.normal);
+
+                            // Adding a force to the hit object.
+                            if (hitInfo.rigidbody != null)
+                                hitInfo.rigidbody.AddForce(m_Camera.transform.forward * GetCurrentWeaponConfig().m_BulletForce, ForceMode.Impulse);
+                        }
+                    }
+                    // ============================================================================= //
                 }
-                // ============================================================================= //
+                else
+                {
+                    var bullet = BulletPooler.Instance?.GetNextAvailable();
+                    if (m_Inventory.Owner.Target != m_Inventory.Owner.PariahController.gameObject)
+                        bullet?.SetTarget(m_Inventory.Owner.Target, m_BulletDamage);
 
-
+                    bullet?.Fire(m_FiringPosition.position, m_Inventory.Owner.Target.transform.position);
+                }
             }
             else
             {
@@ -345,6 +360,10 @@ public class Weapon : MonoBehaviour
                     combatInfo.m_ShootingDuration = 0;
                     
                     //m_IsFiring = false;
+                }
+                else
+                {
+                    //m_EmptySoundEmitter?.Trigger();
                 }
                 //else if (TotalAmmoEmpty())
                 //    this.GetComponentInParent<UIManager>().DisableMagazine();
@@ -558,7 +577,6 @@ public class Weapon : MonoBehaviour
         {
             if (m_SemiAuto) // If the gun is semi auto, we have one other check to do.
             {
-                Debug.Log("is this bad?");
                 // To prevent people from being able to spam semi automatic guns really fast, I'm going to prevent them from firing unless the animation is complete.
                 if (!m_GunAnimators[0].GetCurrentAnimatorStateInfo(0).IsName("Idle")) // Only semi automatic weapons in the game are not dual wielded so we don't have to check the whole list of gun animators.
                 {
@@ -578,6 +596,8 @@ public class Weapon : MonoBehaviour
     public IEnumerator Reload()
     {
         StartReloadAnimation();
+
+        //m_ReloadSoundEmitter.Trigger();
 
         m_IsReloading = true;
 
@@ -892,5 +912,14 @@ public class Weapon : MonoBehaviour
         //GameObject gunMesh = m_Config.m_Gun.gameObject;
         //GameObject[] children = gunMesh.GetComponentsInChildren<GameObject>();
         //for(int i = 0; i <)
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (m_FiringPosition != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(m_FiringPosition.position, 0.025f);
+        }
     }
 }

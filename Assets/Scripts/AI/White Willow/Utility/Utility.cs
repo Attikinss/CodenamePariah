@@ -10,6 +10,8 @@ namespace WhiteWillow
         {
             List<T> assets = new List<T>();
 
+#if UNITY_EDITOR
+
             string[] guids = AssetDatabase.FindAssets(string.Format("t:{0}", typeof(T)));
             for (int i = 0; i < guids.Length; i++)
             {
@@ -18,6 +20,8 @@ namespace WhiteWillow
                 if (asset != null)
                     assets.Add(asset);
             }
+
+#endif
 
             return assets;
         }

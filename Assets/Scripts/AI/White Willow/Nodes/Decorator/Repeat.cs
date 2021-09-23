@@ -12,6 +12,8 @@ namespace WhiteWillow.Nodes
         public override string IconPath { get; } = "Icons/Repeat";
 
         public RepeatCondition RepeatCondition = RepeatCondition.Indefinite;
+
+        public bool RepeatIfFailure = true;
         public uint Repeats = 0;
         [SerializeField]
         private uint m_CurrentRepeats = 0;
@@ -23,17 +25,14 @@ namespace WhiteWillow.Nodes
 
         protected override void OnExit()
         {
-
+            m_CurrentRepeats = 0;
         }
 
         protected override NodeResult OnTick()
         {
             // No point doing anything
             if (Child == null)
-            {
-                m_CurrentRepeats = 0;
                 return NodeResult.Failure;
-            }
 
             // Repeat according to condition
             switch (RepeatCondition)
@@ -41,6 +40,8 @@ namespace WhiteWillow.Nodes
                 case RepeatCondition.Indefinite:
                     {
                         State = Child.Tick();
+
+                        // TODO: Implement abort
 
                         break;
                     }
@@ -50,13 +51,8 @@ namespace WhiteWillow.Nodes
 
                         if (State != NodeResult.Running)
                         {
-                            if (++m_CurrentRepeats >= Repeats)
-                            {
-                                // Reset
-                                m_CurrentRepeats = 0;
-
+                            if ((State == NodeResult.Failure && !RepeatIfFailure) || ++m_CurrentRepeats >= Repeats)
                                 return State;
-                            }
 
                             // TODO: Implement abort
                         }
@@ -69,10 +65,7 @@ namespace WhiteWillow.Nodes
 
                         // Ensure node runs until it either succeeds or is aborted
                         if (State == NodeResult.Failure)
-                        {
-
                             return State;
-                        }
 
                         // TODO: Implement abort
 
@@ -84,10 +77,7 @@ namespace WhiteWillow.Nodes
 
                         // Ensure node runs until it either succeeds or is aborted
                         if (State == NodeResult.Success)
-                        {
-
                             return State;
-                        }
 
                         // TODO: Implement abort
 

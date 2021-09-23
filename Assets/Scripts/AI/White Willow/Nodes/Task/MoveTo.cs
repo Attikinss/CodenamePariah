@@ -15,7 +15,7 @@ namespace WhiteWillow.Nodes
 
         protected override void OnExit()
         {
-
+            Owner.Agent.Stop();
         }
 
         protected override NodeResult OnTick()

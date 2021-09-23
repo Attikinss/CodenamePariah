@@ -119,11 +119,11 @@ namespace WhiteWillow
             Updated = true;
         }
 
-        public object GetEntry<T>(string name)
+        public BlackboardEntry GetEntry<T>(string name)
         {
             var entry = Entries.FirstOrDefault(e => e.Name == name);
 
-            if (!entry.Equals(null))
+            if (entry != null)
                 return entry;
 
             Debug.LogWarning($"No entry with the name <{name}> exists on the blackboard!");

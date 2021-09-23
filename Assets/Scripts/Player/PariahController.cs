@@ -68,7 +68,7 @@ public class PariahController : InputController
 
     private Rigidbody m_Rigidbody;
 
-    bool dead = false;
+    bool m_Dead = false;
 
     private void Awake() => m_Rigidbody = GetComponent<Rigidbody>();
 
@@ -91,7 +91,7 @@ public class PariahController : InputController
             {
                 if (m_CurrentPossessed != null)
                 {
-                    transform.position = m_CurrentPossessed.transform.position + Vector3.up * 1.75f;
+                    transform.position = m_CurrentPossessed.transform.position + Vector3.up * 0.75f;
                     m_Rotation.x = m_CurrentPossessed.Orientation.localEulerAngles.y;
                     m_Rotation.y = m_CurrentPossessed.Orientation.localEulerAngles.x;
                 }
@@ -123,7 +123,6 @@ public class PariahController : InputController
     public override void Disable()
     {
         GetComponent<PlayerInput>().enabled = false;
-        GetComponent<Collider>().enabled = false;
         m_Active = false;
         m_Camera.enabled = false;
     }
@@ -150,7 +149,7 @@ public class PariahController : InputController
     {
         if (!PauseMenu.m_GameIsPaused)
         {
-            if (value.performed && !m_Dashing && !m_Possessing)
+            if (value.performed && !m_Dashing && !m_DashCoolingDown && !m_Possessing)
             {
                 if (Physics.Raycast(m_Camera.transform.position, m_Camera.transform.forward, out RaycastHit hitInfo, m_DashDistance))
                     StartCoroutine(Dash(hitInfo.point, -m_Camera.transform.forward * 0.5f, m_DashDuration));
@@ -229,18 +228,23 @@ public class PariahController : InputController
         if (target == null) yield return null;
 
         float currentTime = 0.0f;
-        Vector3 targetEyes = target.transform.position + Vector3.up * 1.75f;
+        Vector3 targetEyes = target.transform.position + Vector3.up * 0.75f;
+        GetComponent<Collider>().enabled = false;
 
         // TODO: Use epsilon and replace distance check with non sqrt function
         while (Vector3.Distance(transform.position, targetEyes) > 0.01f)
         {
-            transform.position = Vector3.Lerp(transform.position, targetEyes, Tween.EaseInOut5(currentTime / m_DashDuration));
+            if (!PauseMenu.m_GameIsPaused)
+            {
+                transform.position = Vector3.Lerp(transform.position, targetEyes, Tween.EaseInOut5(currentTime / m_DashDuration));
 
-            float distToTarget = Vector3.Distance(transform.position, targetEyes);
-            if (distToTarget <= 1.0f)
-                transform.rotation = Quaternion.Lerp(transform.rotation, target.transform.rotation, Tween.EaseOut3(distToTarget));
+                float distToTarget = Vector3.Distance(transform.position, targetEyes);
+                if (distToTarget <= 1.0f)
+                    transform.rotation = Quaternion.Lerp(transform.rotation, target.transform.rotation, Tween.EaseOut3(distToTarget));
 
-            currentTime += Time.deltaTime;
+                currentTime += Time.deltaTime;
+            }
+
             yield return null;
         }
 
@@ -258,14 +262,14 @@ public class PariahController : InputController
 
     public void TakeDamage(int amount)
     {
-        if (dead) return;
+        if (m_Dead) return;
 
         m_Health = Mathf.Clamp(m_Health - amount, 0, m_MaxHealth);
         if (m_Health == 0)
         {
             // TODO: Kill pariah
             // Temporary: Reloads the current scene
-            dead = true;
+            m_Dead = true;
             StartCoroutine(ReloadLevel());
         }
     }
@@ -274,13 +278,13 @@ public class PariahController : InputController
     {
         while (true)
         {
-            if (!dead && m_Active && !m_Possessing)
+            if (!m_Dead && m_Active && !m_Possessing && !PauseMenu.m_GameIsPaused)
             {
                 m_Health -= m_HealthDrainAmount;
                 if (m_Health <= 0)
                 {
                     m_Health = 0;
-                    dead = true;
+                    m_Dead = true;
                     StartCoroutine(ReloadLevel());
                 }
 
@@ -303,9 +307,8 @@ public class PariahController : InputController
         {
             Debug.Log($"Progress: {asyncOperation.progress * 100}%");
             if (asyncOperation.progress >= 0.9f)
-            {
                 asyncOperation.allowSceneActivation = true;
-            }
+
             yield return null;
         }
 

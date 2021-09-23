@@ -224,6 +224,8 @@ namespace WhiteWillow.Editor
                         node.ConnectNodes(n.InputPort, Direction.Output);
                         n.ConnectNodes(node.OutputPort, Direction.Input);
                     }
+
+                    compNode.Children.FirstOrDefault()?.RecaluclateExecutionOrder();
                 }
                 else if (nodeType == typeof(DecoratorNodeView))
                 {

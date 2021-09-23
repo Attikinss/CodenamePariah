@@ -12,9 +12,17 @@ namespace WhiteWillow
         public T Value;
 
         [HideInInspector]
-        public bool Expand = false;
+        public string Name = "";
 
         [HideInInspector]
         public int Selection = 0;
+
+        public void Validate(Blackboard blackboard)
+        {
+            var value = (T)blackboard.GetEntry<T>(Name)?.Value;
+
+            if (value != null)
+                Value = value;
+        }
     }
 }

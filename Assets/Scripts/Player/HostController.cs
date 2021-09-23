@@ -232,7 +232,7 @@ public class HostController : InputController
     {
         if (value.performed && m_MovInfo.m_IsGrounded && m_MovInfo.m_IsMoving)
         {
-            Debug.Log("OnSlide called.");
+            //Debug.Log("OnSlide called.");
             m_MovInfo.m_SlideDir = value.performed ? m_Orientation.forward : m_MovInfo.m_SlideDir;
             m_MovInfo.m_IsSliding = true;
 
@@ -367,9 +367,7 @@ public class HostController : InputController
         if (!PauseMenu.m_GameIsPaused)
         {
             if (value.performed)
-            {
                 GetCurrentWeapon().StartReload();
-            }
         }
     }
 
@@ -377,19 +375,18 @@ public class HostController : InputController
     {
         if (!PauseMenu.m_GameIsPaused)
         {
-            if (value.performed && !m_Dashing)
-        {
-            Vector3 forwardDir = m_Camera.transform.forward;
-            if (m_MovInfo.m_IsGrounded)
-                forwardDir = m_Orientation.forward;
-            
+            if (value.performed && !m_Dashing && !m_DashCoolingDown)
+            {
+                Vector3 forwardDir = m_Camera.transform.forward;
+                if (m_MovInfo.m_IsGrounded)
+                    forwardDir = m_Orientation.forward;
 
-            if (Physics.Raycast(m_Orientation.position, forwardDir, out RaycastHit hitInfo, m_DashDistance))
-                StartCoroutine(Dash(hitInfo.point, -forwardDir * 0.5f, m_DashDuration));
-            else
-                StartCoroutine(Dash(transform.position + forwardDir * m_DashDistance, Vector3.zero, m_DashDuration));
-        }
+                if (Physics.Raycast(m_Orientation.position, forwardDir, out RaycastHit hitInfo, m_DashDistance))
+                    StartCoroutine(Dash(hitInfo.point, -forwardDir * 0.5f, m_DashDuration));
+                else
+                    StartCoroutine(Dash(transform.position + forwardDir * m_DashDistance, Vector3.zero, m_DashDuration));
             }
+        }
     }
 
     public void OnTestRecoil(InputAction.CallbackContext value)
@@ -560,7 +557,7 @@ public class HostController : InputController
     private bool CheckGrounded()
     {
         RaycastHit hit;
-        Ray ray = new Ray(transform.position + Vector3.up, Vector3.down);
+        Ray ray = new Ray(transform.position, Vector3.down);
         if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckDistance))
         {
             //Debug.Log(hit.transform.name);
@@ -585,7 +582,7 @@ public class HostController : InputController
     private void CalculateGroundNormal()
     {
         RaycastHit hit;
-        Ray ray = new Ray(transform.position + Vector3.up, Vector3.down);
+        Ray ray = new Ray(transform.position, Vector3.down);
         if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckDistance * 1.04f))
         {
             m_MovInfo.m_GroundNormal = hit.normal;
@@ -635,7 +632,7 @@ public class HostController : InputController
 
 		if (m_MovInfo.m_IsSliding)
 		{
-            Debug.Log("Sliding");
+            //Debug.Log("Sliding");
 			// smoothly rotate backwards. todo
 			SmoothMove(m_Camera.transform, new Vector3(0, -0.5f, 0), 0.25f);
 
@@ -831,12 +828,12 @@ public class HostController : InputController
         Color defaultColour = Gizmos.color;
 
         RaycastHit hit;
-        Ray ray = new Ray(transform.position + Vector3.up, Vector3.down);
+        Ray ray = new Ray(transform.position, Vector3.down);
         if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckDistance))
         {
             Gizmos.DrawLine(transform.position, hit.point);
 
-            GraphicalDebugger.DrawSphereCast(transform.position + Vector3.up, (transform.position + Vector3.up) + Vector3.down * m_GroundCheckDistance, Color.green, m_GroundCheckRadius, m_GroundCheckDistance);
+            GraphicalDebugger.DrawSphereCast(transform.position, (transform.position) + Vector3.down * m_GroundCheckDistance, Color.green, m_GroundCheckRadius, m_GroundCheckDistance);
 
             // Draw forward direction but relative to ground normal.
             Gizmos.color = Color.black;
@@ -844,16 +841,16 @@ public class HostController : InputController
         }
         else
         {
-            GraphicalDebugger.DrawSphereCast(transform.position + Vector3.up, (transform.position + Vector3.up) + Vector3.down * m_GroundCheckDistance, Color.red, m_GroundCheckRadius, m_GroundCheckDistance);
+            GraphicalDebugger.DrawSphereCast(transform.position, (transform.position) + Vector3.down * m_GroundCheckDistance, Color.red, m_GroundCheckRadius, m_GroundCheckDistance);
         }
 
         Gizmos.color = defaultColour;
 
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position + Vector3.up, transform.position + new Vector3(-m_MovInfo.m_CacheMovDirection.x, m_MovInfo.m_CacheMovDirection.y, -m_MovInfo.m_CacheMovDirection.z));
+        Gizmos.DrawLine(transform.position, transform.position + new Vector3(-m_MovInfo.m_CacheMovDirection.x, m_MovInfo.m_CacheMovDirection.y, -m_MovInfo.m_CacheMovDirection.z));
 
         Gizmos.color = Color.green;
-        Gizmos.DrawLine(transform.position + Vector3.up, transform.position + m_MovInfo.m_CacheMovDirection);
+        Gizmos.DrawLine(transform.position, transform.position + m_MovInfo.m_CacheMovDirection);
 
         // Trying to visualise true movement forward vector.
         Gizmos.color = Color.cyan;

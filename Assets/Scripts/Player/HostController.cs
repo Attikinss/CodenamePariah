@@ -72,9 +72,11 @@ public class HostController : InputController
             m_MovInfo.m_OriginalColliderCenter = m_Collider.center;
             m_MovInfo.m_OriginalColliderHeight = m_Collider.height;
         }
-	}
+        m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
+    }
     private void Update()
     {
+        m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
         if (!PauseMenu.m_GameIsPaused)
         {
             if (!m_Active) return;

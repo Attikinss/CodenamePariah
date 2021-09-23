@@ -7802,7 +7802,7 @@ MonoBehaviour:
   - {fileID: 8887062762880439734}
   - {fileID: 342960772}
   m_CurrentWeapon: {fileID: 0}
-  m_Camera: {fileID: 981726637825336993}
+  m_Camera: {fileID: 981726637825336994}
 --- !u!114 &8887062761844868491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8153,6 +8153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 782e265ca3eabf54ab9f81dee17cc001, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_TypeTag: 0
   m_Camera: {fileID: 0}
   m_BulletDamage: 0
   m_RoundsInMagazine: 0
@@ -9012,7 +9013,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8557315744390728888, guid: db2a7dce86567b548977e248deeed374, type: 3}
       propertyPath: m_Name
-      value: GunHolder
+      value: AssaultRifle
       objectReference: {fileID: 0}
     - target: {fileID: 8557315744390728889, guid: db2a7dce86567b548977e248deeed374, type: 3}
       propertyPath: m_RootOrder
@@ -9153,7 +9154,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4112493245389595605, guid: f73b75574fad6894ba36d47f828aab6d, type: 3}
       propertyPath: m_Name
-      value: GunHolder3
+      value: DualRifle
       objectReference: {fileID: 0}
     - target: {fileID: 6153622327545923761, guid: f73b75574fad6894ba36d47f828aab6d, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -9234,7 +9235,7 @@ PrefabInstance:
       objectReference: {fileID: 981726636163737742}
     - target: {fileID: 2238759060784313553, guid: c09c029d69a612d48a5dfa6fdefbb62e, type: 3}
       propertyPath: m_Name
-      value: GunHolder2
+      value: Pistol
       objectReference: {fileID: 0}
     - target: {fileID: 2238759060784313555, guid: c09c029d69a612d48a5dfa6fdefbb62e, type: 3}
       propertyPath: m_RootOrder

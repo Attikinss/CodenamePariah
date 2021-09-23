@@ -2,34 +2,33 @@
 
 public class EQSSceneNode : MonoBehaviour
 {
-    [SerializeField]
-    private EnvironmentQuerySystem.EQSNode m_EQSNode;
+    public EnvironmentQuerySystem.EQSNode EQSNode;
 
     public bool m_DrawAlways = false;
 
     private void Start()
     {
-        m_EQSNode = new EnvironmentQuerySystem.EQSNode();
-        m_EQSNode.Position = transform.position;
+        EQSNode.GenerateID();
+        EQSNode.Position = transform.position;
+
+        EQSSceneNodeTracker.AddNode(this);
     }
 
     private void OnDrawGizmos()
     {
-        if (!m_DrawAlways) return;
-
-        Draw();
+        if (m_DrawAlways)
+            Draw();
     }
 
     private void OnDrawGizmosSelected()
     {
-        if (m_DrawAlways) return;
-
-        Draw();
+        if (!m_DrawAlways)
+            Draw();
     }
 
     private void Draw()
     {
-        Gizmos.color = m_EQSNode.Taken ? m_EQSNode.TakenColour : m_EQSNode.VacantColour;
-        Gizmos.DrawSphere(transform.position, m_EQSNode.Size);
+        Gizmos.color = EQSNode.Taken ? EQSNode.TakenColour : EQSNode.VacantColour;
+        Gizmos.DrawSphere(transform.position, EQSNode.Size);
     }
 }

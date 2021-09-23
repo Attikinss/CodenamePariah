@@ -3,81 +3,108 @@ using UnityEngine;
 using WhiteWillow;
 using WhiteWillow.Nodes;
 
-public enum DistanceCheck { ClosestSelf, ClosestTarget, FurthestSelf, FurthestTarget, None }
-public enum AngleCheck { Back, Front, ToTarget, FromTarget, None }
+public enum DistanceCheck { ClosestTarget, FurthestSelf, FurthestTarget, None }
+public enum AngleCheck { Ahead, Behind, ToTarget, FromTarget, None }
 
 [Category("Tasks", "User")]
 public class EQSQuery : Task
 {
-    public NodeMember<float> Angle;
-    public AngleCheck AngleCheck = AngleCheck.None;
-
-    public float Threshold = 5.0f;
-    public NodeMember<float> Distance;
-    public DistanceCheck DistanceCheck = DistanceCheck.None;
-
+    public NodeMember<GameObject> Target;
+    public float Range;
     public bool MaintainTargetsSight = false;
 
-    public NodeMember<float> Range;
-    public NodeMember<GameObject> Target;
+    [Header("Query Checks")]
+    public DistanceCheck DistanceCheck = DistanceCheck.None;
+    public float Distance = 25.0f;
+    public float Threshold = 5.0f;
 
-    private bool m_Cull = false;
+    public AngleCheck AngleCheck = AngleCheck.None;
+    public float Angle = 75.0f;
+
+    private EnvironmentQuerySystem.QueryRequest m_EQSRequest = null;
+    private EnvironmentQuerySystem.EQSNode m_CurrentNode = null;
+    private bool m_EQSRequestSent = false;
 
     // Called before node is executed
     protected override void OnEnter()
     {
-        if (Target.Value != null)
-        {
-            float distanceToPlayer = (Owner.Agent.transform.position - Target.Value.transform.position).sqrMagnitude;
-            if (distanceToPlayer > 50 * 50)
-                m_Cull = true;
-        }
+        if (Target.Value == null && Target.BlackboardValue)
+            Target.Validate(Owner.Blackboard);
     }
 
     // Called after node has finished executing or is aborted
     protected override void OnExit()
     {
-        m_Cull = false;
+        m_EQSRequest = null;
+        m_EQSRequestSent = false;
+        Owner.Agent.CurrentQuery = null;
     }
 
     // This is where the behaviour is updated
     protected override NodeResult OnTick()
     {
-        if (m_Cull)
-            return NodeResult.Failure;
-
-        Query query = /*new Query();*/ EnvironmentQuerySystem.NewQuery(Owner.Agent.transform.position, Range.Value);
-        Owner.Agent.CurrentQuery = query;
-
         if (Target.Value != null)
         {
-            QueryAngleCheck(ref query);
-            QueryDistanceCheck(ref query);
+            // Ensure a request is available for submission
+            if (m_EQSRequest == null)
+                m_EQSRequest = new EnvironmentQuerySystem.QueryRequest(Owner.Agent.transform.position, Range);
 
-            if (!query.Empty())
+            // Ensure a request was submitted successfully to the EQS
+            if (!m_EQSRequestSent)
+                m_EQSRequestSent = EnvironmentQuerySystem.NewQuery(m_EQSRequest);
+
+            // If something went wrong, bail until the next tick
+            if (!m_EQSRequestSent || !m_EQSRequest.QueryResolved || !EnvironmentQuerySystem.RetrieveQuery(m_EQSRequest, out Owner.Agent.CurrentQuery))
+            {
+                return NodeResult.Running;
+            }
+
+            QueryAngleCheck(ref Owner.Agent.CurrentQuery);
+            QueryDistanceCheck(ref Owner.Agent.CurrentQuery);
+
+            if (!Owner.Agent.CurrentQuery.Empty())
             {
                 // Offset to simulate eye height
-                Vector3 verticalOffset = Vector3.up * 0.7f;
+                Vector3 verticalOffset = Vector3.up * 1.5f;
 
-                query.ShuffleValues();
-                foreach (var node in query.Values)
+                Owner.Agent.CurrentQuery.ShuffleValues();
+                float prevPathLength = float.MaxValue;
+                foreach (var node in Owner.Agent.CurrentQuery.Values)
                 {
-                    Vector3 direction = (Target.Value.transform.position + verticalOffset) - (node.Position + verticalOffset);
-                    if (Physics.Raycast(node.Position + verticalOffset, direction, out RaycastHit hitInfo, Range.Value))
+                    Vector3 direction = Target.Value.transform.position - (node.Position + verticalOffset);
+
+                    // Line of sight
+                    // Distance from next position to player
+                    // Travel time/distance to new position
+
+                    if (Physics.Raycast(node.Position + verticalOffset, direction, out RaycastHit hitInfo))
                     {
-                        if (hitInfo.transform.gameObject == Target.Value)
+                        //Debug.Log($"Success: {Owner.Agent.gameObject}");
+                        if (hitInfo.transform.gameObject == Target.Value &&
+                            Vector3.Distance(node.Position, Target.Value.transform.position) <= Owner.Agent.m_ViewRange)
                         {
+                            //float pathLength = Owner.Agent.CalculateTravelDistance(node.Position);
+                            //
+                            //if (pathLength < prevPathLength)
+                            //    prevPathLength = pathLength;
+
                             if (MaintainTargetsSight)
                             {
-                                float targetFacingAngle = Vector3.Angle(node.Position + verticalOffset
+                                float targetFacingAngle = Vector3.Angle((node.Position + verticalOffset)
                                     - Target.Value.transform.position, Target.Value.transform.forward);
 
                                 // Not in players peripheral/immediate view
-                                if (targetFacingAngle < -75.0f || targetFacingAngle > 75.0f)
+                                if (targetFacingAngle < -Angle || targetFacingAngle > Angle)
                                     continue;
                             }
 
-                            Owner.Agent.SetDestination(node.Position);
+                            m_CurrentNode?.Release();
+                            m_CurrentNode = node;
+                            m_CurrentNode.Reserve(Owner.Agent);
+                            Owner.Agent.SetDestination(m_CurrentNode.Position);
+
+                            Debug.Log($"Success: {Owner.Agent.gameObject}");
+
                             return NodeResult.Success;
                         }
                     }
@@ -96,22 +123,22 @@ public class EQSQuery : Task
     {
         switch (AngleCheck)
         {
-            case AngleCheck.Back:
-                query.FilterByAngle(Owner.Agent.transform.position, Owner.Agent.transform.forward, Angle.Value);
+            case AngleCheck.Ahead:
+                query.FilterByAngle(Owner.Agent.transform.position, -Owner.Agent.transform.forward, Angle);
                 break;
 
-            case AngleCheck.Front:
-                query.FilterByAngle(Owner.Agent.transform.position, -Owner.Agent.transform.forward, Angle.Value);
+            case AngleCheck.Behind:
+                query.FilterByAngle(Owner.Agent.transform.position, Owner.Agent.transform.forward, Angle);
                 break;
 
             case AngleCheck.ToTarget:
                 query.FilterByAngle(Owner.Agent.transform.position, Target.Value.transform.position
-                    - Owner.Agent.transform.position, Angle.Value);
+                    - Owner.Agent.transform.position, Angle);
                 break;
 
             case AngleCheck.FromTarget:
                 query.FilterByAngle(Owner.Agent.transform.position, Owner.Agent.transform.position
-                    - Target.Value.transform.position, Angle.Value);
+                    - Target.Value.transform.position, Angle);
                 break;
 
             default: break;
@@ -122,10 +149,6 @@ public class EQSQuery : Task
     {
         switch (DistanceCheck)
         {
-            case DistanceCheck.ClosestSelf:
-                query.FilterByClosest(Owner.Agent.transform.position, Threshold);
-                break;
-
             case DistanceCheck.ClosestTarget:
                 query.FilterByClosest(Target.Value.transform.position, Threshold);
                 break;

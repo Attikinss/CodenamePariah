@@ -647,6 +647,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InputField: {fileID: 5784749309063968099}
   m_Slider: {fileID: 5784749309788757077}
+  m_MouseSensitivitySlider: {fileID: 5784749309350330046}
+  m_MouseInputField: {fileID: 5784749310920019271}
+  m_ControllerSensitivitySlider: {fileID: 5784749310846771140}
+  m_ControllerInputField: {fileID: 5784749309864889479}
   m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &5784749309085811958
 GameObject:
@@ -3605,7 +3609,7 @@ MonoBehaviour:
   m_MinValue: 5
   m_MaxValue: 100
   m_WholeNumbers: 0
-  m_Value: 60
+  m_Value: 40
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -3659,6 +3663,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InputField: {fileID: 5784749310920019271}
   m_Slider: {fileID: 5784749309350330046}
+  m_MouseSensitivitySlider: {fileID: 5784749309350330046}
+  m_MouseInputField: {fileID: 5784749310920019271}
+  m_ControllerSensitivitySlider: {fileID: 5784749310846771140}
+  m_ControllerInputField: {fileID: 5784749309864889479}
   m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &5784749309361969828
 GameObject:
@@ -5433,6 +5441,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InputField: {fileID: 5784749310031777603}
   m_Slider: {fileID: 5784749309526453273}
+  m_MouseSensitivitySlider: {fileID: 5784749309350330046}
+  m_MouseInputField: {fileID: 5784749310920019271}
+  m_ControllerSensitivitySlider: {fileID: 5784749310846771140}
+  m_ControllerInputField: {fileID: 5784749309864889479}
   m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &5784749309549206114
 GameObject:
@@ -6573,19 +6585,7 @@ MonoBehaviour:
   m_CharacterLimit: 6
   m_OnEndEdit:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5784749309494941147}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
   m_OnSubmit:
     m_PersistentCalls:
       m_Calls: []
@@ -7659,6 +7659,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InputField: {fileID: 5784749309063968099}
   m_Slider: {fileID: 5784749309788757077}
+  m_MouseSensitivitySlider: {fileID: 5784749309350330046}
+  m_MouseInputField: {fileID: 5784749310920019271}
+  m_ControllerSensitivitySlider: {fileID: 5784749310846771140}
+  m_ControllerInputField: {fileID: 5784749309864889479}
   m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &5784749309791262822
 GameObject:
@@ -7798,19 +7802,7 @@ MonoBehaviour:
   m_CharacterLimit: 6
   m_OnEndEdit:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5784749309494941147}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
   m_OnSubmit:
     m_PersistentCalls:
       m_Calls: []
@@ -8099,7 +8091,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: 60
+  m_Text: 40
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -8125,6 +8117,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InputField: {fileID: 5784749309864889479}
   m_Slider: {fileID: 5784749310846771140}
+  m_MouseSensitivitySlider: {fileID: 5784749309350330046}
+  m_MouseInputField: {fileID: 5784749310920019271}
+  m_ControllerSensitivitySlider: {fileID: 5784749310846771140}
+  m_ControllerInputField: {fileID: 5784749309864889479}
   m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &5784749309869949386
 GameObject:
@@ -10760,6 +10756,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InputField: {fileID: 5784749310031777603}
   m_Slider: {fileID: 5784749309526453273}
+  m_MouseSensitivitySlider: {fileID: 5784749309350330046}
+  m_MouseInputField: {fileID: 5784749310920019271}
+  m_ControllerSensitivitySlider: {fileID: 5784749310846771140}
+  m_ControllerInputField: {fileID: 5784749309864889479}
   m_PlayerPrefs: {fileID: 0}
 --- !u!1 &5784749310033590853
 GameObject:
@@ -10899,19 +10899,7 @@ MonoBehaviour:
   m_CharacterLimit: 6
   m_OnEndEdit:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5784749309494941147}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
   m_OnSubmit:
     m_PersistentCalls:
       m_Calls: []
@@ -11651,19 +11639,7 @@ MonoBehaviour:
   m_CharacterLimit: 6
   m_OnEndEdit:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5784749309494941147}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
   m_OnSubmit:
     m_PersistentCalls:
       m_Calls: []
@@ -12679,6 +12655,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InputField: {fileID: 5784749310175799532}
   m_Slider: {fileID: 5784749310299506831}
+  m_MouseSensitivitySlider: {fileID: 5784749309350330046}
+  m_MouseInputField: {fileID: 5784749310920019271}
+  m_ControllerSensitivitySlider: {fileID: 5784749310846771140}
+  m_ControllerInputField: {fileID: 5784749309864889479}
   m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &5784749310177795681
 GameObject:
@@ -13194,7 +13174,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!114 &5784749310233106534
 MonoBehaviour:
@@ -13591,19 +13571,7 @@ MonoBehaviour:
   m_CharacterLimit: 6
   m_OnEndEdit:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5784749309494941147}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
   m_OnSubmit:
     m_PersistentCalls:
       m_Calls: []
@@ -13996,6 +13964,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InputField: {fileID: 5784749310175799532}
   m_Slider: {fileID: 5784749310299506831}
+  m_MouseSensitivitySlider: {fileID: 5784749309350330046}
+  m_MouseInputField: {fileID: 5784749310920019271}
+  m_ControllerSensitivitySlider: {fileID: 5784749310846771140}
+  m_ControllerInputField: {fileID: 5784749309864889479}
   m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &5784749310316505285
 GameObject:
@@ -15001,19 +14973,7 @@ MonoBehaviour:
   m_CharacterLimit: 6
   m_OnEndEdit:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5784749309494941147}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
   m_OnSubmit:
     m_PersistentCalls:
       m_Calls: []
@@ -17135,19 +17095,7 @@ MonoBehaviour:
   m_CharacterLimit: 6
   m_OnEndEdit:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5784749309494941147}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
   m_OnSubmit:
     m_PersistentCalls:
       m_Calls: []
@@ -18292,19 +18240,7 @@ MonoBehaviour:
   m_CharacterLimit: 6
   m_OnEndEdit:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5784749309494941147}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
   m_OnSubmit:
     m_PersistentCalls:
       m_Calls: []
@@ -19343,7 +19279,7 @@ MonoBehaviour:
   m_MinValue: 5
   m_MaxValue: 100
   m_WholeNumbers: 0
-  m_Value: 60
+  m_Value: 40
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -19397,6 +19333,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InputField: {fileID: 5784749309864889479}
   m_Slider: {fileID: 5784749310846771140}
+  m_MouseSensitivitySlider: {fileID: 5784749309350330046}
+  m_MouseInputField: {fileID: 5784749310920019271}
+  m_ControllerSensitivitySlider: {fileID: 5784749310846771140}
+  m_ControllerInputField: {fileID: 5784749309864889479}
   m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &5784749310853857069
 GameObject:
@@ -20054,7 +19994,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: 60
+  m_Text: 40
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -20080,6 +20020,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InputField: {fileID: 5784749310920019271}
   m_Slider: {fileID: 5784749309350330046}
+  m_MouseSensitivitySlider: {fileID: 5784749309350330046}
+  m_MouseInputField: {fileID: 5784749310920019271}
+  m_ControllerSensitivitySlider: {fileID: 5784749310846771140}
+  m_ControllerInputField: {fileID: 5784749309864889479}
   m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &5784749310930154283
 GameObject:
@@ -20219,19 +20163,7 @@ MonoBehaviour:
   m_CharacterLimit: 6
   m_OnEndEdit:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5784749309494941147}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
   m_OnSubmit:
     m_PersistentCalls:
       m_Calls: []
@@ -20984,19 +20916,7 @@ MonoBehaviour:
   m_CharacterLimit: 6
   m_OnEndEdit:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5784749309494941147}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
   m_OnSubmit:
     m_PersistentCalls:
       m_Calls: []
@@ -21756,6 +21676,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InputField: {fileID: 5784749311055197890}
   m_Slider: {fileID: 5784749311096350091}
+  m_MouseSensitivitySlider: {fileID: 5784749309350330046}
+  m_MouseInputField: {fileID: 5784749310920019271}
+  m_ControllerSensitivitySlider: {fileID: 5784749310846771140}
+  m_ControllerInputField: {fileID: 5784749309864889479}
   m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &5784749311061627174
 GameObject:
@@ -22538,6 +22462,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InputField: {fileID: 5784749311055197890}
   m_Slider: {fileID: 5784749311096350091}
+  m_MouseSensitivitySlider: {fileID: 5784749309350330046}
+  m_MouseInputField: {fileID: 5784749310920019271}
+  m_ControllerSensitivitySlider: {fileID: 5784749310846771140}
+  m_ControllerInputField: {fileID: 5784749309864889479}
   m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &5784749311106671368
 GameObject:

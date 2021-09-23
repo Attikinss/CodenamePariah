@@ -22,15 +22,15 @@ MonoBehaviour:
   ExecutionOrder: 2
   GraphDimensions:
     serializedVersion: 2
-    x: 532
-    y: 430
+    x: 355
+    y: 469
     width: 165
     height: 81
   Interruptable: 0
   Position:
     BlackboardValue: 0
     Value: {x: 0, y: 0, z: 0}
-    Expand: 0
+    Name: 
     Selection: 0
 --- !u!114 &-2873006661844372805
 MonoBehaviour:
@@ -54,35 +54,23 @@ MonoBehaviour:
   ExecutionOrder: 1
   GraphDimensions:
     serializedVersion: 2
-    x: 366
-    y: 430
+    x: 178
+    y: 469
     width: 165
     height: 81
   Interruptable: 0
-  Angle:
-    BlackboardValue: 0
-    Value: 80
-    Expand: 1
-    Selection: 0
-  AngleCheck: 2
-  Threshold: 5
-  Distance:
-    BlackboardValue: 0
-    Value: 0
-    Expand: 0
-    Selection: 0
-  DistanceCheck: 3
-  MaintainTargetsSight: 1
-  Range:
-    BlackboardValue: 0
-    Value: 15
-    Expand: 1
-    Selection: 0
   Target:
     BlackboardValue: 1
     Value: {fileID: 0}
-    Expand: 1
+    Name: Target
     Selection: 0
+  Range: 20
+  MaintainTargetsSight: 1
+  DistanceCheck: 2
+  Distance: 20
+  Threshold: 5
+  AngleCheck: 4
+  Angle: 75
 --- !u!114 &-1632813149957266194
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -105,14 +93,46 @@ MonoBehaviour:
   ExecutionOrder: 2
   GraphDimensions:
     serializedVersion: 2
-    x: 448
-    y: 304
+    x: 260
+    y: 343
     width: 166
     height: 82
   RunningChild: {fileID: 0}
   Children:
   - {fileID: -2873006661844372805}
   - {fileID: -3631744306323239417}
+--- !u!114 &-1014698060343594665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 729f6e5e156465249afc2926c5a1fcc7, type: 3}
+  m_Name: Log
+  m_EditorClassIdentifier: 
+  Active: 0
+  Owner: {fileID: 11400000}
+  Parent: {fileID: 4792693269171629120}
+  State: 0
+  Title: Log
+  GUID: c8cbfa25-e588-403e-b941-45254ba54192
+  Locked: 0
+  ExecutionOrder: 1
+  GraphDimensions:
+    serializedVersion: 2
+    x: 594
+    y: 471
+    width: 165
+    height: 81
+  Interruptable: 0
+  Message:
+    BlackboardValue: 0
+    Value: Doing nothing.
+    Name: 
+    Selection: 0
 --- !u!114 &-526603628831890957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,7 +147,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Active: 0
   Owner: {fileID: 11400000}
-  Parent: {fileID: 8169266402184767248}
+  Parent: {fileID: 1635078181476274910}
   State: 0
   Title: Engage
   GUID: c3a2d617-f50a-4cfe-8b30-ff7eba1bfef7
@@ -135,13 +155,13 @@ MonoBehaviour:
   ExecutionOrder: 1
   GraphDimensions:
     serializedVersion: 2
-    x: 367
-    y: 178
+    x: 95
+    y: 217
     width: 165
     height: 82
   RunningChild: {fileID: 0}
   Children:
-  - {fileID: 5969798697368172460}
+  - {fileID: 9119219595533620095}
   - {fileID: -1632813149957266194}
 --- !u!114 &11400000
 MonoBehaviour:
@@ -159,12 +179,178 @@ MonoBehaviour:
   Blackboard: {fileID: 11400000, guid: e6137f7276cb0a74e8f1e0cc207a53bb, type: 2}
   Nodes:
   - {fileID: 4850965985751875924}
-  - {fileID: 8169266402184767248}
   - {fileID: -526603628831890957}
   - {fileID: 5969798697368172460}
   - {fileID: -1632813149957266194}
   - {fileID: -2873006661844372805}
   - {fileID: -3631744306323239417}
+  - {fileID: 9119219595533620095}
+  - {fileID: 7032234773326167870}
+  - {fileID: 125078122012639803}
+  - {fileID: 4792693269171629120}
+  - {fileID: -1014698060343594665}
+  - {fileID: 2304292368187985714}
+  - {fileID: 1635078181476274910}
+  - {fileID: 3610415081122974839}
+--- !u!114 &125078122012639803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef68c884cda3a8a49b6fbba58b9c197c, type: 3}
+  m_Name: Idle
+  m_EditorClassIdentifier: 
+  Active: 0
+  Owner: {fileID: 11400000}
+  Parent: {fileID: 1635078181476274910}
+  State: 0
+  Title: Idle
+  GUID: e62e1dfc-0058-42e2-a0f9-19eb7739ae97
+  Locked: 0
+  ExecutionOrder: 2
+  GraphDimensions:
+    serializedVersion: 2
+    x: 676
+    y: 217
+    width: 165
+    height: 82
+  RunningChild: {fileID: 0}
+  Children:
+  - {fileID: 4792693269171629120}
+--- !u!114 &1635078181476274910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef68c884cda3a8a49b6fbba58b9c197c, type: 3}
+  m_Name: Selector
+  m_EditorClassIdentifier: 
+  Active: 0
+  Owner: {fileID: 11400000}
+  Parent: {fileID: 4850965985751875924}
+  State: 0
+  Title: Selector
+  GUID: 2f620017-8900-46a9-90b6-bd526abd798a
+  Locked: 0
+  ExecutionOrder: 1
+  GraphDimensions:
+    serializedVersion: 2
+    x: 388
+    y: 87
+    width: 165
+    height: 82
+  RunningChild: {fileID: 0}
+  Children:
+  - {fileID: -526603628831890957}
+  - {fileID: 125078122012639803}
+--- !u!114 &2304292368187985714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8accdce1ed156214bb95375f12ef5291, type: 3}
+  m_Name: Wait
+  m_EditorClassIdentifier: 
+  Active: 0
+  Owner: {fileID: 11400000}
+  Parent: {fileID: 4792693269171629120}
+  State: 0
+  Title: Wait
+  GUID: e3c26fd8-a67a-4829-b480-cf846b8a3ebc
+  Locked: 0
+  ExecutionOrder: 2
+  GraphDimensions:
+    serializedVersion: 2
+    x: 760
+    y: 471
+    width: 165
+    height: 81
+  Interruptable: 0
+  WaitType: 0
+  Duration: 0.15
+  m_ElapsedTime: 0
+--- !u!114 &3610415081122974839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b571baadc0bf0e47b03d24c5ce9b623, type: 3}
+  m_Name: TargetInSight
+  m_EditorClassIdentifier: 
+  Active: 0
+  Owner: {fileID: 11400000}
+  Parent: {fileID: 9119219595533620095}
+  State: 0
+  Title: TargetInSight
+  GUID: 384396c2-62d4-4f57-b30c-8aaef0b64d8d
+  Locked: 0
+  ExecutionOrder: 1
+  GraphDimensions:
+    serializedVersion: 2
+    x: -214
+    y: 469
+    width: 195
+    height: 82
+  Child: {fileID: 5969798697368172460}
+  Target:
+    BlackboardValue: 1
+    Value: {fileID: 0}
+    Name: Target
+    Selection: 0
+  EngagementDistance:
+    BlackboardValue: 1
+    Value: 17.5
+    Name: ShootRange
+    Selection: 0
+  m_RaycastSteps: 3
+  m_RaycastsPerStep: 7
+  m_RaycastSpacing: 0.02
+--- !u!114 &4792693269171629120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 044444dddb989c94aa4a827c03c2c9cd, type: 3}
+  m_Name: Do nothing
+  m_EditorClassIdentifier: 
+  Active: 0
+  Owner: {fileID: 11400000}
+  Parent: {fileID: 125078122012639803}
+  State: 0
+  Title: Do nothing
+  GUID: a342a58d-89c3-4291-b427-3555ae07e360
+  Locked: 0
+  ExecutionOrder: 1
+  GraphDimensions:
+    serializedVersion: 2
+    x: 673
+    y: 343
+    width: 170
+    height: 82
+  RunningChild: {fileID: 0}
+  Children:
+  - {fileID: -1014698060343594665}
+  - {fileID: 2304292368187985714}
 --- !u!114 &4850965985751875924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,11 +373,11 @@ MonoBehaviour:
   ExecutionOrder: 1
   GraphDimensions:
     serializedVersion: 2
-    x: 366
-    y: -10
+    x: 388
+    y: -20
     width: 165
     height: 83
-  Child: {fileID: 8169266402184767248}
+  Child: {fileID: 1635078181476274910}
 --- !u!114 &5969798697368172460
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,39 +388,36 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ae307cfcea9f9c6478cf77580e1e4a16, type: 3}
-  m_Name: FireAtTarget
+  m_Name: Fire
   m_EditorClassIdentifier: 
   Active: 0
   Owner: {fileID: 11400000}
-  Parent: {fileID: -526603628831890957}
+  Parent: {fileID: 3610415081122974839}
   State: 0
-  Title: FireAtTarget
+  Title: Fire
   GUID: 384028a5-40b4-4044-a141-eda19f68f2d2
   Locked: 0
   ExecutionOrder: 1
   GraphDimensions:
     serializedVersion: 2
-    x: 262
-    y: 304
-    width: 186
+    x: -200
+    y: 573
+    width: 165
     height: 81
   Interruptable: 0
-  m_RaycastSpacing: 0.02
-  m_RaycastsPerStep: 7
-  m_RaycastSteps: 3
-  MinimumShots: 1
-  MaximumShots: 7
-  EngagementDistance:
-    BlackboardValue: 0
-    Value: 10
-    Expand: 1
-    Selection: 0
   Target:
     BlackboardValue: 1
     Value: {fileID: 0}
-    Expand: 1
+    Name: Target
     Selection: 0
---- !u!114 &8169266402184767248
+  EngagementDistance:
+    BlackboardValue: 1
+    Value: 17.5
+    Name: ShootRange
+    Selection: 0
+  MaximumShots: 7
+  MinimumShots: 3
+--- !u!114 &7032234773326167870
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -243,23 +426,54 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef68c884cda3a8a49b6fbba58b9c197c, type: 3}
-  m_Name: Selector
+  m_Script: {fileID: 11500000, guid: 8accdce1ed156214bb95375f12ef5291, type: 3}
+  m_Name: Wait
   m_EditorClassIdentifier: 
   Active: 0
   Owner: {fileID: 11400000}
-  Parent: {fileID: 4850965985751875924}
+  Parent: {fileID: 9119219595533620095}
   State: 0
-  Title: Selector
-  GUID: cb80844e-f38d-4ca2-b4d3-c0cc49b83b77
+  Title: Wait
+  GUID: 59e535fb-5585-4ee6-83f4-25125dd2f9d2
+  Locked: 0
+  ExecutionOrder: 2
+  GraphDimensions:
+    serializedVersion: 2
+    x: -4
+    y: 469
+    width: 165
+    height: 81
+  Interruptable: 0
+  WaitType: 1
+  Duration: 1
+  m_ElapsedTime: 0
+--- !u!114 &9119219595533620095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 044444dddb989c94aa4a827c03c2c9cd, type: 3}
+  m_Name: Fire At Target
+  m_EditorClassIdentifier: 
+  Active: 0
+  Owner: {fileID: 11400000}
+  Parent: {fileID: -526603628831890957}
+  State: 0
+  Title: Fire At Target
+  GUID: 9ab8fb2d-e8ba-4614-ba8e-0f92d4beaa8c
   Locked: 0
   ExecutionOrder: 1
   GraphDimensions:
     serializedVersion: 2
-    x: 367
-    y: 85
-    width: 165
+    x: -102
+    y: 343
+    width: 197
     height: 82
   RunningChild: {fileID: 0}
   Children:
-  - {fileID: -526603628831890957}
+  - {fileID: 3610415081122974839}
+  - {fileID: 7032234773326167870}

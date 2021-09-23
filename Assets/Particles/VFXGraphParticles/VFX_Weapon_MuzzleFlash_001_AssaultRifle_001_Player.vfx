@@ -425,20 +425,6 @@ MonoBehaviour:
     max: 1
     enumValues: []
     descendantCount: 0
-  - name: Min and Max Spark Spawn
-    path: Min and Max Spark Spawn
-    tooltip: 
-    sheetType: m_Vector2f
-    realType: Vector2
-    defaultValue:
-      m_Type:
-        m_SerializableType: UnityEngine.Vector2, UnityEngine.CoreModule, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"x":0.0,"y":0.0}'
-    min: -Infinity
-    max: Infinity
-    enumValues: []
-    descendantCount: 0
   - name: Spark Length
     path: Spark Length
     tooltip: 
@@ -17106,7 +17092,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617232}
   m_ExposedName: Smoke Follow up Delay
   m_Exposed: 1
-  m_Order: 7
+  m_Order: 6
   m_Category: 
   m_Min:
     m_Type:
@@ -18674,7 +18660,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617332}
   m_ExposedName: Spark Length
   m_Exposed: 1
-  m_Order: 6
+  m_Order: 5
   m_Category: 
   m_Min:
     m_Type:
@@ -19190,7 +19176,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617347}
   m_ExposedName: Distance Traveled by Smoke
   m_Exposed: 1
-  m_Order: 8
+  m_Order: 7
   m_Category: 
   m_Min:
     m_Type:

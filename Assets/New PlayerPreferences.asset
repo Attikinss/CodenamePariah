@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: New PlayerPreferences
   m_EditorClassIdentifier: 
   GameplayConfig:
-    MouseSensitivity: 60
-    ControllerSensitivity: 60
+    MouseSensitivity: 40
+    ControllerSensitivity: 40
   VideoConfig:
     Fullscreen: 1
     Resolution:

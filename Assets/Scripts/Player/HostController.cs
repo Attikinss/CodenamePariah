@@ -80,7 +80,9 @@ public class HostController : InputController
     }
 	private void Update()
     {
-        if (!m_Active) return;
+        if (!PauseMenu.m_GameIsPaused)
+        {
+            if (!m_Active) return;
 
         if (GetCurrentWeaponConfig()) // If we have a weapon. We may not have any weapons so thats why we check this.
         { 
@@ -90,59 +92,67 @@ public class HostController : InputController
                 GetCurrentWeapon().m_WeaponActions.m_IsFiring = true;
         }
 
-        m_MovInfo.m_IsGrounded = CheckGrounded();
-        CalculateGroundNormal();
-        if (m_MovInfo.m_IsGrounded)
-            m_MovInfo.m_HasDoubleJumped = false;
-        
-
-        m_MovInfo.m_CurrentMoveSpeed = Rigidbody.velocity.magnitude;
+            m_MovInfo.m_IsGrounded = CheckGrounded();
+            CalculateGroundNormal();
+            if (m_MovInfo.m_IsGrounded)
+                m_MovInfo.m_HasDoubleJumped = false;
 
 
-        // Just for debugging purposes. This variable is only used in the CustomDebugUI script. - Not true anymore, apparently I am using it now ._.
-        m_CombatInfo.m_camForward = m_Camera.transform.forward;
+            m_MovInfo.m_CurrentMoveSpeed = Rigidbody.velocity.magnitude;
 
 
-        // ================ NOTE ================ //
-        // It's really weird and bad to have a counter like this. I'll try find a way around it but
-        // for now it's helping fix an issue with walking up ramps and jumping.
-        // ====================================== //
-
-        if (m_MovInfo.m_HasJumped)
-        {
-            m_MovInfo.m_JumpCounter += Time.deltaTime; // how to get around having a timer for something like this?
-        }
+            // Just for debugging purposes. This variable is only used in the CustomDebugUI script. - Not true anymore, apparently I am using it now ._.
+            m_CombatInfo.m_camForward = m_Camera.transform.forward;
 
 
-        // While draining, the player is not allowed to interact with their weapons.
-        // ;-;
-        if (m_DrainAbility.isDraining)
-        {
-            if (m_Inventory.GetHealth() > 0)
+            // ================ NOTE ================ //
+            // It's really weird and bad to have a counter like this. I'll try find a way around it but
+            // for now it's helping fix an issue with walking up ramps and jumping.
+            // ====================================== //
+
+            if (m_MovInfo.m_HasJumped)
             {
-                // timed event. have adjustable drain speed.
-                m_DrainAbility.drainCounter += Time.deltaTime;
-                if (m_DrainAbility.drainCounter >= m_DrainAbility.drainInterval)
+                m_MovInfo.m_JumpCounter += Time.deltaTime; // how to get around having a timer for something like this?
+            }
+
+
+            // While draining, the player is not allowed to interact with their weapons.
+            // ;-;
+            if (m_DrainAbility.isDraining)
+            {
+                if (m_Inventory.GetHealth() > 0)
                 {
-                    m_Inventory.Owner?.PariahController.AddHealth(m_DrainAbility.restore);
-                    m_DrainAbility.drainCounter = 0.0f;
-                    m_Inventory.TakeDamage(m_DrainAbility.damage);
+                    // timed event. have adjustable drain speed.
+                    m_DrainAbility.drainCounter += Time.deltaTime;
+                    if (m_DrainAbility.drainCounter >= m_DrainAbility.drainInterval)
+                    {
+                        m_Inventory.Owner?.PariahController.AddHealth(m_DrainAbility.restore);
+
+                        m_DrainAbility.drainCounter = 0.0f;
+                        m_Inventory.TakeDamage(m_DrainAbility.damage);
+                    }
                 }
             }
         }
     }
     private void LateUpdate()
     {
-        if (m_Active)
-            Look();
+        if (!PauseMenu.m_GameIsPaused)
+        {
+            if (m_Active)
+                Look();
+        }
     }
 
     private void FixedUpdate()
 	{
-        if (!m_Active) return;
+        if (!PauseMenu.m_GameIsPaused)
+        {
+            if (!m_Active) return;
 
-        Slide();
-        Move(m_MovInfo.MovementInput);
+            Slide();
+            Move(m_MovInfo.MovementInput);
+        }
 	}
 
     
@@ -195,35 +205,41 @@ public class HostController : InputController
     // ================================================================================================================================== //
     public override void OnLook(InputAction.CallbackContext value)
 	{
+        if (!PauseMenu.m_GameIsPaused)
+        {
         Weapon weapon = GetCurrentWeapon();
         if(weapon)
             if (weapon.GetRecoilTestState())
                 return; // early out to prevent mouse movement while testing recoil.
         LookInput = value.ReadValue<Vector2>();
+        }
 	}
 
     public override void OnJump(InputAction.CallbackContext value)
     {
-        if (value.performed)
+        if (!PauseMenu.m_GameIsPaused)
         {
-            Vector3 direction = Vector3.up * ControllerMaths.CalculateJumpForce(m_JumpHeight, Rigidbody.mass, m_Gravity);
-            direction.x = Rigidbody.velocity.x;
-            direction.z = Rigidbody.velocity.z;
-
-            if (/*m_MovInfo.m_IsGrounded*/!m_MovInfo.m_HasJumped)
+            if (value.performed)
             {
-                m_MovInfo.m_HasJumped = true;
+                Vector3 direction = Vector3.up * ControllerMaths.CalculateJumpForce(m_JumpHeight, Rigidbody.mass, m_Gravity);
+                direction.x = Rigidbody.velocity.x;
+                direction.z = Rigidbody.velocity.z;
 
-                m_MovInfo.m_CacheMovDirection = direction;
-                Rigidbody.velocity = direction;
-            }
-            else if (!m_MovInfo.m_IsGrounded && !m_MovInfo.m_HasDoubleJumped)
-            {
-                m_MovInfo.m_CacheMovDirection = direction;
-                Rigidbody.velocity = direction;
+                if (/*m_MovInfo.m_IsGrounded*/!m_MovInfo.m_HasJumped)
+                {
+                    m_MovInfo.m_HasJumped = true;
 
-                // Have to tick m_HasDoubleJumped to false;
-                m_MovInfo.m_HasDoubleJumped = true;
+                    m_MovInfo.m_CacheMovDirection = direction;
+                    Rigidbody.velocity = direction;
+                }
+                else if (!m_MovInfo.m_IsGrounded && !m_MovInfo.m_HasDoubleJumped)
+                {
+                    m_MovInfo.m_CacheMovDirection = direction;
+                    Rigidbody.velocity = direction;
+
+                    // Have to tick m_HasDoubleJumped to false;
+                    m_MovInfo.m_HasDoubleJumped = true;
+                }
             }
         }
     }
@@ -232,7 +248,7 @@ public class HostController : InputController
     {
         if (value.performed && m_MovInfo.m_IsGrounded && m_MovInfo.m_IsMoving)
         {
-            Debug.Log("OnSlide called.");
+            //Debug.Log("OnSlide called.");
             m_MovInfo.m_SlideDir = value.performed ? m_Orientation.forward : m_MovInfo.m_SlideDir;
             m_MovInfo.m_IsSliding = true;
 
@@ -256,7 +272,8 @@ public class HostController : InputController
 
     public void OnShoot(InputAction.CallbackContext value)
     {
-        Debug.Log("Very bad OnShoot spam.");
+        if (!PauseMenu.m_GameIsPaused)
+        {
         Weapon weapon = GetCurrentWeapon();
         if (value.control.IsPressed(0)) // Have to use this otherwise mouse button gets triggered on release aswell.
         {
@@ -280,6 +297,7 @@ public class HostController : InputController
                 // Reset held counter happens regardless.
                 m_CombatInfo.m_ShootingDuration = 0.0f;
             }
+        }
         }
     }
 
@@ -348,6 +366,8 @@ public class HostController : InputController
 
     public void OnAim(InputAction.CallbackContext context)
     {
+        if (!PauseMenu.m_GameIsPaused)
+        {
         Weapon weapon = GetCurrentWeapon();
 
         if (weapon)
@@ -360,6 +380,7 @@ public class HostController : InputController
             {
                 GetCurrentWeapon().m_WeaponActions.m_IsAiming = false;
             }
+        }
         }
     }
 
@@ -378,25 +399,28 @@ public class HostController : InputController
 
     public void OnReload(InputAction.CallbackContext value)
     {
-        if (value.performed)
-        { 
-            GetCurrentWeapon().StartReload();
+        if (!PauseMenu.m_GameIsPaused)
+        {
+            if (value.performed)
+                GetCurrentWeapon().StartReload();
         }
     }
 
     public override void OnDash(InputAction.CallbackContext value)
     {
-        if (value.performed && !m_Dashing)
+        if (!PauseMenu.m_GameIsPaused)
         {
-            Vector3 forwardDir = m_Camera.transform.forward;
-            if (m_MovInfo.m_IsGrounded)
-                forwardDir = m_Orientation.forward;
-            
+            if (value.performed && !m_Dashing && !m_DashCoolingDown)
+            {
+                Vector3 forwardDir = m_Camera.transform.forward;
+                if (m_MovInfo.m_IsGrounded)
+                    forwardDir = m_Orientation.forward;
 
-            if (Physics.Raycast(m_Orientation.position, forwardDir, out RaycastHit hitInfo, m_DashDistance))
-                StartCoroutine(Dash(hitInfo.point, -forwardDir * 0.5f, m_DashDuration));
-            else
-                StartCoroutine(Dash(transform.position + forwardDir * m_DashDistance, Vector3.zero, m_DashDuration));
+                if (Physics.Raycast(m_Orientation.position, forwardDir, out RaycastHit hitInfo, m_DashDistance))
+                    StartCoroutine(Dash(hitInfo.point, -forwardDir * 0.5f, m_DashDuration));
+                else
+                    StartCoroutine(Dash(transform.position + forwardDir * m_DashDistance, Vector3.zero, m_DashDuration));
+            }
         }
     }
 
@@ -451,8 +475,8 @@ public class HostController : InputController
     {
         
 
-        float mouseX = LookInput.x * m_LookSensitivity * Time.deltaTime;
-        float mouseY = LookInput.y * m_LookSensitivity * Time.deltaTime;
+        float mouseX = LookInput.x * m_PlayerPrefs.GameplayConfig.MouseSensitivity * Time.deltaTime;
+        float mouseY = LookInput.y * m_PlayerPrefs.GameplayConfig.MouseSensitivity * Time.deltaTime;
 
         // Finding current look rotation
         Vector3 rot = m_Orientation.transform.localRotation.eulerAngles;
@@ -568,7 +592,7 @@ public class HostController : InputController
     private bool CheckGrounded()
     {
         RaycastHit hit;
-        Ray ray = new Ray(transform.position + Vector3.up, Vector3.down);
+        Ray ray = new Ray(transform.position, Vector3.down);
         if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckDistance))
         {
             //Debug.Log(hit.transform.name);
@@ -593,7 +617,7 @@ public class HostController : InputController
     private void CalculateGroundNormal()
     {
         RaycastHit hit;
-        Ray ray = new Ray(transform.position + Vector3.up, Vector3.down);
+        Ray ray = new Ray(transform.position, Vector3.down);
         if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckDistance * 1.04f))
         {
             m_MovInfo.m_GroundNormal = hit.normal;
@@ -642,7 +666,7 @@ public class HostController : InputController
 
 		if (m_MovInfo.m_IsSliding)
 		{
-            Debug.Log("Sliding");
+            //Debug.Log("Sliding");
 			// smoothly rotate backwards. todo
 			SmoothMove(m_Camera.transform, new Vector3(0, -0.5f, 0), 0.25f);
 
@@ -838,12 +862,12 @@ public class HostController : InputController
         Color defaultColour = Gizmos.color;
 
         RaycastHit hit;
-        Ray ray = new Ray(transform.position + Vector3.up, Vector3.down);
+        Ray ray = new Ray(transform.position, Vector3.down);
         if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckDistance))
         {
             Gizmos.DrawLine(transform.position, hit.point);
 
-            GraphicalDebugger.DrawSphereCast(transform.position + Vector3.up, (transform.position + Vector3.up) + Vector3.down * m_GroundCheckDistance, Color.green, m_GroundCheckRadius, m_GroundCheckDistance);
+            GraphicalDebugger.DrawSphereCast(transform.position, (transform.position) + Vector3.down * m_GroundCheckDistance, Color.green, m_GroundCheckRadius, m_GroundCheckDistance);
 
             // Draw forward direction but relative to ground normal.
             Gizmos.color = Color.black;
@@ -851,16 +875,16 @@ public class HostController : InputController
         }
         else
         {
-            GraphicalDebugger.DrawSphereCast(transform.position + Vector3.up, (transform.position + Vector3.up) + Vector3.down * m_GroundCheckDistance, Color.red, m_GroundCheckRadius, m_GroundCheckDistance);
+            GraphicalDebugger.DrawSphereCast(transform.position, (transform.position) + Vector3.down * m_GroundCheckDistance, Color.red, m_GroundCheckRadius, m_GroundCheckDistance);
         }
 
         Gizmos.color = defaultColour;
 
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position + Vector3.up, transform.position + new Vector3(-m_MovInfo.m_CacheMovDirection.x, m_MovInfo.m_CacheMovDirection.y, -m_MovInfo.m_CacheMovDirection.z));
+        Gizmos.DrawLine(transform.position, transform.position + new Vector3(-m_MovInfo.m_CacheMovDirection.x, m_MovInfo.m_CacheMovDirection.y, -m_MovInfo.m_CacheMovDirection.z));
 
         Gizmos.color = Color.green;
-        Gizmos.DrawLine(transform.position + Vector3.up, transform.position + m_MovInfo.m_CacheMovDirection);
+        Gizmos.DrawLine(transform.position, transform.position + m_MovInfo.m_CacheMovDirection);
 
         // Trying to visualise true movement forward vector.
         Gizmos.color = Color.cyan;

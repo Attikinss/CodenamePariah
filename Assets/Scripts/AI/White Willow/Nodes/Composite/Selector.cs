@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace WhiteWillow.Nodes
 {
@@ -13,7 +14,19 @@ namespace WhiteWillow.Nodes
 
         protected override void OnEnter()
         {
-
+            //if (Title == "Engage")
+            //{
+            //    Debug.Log($"{Title} - Before: ");
+            //    foreach (var child in Children)
+            //        Debug.Log($"{child.Title}");
+            //
+            //    if (Children.Count > 1)
+            //        Children = Children.OrderBy(node => node.ExecutionOrder).ToList();
+            //
+            //    Debug.Log($"{Title} - After: ");
+            //    foreach (var child in Children)
+            //        Debug.Log($"{child.Title}");
+            //}
         }
 
         protected override void OnExit()

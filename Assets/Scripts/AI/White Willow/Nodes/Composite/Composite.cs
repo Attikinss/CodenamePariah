@@ -37,6 +37,8 @@ namespace WhiteWillow.Nodes
                     Children.Add(node);
                 }
             }
+
+            Children = Children.OrderBy(n => n.ExecutionOrder).ToList();
         }
 
         /// <summary>Adds node(s) to the children set.</summary>
@@ -56,6 +58,8 @@ namespace WhiteWillow.Nodes
                 node.SetParent(this);
                 Children.Add(node);
             }
+
+            Children = Children.OrderBy(n => n.ExecutionOrder).ToList();
         }
 
         /// <summary>Removes node(s) from the children set.</summary>

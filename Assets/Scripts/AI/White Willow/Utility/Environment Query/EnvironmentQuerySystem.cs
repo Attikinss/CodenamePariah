@@ -6,36 +6,59 @@ using UnityEngine.AI;
 
 public static class EnvironmentQuerySystem
 {
-    private static List<EQSThread> s_QueryThreads = new List<EQSThread>(10);
+    private static List<EQSThread> s_QueryThreads = new List<EQSThread>(3);
 
     private static Queue<QueryRequest> s_Requests = new Queue<QueryRequest>();
+    private static List<QueryRequest> s_UpcomingRequests = new List<QueryRequest>();
     private static bool s_RequestsLocked = false;
 
     private static List<Query> s_ResolvedQueries = new List<Query>();
     private static bool s_QueriesLocked = false;
+    private static bool s_Active = true;
 
-    public static void NewQuery(QueryRequest request)
+    public static bool NewQuery(QueryRequest request)
     {
         // Find the first thread available.
-        EQSThread thread = s_QueryThreads.Find(t => !t.Busy);
-        if (thread == null)
+        if (s_RequestsLocked)
+            return false;
+
+        s_RequestsLocked = true;
+        lock (s_Requests)
         {
-            if (s_QueryThreads.Count < s_QueryThreads.Capacity)
-            {
-                // If there are none and the maximum thread count hasn't been
-                // reached, create and add a new thread to resolve the new request
-                Debug.Log("New thread");
-                s_QueryThreads.Add(new EQSThread(request));
-            }
-            else
-            {
-                // Otherwise just add it to the queue for resolving
-                s_Requests.Enqueue(request);
-            }
+            s_Requests.Enqueue(request);
+            Debug.Log("Request submitted.");
         }
-        else
+        s_RequestsLocked = false;
+
+        EQSThread thread = s_QueryThreads.FirstOrDefault(t => !t.Busy);
+        if (thread == null && s_QueryThreads.Count < s_QueryThreads.Capacity)
         {
-            thread.SetTask(request);
+            // If there are none and the maximum thread count hasn't been
+            // reached, create and add a new thread to resolve the new request
+            s_QueryThreads.Add(new EQSThread());
+        }
+
+        return true;
+    }
+
+    public static void AbortQuery(QueryRequest request)
+    {
+        //if (!s_RequestsLocked)
+        //{
+        //    s_RequestsLocked = true;
+        //    lock (s_CurrentRequests)
+        //    {
+        //
+        //    }
+        //}
+    }
+
+    public static void Shutdown()
+    {
+        if (s_Active)
+        {
+            s_QueryThreads.ForEach(thread => thread.Stop(true));
+            s_Active = false;
         }
     }
 
@@ -46,17 +69,23 @@ public static class EnvironmentQuerySystem
 
     public static bool RetrieveQuery(QueryRequest request, out Query query)
     {
-        if (!s_QueriesLocked)
+        if (request != null)
         {
-            s_QueriesLocked = true;
-
-            lock (s_ResolvedQueries)
+            if (!s_QueriesLocked)
             {
-                query = s_ResolvedQueries.Find(q => q.ID == request.ID && request.QueryResolved);
-            }
+                s_QueriesLocked = true;
 
-            s_QueriesLocked = false;
-            return query != null;
+                lock (s_ResolvedQueries)
+                {
+                    query = s_ResolvedQueries.Find(q => q.ID == request.ID);
+                    s_ResolvedQueries.Remove(query);
+
+                    Debug.Log($"Query retrieved: {query != null}");
+                }
+
+                s_QueriesLocked = false;
+                return query != null;
+            }
         }
 
         query = null;
@@ -153,7 +182,7 @@ public static class EnvironmentQuerySystem
                 offset = Quaternion.AngleAxis(360.0f / radialDensity * j, Vector3.up) * offset;
                 offset *= (spacing * i);
                 offset += origin;
-
+        
                 // Check if point is on navmesh, if not place it on closest point
                 if (NavMesh.SamplePosition(offset, out NavMeshHit hitInfo, 3.0f, NavMesh.AllAreas))
                 {
@@ -162,7 +191,7 @@ public static class EnvironmentQuerySystem
                     else continue;
                 }
                 else continue;
-
+        
                 // Check if point is inside geometry
                 var colliders = Physics.OverlapSphere(offset, 0.5f);
                 bool insideGeometry = false;
@@ -174,7 +203,7 @@ public static class EnvironmentQuerySystem
                         break;
                     }
                 }
-
+        
                 if (!insideGeometry)
                     query.AddPosition(offset);
             }
@@ -191,7 +220,13 @@ public static class EnvironmentQuerySystem
 
             lock (s_ResolvedQueries)
             {
-                s_ResolvedQueries.Add(query);
+                if (s_ResolvedQueries.Find(q => q.ID == query.ID) == null)
+                {
+                    s_ResolvedQueries.Add(query);
+                    Debug.Log("Query resolved.");
+                }
+                else
+                    Debug.Log("Query already resolved.");
             }
 
             s_QueriesLocked = false;
@@ -210,7 +245,8 @@ public static class EnvironmentQuerySystem
 
             lock (s_Requests)
             {
-                request = s_Requests.Dequeue();
+                if (s_Requests.Count > 0)
+                    request = s_Requests.Dequeue();
             }
 
             s_RequestsLocked = false;
@@ -230,49 +266,69 @@ public static class EnvironmentQuerySystem
             HighPriority,
         }
 
-        [ReadOnly]
+        // Readonly
         [Tooltip("Unique ID for the node.")]
         public string ID;
 
-        [ReadOnly]
+        // Readonly
         [Tooltip("Whether the node has been reserved for another agent.")]
         public bool Taken = false;
+
+        // Readonly
+        [Tooltip("Which agent this node is currently reserved for/taken by.")]
+        public WhiteWillow.Agent CurrentOwner = null;
 
         [Tooltip("The type of the node which defines agent interaction.")]
         public Type NodeType = Type.LowPriority;
 
+        [Header("Debug")]
         public Color VacantColour;
         public Color TakenColour;
-
         public float Size = 0.5f;
 
         [HideInInspector]
         public Vector3 Position;
 
-        public EQSNode()
+        public void GenerateID()
         {
             ID = System.Guid.NewGuid().ToString();
+        }
+
+        public void Reserve(WhiteWillow.Agent agent)
+        {
+            Taken = true;
+            CurrentOwner = agent;
+        }
+
+        public void Release()
+        {
+            CurrentOwner = null;
+            Taken = false;
         }
     }
 
     public class QueryRequest
     {
+        public enum Type { ClosestToTarget, FurthestFromTarget }
+
         public string ID { get; }
         public bool QueryResolved { get; private set; }
 
         public Vector3 Origin { get; }
         public float Range { get; }
+        public Type QueryType;
+
         public List<EQSNode> Nodes;
 
         //public int RadialDensity { get; }
         //public float Spacing { get; }
 
-        public QueryRequest(Vector3 origin, float range, List<EQSNode> nodes/*int radialDensity = 30, float spacing = 1.5f*/)
+        public QueryRequest(Vector3 origin, float range/*int radialDensity = 30, float spacing = 1.5f*/)
         {
             ID = System.Guid.NewGuid().ToString();
             Origin = origin;
             Range = range;
-            Nodes = nodes;
+            Nodes = EQSSceneNodeTracker.GetNodesInRange(origin, range);
             //RadialDensity = radialDensity;
             //Spacing = spacing;
         }
@@ -292,7 +348,7 @@ public static class EnvironmentQuerySystem
         private QueryRequest m_Request;
         private Query m_Query;
 
-        public EQSThread(QueryRequest request)
+        public EQSThread(QueryRequest request = null)
         {
             Active = true;
             m_Request = request;
@@ -300,7 +356,11 @@ public static class EnvironmentQuerySystem
             m_Thread = new Thread(() =>
             {
                 while (Active)
+                {
+                    Busy = true;
                     ExecuteTask();
+                    Busy = false;
+                }
             });
 
             m_Thread.Start();
@@ -316,9 +376,10 @@ public static class EnvironmentQuerySystem
                 {
                     m_Request.Resolve();
                     m_Request = null;
+                    m_Query = null;
                 }
-                else
-                    return;
+
+                return;
             }
 
             if (m_Request == null)
@@ -352,7 +413,7 @@ public static class EnvironmentQuerySystem
             });
         }
 
-        public void Stop(bool forceStop)
+        public void Stop(bool forceStop = false)
         {
             if (forceStop)
                 m_Thread.Abort();
@@ -363,12 +424,15 @@ public static class EnvironmentQuerySystem
         private void ResolveCurrentRequest()
         {
             m_Query = new Query(m_Request.ID);
-            Debug.Log("Executing...");
 
-            foreach (EQSNode node in m_Request.Nodes)
+            //List<Vector3> agentPositions = WhiteWillow.AgentTracker.GetPositions();
+            m_Request.Nodes.ForEach(node =>
             {
+                if (!node.Taken && (node.Position - m_Request.Origin).sqrMagnitude <= m_Request.Range * m_Request.Range)
+                    m_Query.AddNode(node);
 
-            }
+
+            });
         }
 
         /*

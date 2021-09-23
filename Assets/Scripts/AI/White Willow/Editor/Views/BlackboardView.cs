@@ -2,9 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
-using UnityEditor.UIElements;
-using WhiteWillow.Nodes;
 
 namespace WhiteWillow.Editor
 {
@@ -19,17 +16,27 @@ namespace WhiteWillow.Editor
 
             if (m_Target != null)
             {
-                EditorGUILayout.LabelField("Entries");
+                GUILayout.BeginVertical(EditorStyles.helpBox);
 
-                // Draw a list element per entry 
-                if (m_Target.Entries != null)
+                GUIStyle fontStyle = new GUIStyle()
+                { alignment = TextAnchor.MiddleCenter, fontSize = 16 };
+                fontStyle.normal.textColor = Color.white;
+                EditorGUILayout.LabelField("Entries", fontStyle);
+
+                // Draw a list element per entry
+                if (m_Target.Entries != null && m_Target.Entries.Count > 0)
                 {
-                    for (int i = m_Target.Entries.Count - 1; i >= 0; i--)
+                    for (int i = 0; i < m_Target.Entries.Count; i++)
                         DrawEntry(m_Target.Entries[i]);
                 }
 
-                if (GUILayout.Button("New Entry"))
+                if (GUILayout.Button("Add Entry"))
+                {
                     m_Target.AddEntry<object>("New Entry", null);
+                    EditorGUILayout.Space();
+                }
+
+                GUILayout.EndVertical();
             }
 
             BehaviourTreeEditorWindow.Instance.GraphView.CurrentTree.Blackboard = m_Target;
@@ -41,9 +48,14 @@ namespace WhiteWillow.Editor
             SerializedObject so = new SerializedObject(entry);
             bool delete = false;
 
-            entry.Expand = EditorGUILayout.Foldout(entry.Expand, entry.Name, true);
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            GUIStyle headerStyle = "DropDownButton";
+            entry.Expand = /*true;*/ EditorGUILayout.BeginFoldoutHeaderGroup(entry.Expand, entry.Name, headerStyle, null, headerStyle);
+            
             if (entry.Expand)
             {
+                WWEditorUtility.DrawLineSeparator();
+
                 foreach (var field in fields)
                 {
                     SerializedProperty sp = so.FindProperty(field.Name);
@@ -176,6 +188,9 @@ namespace WhiteWillow.Editor
 
                 delete = GUILayout.Button("Delete");
             }
+
+            EditorGUILayout.EndFoldoutHeaderGroup();
+            EditorGUILayout.EndVertical();
 
             so.ApplyModifiedProperties();
             EditorUtility.SetDirty(entry);

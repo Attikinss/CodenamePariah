@@ -97,9 +97,6 @@ GameObject:
   - component: {fileID: 9078166733294619801}
   - component: {fileID: 9078166733294619804}
   - component: {fileID: 808074903986015596}
-  - component: {fileID: 808074904632222108}
-  - component: {fileID: 808074904632222109}
-  - component: {fileID: 808074904632222106}
   m_Layer: 11
   m_Name: BaseFPSController
   m_TagString: Untagged
@@ -643,67 +640,6 @@ MonoBehaviour:
   - {fileID: 9221190766841996153}
   m_CurrentWeapon: {fileID: 0}
   m_Camera: {fileID: 9078166733881164469}
---- !u!114 &808074904632222108
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9078166733294619796}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03bc8063c9e95401f9a8a38bc716750d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Method: 2
-  m_Curve:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
---- !u!114 &808074904632222109
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9078166733294619796}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b209a87a6179f49429716a35c39a7b21, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  InputTree: {fileID: 11400000, guid: 5ac5d0e581cbd9e4fbf1fce2c1c67885, type: 2}
-  Target: {fileID: 0}
-  m_ViewRange: 15
-  m_IgnoreMask:
-    serializedVersion: 2
-    m_Bits: 3895
-  m_Weapon: {fileID: 0}
-  PariahController: {fileID: 0}
---- !u!195 &808074904632222106
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9078166733294619796}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 0
-  m_StoppingDistance: 0.1
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 1
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!1 &9078166733881164466
 GameObject:
   m_ObjectHideFlags: 0

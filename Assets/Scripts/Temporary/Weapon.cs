@@ -190,12 +190,12 @@ public class Weapon : MonoBehaviour
 
                 // I'll add my shoot code in here.
                 Ray ray;
-                if (m_Inventory.Owner.Possessed)
+                if (m_Inventory.Owner == null || m_Inventory.Owner.Possessed) // Added a check so that it can be used without being tied to the agent system.
                 {
                     ray = new Ray(m_Camera.transform.position, m_Camera.transform.forward);
                     WeaponConfiguration currentConfig = GetCurrentWeaponConfig();
                     // =========== TESTING =========== //
-                    if (!currentConfig.m_DisableAllRecoil && m_Inventory.Owner.Possessed)
+                    if (!currentConfig.m_DisableAllRecoil/* && m_Inventory.Owner.Possessed*/) // Redundant possessed check since the outer if statement already checks for that.
                     {
                         float ShootingDuration = Time.time - m_FireStartTime;
 

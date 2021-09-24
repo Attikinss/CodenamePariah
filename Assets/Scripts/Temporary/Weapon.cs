@@ -4,8 +4,17 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.VFX;
 
+public enum WEAPONTYPE
+{
+    RIFLE,
+    PISTOL,
+    DUAL,
+    NONE
+}
 public class Weapon : MonoBehaviour
 {
+    public WEAPONTYPE m_TypeTag;
+
     [SerializeField]
     [Tooltip("The character's camera.")]
     private Camera m_Camera;
@@ -39,10 +48,6 @@ public class Weapon : MonoBehaviour
     private float m_ReloadTime = 1.8f;
 
     [SerializeField]
-    [Tooltip("Whether gun is currently reloading.")]
-    private bool m_IsReloading = false;
-
-    [SerializeField]
     [Tooltip("The percentage of a full magazine required before warning to reload.")]
     private float m_LowAmmoWarningPercentage = 0.3f;
 
@@ -53,52 +58,8 @@ public class Weapon : MonoBehaviour
     /// <summary>An accumulative value used to determine when the next round should be fired.</summary>
     private float m_NextTimeToFire = 0f;
 
-
-
-    // ================================= Added things from HostController. ================================= //
-    //public Transform m_Weapon;
-    //public Transform m_Weapon2;
-
-    // These are references to the weapons that the controller has.
-    //public WeaponConfiguration m_WeaponConfig;
-   // public WeaponConfiguration m_WeaponConfig2;
-
-    [Header("Old Bobbing Controls")]
-    public float m_BobSpeed = 5;
-    [Range(0, 1)]
-    public float m_BobDistance = 0.05f;
-
-    public bool m_IsFiring = false;
-    public bool m_IsAiming = false;
-
-    // Recoil variables.
-    // These two recoil's are the actual shot pattern related recoils.
-    //public float m_AdditionalCameraRecoilX;                                           // Im going to try keep them in HostController.cs since they aren't weapon specific.
-    //public float m_AdditionalCameraRecoilY;
-
-    // This recoil is the camera shake recoil. It rotates the camera by a very small amount. Not intended to effect shooting patterns.
-    //public Vector3 m_AdditionalRecoilRotation;                                                                                            // Going to try and also keep this in HostController.cs since it effects the camera.
-
-    // This recoil is to move the gun model up and down. Just a visual effect.
-    public Vector3 m_WeaponRecoilRot;
-
-
     // Because we're not in the HostController.cs script, we need a reference to it to access some things.
     public HostController m_Controller;
-
-
-    // ========================== TEMPORARY WEAPON BOBBING ========================== //
-    // This weapon sway stuff is here for now since we haven't got animations in yet.
-    // It will be replaced soon.
-
-    [HideInInspector]
-    public float m_SwayTimer = 0.0f;
-    [HideInInspector]
-    public float m_WaveSlice = 0.0f;
-    [HideInInspector]
-    public float m_WaveSliceX = 0.0f;
-    // ========================================================================== //
-
 
     // Because I'm trying to move away from the technique of having timers in Update(), I need a new
     // way of getting the total firing duration. I'm going to record the time when you start firing
@@ -106,60 +67,12 @@ public class Weapon : MonoBehaviour
     [HideInInspector]
     public float m_FireStartTime = 0.0f;
 
-
-
-    // ================== TEMPORARY RECOIL TESTING ================== //
-    [Header("Recoil Testing")]
-    public float m_RecoilTestIntervals = 3.0f;
-    public float m_RecoilTestRestTime = 2.0f;
-
-    [HideInInspector]
-    public bool m_IsRecoilTesting = false;  // Public because I've been moving things into Weapon.cs script.
-    [HideInInspector]
-    public bool m_IsTestResting = false;
-    [HideInInspector]
-    public float m_RecoilTestCounter = 0;
-
-
-
-
-    // ===================================================================================================== //
-
     // Stuff from my original Weapon.cs script.
 
     public Inventory m_Inventory;
-    public GameObject m_HitDecal;
-
-    //public AnimationCurve m_VerticalRecoil;
-
-    // ============= INTERNAL BOOKKEEPING ============= //
-    [HideInInspector]
-    public float m_VerticalProgress = 0.0f; // To track position on the recoil curve.
-
-    [HideInInspector]
-    public Vector3 m_OriginalLocalPosition; // Public so that HostController.cs can access it when lerping back to the weapons original pos.
-    [HideInInspector]
-    public Vector3 m_OriginalGlobalPosition;
-
-    // ================================================ //
-
 
     // temporary ui thing
     private UIManager m_UIManager;
-
-
-    // temporary muzzle flash
-    //public VisualEffect m_MuzzleFlash;
-    public List<VisualEffect> m_MuzzleFlashes;
-
-    // bullet casing
-    //public ParticleSystem m_BulletCasing;
-    public List<ParticleSystem> m_BulletCasings;
-
-    // temporary animation reference
-    public List<Animator> m_GunAnimators;
-    public List<Animator> m_ArmsAnimators;
-
 
     // temporary thing to test out semi-automatic weaponry.
     public bool m_SemiAuto = false;
@@ -169,14 +82,25 @@ public class Weapon : MonoBehaviour
 
     public WeaponConfiguration m_Config;
 
+    // New structs yay.
+    public WeaponTransformInfo m_TransformInfo;
+    public WeaponBob m_WeaponBobInfo;
+    public WeaponAction m_WeaponActions;
+    public RecoilTest m_RecoilTesting;
+    public RecoilInfo m_RecoilInfo;
+    public ParticleEffects m_Particles;
+    public Animators m_Animators;
+
+
 	private void Awake()
 	{
-        m_OriginalLocalPosition = transform.localPosition;
-        m_OriginalGlobalPosition = transform.position;
+        m_TransformInfo.m_OriginalLocalPosition = transform.localPosition;
+        m_TransformInfo.m_OriginalGlobalPosition = transform.position;
 
-        m_UIManager = transform.parent.parent.parent.GetComponent<UIManager>();
-        m_UIManager?.UpdateWeaponUI(this);
-        m_Config = GetComponent<WeaponConfiguration>();
+        //m_UIManager = transform.parent.parent.parent.GetComponent<UIManager>();
+        //m_UIManager?.UpdateWeaponUI(this);
+        m_Config = GetComponent<WeaponConfiguration>();
+
 
 
         // Display a warning if reload time is less than or equal to the animators reload duration.
@@ -184,58 +108,31 @@ public class Weapon : MonoBehaviour
         // I'm going to try caching the original local pos and local rotation and just set it back to that everytime the player swaps weapons.
         //m_OriginalLocalRot = transform.localRotation;
     }
+	private void Start()
+	{
+        m_UIManager = UIManager.s_Instance;
+        m_UIManager?.UpdateWeaponUI(this);
+	}
 
-    // Update is called once per frame
-    void Update()
+	// Update is called once per frame
+	void Update()
     {
-        // ========================= DECREMENTING AMMO WHEN SHOOTING ========================= //
-
-        // TEMP FIX so that other characters with this script dont have their ammo decrement when the player clicks.
-        //if (m_Camera.gameObject.activeSelf == true)
-        //{
-        //// need to make sure this is only active when possessing
-        //if (Mouse.current.leftButton.isPressed && this.CompareTag("AssaultRifle"))
-        //{
-        //    Fire();
-        //}
-        //
-        // need to make sure this is only active when possessing
-
-        // =================================================================================== //
-
-
-
-        
         // I've added m_IsReloading checks to prevent shooting while reloading and also to activate recoil recovery even if m_IsFiring is still true.
         // This gives the advantage of reloading while holding down the mouse button will let you begin shooting again without having to re-press the mouse button.
 
-        if (m_IsFiring && !m_IsReloading)
+        if (m_WeaponActions.m_IsFiring && !m_WeaponActions.m_IsReloading)
         {
             Fire();
             m_UIManager?.UpdateWeaponUI(this);
         }
-        else if (!m_IsFiring || m_IsReloading || TotalAmmoEmpty()) // We want to recovery if we are reloading. This lets us set reloading to true and keep firing on true and the player wont shoot.
+        else if (!GetFireState() || GetReloadState() || TotalAmmoEmpty()/*!m_WeaponActions.m_IsFiring || m_WeaponActions.m_IsReloading || TotalAmmoEmpty()*/) // We want to recovery if we are reloading. This lets us set reloading to true and keep firing on true and the player wont shoot.
             UpdateRecoilRecovery();
 
-        
-        if (m_IsAiming && !m_IsReloading && !m_DualWield)
+        if (CanAim()/*m_WeaponActions.m_IsAiming && !m_WeaponActions.m_IsReloading && !m_DualWield*/)
             Aim();
 
         UpdateSway(m_Controller.LookInput.x, m_Controller.LookInput.y);
-
         UpdateRecoilTest();
-
-
-        // Reloading. Going to leave it out for now just while I get the system back in working order. 
-
-        //else if (Keyboard.current.rKey.wasPressedThisFrame) //
-        //{
-        //    if (!PrimaryAmmoFull() && !ReserveAmmoEmpty() && !m_IsReloading)
-        //        StartCoroutine(Reload());
-        //}
-
-
-        // Update and other functions from HostController.cs
     }
 
 	private void FixedUpdate()
@@ -255,50 +152,50 @@ public class Weapon : MonoBehaviour
             {
                 // testing somethhing for semi-auto
                 if (m_SemiAuto)
-                    m_IsFiring = false;
+                    m_WeaponActions.m_IsFiring = false;
 
                 // Play effects.
                 if (m_DualWield)
                 {
-                    if (m_MuzzleFlashes.Count > 0)
+                    if (m_Particles.m_MuzzleFlashes.Count > 0)
                     {
-                        for (int i = 0; i < m_MuzzleFlashes.Count; i++)
-                            m_MuzzleFlashes[i].Play();
+                        for (int i = 0; i < m_Particles.m_MuzzleFlashes.Count; i++)
+                            m_Particles.m_MuzzleFlashes[i].Play();
                     }
-                    if (m_BulletCasings.Count > 0)
+                    if (m_Particles.m_BulletCasings.Count > 0)
                     {
-                        for (int i = 0; i < m_BulletCasings.Count; i++)
-                            m_BulletCasings[i].Play();
+                        for (int i = 0; i < m_Particles.m_BulletCasings.Count; i++)
+                            m_Particles.m_BulletCasings[i].Play();
                     }
-                    if (m_GunAnimators.Count > 0)
-                        for (int i = 0; i < m_GunAnimators.Count; i++)
-                            m_GunAnimators[i].SetTrigger("IsFiring");
-                    if (m_ArmsAnimators.Count > 0)
-                        for (int i = 0; i < m_ArmsAnimators.Count; i++)
-                            m_ArmsAnimators[i].SetTrigger("IsFiring");
+                    if (m_Animators.m_GunAnimators.Count > 0)
+                        for (int i = 0; i < m_Animators.m_GunAnimators.Count; i++)
+                            m_Animators.m_GunAnimators[i].SetTrigger("IsFiring");
+                    if (m_Animators.m_ArmsAnimators.Count > 0)
+                        for (int i = 0; i < m_Animators.m_ArmsAnimators.Count; i++)
+                            m_Animators.m_ArmsAnimators[i].SetTrigger("IsFiring");
                 }
                 else
                 {
-                    m_MuzzleFlashes[0].Play();
-                    m_BulletCasings[0].Play();
-                    m_GunAnimators[0].SetTrigger("IsFiring");
-                    m_ArmsAnimators[0].SetTrigger("IsFiring");
+                    m_Particles.m_MuzzleFlashes[0].Play();
+                    m_Particles.m_BulletCasings[0].Play();
+                    m_Animators.m_GunAnimators[0].SetTrigger("IsFiring");
+                    m_Animators.m_ArmsAnimators[0].SetTrigger("IsFiring");
                 }
 
 				// Currently gets rid of bullet sprite before UI has fully updated //
-				m_UIManager.DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);
+				//m_UIManager.DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);
                 m_RoundsInMagazine--;
 
                 //m_FireSoundEmitter?.Trigger();
 
                 // I'll add my shoot code in here.
                 Ray ray;
-                if (m_Inventory.Owner.Possessed)
+                if (m_Inventory.Owner == null || m_Inventory.Owner.Possessed) // Added a check so that it can be used without being tied to the agent system.
                 {
                     ray = new Ray(m_Camera.transform.position, m_Camera.transform.forward);
                     WeaponConfiguration currentConfig = GetCurrentWeaponConfig();
                     // =========== TESTING =========== //
-                    if (!currentConfig.m_DisableAllRecoil && m_Inventory.Owner.Possessed)
+                    if (!currentConfig.m_DisableAllRecoil/* && m_Inventory.Owner.Possessed*/) // Redundant possessed check since the outer if statement already checks for that.
                     {
                         float ShootingDuration = Time.time - m_FireStartTime;
 
@@ -373,13 +270,11 @@ public class Weapon : MonoBehaviour
 
     public void StartReload()
     {
-        if (!PrimaryAmmoFull() && !ReserveAmmoEmpty() && !m_IsReloading)
-        {
+        if (!PrimaryAmmoFull() && !ReserveAmmoEmpty() && !GetReloadState())
+        {
             CombatInfo combatInfo = m_Controller.m_CombatInfo;
             StartCoroutine(Reload());
             combatInfo.m_ShootingDuration = 0;
-
-            
         }
     }
 
@@ -411,17 +306,17 @@ public class Weapon : MonoBehaviour
         if (m_Controller.m_MovInfo.m_IsMoving)
         {
             // Do weapon sway stuff.
-            m_SwayTimer += Time.deltaTime;
-            m_WaveSlice = -(Mathf.Sin(m_SwayTimer * m_BobSpeed) + 1) / 2;
-            m_WaveSliceX = Mathf.Cos(m_SwayTimer * m_BobSpeed);
+            m_WeaponBobInfo.m_SwayTimer += Time.deltaTime;
+            m_WeaponBobInfo.m_WaveSlice = -(Mathf.Sin(m_WeaponBobInfo.m_SwayTimer * m_WeaponBobInfo.m_BobSpeed) + 1) / 2;
+            m_WeaponBobInfo.m_WaveSliceX = Mathf.Cos(m_WeaponBobInfo.m_SwayTimer * m_WeaponBobInfo.m_BobSpeed);
 
-            if (m_WaveSlice >= -0.5f)
+            if (m_WeaponBobInfo.m_WaveSlice >= -0.5f)
             {
-                m_WaveSlice = -1 - -(Mathf.Sin(m_SwayTimer * m_BobSpeed) + 1) / 2;
+                m_WeaponBobInfo.m_WaveSlice = -1 - -(Mathf.Sin(m_WeaponBobInfo.m_SwayTimer * m_WeaponBobInfo.m_BobSpeed) + 1) / 2;
             }
 
-            float translateChangeX = m_WaveSliceX * m_BobDistance;
-            float translateChangeY = m_WaveSlice * m_BobDistance;
+            float translateChangeX = m_WeaponBobInfo.m_WaveSliceX * m_WeaponBobInfo.m_BobDistance;
+            float translateChangeY = m_WeaponBobInfo.m_WaveSlice * m_WeaponBobInfo.m_BobDistance;
             localPosition.y = /*currentWeaponMidPoint.y + */translateChangeY;
             localPosition.x = /*currentWeaponMidPoint.x + */translateChangeX;
 
@@ -432,13 +327,6 @@ public class Weapon : MonoBehaviour
         {
             return Vector3.zero;
         }
-        //else
-        //{
-        //    m_SwayTimer = 0.0f;
-        //    localPosition.y = currentWeaponMidPoint.y;
-        //    localPosition.x = currentWeaponMidPoint.x;
-        //    currentWeapon.transform.localPosition = Vector3.Lerp(currentWeapon.transform.localPosition, currentWeapon.m_MidPoint, 0.01f);
-        //}
     }
 
     /// <summary>
@@ -466,10 +354,10 @@ public class Weapon : MonoBehaviour
             gunVisRecoil.y = 0;
             gunVisRecoil.z = 0;
             //m_WeaponRecoilRot -= new Vector3(weaponConfig.m_WeaponRotRecoilVertStrength, 0, 0);
-            m_WeaponRecoilRot -= gunVisRecoil;
+            m_RecoilInfo.m_WeaponRecoilRot -= gunVisRecoil;
 
             // Clamping because the gun recoils a bit to high currently.
-            m_WeaponRecoilRot.x = Mathf.Clamp(m_WeaponRecoilRot.x, -weaponConfig.m_WeaponVisualRecoilClamp, weaponConfig.m_WeaponVisualRecoilClamp);
+            m_RecoilInfo.m_WeaponRecoilRot.x = Mathf.Clamp(m_RecoilInfo.m_WeaponRecoilRot.x, -weaponConfig.m_WeaponVisualRecoilClamp, weaponConfig.m_WeaponVisualRecoilClamp);
 
             Vector3 weaponPosChange = Vector3.zero;
             weaponPosChange.x = 0;
@@ -493,7 +381,7 @@ public class Weapon : MonoBehaviour
         CameraRecoil cameraRecoil = m_Controller.m_AccumulatedRecoil;
 
         cameraRecoil.accumulatedVisualRecoil = Vector3.Lerp(cameraRecoil.accumulatedVisualRecoil, Vector3.zero, weaponConfig.m_CameraRecoilReturnSpeed * Time.deltaTime);
-        m_WeaponRecoilRot = Vector3.Lerp(m_WeaponRecoilRot, Vector3.zero, weaponConfig.m_WeaponRecoilReturnSpeed * Time.deltaTime);
+        m_RecoilInfo.m_WeaponRecoilRot = Vector3.Lerp(m_RecoilInfo.m_WeaponRecoilRot, Vector3.zero, weaponConfig.m_WeaponRecoilReturnSpeed * Time.deltaTime);
 
         weaponConfig.m_WeaponRecoilTransform = Vector3.Lerp(weaponConfig.m_WeaponRecoilTransform, Vector3.zero, weaponConfig.m_WeaponRecoilReturnSpeed * Time.deltaTime);
     }
@@ -573,12 +461,12 @@ public class Weapon : MonoBehaviour
     /// <summary>Defines whether or not the weapon can fire the next round.</summary>
     private bool ReadyToFire()
     {
-        if (Time.time >= m_NextTimeToFire && !m_IsReloading)//(time.time or time.deltatime)
+        if (Time.time >= m_NextTimeToFire && !GetReloadState())//(time.time or time.deltatime)
         {
             if (m_SemiAuto) // If the gun is semi auto, we have one other check to do.
             {
                 // To prevent people from being able to spam semi automatic guns really fast, I'm going to prevent them from firing unless the animation is complete.
-                if (!m_GunAnimators[0].GetCurrentAnimatorStateInfo(0).IsName("Idle")) // Only semi automatic weapons in the game are not dual wielded so we don't have to check the whole list of gun animators.
+                if (!m_Animators.m_GunAnimators[0].GetCurrentAnimatorStateInfo(0).IsName("Idle")) // Only semi automatic weapons in the game are not dual wielded so we don't have to check the whole list of gun animators.
                 {
                     return false;
                 }
@@ -597,9 +485,7 @@ public class Weapon : MonoBehaviour
     {
         StartReloadAnimation();
 
-        //m_ReloadSoundEmitter.Trigger();
-
-        m_IsReloading = true;
+        m_WeaponActions.m_IsReloading = true;
 
         // Before waiting you could invoke an animator here
         // to play a reload animation and an audio manager
@@ -624,7 +510,7 @@ public class Weapon : MonoBehaviour
         if (m_ReserveAmmo <= ammoRequired)
         {
             // Update UI to only show one mag
-            m_UIManager.ModuloEqualsZero(m_RoundsInMagazine + m_ReserveAmmo);
+            //m_UIManager.ModuloEqualsZero(m_RoundsInMagazine + m_ReserveAmmo);
 
             // Move all remaining ammo into magazine
             m_RoundsInMagazine += m_ReserveAmmo;
@@ -635,12 +521,12 @@ public class Weapon : MonoBehaviour
             if ((m_RoundsInMagazine + m_ReserveAmmo) % m_MagazineSize == 0)
             {
                 // Total ammo equals an amount that when divided by magazine size, has no remainder therefore get rid of a mag UI element
-                m_UIManager.ModuloEqualsZero(m_MagazineSize);
+                //m_UIManager.ModuloEqualsZero(m_MagazineSize);
             }
             else
             {
                 // Removes bullet sprites total from 1 - 2 mags depending on the ammo missing from current magazine and how much ammo was already missing in the last magazine
-                m_UIManager.RemoveAmmoFromLastAddToCurrent(m_MagazineSize);
+                //m_UIManager.RemoveAmmoFromLastAddToCurrent(m_MagazineSize);
             }
 
             // Move required amount from reserve to magazine
@@ -652,7 +538,7 @@ public class Weapon : MonoBehaviour
                        // originally started firing.
 
         m_UIManager?.UpdateWeaponUI(this);
-        m_IsReloading = false;
+        m_WeaponActions.m_IsReloading = false;
     }
 
     private void UpdateSway(float x, float y)
@@ -661,7 +547,7 @@ public class Weapon : MonoBehaviour
 
         WeaponConfiguration weaponConfig = GetCurrentWeaponConfig();
         Transform gunTransform = GetCurrentWeaponTransform();
-        if (!m_IsAiming || m_IsReloading)
+        if (!GetAimState() || GetReloadState())
         {
             Vector3 gunOriginalPos = GetCurrentWeaponOriginalPos();
 
@@ -673,7 +559,7 @@ public class Weapon : MonoBehaviour
             finalPosition.z = weaponConfig.m_WeaponRecoilTransform.z;
 
             gunTransform.localPosition = Vector3.Lerp(gunTransform.localPosition, finalPosition + gunOriginalPos, Time.deltaTime * weaponConfig.m_GunSwayReturn);
-            Quaternion xAxis = Quaternion.AngleAxis(m_WeaponRecoilRot.x, Vector3.right);
+            Quaternion xAxis = Quaternion.AngleAxis(m_RecoilInfo.m_WeaponRecoilRot.x, Vector3.right);
             Quaternion zAxis = Quaternion.AngleAxis(Mathf.Clamp(-x, -weaponConfig.m_WeaponSwayRotateClamp, weaponConfig.m_WeaponSwayRotateClamp), Vector3.forward);
             gunTransform.localRotation = Quaternion.Slerp(gunTransform.localRotation, zAxis * xAxis, weaponConfig.m_WeaponSwayRotateSpeed);
 
@@ -684,7 +570,7 @@ public class Weapon : MonoBehaviour
             m_Camera.fieldOfView += requiredChange * 0.45f;
 
         }
-        else if (m_IsAiming)
+        else if (GetAimState())
         {
             // Had to put the sway code with the Aim() function since it was easier to just add the neccessary values to the calculations over there rather than try and split up the equations.
 
@@ -693,14 +579,14 @@ public class Weapon : MonoBehaviour
 
             float requiredChange = desiredFOV - currentFOV;
 
-            if(!m_IsReloading) // Wont zoom in if we are reloading.
+            if(!GetReloadState()) // Wont zoom in if we are reloading.
             m_Camera.fieldOfView += requiredChange * 0.45f;
 
 
 
             // Quaternion rotate
             Quaternion zAxis = Quaternion.AngleAxis(Mathf.Clamp(-x, -weaponConfig.m_WeaponSwayRotateClamp, weaponConfig.m_WeaponSwayRotateClamp), Vector3.forward);
-            Quaternion xAxis = Quaternion.AngleAxis(m_WeaponRecoilRot.x * weaponConfig.m_ADSRecoilModifier, Vector3.right);
+            Quaternion xAxis = Quaternion.AngleAxis(m_RecoilInfo.m_WeaponRecoilRot.x * weaponConfig.m_ADSRecoilModifier, Vector3.right);
             gunTransform.localRotation = Quaternion.Slerp(gunTransform.localRotation, zAxis * xAxis, weaponConfig.m_WeaponSwayRotateSpeed);
         }
 
@@ -710,31 +596,85 @@ public class Weapon : MonoBehaviour
     private void UpdateRecoilTest()
     {
         // ============== EXPERIMENTAL RECOIL TESTING STUFF ============== //
-        if (m_IsRecoilTesting)
+        if (GetRecoilTestState())
         {
-            if (!m_IsTestResting)
-                m_IsFiring = true;
+            if (!m_RecoilTesting.m_IsTestResting)
+                m_WeaponActions.m_IsFiring = true;
             else
-                m_IsFiring = false;
+                m_WeaponActions.m_IsFiring = false;
 
 
-            m_RecoilTestCounter += Time.deltaTime;
-            if (!m_IsTestResting && m_RecoilTestCounter >= m_RecoilTestIntervals)
+            m_RecoilTesting.m_RecoilTestCounter += Time.deltaTime;
+            if (!m_RecoilTesting.m_IsTestResting && m_RecoilTesting.m_RecoilTestCounter >= m_RecoilTesting.m_RecoilTestIntervals)
             {
-                m_IsTestResting = true;
+                m_RecoilTesting.m_IsTestResting = true;
                 
-                m_RecoilTestCounter = 0.0f;
+                m_RecoilTesting.m_RecoilTestCounter = 0.0f;
             }
-            else if (m_IsTestResting && m_RecoilTestCounter >= m_RecoilTestRestTime) // This means were now counting the rest time.
+            else if (m_RecoilTesting.m_IsTestResting && m_RecoilTesting.m_RecoilTestCounter >= m_RecoilTesting.m_RecoilTestRestTime) // This means were now counting the rest time.
             {
                 CombatInfo combatInfo = m_Controller.m_CombatInfo;
 
-                m_IsTestResting = false;
-                m_RecoilTestCounter = 0.0f;
+                m_RecoilTesting.m_IsTestResting = false;
+                m_RecoilTesting.m_RecoilTestCounter = 0.0f;
                 m_Controller.m_XRotation = combatInfo.m_PrevXRot; // this might be unnessessary since the guns camera rotation goes back down through the recoil recovery system.
                 m_Controller.m_Orientation.transform.eulerAngles = combatInfo.m_PrevOrientationRot;
 
                 SetFireTime(); // This sequence of firing should be reset. It normally gets cancelled on mouse button up after firing.
+            }
+        }
+    }
+
+    /// <summary>
+    /// SetFireTime() is a helper function that allows the HostController script to set the time when the player
+    /// starts to hold down the mouse button.
+    /// </summary>
+    public void SetFireTime()
+    {
+        m_FireStartTime = Time.time;
+    }
+    private void StartReloadAnimation()
+    {
+        if (m_Animators.m_GunAnimators.Count > 0)
+        {
+            for (int i = 0; i < m_Animators.m_GunAnimators.Count; i++)
+            {
+                m_Animators.m_GunAnimators[i].SetTrigger("OnReload");
+            }
+        }
+        if (m_Animators.m_ArmsAnimators.Count > 0)
+        {
+            for (int i = 0; i < m_Animators.m_ArmsAnimators.Count; i++)
+            {
+                m_Animators.m_ArmsAnimators[i].SetTrigger("OnReload");
+            }
+        }
+    }
+
+    public void SetWeaponLayerRecursively(int layer)
+    {
+        // I'm not allowed to edit the agent prefab right now, so to get around the issue of
+        // m_Config being set in Awake(), and the second and third guns not being Awoken.. until after the player
+        // swaps to them, I'll just set them here. This is pretty bad but as soon as I can edit the Agent prefab I'll fix this properly.
+        if (!m_Config)
+        {
+            m_Config = GetComponent<WeaponConfiguration>();
+        }
+
+        for (int i = 0; i < m_Config.m_Gun.Count; i++)
+        { 
+            Transform parent = m_Config.m_Gun[i];
+            foreach (Transform trans in parent.GetComponentsInChildren<Transform>(true))
+            {
+                trans.gameObject.layer = layer;
+            }
+        }
+        for (int i = 0; i < m_Config.m_Arms.Count; i++)
+        {
+            Transform parent = m_Config.m_Arms[i];
+            foreach (Transform trans in parent.GetComponentsInChildren<Transform>(true))
+            {
+                trans.gameObject.layer = layer;
             }
         }
     }
@@ -826,100 +766,20 @@ public class Weapon : MonoBehaviour
         return m_ReserveAmmo;
     }
 
-    private WeaponConfiguration GetCurrentWeaponConfig()
-    {
-        return m_Inventory.m_CurrentWeapon.m_Config;
-    }
+    private WeaponConfiguration GetCurrentWeaponConfig() { return m_Inventory.m_CurrentWeapon.m_Config; }
     private Transform GetCurrentWeaponTransform() => m_Inventory.m_CurrentWeapon.transform;
-    private Vector3 GetCurrentWeaponOriginalPos() => m_Inventory.m_CurrentWeapon.m_OriginalLocalPosition;
-    private HostController GetController()
-    {
-        // Maybe we'll have a function to do this but for now I'm just going to make the 
-        // controller a public variable that can be set in the inspector.
+    private Vector3 GetCurrentWeaponOriginalPos() => m_Inventory.m_CurrentWeapon.m_TransformInfo.m_OriginalLocalPosition;
+    public bool GetFireState() { return m_WeaponActions.m_IsFiring; }
+    public void SetFireState(bool state) { m_WeaponActions.m_IsFiring = state; }
+    public void ResetFire() { m_WeaponActions.m_IsFiring = false; }
+    public bool GetReloadState() { return m_WeaponActions.m_IsReloading; }
+    public void ResetReload() { m_WeaponActions.m_IsReloading = false; }
+    public bool IsReloading() { return m_WeaponActions.m_IsReloading; }
+    public bool GetAimState() { return m_WeaponActions.m_IsAiming; }
+    public void ResetAim() { m_WeaponActions.m_IsAiming = false; }
+    public bool GetRecoilTestState() { return m_RecoilTesting.m_IsRecoilTesting; }
+    public bool CanFire() {return (GetFireState() && !GetReloadState() && !TotalAmmoEmpty());}
+    public bool CanAim() { return (GetAimState() && !GetReloadState() && !m_DualWield); }
+    public void SetCamera(Camera camera) { m_Camera = camera; }
 
-        return null;
-    }
-
-    /// <summary>
-    /// SetFireTime() is a helper function that allows the HostController script to set the time when the player
-    /// starts to hold down the mouse button.
-    /// </summary>
-    public void SetFireTime()
-    {
-        m_FireStartTime = Time.time;
-    }
-
-    public void ResetReload() { m_IsReloading = false; }
-
-    private void StartReloadAnimation()
-    {
-        if (m_GunAnimators.Count > 0)
-        {
-            for (int i = 0; i < m_GunAnimators.Count; i++)
-            {
-                m_GunAnimators[i].SetTrigger("OnReload");
-            }
-        }
-        if (m_ArmsAnimators.Count > 0)
-        {
-            for (int i = 0; i < m_ArmsAnimators.Count; i++)
-            { 
-                m_ArmsAnimators[i].SetTrigger("OnReload");
-            }
-        }
-        
-    }
-
-    public void ResetReloadAnimation()
-    {
-        // okay this isn't working so for now I will just prevent players from swapping weapons while reloading.
-
-        //m_AssualtRifleAnimator.enabled = false;
-        //m_AssualtRifleAnimator.enabled = true;
-    }
-
-    public bool IsReloading() { return m_IsReloading; }
-
-    /// <summary>
-    /// ClearThings() is a temporary function which is supposed to clear things like weapon rotation, position and weapon bob location. This
-    /// is so the weapon is completely fresh when the player swaps back to it.
-    /// </summary>
-    public void ClearThings()
-    {
-       
-    }
-
-    public void SetWeaponLayerRecursively(int layer)
-    {
-        // I'm not allowed to edit the agent prefab right now, so to get around the issue of
-        // m_Config being set in Awake(), and the second and third guns not being Awoken.. until after the player
-        // swaps to them, I'll just set them here. This is pretty bad but as soon as I can edit the Agent prefab I'll fix this properly.
-        if (!m_Config)
-        {
-            m_Config = GetComponent<WeaponConfiguration>();
-        }
-
-        Transform parent = m_Config.m_Gun;
-
-
-
-
-        foreach (Transform trans in parent.GetComponentsInChildren<Transform>(true))
-        {
-            trans.gameObject.layer = layer;
-        }
-
-        //GameObject gunMesh = m_Config.m_Gun.gameObject;
-        //GameObject[] children = gunMesh.GetComponentsInChildren<GameObject>();
-        //for(int i = 0; i <)
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        if (m_FiringPosition != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(m_FiringPosition.position, 0.025f);
-        }
-    }
 }

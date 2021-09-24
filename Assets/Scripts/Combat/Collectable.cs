@@ -3,8 +3,20 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine;
 
+public enum CollectableAction
+{ 
+    PICKUP,
+    UPGRADE_WEAPON
+}
+
 public class Collectable : MonoBehaviour
 {
+    public CollectableAction m_Action;
+
+    public GameObject m_ItemPrefab;
+
+    public WEAPONTYPE m_RequiredTarget;
+
     [SerializeField]
     private float m_RotationSpeed = 60f;
 
@@ -28,7 +40,12 @@ public class Collectable : MonoBehaviour
             if (agent.Possessed)
             {
                 //Do the things then destroy or set inactive.
-                Destroy(gameObject);
+                Inventory inv = agent.GetComponent<Inventory>();
+                if (!inv)
+                    Debug.LogError("You walked over a pickup but you are missing an Inventory.cs script!");
+
+                if(Activate(inv))
+                    Destroy(gameObject);
             }
         }
     }
@@ -41,5 +58,18 @@ public class Collectable : MonoBehaviour
         Vector3 currentPosition = transform.position;
         currentPosition.y = m_StartPosition.y + Mathf.Sin(Time.time * m_BobSpeed) * m_BobHeight;
         transform.position = currentPosition;
+    }
+
+    private bool Activate(Inventory inv)
+    {
+        switch (m_Action)
+        {
+            case CollectableAction.PICKUP:
+                return inv.AddWeapon(m_ItemPrefab);
+            case CollectableAction.UPGRADE_WEAPON:
+                return inv.UpgradeWeapon(inv.GetWeaponNum(), m_ItemPrefab, m_RequiredTarget);
+            default:
+                return false;
+        }
     }
 }

@@ -60,7 +60,7 @@ public class HostController : InputController
         m_MovInfo = new MovementInfo();
         m_CombatInfo = new CombatInfo();
 
-        m_UIManager = GetComponent<UIManager>();
+        
         Rigidbody = GetComponent<Rigidbody>();
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -73,16 +73,24 @@ public class HostController : InputController
             m_MovInfo.m_OriginalColliderHeight = m_Collider.height;
         }
 	}
-    private void Update()
+
+	private void Start()
+	{
+        m_UIManager = UIManager.s_Instance;
+    }
+	private void Update()
     {
         if (!PauseMenu.m_GameIsPaused)
         {
             if (!m_Active) return;
 
+        if (GetCurrentWeaponConfig()) // If we have a weapon. We may not have any weapons so thats why we check this.
+        { 
             if (GetCurrentWeaponConfig().m_AlwaysADS) // The reason why I do this is so I don't have to check for the m_AlwaysADS bool everywhere. This way I can still just check for m_IsAiming in all functions.
-                GetCurrentWeapon().m_IsAiming = true;
+                GetCurrentWeapon().m_WeaponActions.m_IsAiming = true;
             if (GetCurrentWeaponConfig().m_AlwaysFiring) // Doing same here for the reason above.
-                GetCurrentWeapon().m_IsFiring = true;
+                GetCurrentWeapon().m_WeaponActions.m_IsFiring = true;
+        }
 
             m_MovInfo.m_IsGrounded = CheckGrounded();
             CalculateGroundNormal();
@@ -156,7 +164,7 @@ public class HostController : InputController
         GetComponent<PlayerInput>().enabled = true;
         m_Active = true;
         m_Camera.enabled = true;
-        UnhideHUD();
+        //UnhideHUD();
 
         CustomDebugUI.s_Instance.SetController(this);
 
@@ -166,6 +174,10 @@ public class HostController : InputController
         { 
             m_Inventory.m_Weapons[i].SetWeaponLayerRecursively(12); // If we ever rearrange layer orders this will have to change!                      ===================== IMPORTANT =====================
         }
+
+        m_UIManager.UnhideCanvas();
+        m_UIManager.SetInventory(m_Inventory);
+        m_UIManager.UpdateAllUI(GetCurrentWeapon());
     }
 
     /// <summary>
@@ -176,7 +188,7 @@ public class HostController : InputController
         GetComponent<PlayerInput>().enabled = false;
         m_Active = false;
         m_Camera.enabled = false;
-        HideHUD();
+        //HideHUD();
 
         CustomDebugUI.s_Instance.ClearController();
 
@@ -185,6 +197,8 @@ public class HostController : InputController
         {
             m_Inventory.m_Weapons[i].SetWeaponLayerRecursively(10); // If we ever rearrange layer orders this will have to change!                      ===================== IMPORTANT =====================
         }
+
+        m_UIManager.HideCanvas();
     }
 
     // ========================================================== Input Events ========================================================== //
@@ -193,9 +207,11 @@ public class HostController : InputController
 	{
         if (!PauseMenu.m_GameIsPaused)
         {
-            if (GetCurrentWeapon().m_IsRecoilTesting)
+        Weapon weapon = GetCurrentWeapon();
+        if(weapon)
+            if (weapon.GetRecoilTestState())
                 return; // early out to prevent mouse movement while testing recoil.
-            LookInput = value.ReadValue<Vector2>();
+        LookInput = value.ReadValue<Vector2>();
         }
 	}
 
@@ -258,94 +274,113 @@ public class HostController : InputController
     {
         if (!PauseMenu.m_GameIsPaused)
         {
-            if (value.control.IsPressed(0)) // Have to use this otherwise mouse button gets triggered on release aswell.
+        Weapon weapon = GetCurrentWeapon();
+        if (value.control.IsPressed(0)) // Have to use this otherwise mouse button gets triggered on release aswell.
+        {
+            // Now we have to access the weapon script to call weapon functions.
+            if (weapon)
             {
-                // Now we have to access the weapon script to call weapon functions.
-                GetCurrentWeapon().m_IsFiring = true;
-
+                weapon.SetFireState(true);
 
                 // Experimental thing I'm trying.
                 // I will store the original camera rotation when they first start shooting that way I can go back to this rotation when they recover from recoil.
                 m_CombatInfo.m_PrevCamForward = m_Camera.transform.forward;
-                GetCurrentWeapon().SetFireTime();
-
+                weapon.SetFireTime();
             }
-            else
-            {
-                GetCurrentWeapon().m_IsFiring = false;
+        }
+        else
+        {
+            if (weapon)
+            { 
+                weapon.SetFireState(false);
 
                 // Reset held counter happens regardless.
                 m_CombatInfo.m_ShootingDuration = 0.0f;
             }
         }
+        }
     }
 
     public void OnWeaponSelect1(InputAction.CallbackContext value)
     {
-        if (value.performed && !GetCurrentWeapon().IsReloading())
-        {
-            // Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
-            GetCurrentWeapon().ResetReload();
-            //GetCurrentWeapon().ResetReloadAnimation(); dont need here because pistol doesnt have animation yet.
+		if (value.performed && GetCurrentWeapon() && !GetCurrentWeapon().IsReloading())
+		{
+            //     if (m_Inventory.HasWeapon(0))
+            //     { 
+            //// Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
+            //GetCurrentWeapon().ResetReload();
+            ////GetCurrentWeapon().ResetReloadAnimation(); dont need here because pistol doesnt have animation yet.
 
 
             SelectWeapon(0);
 
-            // Previously I was tracking weapon states in PlayerManager in an attempt to free up space in this controller script. However, now that we have an Inventory script that tracks weapons and
-            // the players current weapon, I'll leave that stuff in there.
-            //PlayerManager.SetWeapon(WeaponSlot.WEAPON1);
+            //// Previously I was tracking weapon states in PlayerManager in an attempt to free up space in this controller script. However, now that we have an Inventory script that tracks weapons and
+            //// the players current weapon, I'll leave that stuff in there.
+            ////PlayerManager.SetWeapon(WeaponSlot.WEAPON1);
 
 
-            //m_UIManager.m_IsRifle = true;
-            m_UIManager.m_CurrentWeaponType = WEAPONTYPE.RIFLE;
-            m_UIManager.HideMagazine(m_UIManager.m_CurrentWeaponType);
-        }
-    }
+            ////m_UIManager.m_IsRifle = true;
+            //m_UIManager.m_CurrentWeaponType = WEAPONTYPE.RIFLE;
+            //m_UIManager.HideMagazine(m_UIManager.m_CurrentWeaponType);
+            //     }
+		}
+	}
 
     public void OnWeaponSelect2(InputAction.CallbackContext value)
     {
-        if (value.performed && !GetCurrentWeapon().IsReloading())
-        {
-            // Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
-            GetCurrentWeapon().ResetReload();
-            GetCurrentWeapon().ResetReloadAnimation();
+		if (value.performed && GetCurrentWeapon() && !GetCurrentWeapon().IsReloading())
+		{
+            //     if (m_Inventory.HasWeapon(1))
+            //     { 
+            //// Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
+            //GetCurrentWeapon().ResetReload();
 
             SelectWeapon(1);
 
-            //m_UIManager.m_IsRifle = false;
-            m_UIManager.m_CurrentWeaponType = WEAPONTYPE.PISTOL;
-            m_UIManager.HideMagazine(m_UIManager.m_CurrentWeaponType);
-        }
-    }
+            ////m_UIManager.m_IsRifle = false;
+            //m_UIManager.m_CurrentWeaponType = WEAPONTYPE.PISTOL;
+            //m_UIManager.HideMagazine(m_UIManager.m_CurrentWeaponType);
+            //     }
+            
+		}
+	}
 
     public void OnWeaponSelect3(InputAction.CallbackContext value)
     {
-        if (value.performed && !GetCurrentWeapon().IsReloading())
-        {
-            // Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
-            GetCurrentWeapon().ResetReload();
-            GetCurrentWeapon().ResetReloadAnimation();
+		if (value.performed && GetCurrentWeapon() && !GetCurrentWeapon().IsReloading())
+		{
+            //     if (m_Inventory.HasWeapon(2))
+            //     { 
+            //// Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
+            //GetCurrentWeapon().ResetReload();
 
             SelectWeapon(2);
 
-            //m_UIManager.m_IsRifle = false;
-            m_UIManager.m_CurrentWeaponType = WEAPONTYPE.DUAL;
-            m_UIManager.HideMagazine(m_UIManager.m_CurrentWeaponType);
-        }
-    }
+            ////m_UIManager.m_IsRifle = false;
+            //m_UIManager.m_CurrentWeaponType = WEAPONTYPE.DUAL;
+            //m_UIManager.HideMagazine(m_UIManager.m_CurrentWeaponType);
+            //     }
+            
+		}
+	}
 
     public void OnAim(InputAction.CallbackContext context)
     {
         if (!PauseMenu.m_GameIsPaused)
         {
+        Weapon weapon = GetCurrentWeapon();
+
+        if (weapon)
+        { 
             if (context.performed)
             {
-                GetCurrentWeapon().m_IsAiming = true;
+                GetCurrentWeapon().m_WeaponActions.m_IsAiming = true;
             }
             else if (context.canceled)
             {
-                GetCurrentWeapon().m_IsAiming = false;
+                GetCurrentWeapon().m_WeaponActions.m_IsAiming = false;
             }
+        }
         }
     }
 
@@ -391,21 +426,21 @@ public class HostController : InputController
 
     public void OnTestRecoil(InputAction.CallbackContext value)
     {
-        if (value.performed && !GetCurrentWeapon().m_IsRecoilTesting)
+        if (value.performed && !GetCurrentWeapon().m_RecoilTesting.m_IsRecoilTesting)
         {
-            GetCurrentWeapon().m_IsRecoilTesting = true;
+            GetCurrentWeapon().m_RecoilTesting.m_IsRecoilTesting = true;
             m_CombatInfo.m_PrevOrientationRot = m_Orientation.transform.eulerAngles;
             m_CombatInfo.m_PrevXRot = m_XRotation;
 
             GetCurrentWeapon().SetFireTime(); // Starting fire counter.
         }
-        else if (value.performed && GetCurrentWeapon().m_IsRecoilTesting)
+        else if (value.performed && GetCurrentWeapon().m_RecoilTesting.m_IsRecoilTesting)
         {
-            GetCurrentWeapon().m_IsRecoilTesting = false;
-            GetCurrentWeapon().m_IsTestResting = false;
+            GetCurrentWeapon().m_RecoilTesting.m_IsRecoilTesting = false;
+            GetCurrentWeapon().m_RecoilTesting.m_IsTestResting = false;
 
-            GetCurrentWeapon().m_IsFiring = false;
-            GetCurrentWeapon().m_RecoilTestCounter = 0;
+            GetCurrentWeapon().m_WeaponActions.m_IsFiring = false;
+            GetCurrentWeapon().m_RecoilTesting.m_RecoilTestCounter = 0;
         }
     }
 
@@ -599,18 +634,17 @@ public class HostController : InputController
     /// <param name="index">The element of the m_Weapons List you want to swap to.</param>
     private void SelectWeapon(int index)
     {
-        // Resetting weapon rotation and location.
-        m_Inventory.m_CurrentWeapon.ClearThings();
+        //Weapon cache = m_Inventory.m_CurrentWeapon;
+        //m_Inventory.m_CurrentWeapon.m_WeaponActions.m_IsAiming = false;
+        //m_Inventory.m_CurrentWeapon.m_WeaponActions.m_IsFiring = false;
+        //m_Inventory.m_CurrentWeapon = m_Inventory.m_Weapons[index]; // Swapping to new weapon.
 
-        Weapon cache = m_Inventory.m_CurrentWeapon;
-        m_Inventory.m_CurrentWeapon.m_IsAiming = false;
-        m_Inventory.m_CurrentWeapon.m_IsFiring = false;
-        m_Inventory.m_CurrentWeapon = m_Inventory.m_Weapons[index]; // Swapping to new weapon.
+        //// Setting them active/inactive to display the correct weapon. Eventually this will be complimented by a weapon swapping phase where it will take some time before
+        //// the player can shoot after swapping weapons.
+        //cache.gameObject.SetActive(false);
+        //m_Inventory.m_CurrentWeapon.gameObject.SetActive(true);
 
-        // Setting them active/inactive to display the correct weapon. Eventually this will be complimented by a weapon swapping phase where it will take some time before
-        // the player can shoot after swapping weapons.
-        cache.gameObject.SetActive(false);
-        m_Inventory.m_CurrentWeapon.gameObject.SetActive(true);
+        m_Inventory.SetWeapon(index);
 
         m_UIManager?.UpdateWeaponUI(m_Inventory.m_CurrentWeapon);
     }
@@ -700,26 +734,26 @@ public class HostController : InputController
         // script to have another list that compliments the m_Weapons list. This new list would match
         // each element in the m_Weapons list and store the corresponding weapons WeaponConfiguration script.
 
-        return m_Inventory.m_CurrentWeapon.m_Config;
+        return m_Inventory.GetCurrentConfig();
     }
 
     private Transform GetCurrentWeaponTransform() => m_Inventory.m_CurrentWeapon.transform;
-    private Vector3 GetCurrentWeaponOriginalPos() => m_Inventory.m_CurrentWeapon.m_OriginalLocalPosition;
-    private Vector3 GetCurrentWeaponOriginalGlobalPos() => m_Inventory.m_CurrentWeapon.m_OriginalGlobalPosition;
+    private Vector3 GetCurrentWeaponOriginalPos() => m_Inventory.m_CurrentWeapon.m_TransformInfo.m_OriginalLocalPosition;
+    private Vector3 GetCurrentWeaponOriginalGlobalPos() => m_Inventory.m_CurrentWeapon.m_TransformInfo.m_OriginalGlobalPosition;
     public Weapon GetCurrentWeapon() => m_Inventory.m_CurrentWeapon;
 
 
     
 
-    public void HideHUD()
-    {
-        m_HUD.SetActive(false);
-    }
+    //public void HideHUD()
+    //{
+    //    m_HUD.SetActive(false);
+    //}
 
-    public void UnhideHUD()
-    {
-        m_HUD.SetActive(true);
-    }
+    //public void UnhideHUD()
+    //{
+    //    m_HUD.SetActive(true);
+    //}
 
 	// remember cooldown.
 	// this host dies. you get kicked out.
@@ -909,4 +943,34 @@ public class HostController : InputController
         if (m_DeathIncarnateAbility.drawingDeathIncarnate)
             Ability3Gizmo();
     }
+
+
+
+
+    // Testing new weapon features out.
+
+    public void OnDeleteWep1(InputAction.CallbackContext value)
+    {
+        if(value.performed)
+            m_Inventory.RemoveWeapon(0);
+    }
+    public void OnDeleteWep2(InputAction.CallbackContext value)
+    {
+        if (value.performed)
+            m_Inventory.RemoveWeapon(1);
+    }
+    public void OnDeleteWep3(InputAction.CallbackContext value)
+    {
+        if (value.performed)
+            m_Inventory.RemoveWeapon(2);
+    }
+
+    public void OnAddWeapon(InputAction.CallbackContext value)
+    {
+        if (value.performed)
+        {
+            m_Inventory.AddWeapon(Resources.Load<GameObject>("AssaultRifle"));
+        }
+    }
+
 }

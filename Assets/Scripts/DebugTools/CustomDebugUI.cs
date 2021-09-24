@@ -150,13 +150,19 @@ public class CustomDebugUI : MonoBehaviour
             // Because there are multiple weapons, I have to get the current weapons configuration.
             WeaponConfiguration weaponConfig = m_playerController.GetCurrentWeaponConfig();
 
+            if (weaponConfig)
+            { 
+                GraphicalDebugger.Assign<Vector3>(weaponConfig.m_WeaponRecoilTransform, "WeaponRecoilTransf", m_WeaponRecoilTransfText);
+            }
+
             //GraphicalDebugger.Assign<Vector3>(m_playerController.WeaponRecoilRot, "WeaponRecoilRot", m_WeaponRecoilRotText);
-            GraphicalDebugger.Assign<Vector3>(weaponConfig.m_WeaponRecoilTransform, "WeaponRecoilTransf", m_WeaponRecoilTransfText);
 
             GraphicalDebugger.Assign<float>(cameraRecoil.accumulatedPatternRecoilX, "VerticalCameraRecoil", m_VerticalCameraRecoilText);
             GraphicalDebugger.Assign<float>(cameraRecoil.accumulatedPatternRecoilY, "HorizontalCameraRecoil", m_HorizontalCameraRecoilText);
 
-            GraphicalDebugger.Assign<float>(Time.time - m_playerController.GetCurrentWeapon().m_FireStartTime, "FireHeldCounter", m_FireHeldCounterText);
+            Weapon currentWeapon = m_playerController.GetCurrentWeapon();
+            if(currentWeapon)
+                GraphicalDebugger.Assign<float>(Time.time - currentWeapon.m_FireStartTime, "FireHeldCounter", m_FireHeldCounterText);
 
             GraphicalDebugger.Assign<float>(combatInfo.m_camForward.x, "CurrentCamXRot", m_CurrentCamXRotText);
             GraphicalDebugger.Assign<float>(combatInfo.m_PrevCamForward.x, "PreviousCamXRot", m_PreviousCamXRotText);

@@ -481,6 +481,38 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""DeleteWep1"",
+                    ""type"": ""Button"",
+                    ""id"": ""d4f92224-f67a-4ec1-8d7c-d353b6c6f058"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""DeleteWep2"",
+                    ""type"": ""Button"",
+                    ""id"": ""630e96d2-a3cb-4c30-8700-0a6a05ded641"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""DeleteWep3"",
+                    ""type"": ""Button"",
+                    ""id"": ""14bf4d4b-0f9b-4ff7-9c9e-b85a42b08bcf"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""TestAddWeapon"",
+                    ""type"": ""Button"",
+                    ""id"": ""f316d8a8-f58e-4861-988e-db0f9c79e3ea"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -912,6 +944,50 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""action"": ""Select3"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5059b056-3b53-48a5-a3b5-1d9206de3a24"",
+                    ""path"": ""<Keyboard>/7"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""DeleteWep1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c88e9ef8-82f5-44d1-8a29-7df577ae3f4b"",
+                    ""path"": ""<Keyboard>/8"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""DeleteWep2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""61b2ff82-d5e4-42bd-801b-3562ec0f5203"",
+                    ""path"": ""<Keyboard>/9"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""DeleteWep3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""632e677c-766c-4999-a2a9-f0e5c9a355c7"",
+                    ""path"": ""<Keyboard>/o"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""TestAddWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -979,6 +1055,10 @@ public class @InputMap : IInputActionCollection, IDisposable
         m_Host_Ability3 = m_Host.FindAction("Ability3", throwIfNotFound: true);
         m_Host_Debug = m_Host.FindAction("Debug", throwIfNotFound: true);
         m_Host_ToggleHUD = m_Host.FindAction("ToggleHUD", throwIfNotFound: true);
+        m_Host_DeleteWep1 = m_Host.FindAction("DeleteWep1", throwIfNotFound: true);
+        m_Host_DeleteWep2 = m_Host.FindAction("DeleteWep2", throwIfNotFound: true);
+        m_Host_DeleteWep3 = m_Host.FindAction("DeleteWep3", throwIfNotFound: true);
+        m_Host_TestAddWeapon = m_Host.FindAction("TestAddWeapon", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1119,6 +1199,10 @@ public class @InputMap : IInputActionCollection, IDisposable
     private readonly InputAction m_Host_Ability3;
     private readonly InputAction m_Host_Debug;
     private readonly InputAction m_Host_ToggleHUD;
+    private readonly InputAction m_Host_DeleteWep1;
+    private readonly InputAction m_Host_DeleteWep2;
+    private readonly InputAction m_Host_DeleteWep3;
+    private readonly InputAction m_Host_TestAddWeapon;
     public struct HostActions
     {
         private @InputMap m_Wrapper;
@@ -1141,6 +1225,10 @@ public class @InputMap : IInputActionCollection, IDisposable
         public InputAction @Ability3 => m_Wrapper.m_Host_Ability3;
         public InputAction @Debug => m_Wrapper.m_Host_Debug;
         public InputAction @ToggleHUD => m_Wrapper.m_Host_ToggleHUD;
+        public InputAction @DeleteWep1 => m_Wrapper.m_Host_DeleteWep1;
+        public InputAction @DeleteWep2 => m_Wrapper.m_Host_DeleteWep2;
+        public InputAction @DeleteWep3 => m_Wrapper.m_Host_DeleteWep3;
+        public InputAction @TestAddWeapon => m_Wrapper.m_Host_TestAddWeapon;
         public InputActionMap Get() { return m_Wrapper.m_Host; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1204,6 +1292,18 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @ToggleHUD.started -= m_Wrapper.m_HostActionsCallbackInterface.OnToggleHUD;
                 @ToggleHUD.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnToggleHUD;
                 @ToggleHUD.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnToggleHUD;
+                @DeleteWep1.started -= m_Wrapper.m_HostActionsCallbackInterface.OnDeleteWep1;
+                @DeleteWep1.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnDeleteWep1;
+                @DeleteWep1.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnDeleteWep1;
+                @DeleteWep2.started -= m_Wrapper.m_HostActionsCallbackInterface.OnDeleteWep2;
+                @DeleteWep2.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnDeleteWep2;
+                @DeleteWep2.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnDeleteWep2;
+                @DeleteWep3.started -= m_Wrapper.m_HostActionsCallbackInterface.OnDeleteWep3;
+                @DeleteWep3.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnDeleteWep3;
+                @DeleteWep3.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnDeleteWep3;
+                @TestAddWeapon.started -= m_Wrapper.m_HostActionsCallbackInterface.OnTestAddWeapon;
+                @TestAddWeapon.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnTestAddWeapon;
+                @TestAddWeapon.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnTestAddWeapon;
             }
             m_Wrapper.m_HostActionsCallbackInterface = instance;
             if (instance != null)
@@ -1262,6 +1362,18 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @ToggleHUD.started += instance.OnToggleHUD;
                 @ToggleHUD.performed += instance.OnToggleHUD;
                 @ToggleHUD.canceled += instance.OnToggleHUD;
+                @DeleteWep1.started += instance.OnDeleteWep1;
+                @DeleteWep1.performed += instance.OnDeleteWep1;
+                @DeleteWep1.canceled += instance.OnDeleteWep1;
+                @DeleteWep2.started += instance.OnDeleteWep2;
+                @DeleteWep2.performed += instance.OnDeleteWep2;
+                @DeleteWep2.canceled += instance.OnDeleteWep2;
+                @DeleteWep3.started += instance.OnDeleteWep3;
+                @DeleteWep3.performed += instance.OnDeleteWep3;
+                @DeleteWep3.canceled += instance.OnDeleteWep3;
+                @TestAddWeapon.started += instance.OnTestAddWeapon;
+                @TestAddWeapon.performed += instance.OnTestAddWeapon;
+                @TestAddWeapon.canceled += instance.OnTestAddWeapon;
             }
         }
     }
@@ -1313,5 +1425,9 @@ public class @InputMap : IInputActionCollection, IDisposable
         void OnAbility3(InputAction.CallbackContext context);
         void OnDebug(InputAction.CallbackContext context);
         void OnToggleHUD(InputAction.CallbackContext context);
+        void OnDeleteWep1(InputAction.CallbackContext context);
+        void OnDeleteWep2(InputAction.CallbackContext context);
+        void OnDeleteWep3(InputAction.CallbackContext context);
+        void OnTestAddWeapon(InputAction.CallbackContext context);
     }
 }

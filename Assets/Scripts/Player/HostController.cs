@@ -54,6 +54,9 @@ public class HostController : InputController
     public DrainAbility m_DrainAbility;
     public DeathIncarnateAbility m_DeathIncarnateAbility;
 
+    // Mesh of the soldier or scientist.
+    public GameObject m_Mesh;
+
 	private void Awake()
 	{
         m_AccumulatedRecoil = new CameraRecoil();
@@ -72,6 +75,9 @@ public class HostController : InputController
             m_MovInfo.m_OriginalColliderCenter = m_Collider.center;
             m_MovInfo.m_OriginalColliderHeight = m_Collider.height;
         }
+
+        if (!m_Mesh)
+            m_Mesh = m_Orientation.transform.Find("Mesh").gameObject;
 	}
 
 	private void Start()
@@ -178,6 +184,10 @@ public class HostController : InputController
         m_UIManager.UnhideCanvas();
         m_UIManager.SetInventory(m_Inventory);
         m_UIManager.UpdateAllUI(GetCurrentWeapon());
+
+
+        // Hide mesh when entering.
+        m_Mesh.SetActive(false);
     }
 
     /// <summary>
@@ -199,6 +209,9 @@ public class HostController : InputController
         }
 
         m_UIManager.HideCanvas();
+
+        // Unhide the mesh when leaving.
+        m_Mesh.SetActive(true);
     }
 
     // ========================================================== Input Events ========================================================== //

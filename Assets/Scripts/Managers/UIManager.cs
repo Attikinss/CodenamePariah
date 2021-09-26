@@ -11,6 +11,10 @@ public class UIManager : MonoBehaviour
     private TextMeshProUGUI m_AmmoDisplay;
 
     [SerializeField]
+    [Tooltip("Numerical Left Gun Ammo Count UI")]
+    private TextMeshProUGUI m_AmmoDisplayLeft;
+
+    [SerializeField]
     [Tooltip("On Screen Warning for Low Ammo and No Ammo")]
     private TextMeshProUGUI m_AmmoWarning;
 
@@ -360,6 +364,16 @@ public class UIManager : MonoBehaviour
             
             //m_AmmoDisplay.SetText($"{first} / {second}");
             m_AmmoDisplay.SetText(first + " / " + second);
+
+            // ==================================================== For left gun in dual wield. ==================================================== //
+            int currentRoundsLeftGun = weapon.GetRoundsInMagazine(true);
+            int reserveRoundsLeftGun = weapon.GetReserve(true);
+
+            string firstExtraGun = currentRoundsLeftGun >= 10 ? currentRoundsLeftGun.ToString() : $"0{currentRoundsLeftGun}";
+            string secondExtraGun = reserveRoundsLeftGun >= 10 ? reserveRoundsLeftGun.ToString() : $"0{reserveRoundsLeftGun}";
+
+            //m_AmmoDisplay.SetText($"{first} / {second}");
+            m_AmmoDisplayLeft.SetText(firstExtraGun + " / " + secondExtraGun);
         }
 
     }

@@ -76,8 +76,13 @@ public class HostController : InputController
             m_MovInfo.m_OriginalColliderHeight = m_Collider.height;
         }
 
+        Transform meshResult;
         if (!m_Mesh)
-            m_Mesh = m_Orientation.transform.Find("Mesh").gameObject;
+        {
+            meshResult = m_Orientation.transform.Find("Mesh");
+            if(meshResult)
+                m_Mesh = meshResult.gameObject;
+        }
 	}
 
 	private void Start()
@@ -187,7 +192,8 @@ public class HostController : InputController
 
 
         // Hide mesh when entering.
-        m_Mesh.SetActive(false);
+        if(m_Mesh)
+            m_Mesh.SetActive(false);
     }
 
     /// <summary>
@@ -211,7 +217,8 @@ public class HostController : InputController
         m_UIManager.HideCanvas();
 
         // Unhide the mesh when leaving.
-        m_Mesh.SetActive(true);
+        if(m_Mesh)
+            m_Mesh.SetActive(true);
     }
 
     // ========================================================== Input Events ========================================================== //

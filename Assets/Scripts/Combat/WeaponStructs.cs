@@ -34,8 +34,10 @@ public struct WeaponBob
 public struct WeaponAction
 {
 	public bool m_IsFiring;
-	public bool m_IsAiming;
+	public bool m_IsAiming; // m_IsAiming can also be used to track if the left gun is firing.
 	public bool m_IsReloading;
+
+	public bool m_IsReloadingLeft;
 
 	// both false on default i guess.
 }

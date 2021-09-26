@@ -58,10 +58,11 @@ public class Weapon : MonoBehaviour
     /// <summary>An accumulative value used to determine when the next round should be fired.</summary>
     private float m_NextTimeToFire = 0f;
 
+
     // Duplicate variables to handle the second gun for dual wield.
     private int m_RoundsInMagazineLeft;
     private int m_ReserveAmmoLeft;
-    private float m_NextTimeToFireLeft;
+    private float m_NextTimeToFireLeft = 0f;
    
 
     // Because we're not in the HostController.cs script, we need a reference to it to access some things.
@@ -143,8 +144,21 @@ public class Weapon : MonoBehaviour
                 Fire(true); // special is set to true since we are firing from the left gun.
             m_UIManager?.UpdateWeaponUI(this);
         }
-        else if (!GetFireState() || GetReloadState() || TotalAmmoEmpty()/*!m_WeaponActions.m_IsFiring || m_WeaponActions.m_IsReloading || TotalAmmoEmpty()*/) // We want to recovery if we are reloading. This lets us set reloading to true and keep firing on true and the player wont shoot.
-            UpdateRecoilRecovery();
+        /*else */if (CanRecoilRecover()/*!GetFireState() || GetReloadState(true) || TotalAmmoEmpty()*/) // We want to recovery if we are reloading. This lets us set reloading to true and keep firing on true and the player wont shoot.
+        {
+            //bool recoilRecSuccess = false;
+            //// Few more checks if we are dual wielding.
+            //if (m_DualWield)
+            //{
+            //    if (!GetFireState(true) || GetReloadState(true)) // Both guns must be reloading to have the gun go back down.
+            //        recoilRecSuccess = true;
+            //}
+            //else
+            //    recoilRecSuccess = true;
+            //
+            //if(recoilRecSuccess)
+                UpdateRecoilRecovery();
+        }
 
         if (CanAim()/*m_WeaponActions.m_IsAiming && !m_WeaponActions.m_IsReloading && !m_DualWield*/)
         {
@@ -177,7 +191,7 @@ public class Weapon : MonoBehaviour
         // For example whenever a sound needs to be played, you can call into
         // the audio manager to play the appropriate sound.
 
-        if (ReadyToFire())
+        if (ReadyToFire(special))
         {
             // Getting the correct rounds in magazine. There are two, the normal one and the one for the left gun.
             int RoundsInMag;
@@ -503,9 +517,15 @@ public class Weapon : MonoBehaviour
     }
 
     /// <summary>Defines whether or not the weapon can fire the next round.</summary>
-    private bool ReadyToFire()
+    private bool ReadyToFire(bool dual = false)
     {
-        if (Time.time >= m_NextTimeToFire && !GetReloadState())//(time.time or time.deltatime)
+        float nextTime;
+        if (dual)
+            nextTime = m_NextTimeToFireLeft;
+        else
+            nextTime = m_NextTimeToFire;
+
+        if (Time.time >= nextTime && !GetReloadState(dual))//(time.time or time.deltatime)
         {
             if (m_SemiAuto) // If the gun is semi auto, we have one other check to do.
             {
@@ -517,7 +537,10 @@ public class Weapon : MonoBehaviour
             }
 
             // Defines the firing rate as rounds per minute (hard coded 60s)
-            m_NextTimeToFire = Time.time + (60.0f / m_FireRate);
+            if(dual)
+                m_NextTimeToFireLeft = Time.time + (60.0f / m_FireRate);
+            else
+                m_NextTimeToFire = Time.time + (60.0f / m_FireRate);
             return true;
         }
 
@@ -884,13 +907,67 @@ public class Weapon : MonoBehaviour
         }
     }
 
+    private bool CanRecoilRecover()
+    {
+        if (m_DualWield)
+        {
+            // In the dual wield scenario, both guns must not be shooting, both must be reloading to enable recoil recovery.
+            if ((!IsShooting() && !IsShooting(true)) || (GetReloadState() && GetReloadState(true)))
+                return true;
+            else
+                return false;
+        }
+        else 
+        {
+            if (!GetFireState() || GetReloadState() || TotalAmmoEmpty())
+                return true;
+            else
+                return false;
+        }
+    }
+
     private WeaponConfiguration GetCurrentWeaponConfig() { return m_Inventory.m_CurrentWeapon.m_Config; }
     private Transform GetCurrentWeaponTransform() => m_Inventory.m_CurrentWeapon.transform;
     private Vector3 GetCurrentWeaponOriginalPos() => m_Inventory.m_CurrentWeapon.m_TransformInfo.m_OriginalLocalPosition;
-    public bool GetFireState() { return m_WeaponActions.m_IsFiring; }
+    public bool GetFireState(bool dual = false) 
+    {
+        if (dual)
+            return m_WeaponActions.m_IsAiming; // m_IsAiming tracks whether the extra dual gun is firing.
+        else
+            return m_WeaponActions.m_IsFiring; 
+    }
+    /// <summary>
+    /// IsShooting() is different from GetFireState() because GetFireState() returns whether the fire button is being held down whereas IsShooting() returns
+    /// if the player is actively firing. Reloading is an example of where GetFireState() may return true but IsShooting() will return false.
+    /// </summary>
+    /// <param name="dual">If you are asking about the extra dual wield gun.</param>
+    /// <returns></returns>
+    public bool IsShooting(bool dual = false)
+    {
+        if (dual)
+        {
+            if (GetFireState() && !GetReloadState(true))
+                return true;
+            else
+                return false;
+        }
+        else
+        {
+            if (GetFireState(true) && !GetReloadState())
+                return true;
+            else
+                return false;
+        }
+    }
     public void SetFireState(bool state) { m_WeaponActions.m_IsFiring = state; }
     public void ResetFire() { m_WeaponActions.m_IsFiring = false; }
-    public bool GetReloadState() { return m_WeaponActions.m_IsReloading; }
+    public bool GetReloadState(bool dual = false) 
+    {
+        if (dual)
+            return m_WeaponActions.m_IsReloadingLeft;
+        else
+            return m_WeaponActions.m_IsReloading; 
+    }
     public void ResetReload() { m_WeaponActions.m_IsReloading = false; }
     public bool IsReloading() { return m_WeaponActions.m_IsReloading; }
     public bool GetAimState() { return m_WeaponActions.m_IsAiming; }

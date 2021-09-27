@@ -136,7 +136,7 @@ public class Weapon : MonoBehaviour
         // I've added m_IsReloading checks to prevent shooting while reloading and also to activate recoil recovery even if m_IsFiring is still true.
         // This gives the advantage of reloading while holding down the mouse button will let you begin shooting again without having to re-press the mouse button.
 
-        if (m_WeaponActions.m_IsFiring && !m_WeaponActions.m_IsReloading)
+        if (CanFire(m_DualWield)/*m_WeaponActions.m_IsFiring && !m_WeaponActions.m_IsReloading*/)
         {
             if (!m_DualWield)
                 Fire();
@@ -912,7 +912,7 @@ public class Weapon : MonoBehaviour
         if (m_DualWield)
         {
             // In the dual wield scenario, both guns must not be shooting, both must be reloading to enable recoil recovery.
-            if ((!IsShooting() && !IsShooting(true)) || (GetReloadState() && GetReloadState(true)))
+            if ((!DualWieldIsShooting() && !DualWieldIsShooting(true)) || (GetReloadState() && GetReloadState(true)))
                 return true;
             else
                 return false;
@@ -942,7 +942,7 @@ public class Weapon : MonoBehaviour
     /// </summary>
     /// <param name="dual">If you are asking about the extra dual wield gun.</param>
     /// <returns></returns>
-    public bool IsShooting(bool dual = false)
+    public bool DualWieldIsShooting(bool dual = false)
     {
         if (dual)
         {
@@ -973,7 +973,15 @@ public class Weapon : MonoBehaviour
     public bool GetAimState() { return m_WeaponActions.m_IsAiming; }
     public void ResetAim() { m_WeaponActions.m_IsAiming = false; }
     public bool GetRecoilTestState() { return m_RecoilTesting.m_IsRecoilTesting; }
-    public bool CanFire() {return (GetFireState() && !GetReloadState() && !TotalAmmoEmpty());}
+    public bool CanFire(bool dual = false) 
+    {
+        if (dual)
+        {
+            return GetFireState() && !GetReloadState(dual); // The normal fire mode is the left gun in a dual wield scenario, so we must check if the left gun is not reloading.
+        }
+        else
+            return (GetFireState() && !GetReloadState());
+    }
     public bool CanAim() { return (GetAimState() && !GetReloadState()); }
     public void SetCamera(Camera camera) { m_Camera = camera; }
 

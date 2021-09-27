@@ -366,6 +366,9 @@ public class UIManager : MonoBehaviour
             m_AmmoDisplay.SetText(first + " / " + second);
 
             // ==================================================== For left gun in dual wield. ==================================================== //
+            // Hiding if unneccessary.
+            ToggleDualWield(weapon.m_DualWield);
+
             int currentRoundsLeftGun = weapon.GetRoundsInMagazine(true);
             int reserveRoundsLeftGun = weapon.GetReserve(true);
 
@@ -394,6 +397,13 @@ public class UIManager : MonoBehaviour
     {
         UpdateHealthUI();
         UpdateWeaponUI(currentWeapon);
+    }
+    private void ToggleDualWield(bool toggle)
+    {
+        if (!toggle)
+            m_AmmoDisplayLeft.enabled = false;
+        else
+            m_AmmoDisplayLeft.enabled = true;
     }
     public void UnhideCanvas() { m_Canvas.gameObject.SetActive(true); }
     public void HideCanvas() { m_Canvas.gameObject.SetActive(false); }

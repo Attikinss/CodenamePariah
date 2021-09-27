@@ -67,6 +67,9 @@ public class UIManager : MonoBehaviour
     [Tooltip("Death Incarnate Bar UI")]
     private Image m_DeathIncarnateBar;
 
+    private Image m_Bar;
+    private TextMeshProUGUI m_DeathIncarnateBarText;
+
 	public void Awake()
 	{
         if (!s_Instance)
@@ -79,6 +82,14 @@ public class UIManager : MonoBehaviour
             Destroy(this);
         }
 
+        if (m_DeathIncarnateBar)
+        { 
+            m_Bar = m_DeathIncarnateBar.transform.Find("Bar").GetComponent<Image>();
+            m_DeathIncarnateBarText = m_DeathIncarnateBar.transform.Find("Text").GetComponent<TextMeshProUGUI>();
+        }
+
+        // Hide bar on start.
+        ToggleBar(false);
 
         //// Temporarily getting all the Bullet Image components because I've discovered setting game objects to false is slow if you do it a lot of times.
         //// Also I'm getting the components through code so I don't change the player prefab.
@@ -409,12 +420,24 @@ public class UIManager : MonoBehaviour
         else
             m_AmmoDisplayLeft.enabled = true;
     }
-
+    public void ToggleBar(bool toggle)
+    {
+        if (!toggle)
+        {
+            m_DeathIncarnateBar.enabled = false;
+            m_DeathIncarnateBarText.enabled = false;
+            m_Bar.enabled = false;
+        }
+        else
+        { 
+            m_DeathIncarnateBar.enabled = true;
+            m_DeathIncarnateBarText.enabled = true;
+            m_Bar.enabled = true;
+        }
+    }
     public void SetDeathIncarnateBar(float percentage)
     {
-        
-
-        m_DeathIncarnateBar.fillAmount = percentage;
+        m_Bar.fillAmount = percentage;
     }
     public void UnhideCanvas() { m_Canvas.gameObject.SetActive(true); }
     public void HideCanvas() { m_Canvas.gameObject.SetActive(false); }

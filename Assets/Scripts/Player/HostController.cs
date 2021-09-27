@@ -468,11 +468,16 @@ public class HostController : InputController
     public void OnAbility3(InputAction.CallbackContext value)
     {
         if (value.performed && !m_DeathIncarnateAbility.deathIncarnateUsed)
+        {
             m_DeathIncarnateAbility.chargeRoutine = StartCoroutine(Ability3Charge());
+            m_UIManager.ToggleBar(true);
+        }
 
         else if (value.canceled)
+        { 
             StopCoroutine(m_DeathIncarnateAbility.chargeRoutine); // When we let go, we stop the couritine to clear the time value in it.
-
+            m_UIManager.ToggleBar(false);
+        }
     }
 
     public void OnDebugToggle(InputAction.CallbackContext value)

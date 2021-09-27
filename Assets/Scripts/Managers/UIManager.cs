@@ -63,6 +63,10 @@ public class UIManager : MonoBehaviour
 	[Tooltip("Health Sprite UI")]
 	private GameObject m_HealthSprite;
 
+    [SerializeField]
+    [Tooltip("Death Incarnate Bar UI")]
+    private Image m_DeathIncarnateBar;
+
 	public void Awake()
 	{
         if (!s_Instance)
@@ -404,6 +408,13 @@ public class UIManager : MonoBehaviour
             m_AmmoDisplayLeft.enabled = false;
         else
             m_AmmoDisplayLeft.enabled = true;
+    }
+
+    public void SetDeathIncarnateBar(float percentage)
+    {
+        
+
+        m_DeathIncarnateBar.fillAmount = percentage;
     }
     public void UnhideCanvas() { m_Canvas.gameObject.SetActive(true); }
     public void HideCanvas() { m_Canvas.gameObject.SetActive(false); }

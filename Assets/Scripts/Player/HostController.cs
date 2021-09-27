@@ -834,6 +834,9 @@ public class HostController : InputController
 
 			Debug.Log(time);
 
+            // Set power bar ui to match.
+            m_UIManager.SetDeathIncarnateBar(time / m_DeathIncarnateAbility.deathIncarnateRequiredHold);
+
 			yield return null;
 		}
 

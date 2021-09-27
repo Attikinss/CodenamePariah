@@ -59,6 +59,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AmmoDisplay: {fileID: 0}
+  m_AmmoDisplayLeft: {fileID: 0}
   m_AmmoWarning: {fileID: 0}
   m_Canvas: {fileID: 0}
   m_Inv: {fileID: 0}

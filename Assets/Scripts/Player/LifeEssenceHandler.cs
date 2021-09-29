@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 /// <summary>
@@ -9,7 +10,7 @@ using UnityEngine.UI;
 public class LifeEssenceHandler : MonoBehaviour
 {
     public PariahController m_Pariah;
-    public Text m_Text;
+	public TextMeshProUGUI m_Text;
 
 	private void Start()
 	{
@@ -25,6 +26,6 @@ public class LifeEssenceHandler : MonoBehaviour
 	// Update is called once per frame
 	void Update()
     {
-        m_Text.text = "Life Essence: " + m_Pariah.GetHealth();
+        m_Text.text = "Life: " + m_Pariah.GetHealth();
     }
 }

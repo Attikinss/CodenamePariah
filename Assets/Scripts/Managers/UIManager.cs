@@ -11,6 +11,10 @@ public class UIManager : MonoBehaviour
     private TextMeshProUGUI m_AmmoDisplay;
 
     [SerializeField]
+    [Tooltip("Numerical Left Gun Ammo Count UI")]
+    private TextMeshProUGUI m_AmmoDisplayLeft;
+
+    [SerializeField]
     [Tooltip("On Screen Warning for Low Ammo and No Ammo")]
     private TextMeshProUGUI m_AmmoWarning;
 
@@ -59,6 +63,13 @@ public class UIManager : MonoBehaviour
 	[Tooltip("Health Sprite UI")]
 	private GameObject m_HealthSprite;
 
+    [SerializeField]
+    [Tooltip("Death Incarnate Bar UI")]
+    private Image m_DeathIncarnateBar;
+
+    private Image m_Bar;
+    private TextMeshProUGUI m_DeathIncarnateBarText;
+
 	public void Awake()
 	{
         if (!s_Instance)
@@ -71,6 +82,14 @@ public class UIManager : MonoBehaviour
             Destroy(this);
         }
 
+        if (m_DeathIncarnateBar)
+        { 
+            m_Bar = m_DeathIncarnateBar.transform.Find("Bar").GetComponent<Image>();
+            m_DeathIncarnateBarText = m_DeathIncarnateBar.transform.Find("Text").GetComponent<TextMeshProUGUI>();
+        }
+
+        // Hide bar on start.
+        ToggleBar(false);
 
         //// Temporarily getting all the Bullet Image components because I've discovered setting game objects to false is slow if you do it a lot of times.
         //// Also I'm getting the components through code so I don't change the player prefab.
@@ -360,6 +379,19 @@ public class UIManager : MonoBehaviour
             
             //m_AmmoDisplay.SetText($"{first} / {second}");
             m_AmmoDisplay.SetText(first + " / " + second);
+
+            // ==================================================== For left gun in dual wield. ==================================================== //
+            // Hiding if unneccessary.
+            ToggleDualWield(weapon.m_DualWield);
+
+            int currentRoundsLeftGun = weapon.GetRoundsInMagazine(true);
+            int reserveRoundsLeftGun = weapon.GetReserve(true);
+
+            string firstExtraGun = currentRoundsLeftGun >= 10 ? currentRoundsLeftGun.ToString() : $"0{currentRoundsLeftGun}";
+            string secondExtraGun = reserveRoundsLeftGun >= 10 ? reserveRoundsLeftGun.ToString() : $"0{reserveRoundsLeftGun}";
+
+            //m_AmmoDisplay.SetText($"{first} / {second}");
+            m_AmmoDisplayLeft.SetText(firstExtraGun + " / " + secondExtraGun);
         }
 
     }
@@ -380,6 +412,32 @@ public class UIManager : MonoBehaviour
     {
         UpdateHealthUI();
         UpdateWeaponUI(currentWeapon);
+    }
+    private void ToggleDualWield(bool toggle)
+    {
+        if (!toggle)
+            m_AmmoDisplayLeft.enabled = false;
+        else
+            m_AmmoDisplayLeft.enabled = true;
+    }
+    public void ToggleBar(bool toggle)
+    {
+        if (!toggle)
+        {
+            m_DeathIncarnateBar.enabled = false;
+            m_DeathIncarnateBarText.enabled = false;
+            m_Bar.enabled = false;
+        }
+        else
+        { 
+            m_DeathIncarnateBar.enabled = true;
+            m_DeathIncarnateBarText.enabled = true;
+            m_Bar.enabled = true;
+        }
+    }
+    public void SetDeathIncarnateBar(float percentage)
+    {
+        m_Bar.fillAmount = percentage;
     }
     public void UnhideCanvas() { m_Canvas.gameObject.SetActive(true); }
     public void HideCanvas() { m_Canvas.gameObject.SetActive(false); }

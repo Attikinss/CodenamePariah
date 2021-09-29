@@ -76,8 +76,13 @@ public class HostController : InputController
             m_MovInfo.m_OriginalColliderHeight = m_Collider.height;
         }
 
+        Transform meshResult;
         if (!m_Mesh)
-            m_Mesh = m_Orientation.transform.Find("Mesh").gameObject;
+        {
+            meshResult = m_Orientation.transform.Find("Mesh");
+            if(meshResult)
+                m_Mesh = meshResult.gameObject;
+        }
 	}
 
 	private void Start()
@@ -187,7 +192,8 @@ public class HostController : InputController
 
 
         // Hide mesh when entering.
-        m_Mesh.SetActive(false);
+        if(m_Mesh)
+            m_Mesh.SetActive(false);
     }
 
     /// <summary>
@@ -211,7 +217,8 @@ public class HostController : InputController
         m_UIManager.HideCanvas();
 
         // Unhide the mesh when leaving.
-        m_Mesh.SetActive(true);
+        if(m_Mesh)
+            m_Mesh.SetActive(true);
     }
 
     // ========================================================== Input Events ========================================================== //
@@ -461,11 +468,16 @@ public class HostController : InputController
     public void OnAbility3(InputAction.CallbackContext value)
     {
         if (value.performed && !m_DeathIncarnateAbility.deathIncarnateUsed)
+        {
             m_DeathIncarnateAbility.chargeRoutine = StartCoroutine(Ability3Charge());
+            m_UIManager.ToggleBar(true);
+        }
 
         else if (value.canceled)
+        { 
             StopCoroutine(m_DeathIncarnateAbility.chargeRoutine); // When we let go, we stop the couritine to clear the time value in it.
-
+            m_UIManager.ToggleBar(false);
+        }
     }
 
     public void OnDebugToggle(InputAction.CallbackContext value)
@@ -826,6 +838,9 @@ public class HostController : InputController
 
 
 			Debug.Log(time);
+
+            // Set power bar ui to match.
+            m_UIManager.SetDeathIncarnateBar(time / m_DeathIncarnateAbility.deathIncarnateRequiredHold);
 
 			yield return null;
 		}

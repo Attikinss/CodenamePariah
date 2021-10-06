@@ -8,6 +8,10 @@ public class HostController : InputController
 {
     [Header("Settings")]
 
+    [SerializeField]
+    [Min(0)]
+    private int m_OnDestroyedDamage = 25;
+
     [Header("Mouse Controls")]
     public float m_VerticalLock = 75.0f;
 
@@ -1001,4 +1005,5 @@ public class HostController : InputController
         }
     }
 
+    public int GetOnDestroyDamage() { return m_OnDestroyedDamage; }
 }

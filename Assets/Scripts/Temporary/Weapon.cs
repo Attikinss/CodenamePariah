@@ -24,6 +24,10 @@ public class Weapon : MonoBehaviour
     public int m_BulletDamage;
 
     [SerializeField]
+    [Tooltip("How much damage scales when weapon is used by an AI Agent.")]
+    public float m_AIDamageModifier = 0.5f;
+
+    [SerializeField]
     [Tooltip("Current ammo in magazine.")]
     private int m_RoundsInMagazine;
 
@@ -274,15 +278,12 @@ public class Weapon : MonoBehaviour
                     {
                         if (hitInfo.transform.gameObject != null)
                         {
-                            //Debug.Log("Bad");
                             if (hitInfo.transform.TryGetComponent(out Inventory agentInventory))
-
                             {
-                                //Debug.Log("BAD");
-                                agentInventory.TakeDamage(m_BulletDamage);
+                                float damageMod = m_Inventory.Owner.Possessed ? m_AIDamageModifier : 1.0f;
+                                agentInventory.TakeDamage((int)(m_BulletDamage * damageMod));
 
                                 return;
-
                             }
 
                             GameManager.Instance?.PlaceDecal(hitInfo.transform, hitInfo.point, hitInfo.normal);

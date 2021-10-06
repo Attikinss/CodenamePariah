@@ -426,7 +426,10 @@ public class HostController : InputController
         if (!PauseMenu.m_GameIsPaused)
         {
             if (value.performed)
-                GetCurrentWeapon().StartReload();
+            { 
+                GetCurrentWeapon().StartReload(false); // Reload normal gun.
+                GetCurrentWeapon().StartReload(true); // Reload additional dual wielded gun.
+            }
         }
     }
 

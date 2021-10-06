@@ -326,12 +326,12 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    public void StartReload()
+    public void StartReload(bool dualWield)
     {
-        if (!PrimaryAmmoFull() && !ReserveAmmoEmpty() && !GetReloadState())
+        if (!PrimaryAmmoFull(dualWield) && !ReserveAmmoEmpty(dualWield) && !GetReloadState(dualWield))
         {
             CombatInfo combatInfo = m_Controller.m_CombatInfo;
-            StartCoroutine(Reload());
+            StartCoroutine(Reload(dualWield));
             combatInfo.m_ShootingDuration = 0;
         }
     }
@@ -817,9 +817,13 @@ public class Weapon : MonoBehaviour
     }
 
     /// <summary>Defines whether or not the weapon's magazine is full.</summary>
-    public bool PrimaryAmmoFull()
+    public bool PrimaryAmmoFull(bool dual)
     {
-        return m_RoundsInMagazine == m_MagazineSize;
+        if (!dual)
+            return m_RoundsInMagazine == m_MagazineSize;
+        else
+            return m_RoundsInMagazineLeft == m_MagazineSize;
+
     }
 
     /// <summary>Defines whether or not the weapon's reserve ammo pool is full.</summary>

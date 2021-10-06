@@ -32,7 +32,7 @@ namespace WhiteWillow.Editor
 
         public override void OnMove()
         {
-            CaluclateExecutionOrder();
+            RecaluclateExecutionOrder();
 
             Node.GraphDimensions = Position;
         }

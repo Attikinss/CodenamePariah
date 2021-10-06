@@ -17,16 +17,19 @@ namespace WhiteWillow.Nodes
         public float Duration = 1.0f;
 
         [SerializeField]
-        [ReadOnly]
+        //[ReadOnly]
         private float m_ElapsedTime = 0.0f;
         private float m_StartTime = 0.0f;
+        private float m_Duration = 0.0f;
 
         protected override void OnEnter()
         {
             if (WaitType == WaitValueType.Varying)
-                Duration += Mathf.Clamp(Random.Range(-Duration, Duration) / 2, 0.0f, 30.0f);
+                m_Duration += Mathf.Clamp(Random.Range(-Duration, Duration) / 2, 0.0f, 5.0f);
             else if (WaitType == WaitValueType.Random)
-                Duration = Random.Range(0.0f, 30.0f);
+                m_Duration = Random.Range(0.0f, 5.0f);
+            else
+                m_Duration = Duration;
 
             m_StartTime = Time.time;
         }
@@ -39,7 +42,7 @@ namespace WhiteWillow.Nodes
         protected override NodeResult OnTick()
         {
             m_ElapsedTime = Time.time - m_StartTime;
-            if (m_ElapsedTime >= Duration)
+            if (m_ElapsedTime >= m_Duration)
                 return NodeResult.Success;
 
             return NodeResult.Running;

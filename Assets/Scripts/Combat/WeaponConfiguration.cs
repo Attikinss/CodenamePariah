@@ -12,7 +12,8 @@ public class WeaponConfiguration : MonoBehaviour
     public bool m_AlwaysFiring;
 
     [Header("Transform References")]
-    public Transform m_Gun;
+    public List<Transform> m_Gun;
+    public List<Transform> m_Arms;
     public Transform m_ScopeCentre;
 
     [Header("General")]
@@ -48,6 +49,8 @@ public class WeaponConfiguration : MonoBehaviour
     public float m_ADSRecoilModifier = 1;
     [HideInInspector]
     public Vector3 m_WeaponRecoilTransform;
+    [Tooltip("Clamps the x rotation for the weapons visual recoil.")]
+    public float m_WeaponVisualRecoilClamp = 10;
 
     [Header("Camera Recoil Pattern")]
     public AnimationCurve m_VerticalRecoil;

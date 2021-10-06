@@ -97,6 +97,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e073ab19eeee204c9a5ccd5a8cfbe40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Action: 1
+  m_ItemPrefab: {fileID: 4112493245389595605, guid: f73b75574fad6894ba36d47f828aab6d, type: 3}
+  m_RequiredTarget: 0
   m_RotationSpeed: 60
   m_BobHeight: 0.125
   m_BobSpeed: 2

@@ -11,8 +11,12 @@ namespace WhiteWillow
     {
         public Root RootNode;
         public Agent Agent { get; private set; }
+        public Blackboard Blackboard;
+
+        public List<BaseNode> Nodes = new List<BaseNode>();
 
         public void SetAgent(Agent agent) => Agent = agent;
+        public void SetBlackboard(Blackboard blackboard) => Blackboard = blackboard;
 
         public BehaviourTree Clone(string name)
         {
@@ -59,8 +63,6 @@ namespace WhiteWillow
 
             return newTree;
         }
-
-        public List<BaseNode> Nodes = new List<BaseNode>();
 
         public void Tick() => RootNode?.Tick();
 

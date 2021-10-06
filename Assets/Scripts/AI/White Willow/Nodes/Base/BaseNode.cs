@@ -14,7 +14,7 @@ namespace WhiteWillow.Nodes
         public Action OnNodeInactive;
 
         /// <summary>Defines whether the node is currently active.</summary>
-        [ReadOnly]
+        [HideInInspector]
         public bool Active = false;
 
         /// <summary>The behaviour tree the node belongs to.</summary>
@@ -30,6 +30,7 @@ namespace WhiteWillow.Nodes
         public NodeResult State;
 
         /// <summary>The display name of the node.</summary>
+        [Header("General")]
         public string Title = "";
 
         /// <summary>The unique ID of the node.</summary>
@@ -55,6 +56,9 @@ namespace WhiteWillow.Nodes
         /// <returns>The result of a leaf nodes current status.</returns>
         public NodeResult Tick()
         {
+            // Prevents traversal of this node while it's locked
+            if (Locked) return NodeResult.Locked;
+
             if (!Active)
             {
                 // Node now active and will perform pre-op functionality

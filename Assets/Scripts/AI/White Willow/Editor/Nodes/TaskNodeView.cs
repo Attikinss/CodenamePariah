@@ -47,7 +47,7 @@ namespace WhiteWillow.Editor
         /// <summary>Handles the movement and execution order assignment of the node in the graph view.</summary>
         public override void OnMove()
         {
-            CaluclateExecutionOrder();
+            RecaluclateExecutionOrder();
 
             Node.GraphDimensions = Position;
         }

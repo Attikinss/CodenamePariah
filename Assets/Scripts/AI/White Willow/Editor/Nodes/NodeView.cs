@@ -216,18 +216,25 @@ namespace WhiteWillow.Editor
             outputContainer.Add(OutputPort);
         }
 
-        protected void CaluclateExecutionOrder()
+        public void RecaluclateExecutionOrder()
         {
-            if (Parent != null && Parent is CompositeNodeView)
+            CompositeNodeView parent = Parent as CompositeNodeView;
+            if (parent != null)
             {
-                List<KeyValuePair<int, float>> nodeHeights = new List<KeyValuePair<int, float>>();
-                for (int i = 0; i < (Parent as CompositeNodeView).Children.Count; i++)
-                    nodeHeights.Add(new KeyValuePair<int, float>(i, (Parent as CompositeNodeView).Children.ElementAt(i).Position.position.x));
+                List<KeyValuePair<int, float>> nodeLocations = new List<KeyValuePair<int, float>>();
+                for (int i = 0; i < parent.Children.Count; i++)
+                {
+                    // For some fkn reason the native position rect doesn't update??
+                    // Using Node.GraphDimensions for position data does though so we all g here
+                    nodeLocations.Add(new KeyValuePair<int, float>(i, parent.Children.ElementAt(i).Node.GraphDimensions.position.x));
+                }
 
-                nodeHeights.Sort(delegate (KeyValuePair<int, float> a, KeyValuePair<int, float> b) { return a.Value.CompareTo(b.Value); });
+                nodeLocations.Sort(delegate (KeyValuePair<int, float> a, KeyValuePair<int, float> b) { return a.Value.CompareTo(b.Value); });
 
-                for (int i = 0; i < (Parent as CompositeNodeView).Children.Count; i++)
-                    (Parent as CompositeNodeView).Children.ElementAt(i).Node.ExecutionOrder = Convert.ToUInt16(nodeHeights.FindIndex(itr => itr.Key == i) + 1);
+                for (int i = 0; i < parent.Children.Count; i++)
+                    parent.Children.ElementAt(i).Node.ExecutionOrder = Convert.ToUInt16(nodeLocations.FindIndex(itr => itr.Key == i) + 1);
+
+                parent.Children = new HashSet<NodeView>(parent.Children.OrderBy(node => node.Node.ExecutionOrder), null);
             }
         }
 
@@ -244,7 +251,11 @@ namespace WhiteWillow.Editor
         public abstract IEnumerable<Edge> OnDelete();
 
         /// <summary>Adds the node to the graph view.</summary>
-        public void AddToGraphView() => m_GraphView.AddElement(this);
+        public void AddToGraphView()
+        {
+            m_GraphView.AddElement(this);
+            RecaluclateExecutionOrder();
+        }
 
         /// <summary>Removes the node from the graph view.</summary>
         public void RemoveFromGraphView() => m_GraphView.RemoveElement(this);
@@ -253,6 +264,12 @@ namespace WhiteWillow.Editor
         {
             base.OnSelected();
             OnNodeSelected?.Invoke(this);
+        }
+
+        public bool IsMouseOver(Vector2 mousePos)
+        {
+            return (mousePos.x > Position.xMin && mousePos.y > Position.yMin &&
+                mousePos.x < Position.xMax && mousePos.y < Position.yMax);
         }
 
         public void OnActive()

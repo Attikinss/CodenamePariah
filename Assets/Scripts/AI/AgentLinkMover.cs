@@ -11,7 +11,7 @@ public enum OffMeshLinkMoveMethod
 }
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class AgentLinkMover : MonoBehaviour
+public class AgentLinkMover : MonoBehaviour 
 {
     public OffMeshLinkMoveMethod m_Method = OffMeshLinkMoveMethod.Parabola;
     public AnimationCurve m_Curve = new AnimationCurve();

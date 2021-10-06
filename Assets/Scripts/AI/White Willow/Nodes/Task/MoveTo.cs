@@ -6,6 +6,7 @@ namespace WhiteWillow.Nodes
     public class MoveTo : Task
     {
         public override string IconPath { get; } = "Icons/MoveTo";
+        public NodeMember<Vector3> Position;
 
         protected override void OnEnter()
         {
@@ -14,7 +15,7 @@ namespace WhiteWillow.Nodes
 
         protected override void OnExit()
         {
-
+            Owner.Agent.Stop();
         }
 
         protected override NodeResult OnTick()
@@ -25,7 +26,12 @@ namespace WhiteWillow.Nodes
             if (Owner.Agent.AtPosition())
                 return NodeResult.Success;
             else
+            {
+                if (Owner.Agent.Stuck())
+                    return NodeResult.Failure;
+
                 return NodeResult.Running;
+            }
         }
     }
 }

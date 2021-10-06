@@ -1,0 +1,15 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/Libs/White%20Willow/Editor/Resources/Styles/AgentEditor.uss?fileID=7433441132597879392&amp;guid=c1084021792aba44d8751498e5cb9a21&amp;type=3#AgentEditor" />
+    <ui:IMGUIContainer>
+        <ui:Label text="White Willow Agent" display-tooltip-when-elided="true" name="Title" />
+        <uie:Toolbar name="Toolbar" style="flex-shrink: 1; flex-direction: row; justify-content: center; border-left-color: rgb(29, 29, 29); border-right-color: rgb(29, 29, 29); border-top-color: rgb(29, 29, 29); border-bottom-color: rgb(29, 29, 29); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 2px;">
+            <uie:ToolbarToggle focusable="false" label="Properties" name="PropertiesToggle" style="flex-shrink: 1; left: auto; flex-grow: 1;" />
+            <uie:ToolbarSpacer style="width: 3px;" />
+            <uie:ToolbarToggle focusable="false" label="Blackboard" name="BlackboardToggle" style="flex-shrink: 1; flex-grow: 1; left: auto;" />
+        </uie:Toolbar>
+        <WhiteWillow.Editor.AgentPropertyView>
+            <uie:ObjectField label="Behaviour Tree" name="BehaviourTreeField" />
+            <uie:FloatField label="Movement Speed" value="5" readonly="false" name="MoveSpeedField" />
+        </WhiteWillow.Editor.AgentPropertyView>
+    </ui:IMGUIContainer>
+</ui:UXML>

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace WhiteWillow.Nodes
 {
@@ -7,13 +8,25 @@ namespace WhiteWillow.Nodes
     ///<br>If it never receives a success or running result it will return a failure result to its parent.</br>
     ///</summary>
     [Category("Composites")]
-    public class Selector : Composite
+    public sealed class Selector : Composite
     {
         public override string IconPath { get; } = "Icons/Selector";
 
         protected override void OnEnter()
         {
-
+            //if (Title == "Engage")
+            //{
+            //    Debug.Log($"{Title} - Before: ");
+            //    foreach (var child in Children)
+            //        Debug.Log($"{child.Title}");
+            //
+            //    if (Children.Count > 1)
+            //        Children = Children.OrderBy(node => node.ExecutionOrder).ToList();
+            //
+            //    Debug.Log($"{Title} - After: ");
+            //    foreach (var child in Children)
+            //        Debug.Log($"{child.Title}");
+            //}
         }
 
         protected override void OnExit()
@@ -23,12 +36,8 @@ namespace WhiteWillow.Nodes
 
         protected override NodeResult OnTick()
         {
-            // Prevents traversal of this node while it's locked
-            if (Locked) return NodeResult.Locked;
-
             // No point doing anything
             if (Children.Count == 0) return NodeResult.Failure;
-
 
             // Ignore all other children if there is a running child
             var lastRunningChild = RunningChild;

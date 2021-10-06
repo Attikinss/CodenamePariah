@@ -8,7 +8,7 @@ namespace WhiteWillow.Nodes
         public override string IconPath { get; } = "Icons/Log";
 
         [Tooltip("The message that will be logged to the console.")]
-        public string Message = "";
+        public NodeMember<string> Message;
 
         protected override void OnEnter() { }
 
@@ -16,7 +16,7 @@ namespace WhiteWillow.Nodes
 
         protected override NodeResult OnTick()
         {
-            Debug.Log($"{Owner.Agent} {Message}");
+            Debug.Log($"[{Owner.Agent}]: {Message.Value}");
             return NodeResult.Success;
         }
     }

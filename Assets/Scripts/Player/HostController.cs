@@ -54,13 +54,16 @@ public class HostController : InputController
     public DrainAbility m_DrainAbility;
     public DeathIncarnateAbility m_DeathIncarnateAbility;
 
+    // Mesh of the soldier or scientist.
+    public GameObject m_Mesh;
+
 	private void Awake()
 	{
         m_AccumulatedRecoil = new CameraRecoil();
         m_MovInfo = new MovementInfo();
         m_CombatInfo = new CombatInfo();
 
-        m_UIManager = GetComponent<UIManager>();
+        
         Rigidbody = GetComponent<Rigidbody>();
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -72,19 +75,35 @@ public class HostController : InputController
             m_MovInfo.m_OriginalColliderCenter = m_Collider.center;
             m_MovInfo.m_OriginalColliderHeight = m_Collider.height;
         }
+
+        Transform meshResult;
+        if (!m_Mesh)
+        {
+            meshResult = m_Orientation.transform.Find("Mesh");
+            if(meshResult)
+                m_Mesh = meshResult.gameObject;
+        }
         m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
+	}
+
+	private void Start()
+	{
+        m_UIManager = UIManager.s_Instance;
     }
-    private void Update()
+	private void Update()
     {
         m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
         if (!PauseMenu.m_GameIsPaused)
         {
             if (!m_Active) return;
 
+        if (GetCurrentWeaponConfig()) // If we have a weapon. We may not have any weapons so thats why we check this.
+        { 
             if (GetCurrentWeaponConfig().m_AlwaysADS) // The reason why I do this is so I don't have to check for the m_AlwaysADS bool everywhere. This way I can still just check for m_IsAiming in all functions.
-                GetCurrentWeapon().m_IsAiming = true;
+                GetCurrentWeapon().m_WeaponActions.m_IsAiming = true;
             if (GetCurrentWeaponConfig().m_AlwaysFiring) // Doing same here for the reason above.
-                GetCurrentWeapon().m_IsFiring = true;
+                GetCurrentWeapon().m_WeaponActions.m_IsFiring = true;
+        }
 
             m_MovInfo.m_IsGrounded = CheckGrounded();
             CalculateGroundNormal();
@@ -158,9 +177,25 @@ public class HostController : InputController
         GetComponent<PlayerInput>().enabled = true;
         m_Active = true;
         m_Camera.enabled = true;
-        UnhideHUD();
+        //UnhideHUD();
 
         CustomDebugUI.s_Instance.SetController(this);
+
+
+        // When the player is controlling a unit, we set the weapons to be overlayed so they don't stick inside walls and stuff. It's reverted back in Disable().
+        for (int i = 0; i < m_Inventory.m_Weapons.Count; i++)
+        { 
+            m_Inventory.m_Weapons[i].SetWeaponLayerRecursively(12); // If we ever rearrange layer orders this will have to change!                      ===================== IMPORTANT =====================
+        }
+
+        m_UIManager.UnhideCanvas();
+        m_UIManager.SetInventory(m_Inventory);
+        m_UIManager.UpdateAllUI(GetCurrentWeapon());
+
+
+        // Hide mesh when entering.
+        if(m_Mesh)
+            m_Mesh.SetActive(false);
     }
 
     /// <summary>
@@ -171,9 +206,21 @@ public class HostController : InputController
         GetComponent<PlayerInput>().enabled = false;
         m_Active = false;
         m_Camera.enabled = false;
-        HideHUD();
+        //HideHUD();
 
         CustomDebugUI.s_Instance.ClearController();
+
+        // Reverting the layer back to what it was.
+        for (int i = 0; i < m_Inventory.m_Weapons.Count; i++)
+        {
+            m_Inventory.m_Weapons[i].SetWeaponLayerRecursively(10); // If we ever rearrange layer orders this will have to change!                      ===================== IMPORTANT =====================
+        }
+
+        m_UIManager.HideCanvas();
+
+        // Unhide the mesh when leaving.
+        if(m_Mesh)
+            m_Mesh.SetActive(true);
     }
 
     // ========================================================== Input Events ========================================================== //
@@ -182,9 +229,11 @@ public class HostController : InputController
 	{
         if (!PauseMenu.m_GameIsPaused)
         {
-            if (GetCurrentWeapon().m_IsRecoilTesting)
+        Weapon weapon = GetCurrentWeapon();
+        if(weapon)
+            if (weapon.GetRecoilTestState())
                 return; // early out to prevent mouse movement while testing recoil.
-            LookInput = value.ReadValue<Vector2>();
+        LookInput = value.ReadValue<Vector2>();
         }
 	}
 
@@ -221,7 +270,7 @@ public class HostController : InputController
     {
         if (value.performed && m_MovInfo.m_IsGrounded && m_MovInfo.m_IsMoving)
         {
-            Debug.Log("OnSlide called.");
+            //Debug.Log("OnSlide called.");
             m_MovInfo.m_SlideDir = value.performed ? m_Orientation.forward : m_MovInfo.m_SlideDir;
             m_MovInfo.m_IsSliding = true;
 
@@ -239,7 +288,7 @@ public class HostController : InputController
         if (value.performed)
         {
             if (TryGetComponent(out WhiteWillow.Agent agent))
-                agent.Reliquinsh();
+                agent.Release();
         }
     }
 
@@ -247,94 +296,113 @@ public class HostController : InputController
     {
         if (!PauseMenu.m_GameIsPaused)
         {
-            if (value.control.IsPressed(0)) // Have to use this otherwise mouse button gets triggered on release aswell.
+        Weapon weapon = GetCurrentWeapon();
+        if (value.control.IsPressed(0)) // Have to use this otherwise mouse button gets triggered on release aswell.
+        {
+            // Now we have to access the weapon script to call weapon functions.
+            if (weapon)
             {
-                // Now we have to access the weapon script to call weapon functions.
-                GetCurrentWeapon().m_IsFiring = true;
-
+                weapon.SetFireState(true);
 
                 // Experimental thing I'm trying.
                 // I will store the original camera rotation when they first start shooting that way I can go back to this rotation when they recover from recoil.
                 m_CombatInfo.m_PrevCamForward = m_Camera.transform.forward;
-                GetCurrentWeapon().SetFireTime();
-
+                weapon.SetFireTime();
             }
-            else
-            {
-                GetCurrentWeapon().m_IsFiring = false;
+        }
+        else
+        {
+            if (weapon)
+            { 
+                weapon.SetFireState(false);
 
                 // Reset held counter happens regardless.
                 m_CombatInfo.m_ShootingDuration = 0.0f;
             }
         }
+        }
     }
 
     public void OnWeaponSelect1(InputAction.CallbackContext value)
     {
-        if (value.performed && !GetCurrentWeapon().IsReloading())
-        {
-            // Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
-            GetCurrentWeapon().ResetReload();
-            //GetCurrentWeapon().ResetReloadAnimation(); dont need here because pistol doesnt have animation yet.
+		if (value.performed && GetCurrentWeapon() && !GetCurrentWeapon().IsReloading())
+		{
+            //     if (m_Inventory.HasWeapon(0))
+            //     { 
+            //// Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
+            //GetCurrentWeapon().ResetReload();
+            ////GetCurrentWeapon().ResetReloadAnimation(); dont need here because pistol doesnt have animation yet.
 
 
             SelectWeapon(0);
 
-            // Previously I was tracking weapon states in PlayerManager in an attempt to free up space in this controller script. However, now that we have an Inventory script that tracks weapons and
-            // the players current weapon, I'll leave that stuff in there.
-            //PlayerManager.SetWeapon(WeaponSlot.WEAPON1);
+            //// Previously I was tracking weapon states in PlayerManager in an attempt to free up space in this controller script. However, now that we have an Inventory script that tracks weapons and
+            //// the players current weapon, I'll leave that stuff in there.
+            ////PlayerManager.SetWeapon(WeaponSlot.WEAPON1);
 
 
-            //m_UIManager.m_IsRifle = true;
-            m_UIManager.m_CurrentWeaponType = WEAPONTYPE.RIFLE;
-            m_UIManager.HideMagazine(m_UIManager.m_CurrentWeaponType);
-        }
-    }
+            ////m_UIManager.m_IsRifle = true;
+            //m_UIManager.m_CurrentWeaponType = WEAPONTYPE.RIFLE;
+            //m_UIManager.HideMagazine(m_UIManager.m_CurrentWeaponType);
+            //     }
+		}
+	}
 
     public void OnWeaponSelect2(InputAction.CallbackContext value)
     {
-        if (value.performed && !GetCurrentWeapon().IsReloading())
-        {
-            // Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
-            GetCurrentWeapon().ResetReload();
-            GetCurrentWeapon().ResetReloadAnimation();
+		if (value.performed && GetCurrentWeapon() && !GetCurrentWeapon().IsReloading())
+		{
+            //     if (m_Inventory.HasWeapon(1))
+            //     { 
+            //// Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
+            //GetCurrentWeapon().ResetReload();
 
             SelectWeapon(1);
 
-            //m_UIManager.m_IsRifle = false;
-            m_UIManager.m_CurrentWeaponType = WEAPONTYPE.PISTOL;
-            m_UIManager.HideMagazine(m_UIManager.m_CurrentWeaponType);
-        }
-    }
+            ////m_UIManager.m_IsRifle = false;
+            //m_UIManager.m_CurrentWeaponType = WEAPONTYPE.PISTOL;
+            //m_UIManager.HideMagazine(m_UIManager.m_CurrentWeaponType);
+            //     }
+            
+		}
+	}
 
     public void OnWeaponSelect3(InputAction.CallbackContext value)
     {
-        if (value.performed && !GetCurrentWeapon().IsReloading())
-        {
-            // Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
-            GetCurrentWeapon().ResetReload();
-            GetCurrentWeapon().ResetReloadAnimation();
+		if (value.performed && GetCurrentWeapon() && !GetCurrentWeapon().IsReloading())
+		{
+            //     if (m_Inventory.HasWeapon(2))
+            //     { 
+            //// Temporary fix for bug where if the player switches to another weapon while reloading, the former gun can no longer shoot.
+            //GetCurrentWeapon().ResetReload();
 
             SelectWeapon(2);
 
-            //m_UIManager.m_IsRifle = false;
-            m_UIManager.m_CurrentWeaponType = WEAPONTYPE.DUAL;
-            m_UIManager.HideMagazine(m_UIManager.m_CurrentWeaponType);
-        }
-    }
+            ////m_UIManager.m_IsRifle = false;
+            //m_UIManager.m_CurrentWeaponType = WEAPONTYPE.DUAL;
+            //m_UIManager.HideMagazine(m_UIManager.m_CurrentWeaponType);
+            //     }
+            
+		}
+	}
 
     public void OnAim(InputAction.CallbackContext context)
     {
         if (!PauseMenu.m_GameIsPaused)
         {
+        Weapon weapon = GetCurrentWeapon();
+
+        if (weapon)
+        { 
             if (context.performed)
             {
-                GetCurrentWeapon().m_IsAiming = true;
+                GetCurrentWeapon().m_WeaponActions.m_IsAiming = true;
             }
             else if (context.canceled)
             {
-                GetCurrentWeapon().m_IsAiming = false;
+                GetCurrentWeapon().m_WeaponActions.m_IsAiming = false;
             }
+        }
         }
     }
 
@@ -356,9 +424,7 @@ public class HostController : InputController
         if (!PauseMenu.m_GameIsPaused)
         {
             if (value.performed)
-            {
                 GetCurrentWeapon().StartReload();
-            }
         }
     }
 
@@ -366,38 +432,37 @@ public class HostController : InputController
     {
         if (!PauseMenu.m_GameIsPaused)
         {
-            if (value.performed && !m_Dashing)
-        {
-            Vector3 forwardDir = m_Camera.transform.forward;
-            if (m_MovInfo.m_IsGrounded)
-                forwardDir = m_Orientation.forward;
-            
+            if (value.performed && !m_Dashing && !m_DashCoolingDown)
+            {
+                Vector3 forwardDir = m_Camera.transform.forward;
+                if (m_MovInfo.m_IsGrounded)
+                    forwardDir = m_Orientation.forward;
 
-            if (Physics.Raycast(m_Orientation.position, forwardDir, out RaycastHit hitInfo, m_DashDistance))
-                StartCoroutine(Dash(hitInfo.point, -forwardDir * 0.5f, m_DashDuration));
-            else
-                StartCoroutine(Dash(transform.position + forwardDir * m_DashDistance, Vector3.zero, m_DashDuration));
-        }
+                if (Physics.Raycast(m_Orientation.position, forwardDir, out RaycastHit hitInfo, m_DashDistance))
+                    StartCoroutine(Dash(hitInfo.point, -forwardDir * 0.5f, m_DashDuration));
+                else
+                    StartCoroutine(Dash(transform.position + forwardDir * m_DashDistance, Vector3.zero, m_DashDuration));
             }
+        }
     }
 
     public void OnTestRecoil(InputAction.CallbackContext value)
     {
-        if (value.performed && !GetCurrentWeapon().m_IsRecoilTesting)
+        if (value.performed && !GetCurrentWeapon().m_RecoilTesting.m_IsRecoilTesting)
         {
-            GetCurrentWeapon().m_IsRecoilTesting = true;
+            GetCurrentWeapon().m_RecoilTesting.m_IsRecoilTesting = true;
             m_CombatInfo.m_PrevOrientationRot = m_Orientation.transform.eulerAngles;
             m_CombatInfo.m_PrevXRot = m_XRotation;
 
             GetCurrentWeapon().SetFireTime(); // Starting fire counter.
         }
-        else if (value.performed && GetCurrentWeapon().m_IsRecoilTesting)
+        else if (value.performed && GetCurrentWeapon().m_RecoilTesting.m_IsRecoilTesting)
         {
-            GetCurrentWeapon().m_IsRecoilTesting = false;
-            GetCurrentWeapon().m_IsTestResting = false;
+            GetCurrentWeapon().m_RecoilTesting.m_IsRecoilTesting = false;
+            GetCurrentWeapon().m_RecoilTesting.m_IsTestResting = false;
 
-            GetCurrentWeapon().m_IsFiring = false;
-            GetCurrentWeapon().m_RecoilTestCounter = 0;
+            GetCurrentWeapon().m_WeaponActions.m_IsFiring = false;
+            GetCurrentWeapon().m_RecoilTesting.m_RecoilTestCounter = 0;
         }
     }
 
@@ -405,11 +470,16 @@ public class HostController : InputController
     public void OnAbility3(InputAction.CallbackContext value)
     {
         if (value.performed && !m_DeathIncarnateAbility.deathIncarnateUsed)
+        {
             m_DeathIncarnateAbility.chargeRoutine = StartCoroutine(Ability3Charge());
+            m_UIManager.ToggleBar(true);
+        }
 
         else if (value.canceled)
+        { 
             StopCoroutine(m_DeathIncarnateAbility.chargeRoutine); // When we let go, we stop the couritine to clear the time value in it.
-
+            m_UIManager.ToggleBar(false);
+        }
     }
 
     public void OnDebugToggle(InputAction.CallbackContext value)
@@ -549,7 +619,7 @@ public class HostController : InputController
     private bool CheckGrounded()
     {
         RaycastHit hit;
-        Ray ray = new Ray(transform.position + Vector3.up, Vector3.down);
+        Ray ray = new Ray(transform.position, Vector3.down);
         if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckDistance))
         {
             //Debug.Log(hit.transform.name);
@@ -574,7 +644,7 @@ public class HostController : InputController
     private void CalculateGroundNormal()
     {
         RaycastHit hit;
-        Ray ray = new Ray(transform.position + Vector3.up, Vector3.down);
+        Ray ray = new Ray(transform.position, Vector3.down);
         if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckDistance * 1.04f))
         {
             m_MovInfo.m_GroundNormal = hit.normal;
@@ -591,18 +661,17 @@ public class HostController : InputController
     /// <param name="index">The element of the m_Weapons List you want to swap to.</param>
     private void SelectWeapon(int index)
     {
-        // Resetting weapon rotation and location.
-        m_Inventory.m_CurrentWeapon.ClearThings();
+        //Weapon cache = m_Inventory.m_CurrentWeapon;
+        //m_Inventory.m_CurrentWeapon.m_WeaponActions.m_IsAiming = false;
+        //m_Inventory.m_CurrentWeapon.m_WeaponActions.m_IsFiring = false;
+        //m_Inventory.m_CurrentWeapon = m_Inventory.m_Weapons[index]; // Swapping to new weapon.
 
-        Weapon cache = m_Inventory.m_CurrentWeapon;
-        m_Inventory.m_CurrentWeapon.m_IsAiming = false;
-        m_Inventory.m_CurrentWeapon.m_IsFiring = false;
-        m_Inventory.m_CurrentWeapon = m_Inventory.m_Weapons[index]; // Swapping to new weapon.
+        //// Setting them active/inactive to display the correct weapon. Eventually this will be complimented by a weapon swapping phase where it will take some time before
+        //// the player can shoot after swapping weapons.
+        //cache.gameObject.SetActive(false);
+        //m_Inventory.m_CurrentWeapon.gameObject.SetActive(true);
 
-        // Setting them active/inactive to display the correct weapon. Eventually this will be complimented by a weapon swapping phase where it will take some time before
-        // the player can shoot after swapping weapons.
-        cache.gameObject.SetActive(false);
-        m_Inventory.m_CurrentWeapon.gameObject.SetActive(true);
+        m_Inventory.SetWeapon(index);
 
         m_UIManager?.UpdateWeaponUI(m_Inventory.m_CurrentWeapon);
     }
@@ -624,7 +693,7 @@ public class HostController : InputController
 
 		if (m_MovInfo.m_IsSliding)
 		{
-            Debug.Log("Sliding");
+            //Debug.Log("Sliding");
 			// smoothly rotate backwards. todo
 			SmoothMove(m_Camera.transform, new Vector3(0, -0.5f, 0), 0.25f);
 
@@ -692,26 +761,26 @@ public class HostController : InputController
         // script to have another list that compliments the m_Weapons list. This new list would match
         // each element in the m_Weapons list and store the corresponding weapons WeaponConfiguration script.
 
-        return m_Inventory.m_CurrentWeapon.m_Config;
+        return m_Inventory.GetCurrentConfig();
     }
 
     private Transform GetCurrentWeaponTransform() => m_Inventory.m_CurrentWeapon.transform;
-    private Vector3 GetCurrentWeaponOriginalPos() => m_Inventory.m_CurrentWeapon.m_OriginalLocalPosition;
-    private Vector3 GetCurrentWeaponOriginalGlobalPos() => m_Inventory.m_CurrentWeapon.m_OriginalGlobalPosition;
+    private Vector3 GetCurrentWeaponOriginalPos() => m_Inventory.m_CurrentWeapon.m_TransformInfo.m_OriginalLocalPosition;
+    private Vector3 GetCurrentWeaponOriginalGlobalPos() => m_Inventory.m_CurrentWeapon.m_TransformInfo.m_OriginalGlobalPosition;
     public Weapon GetCurrentWeapon() => m_Inventory.m_CurrentWeapon;
 
 
     
 
-    public void HideHUD()
-    {
-        m_HUD.SetActive(false);
-    }
+    //public void HideHUD()
+    //{
+    //    m_HUD.SetActive(false);
+    //}
 
-    public void UnhideHUD()
-    {
-        m_HUD.SetActive(true);
-    }
+    //public void UnhideHUD()
+    //{
+    //    m_HUD.SetActive(true);
+    //}
 
 	// remember cooldown.
 	// this host dies. you get kicked out.
@@ -772,6 +841,9 @@ public class HostController : InputController
 
 			Debug.Log(time);
 
+            // Set power bar ui to match.
+            m_UIManager.SetDeathIncarnateBar(time / m_DeathIncarnateAbility.deathIncarnateRequiredHold);
+
 			yield return null;
 		}
 
@@ -820,12 +892,12 @@ public class HostController : InputController
         Color defaultColour = Gizmos.color;
 
         RaycastHit hit;
-        Ray ray = new Ray(transform.position + Vector3.up, Vector3.down);
+        Ray ray = new Ray(transform.position, Vector3.down);
         if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckDistance))
         {
             Gizmos.DrawLine(transform.position, hit.point);
 
-            GraphicalDebugger.DrawSphereCast(transform.position + Vector3.up, (transform.position + Vector3.up) + Vector3.down * m_GroundCheckDistance, Color.green, m_GroundCheckRadius, m_GroundCheckDistance);
+            GraphicalDebugger.DrawSphereCast(transform.position, (transform.position) + Vector3.down * m_GroundCheckDistance, Color.green, m_GroundCheckRadius, m_GroundCheckDistance);
 
             // Draw forward direction but relative to ground normal.
             Gizmos.color = Color.black;
@@ -833,16 +905,16 @@ public class HostController : InputController
         }
         else
         {
-            GraphicalDebugger.DrawSphereCast(transform.position + Vector3.up, (transform.position + Vector3.up) + Vector3.down * m_GroundCheckDistance, Color.red, m_GroundCheckRadius, m_GroundCheckDistance);
+            GraphicalDebugger.DrawSphereCast(transform.position, (transform.position) + Vector3.down * m_GroundCheckDistance, Color.red, m_GroundCheckRadius, m_GroundCheckDistance);
         }
 
         Gizmos.color = defaultColour;
 
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position + Vector3.up, transform.position + new Vector3(-m_MovInfo.m_CacheMovDirection.x, m_MovInfo.m_CacheMovDirection.y, -m_MovInfo.m_CacheMovDirection.z));
+        Gizmos.DrawLine(transform.position, transform.position + new Vector3(-m_MovInfo.m_CacheMovDirection.x, m_MovInfo.m_CacheMovDirection.y, -m_MovInfo.m_CacheMovDirection.z));
 
         Gizmos.color = Color.green;
-        Gizmos.DrawLine(transform.position + Vector3.up, transform.position + m_MovInfo.m_CacheMovDirection);
+        Gizmos.DrawLine(transform.position, transform.position + m_MovInfo.m_CacheMovDirection);
 
         // Trying to visualise true movement forward vector.
         Gizmos.color = Color.cyan;
@@ -901,4 +973,34 @@ public class HostController : InputController
         if (m_DeathIncarnateAbility.drawingDeathIncarnate)
             Ability3Gizmo();
     }
+
+
+
+
+    // Testing new weapon features out.
+
+    public void OnDeleteWep1(InputAction.CallbackContext value)
+    {
+        if(value.performed)
+            m_Inventory.RemoveWeapon(0);
+    }
+    public void OnDeleteWep2(InputAction.CallbackContext value)
+    {
+        if (value.performed)
+            m_Inventory.RemoveWeapon(1);
+    }
+    public void OnDeleteWep3(InputAction.CallbackContext value)
+    {
+        if (value.performed)
+            m_Inventory.RemoveWeapon(2);
+    }
+
+    public void OnAddWeapon(InputAction.CallbackContext value)
+    {
+        if (value.performed)
+        {
+            m_Inventory.AddWeapon(Resources.Load<GameObject>("AssaultRifle"));
+        }
+    }
+
 }

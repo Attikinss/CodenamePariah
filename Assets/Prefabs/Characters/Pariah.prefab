@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5488115989255903691}
   - component: {fileID: 5488115989255903690}
   - component: {fileID: 5488115989255903695}
-  - component: {fileID: 6028175250013618003}
+  - component: {fileID: -6513908037956115129}
   m_Layer: 0
   m_Name: Pariah
   m_TagString: Untagged
@@ -53,15 +53,18 @@ MonoBehaviour:
   m_MovementSpeed: 650
   m_LookSensitivity: 40
   m_DashDuration: 0.5
+  m_DashCooldown: 1
   m_DashDistance: 12.5
+  m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
   m_PlayerInput: {fileID: 5488115989255903691}
   m_Active: 1
   m_Dashing: 0
+  m_DashCoolingDown: 0
   m_Acceleration: 0.08
-  m_Health: 100
-  m_MaxHealth: 100
+  m_Health: 200
+  m_MaxHealth: 200
   m_HealthDrainAmount: 1
-  m_HealthDrainDelay: 0.1
+  m_HealthDrainDelay: 0.25
   m_MovementInput: {x: 0, y: 0, z: 0}
   m_LookInput: {x: 0, y: 0}
   m_Rotation: {x: 0, y: 0}
@@ -319,6 +322,34 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 1a369283-ec17-47f9-8107-662f60fdea79
     m_ActionName: Host/Select2[/Keyboard/2]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 34ac542d-357c-4a6b-a6aa-2be3b09a062e
+    m_ActionName: Host/Select3[/Keyboard/3]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: bcf73363-bc80-4831-b974-7150f49040b0
+    m_ActionName: Host/RecoilTest[/Keyboard/k]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: f9c58ad8-8a77-4d56-a4a3-4075ad8b7bde
+    m_ActionName: Host/Ability2[/Keyboard/q]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5b49c673-d3b1-41b6-99d5-f9d704f79ca1
+    m_ActionName: Host/Reload[/Keyboard/r]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 1c83b672-8c3a-4495-a8a6-adbde018f0a7
+    m_ActionName: Host/Ability3[/Keyboard/e]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: eae199af-e3a2-4a7c-b07a-7d79b6689faa
+    m_ActionName: Host/Debug[/Keyboard/f3]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: ef142069-848d-41fb-81e7-af98a812f8b8
+    m_ActionName: Host/ToggleHUD[/Keyboard/f4]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: KBM
   m_DefaultActionMap: Pariah
@@ -353,14 +384,20 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.25
   m_Center: {x: 0, y: 0, z: 0}
---- !u!81 &6028175250013618003
-AudioListener:
+--- !u!114 &-6513908037956115129
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5488115989255903284}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attenuationObject: {fileID: 0}
+  ListenerNumber: -1
 --- !u!1 &5488115990317370183
 GameObject:
   m_ObjectHideFlags: 0

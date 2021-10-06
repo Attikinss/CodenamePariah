@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using UnityEngine.Rendering.HighDefinition;
+
 /// <summary>
 /// This GameManager is a temporary class by Daniel. I'm using it now just as a place to store all the weapon shot decals.
 /// </summary>
@@ -11,15 +13,31 @@ public class GameManager : MonoBehaviour
 
     public int m_MaxDecals = 35;
 
-    public List<Decal> m_allDecals = new List<Decal>();
+    //public List<Decal> m_allDecals = new List<Decal>();
 
-    private List<Decal> m_decalPool = new List<Decal>();
+    //private List<Decal> m_decalPool = new List<Decal>();
 
-    private List<GameObject> m_DecalSprite = new List<GameObject>();
+    //private List<GameObject> m_DecalSprite = new List<GameObject>();
 
-    public GameObject m_DecalObject;
+    // Right now the decal system depends on having a prefab to represent the decal. This seems pretty weird to me but until I further discuss this with others I will
+    // keep it like this. This m_DecalObject is that prefab, if it is not set in the GameManager, we wont try and instantiate them.
+    //public GameObject m_DecalObject;
 
-    public void TogglePause(bool toggle)
+
+
+
+    // =================== NEW DECAL SYSTEM IN PROGRESS =================== //
+    public DecalProjector m_ProjectorObject; // Template to instantiate the others.
+
+    public List<Decal> m_BulletPool; // Decal now contains the projector.
+    int m_BulletPoolRingBuffer = 0; // Tracks what we're up to in the bullet pool.
+
+	private void Awake()
+	{
+        m_BulletPool = new List<Decal>();
+	}
+
+	public void TogglePause(bool toggle)
     { }
 
     // Start is called before the first frame update
@@ -27,30 +45,38 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
 
-        // super temporary decal system. todo completely rework it.
+        //if (m_DecalObject) // If the GameManager has no decal gameobject set, don't try create them.
+        //{
+        //    for (int i = 0; i < m_MaxDecals; i++)
+        //    {
+        //        m_DecalSprite.Add(GameObject.Instantiate(m_DecalObject));
+        //        m_DecalSprite[i].transform.position = new Vector3(0, -100, 0); // Hiding the unused decals out of the way.
 
-        if (m_DecalObject)
-        {
-            for (int i = 0; i < m_MaxDecals; i++)
-            {
-                m_DecalSprite.Add(GameObject.Instantiate(m_DecalObject));
-                m_DecalSprite[i].transform.position = new Vector3(-1000, -1000, -1000); // temporary!!
-
-            }
-            for (int i = 0; i < m_MaxDecals; i++)
-            {
-                m_decalPool.Add(new Decal(m_DecalSprite[i]));
-            }
-        }
-        else
-        {
-            for (int i = 0; i < m_MaxDecals; i++)
-            {
-                m_decalPool.Add(new Decal());
-            }
-        }
+        //    }
+        //    for (int i = 0; i < m_MaxDecals; i++)
+        //    {
+        //        m_decalPool.Add(new Decal(m_DecalSprite[i]));
+        //    }
+        //}
+        //else
+        //{
+        //    for (int i = 0; i < m_MaxDecals; i++)
+        //    {
+        //        m_decalPool.Add(new Decal());
+        //    }
+        //}
 
         // Initialise the unused pool of decals.
+
+
+        // ====================== NEW DECAL SYSTEM ====================== //
+        for (int i = 0; i < m_MaxDecals - 1; i++) // minus one for now since I'm leaving the first decal projector in the scene. This will have to change if we
+        {                                         // load it from resources instead.
+            // Instantiate the decals.
+            Decal newDecal = new Decal(m_ProjectorObject.gameObject);
+            m_BulletPool.Add(newDecal);
+        }
+
 
     }
 
@@ -60,22 +86,29 @@ public class GameManager : MonoBehaviour
         UpdateDecals();
     }
 
-    public void AddDecal(Transform obj, Vector3 hitPoint, Vector3 normal)
+    public void PlaceDecal(Transform obj, Vector3 hitPoint, Vector3 normal)
     {
-        m_decalPool[0].SetDecal(obj, hitPoint, normal);
+        //m_decalPool[0].SetDecal(obj, hitPoint, normal);
 
-        Decal m_oldFirst = m_decalPool[0];
-        m_decalPool.RemoveAt(0); // Removing the first one.
-        m_decalPool.Add(m_oldFirst); // Adding it back so it's at the back of the list.
+        //Decal m_oldFirst = m_decalPool[0];
+        //m_decalPool.RemoveAt(0); // Removing the first one.
+        //m_decalPool.Add(m_oldFirst); // Adding it back so it's at the back of the list.
+
+        if (m_BulletPoolRingBuffer == m_MaxDecals - 1) // We have exceeded the amount of decals in the world!
+            m_BulletPoolRingBuffer = 0; // Set it back to the start.
+
+        m_BulletPool[m_BulletPoolRingBuffer].SetDecal(obj, hitPoint, normal);
+        m_BulletPoolRingBuffer++;
+        
     }
 
     public void AddDecal(Transform obj, Vector3 hitPoint, Vector3 normal, GameObject decal)
     {
-        m_decalPool[0].SetDecal(obj, hitPoint, normal, decal);
+        //m_decalPool[0].SetDecal(obj, hitPoint, normal, decal);
 
-        Decal m_oldFirst = m_decalPool[0];
-        m_decalPool.RemoveAt(0); // Removing the first one.
-        m_decalPool.Add(m_oldFirst); // Adding it back so it's at the back of the list.
+        //Decal m_oldFirst = m_decalPool[0];
+        //m_decalPool.RemoveAt(0); // Removing the first one.
+        //m_decalPool.Add(m_oldFirst); // Adding it back so it's at the back of the list.
     }
 
     public void PopDecal()
@@ -83,13 +116,21 @@ public class GameManager : MonoBehaviour
 
     private void UpdateDecals()
     {
-        if (m_decalPool.Count > 0)
+        //if (m_decalPool.Count > 0)
+        //{
+        //    for (int i = 0; i < m_decalPool.Count; i++)
+        //    {
+        //        m_decalPool[i].Update();
+        //    }
+        //}
+
+        if (m_BulletPool.Count > 0) // If we actually have any decals.
         {
-            for (int i = 0; i < m_decalPool.Count; i++)
-            {
-                m_decalPool[i].Update();
-            }
+            for (int i = 0; i < m_BulletPool.Count; i++)
+                m_BulletPool[i].Update(); // Refresh the projectors positions and stuff incase they are on moving objects.
         }
+
+
     }
 
 	private void OnDrawGizmos()

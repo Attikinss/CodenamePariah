@@ -34,14 +34,13 @@ namespace WhiteWillow.Editor
         public static readonly string c_EditorResourcePath = $"{c_RootPath}/Editor/Resources";
         public static readonly string c_IconPath = $"{c_EditorResourcePath}/Icons";
 
-        public BehaviourTreeGraphView() { }
-
         public void Construct(BehaviourTreeEditorWindow editorWindow)
         {
             m_EditorWindow = editorWindow;
 
             // Set callback for key down events
             RegisterCallback<KeyDownEvent>(OnKeyDown);
+            RegisterCallback<MouseDownEvent>(OnMouseDown);
 
             // Setup the zoom values of the graph
             SetupZoom(0.4f, 2.0f, 0.2f, 1.25f);
@@ -145,14 +144,14 @@ namespace WhiteWillow.Editor
                 var nodeView = node as NodeView;
                 nodeView?.UpdateInfo();
 
-                // Unhighlith all nodes
-                if (!nodeView.m_Highlight) (nodeView as TaskNodeView)?.Unhighlight();
+                // Unhighlight all nodes
+                if (!nodeView.m_Highlight && EditorApplication.isPlaying) (nodeView as TaskNodeView)?.Unhighlight();
             });
 
             nodeViews.ForEach(node =>
             {
                 var nodeView = node as TaskNodeView;
-                if (nodeView != null && nodeView.m_Highlight) (node as TaskNodeView)?.Highlight();
+                if (nodeView != null && nodeView.m_Highlight && EditorApplication.isPlaying) (node as TaskNodeView)?.Highlight();
             });
         }
 
@@ -225,6 +224,8 @@ namespace WhiteWillow.Editor
                         node.ConnectNodes(n.InputPort, Direction.Output);
                         n.ConnectNodes(node.OutputPort, Direction.Input);
                     }
+
+                    compNode.Children.FirstOrDefault()?.RecaluclateExecutionOrder();
                 }
                 else if (nodeType == typeof(DecoratorNodeView))
                 {
@@ -272,6 +273,20 @@ namespace WhiteWillow.Editor
                 // Focus on all elements
                 else
                     FrameAll();
+            }
+        }
+
+        public void OnMouseDown(MouseDownEvent evt)
+        {
+            if (evt.button == 0)
+            {
+                Vector3 screenMousePosition = evt.localMousePosition;
+                Vector2 worldMousePosition = screenMousePosition - contentViewContainer.transform.position;
+                worldMousePosition *= 1 / contentViewContainer.transform.scale.x;
+
+                bool mouseOverNode = nodes.Any(node => (node as NodeView).IsMouseOver(worldMousePosition));
+                if (!mouseOverNode)
+                    OnNodeSelected(null);
             }
         }
 

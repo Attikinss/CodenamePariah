@@ -179,6 +179,7 @@ MonoBehaviour:
     drawingDeathIncarnate: 0
     deathIncarnatePos: {x: 0, y: 0, z: 0}
     deathIncarnateUsed: 0
+  m_Mesh: {fileID: 0}
 --- !u!114 &4480668722508770147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -947,9 +948,25 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4480668722508770150}
     - target: {fileID: 2238759060784313516, guid: c09c029d69a612d48a5dfa6fdefbb62e, type: 3}
+      propertyPath: m_ReserveAmmo
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2238759060784313516, guid: c09c029d69a612d48a5dfa6fdefbb62e, type: 3}
+      propertyPath: m_MagazineSize
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2238759060784313516, guid: c09c029d69a612d48a5dfa6fdefbb62e, type: 3}
       propertyPath: m_FiringPosition
       value: 
       objectReference: {fileID: 1125695211050776387}
+    - target: {fileID: 2238759060784313516, guid: c09c029d69a612d48a5dfa6fdefbb62e, type: 3}
+      propertyPath: m_MaxReserveAmmo
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2238759060784313516, guid: c09c029d69a612d48a5dfa6fdefbb62e, type: 3}
+      propertyPath: m_RoundsInMagazine
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2238759060784313553, guid: c09c029d69a612d48a5dfa6fdefbb62e, type: 3}
       propertyPath: m_Name
       value: Pistol

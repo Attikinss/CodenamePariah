@@ -12,6 +12,6 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: d3b7fa7d6fa118d42978a20ed493114e
   - enabled: 1
-    path: Assets/Scenes/Level_001_PrefabScenes/Arena_001.unity
+    path: Assets/Scenes/Level_001_PrefabScenes/Level_001.unity
     guid: 6fe533e3e6266e4479b7086148560d05
   m_configObjects: {}

@@ -13,6 +13,10 @@ public class GameManager : MonoBehaviour
 
     public int m_MaxDecals = 35;
 
+    public static WhiteWillow.Agent s_StartedAgent;
+
+    public PariahController m_Pariah;
+
     //public List<Decal> m_allDecals = new List<Decal>();
 
     //private List<Decal> m_decalPool = new List<Decal>();
@@ -44,6 +48,15 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Instance = this;
+
+        if (!m_Pariah)
+        {
+            // If we haven't set the PariahController in the inspector, we'll attempt to get it by searching the scene.
+            Debug.LogWarning("PariahController reference in GameManager has not been set. Attempting to set it by searching through the scene...");
+            m_Pariah = GameObject.Find("Pariah").GetComponent<PariahController>();
+            if (m_Pariah)
+                Debug.LogWarning("Successfully found and set PariahController reference in GameManager.");
+        }
 
         //if (m_DecalObject) // If the GameManager has no decal gameobject set, don't try create them.
         //{
@@ -139,5 +152,21 @@ public class GameManager : MonoBehaviour
         //{
         //    m_decalPool[i].DrawGizmo();
         //}
+    }
+
+    public static void SetStartAgent(WhiteWillow.Agent startingAgent)
+    {
+        if (s_StartedAgent == null)
+        {
+            s_StartedAgent = startingAgent;
+            GameManager instance = GameManager.Instance;
+            // We can do it because there have been no other agents set to be started in.
+            instance.m_Pariah.ForceInstantPossess(s_StartedAgent);
+        }
+        else
+        {
+            // If we hit this, that means someone has set more than 1 agent to be started in.
+            Debug.LogError("You have set multiple agents to be the starting controller!");
+        }
     }
 }

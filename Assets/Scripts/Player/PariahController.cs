@@ -321,4 +321,15 @@ public class PariahController : InputController
     /// </summary>
     /// <returns></returns>
     public int GetHealth() { return m_Health; }
+
+    /// <summary>
+    /// ForceInstantPossess() is used to start the player in an agent. It is called from GameManager.
+    /// </summary>
+    /// <param name="target">Agent you want to control.</param>
+    public void ForceInstantPossess(Agent target)
+    {
+        target.Possess();
+        m_CurrentPossessed = target;
+        m_Possessing = false;
+    }
 }

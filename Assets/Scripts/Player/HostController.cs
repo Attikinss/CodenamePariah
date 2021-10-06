@@ -9,6 +9,10 @@ public class HostController : InputController
     [Header("Settings")]
 
     [SerializeField]
+    [Tooltip("Set this agent to be the one the game starts in. There can only be one!")]
+    private bool m_StartingAgent;
+
+    [SerializeField]
     [Min(0)]
     private int m_OnDestroyedDamage = 25;
 
@@ -92,6 +96,10 @@ public class HostController : InputController
 	private void Start()
 	{
         m_UIManager = UIManager.s_Instance;
+
+        // If this is the starting agent, let the GameManager know.
+        if (m_StartingAgent)
+            GameManager.SetStartAgent(GetComponent<WhiteWillow.Agent>());
     }
 	private void Update()
     {

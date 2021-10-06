@@ -194,34 +194,7 @@ MonoBehaviour:
     - model: {fileID: 8926484042661615954}
       id: 0
       isStickyNote: 0
-    - model: {fileID: 8926484042661615965}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615971}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615976}
-      id: 0
-      isStickyNote: 0
     - model: {fileID: 8926484042661615980}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661616002}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661616000}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661616006}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615993}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661616004}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615991}
       id: 0
       isStickyNote: 0
     - model: {fileID: 8926484042661616018}
@@ -16705,7 +16678,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_UIIgnoredErrors: []
-  m_Parent: {fileID: 0}
+  m_Parent: {fileID: 114350483966674976}
   m_Children: []
   m_UIPosition: {x: 0, y: 0}
   m_UICollapsed: 1
@@ -16912,7 +16885,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_UIIgnoredErrors: []
-  m_Parent: {fileID: 0}
+  m_Parent: {fileID: 114350483966674976}
   m_Children: []
   m_UIPosition: {x: 0, y: 0}
   m_UICollapsed: 1

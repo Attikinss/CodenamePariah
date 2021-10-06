@@ -12,7 +12,8 @@ public class WeaponConfiguration : MonoBehaviour
     public bool m_AlwaysFiring;
 
     [Header("Transform References")]
-    public Transform m_Gun;
+    public List<Transform> m_Gun;
+    public List<Transform> m_Arms;
     public Transform m_ScopeCentre;
 
     [Header("General")]

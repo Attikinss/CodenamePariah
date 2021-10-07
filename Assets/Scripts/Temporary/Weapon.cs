@@ -274,12 +274,11 @@ public class Weapon : MonoBehaviour
                     {
                         if (hitInfo.transform.gameObject != null)
                         {
-                            GameManager.s_Instance.PlaceBulletSpray(hitInfo.point, hitInfo.transform, (transform.position - hitInfo.point).normalized);
                             //Debug.Log("Bad");
                             if (hitInfo.transform.TryGetComponent(out Inventory agentInventory))
-
                             {
                                 //Debug.Log("BAD");
+                                GameManager.s_Instance.PlaceBulletSpray(hitInfo.point, hitInfo.transform, (transform.position - hitInfo.point).normalized);
                                 agentInventory.TakeDamage(m_BulletDamage);
                                 
 

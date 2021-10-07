@@ -38,8 +38,7 @@ public class BloodSpray
         {
             Vector3 localPos = m_AttachedObj.TransformPoint(m_Pos);
             
-            m_ParticleObj.transform.LookAt(localPos + m_AttachedObj.TransformVector(m_FacingDirection));
-            localPos += m_AttachedObj.TransformVector(m_FacingDirection) * 0.009f;
+            localPos += m_AttachedObj.TransformVector(m_FacingDirection) * 0.09f;
 
             m_ParticleObj.transform.position = localPos;
         }
@@ -48,6 +47,7 @@ public class BloodSpray
     public void SetSpray(Transform attach, Vector3 hitPoint, Vector3 facing)
     {
         m_AttachedObj = attach;
+        m_ParticleObj.transform.LookAt(m_Particle.transform.position + m_AttachedObj.TransformVector(m_FacingDirection));
         m_Pos = m_AttachedObj.InverseTransformPoint(hitPoint);
         m_FacingDirection = facing;
         //m_LocalMat = m_objAttached.worldToLocalMatrix;

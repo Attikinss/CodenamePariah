@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 using UnityEngine.Rendering.HighDefinition;
 
@@ -9,7 +10,7 @@ using UnityEngine.Rendering.HighDefinition;
 /// </summary>
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance { get; private set; }
+    public static GameManager s_Instance { get; private set; }
 
     public int m_MaxDecals = 35;
 
@@ -36,9 +37,28 @@ public class GameManager : MonoBehaviour
     public List<Decal> m_BulletPool; // Decal now contains the projector.
     int m_BulletPoolRingBuffer = 0; // Tracks what we're up to in the bullet pool.
 
+    // ================== Blood Spray Pool System ========================= //
+    public GameObject m_BloodSprayPrefab;
+    [Tooltip("The blood sprays are bullet pooled. This value will be how many bullet sprays are in the pool.")]
+    public uint m_MaxBloodSprays = 10; // I think 10 is a solid number. If we have agents constantly getting shot really fast than this would have to increase.
+
+    public List<BloodSpray> m_BloodSprayPool;
+    private int m_BloodSprayPoolRingBuffer = 0;
+
+
 	private void Awake()
 	{
         m_BulletPool = new List<Decal>();
+        m_BloodSprayPool = new List<BloodSpray>();
+
+        if (s_Instance == null)
+            s_Instance = this;
+        else if (s_Instance != null && s_Instance != this)
+        {
+            // We have placed multiple GameManager components in the scene.
+            Debug.LogError("There are multiple GameManager components in the scene!");
+            Destroy(this.gameObject);
+        }
 	}
 
 	public void TogglePause(bool toggle)
@@ -47,7 +67,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Instance = this;
+        //s_Instance = this;
 
         if (!m_Pariah)
         {
@@ -85,11 +105,18 @@ public class GameManager : MonoBehaviour
         // ====================== NEW DECAL SYSTEM ====================== //
         for (int i = 0; i < m_MaxDecals - 1; i++) // minus one for now since I'm leaving the first decal projector in the scene. This will have to change if we
         {                                         // load it from resources instead.
-            // Instantiate the decals.
-            Decal newDecal = new Decal(m_ProjectorObject.gameObject);
+            // Instantiate the decals.                                                              // The comment above me is incorrect. You can load prefabs in without them being
+            Decal newDecal = new Decal(m_ProjectorObject.gameObject);                               // in the scene.
             m_BulletPool.Add(newDecal);
         }
 
+
+        // Initializing all the bullet spray objects.
+        for (int i = 0; i < m_MaxBloodSprays; i++)
+        {
+            BloodSpray newSpray = new BloodSpray(m_BloodSprayPrefab);
+            m_BloodSprayPool.Add(newSpray);
+        }
 
     }
 
@@ -97,6 +124,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         UpdateDecals();
+        UpdateBloodSprays();
     }
 
     public void PlaceDecal(Transform obj, Vector3 hitPoint, Vector3 normal)
@@ -159,7 +187,7 @@ public class GameManager : MonoBehaviour
         if (s_StartedAgent == null)
         {
             s_StartedAgent = startingAgent;
-            GameManager instance = GameManager.Instance;
+            GameManager instance = GameManager.s_Instance;
             // We can do it because there have been no other agents set to be started in.
             instance.m_Pariah.ForceInstantPossess(s_StartedAgent);
         }
@@ -167,6 +195,32 @@ public class GameManager : MonoBehaviour
         {
             // If we hit this, that means someone has set more than 1 agent to be started in.
             Debug.LogError("You have set multiple agents to be the starting controller!");
+        }
+    }
+
+    public void PlaceBulletSpray(Vector3 pos, Transform parent, Vector3 facing)
+    {
+        m_BloodSprayPool[m_BloodSprayPoolRingBuffer].SetSpray(parent, pos, facing);
+
+        // Play the effect.
+        //m_BloodSprayPool[m_BloodSprayPoolRingBuffer].Play();
+
+        IncrementSprayRingBuffer(); // Incrementing the ring buffer so it is prepared for the next PlaceBulletSpray() call.
+    }
+    private void IncrementSprayRingBuffer()
+    {
+        if (m_BloodSprayPoolRingBuffer >= m_BloodSprayPool.Count - 1)
+        {
+            m_BloodSprayPoolRingBuffer = 0;
+        }
+        else
+            m_BloodSprayPoolRingBuffer++;
+    }
+    private void UpdateBloodSprays()
+    {
+        for (int i = 0; i < m_BloodSprayPool.Count; i++)
+        {
+            m_BloodSprayPool[i].Update();
         }
     }
 }

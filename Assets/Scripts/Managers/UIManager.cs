@@ -384,14 +384,16 @@ public class UIManager : MonoBehaviour
             // Hiding if unneccessary.
             ToggleDualWield(weapon.m_DualWield);
 
-            int currentRoundsLeftGun = weapon.GetRoundsInMagazine(true);
-            int reserveRoundsLeftGun = weapon.GetReserve(true);
+            int currentRoundsLeftGun = weapon.GetRoundsInMagazine(true); 
+            int reserveRoundsLeftGun = weapon.GetReserve(); // Remove true in parameter because there will only be one ammo pool from now on.
 
             string firstExtraGun = currentRoundsLeftGun >= 10 ? currentRoundsLeftGun.ToString() : $"0{currentRoundsLeftGun}";
             string secondExtraGun = reserveRoundsLeftGun >= 10 ? reserveRoundsLeftGun.ToString() : $"0{reserveRoundsLeftGun}";
 
             //m_AmmoDisplay.SetText($"{first} / {second}");
-            m_AmmoDisplayLeft.SetText(firstExtraGun + " / " + secondExtraGun);
+
+            //m_AmmoDisplayLeft.SetText(firstExtraGun + " / " + secondExtraGun); // No longer showing pool of ammo for the left dual wield gun since the pools are the same.
+            m_AmmoDisplayLeft.SetText(firstExtraGun);
         }
 
     }

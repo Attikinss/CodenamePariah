@@ -61,7 +61,7 @@ public class Weapon : MonoBehaviour
 
     // Duplicate variables to handle the second gun for dual wield.
     private int m_RoundsInMagazineLeft;
-    private int m_ReserveAmmoLeft;
+    //private int m_ReserveAmmoLeft;
     private float m_NextTimeToFireLeft = 0f;
    
 
@@ -122,7 +122,7 @@ public class Weapon : MonoBehaviour
 
 
         // Setting up the left gun's ammo pools and stuff to match the right gun.
-        m_ReserveAmmoLeft = m_ReserveAmmo;        m_RoundsInMagazineLeft = m_RoundsInMagazine;
+        //m_ReserveAmmoLeft = m_ReserveAmmo; // Removed reserve ammo for the left gun because the left and right gun ammo pools are going to be the same.        m_RoundsInMagazineLeft = m_RoundsInMagazine;
     }
 	private void Start()
 	{
@@ -329,7 +329,7 @@ public class Weapon : MonoBehaviour
 
     public void StartReload(bool dualWield)
     {
-        if (!PrimaryAmmoFull(dualWield) && !ReserveAmmoEmpty(dualWield) && !GetReloadState(dualWield))
+        if (!PrimaryAmmoFull(dualWield) && !ReserveAmmoEmpty() && !GetReloadState(dualWield))
         {
             CombatInfo combatInfo = m_Controller.m_CombatInfo;
             StartCoroutine(Reload(dualWield));
@@ -581,7 +581,8 @@ public class Weapon : MonoBehaviour
         if (special)
         {
             ammoRequired = m_MagazineSize - m_RoundsInMagazineLeft;
-            reservePool = m_ReserveAmmoLeft;
+            //reservePool = m_ReserveAmmoLeft;
+            reservePool = m_ReserveAmmo;
         }
         else
         { 
@@ -600,8 +601,10 @@ public class Weapon : MonoBehaviour
             // Move all remaining ammo into magazine
             if (special)
             {
-                m_RoundsInMagazineLeft += m_ReserveAmmoLeft;
-                m_ReserveAmmoLeft = 0;
+                //m_RoundsInMagazineLeft += m_ReserveAmmoLeft;
+                m_RoundsInMagazineLeft += m_ReserveAmmo;
+                //m_ReserveAmmoLeft = 0;
+                m_ReserveAmmo = 0;
             }
             else 
             {
@@ -626,7 +629,8 @@ public class Weapon : MonoBehaviour
             if (special)
             {
                 m_RoundsInMagazineLeft += ammoRequired;
-                m_ReserveAmmoLeft -= ammoRequired;
+                //m_ReserveAmmoLeft -= ammoRequired;
+                m_ReserveAmmo -= ammoRequired;
             }
             else
             { 
@@ -868,7 +872,11 @@ public class Weapon : MonoBehaviour
     public bool ReserveAmmoEmpty(bool special = false)
     {
         if (special) // If special is true, check the left gun reserve ammo.
-            return m_ReserveAmmoLeft == 0;
+        { 
+            //return m_ReserveAmmoLeft == 0;
+            return m_ReserveAmmo == 0;
+
+        }
 
         return m_ReserveAmmo == 0;
     }
@@ -884,7 +892,10 @@ public class Weapon : MonoBehaviour
     public int GetReserve(bool special = false)
     {
         if (special)
-            return m_ReserveAmmoLeft;
+        { 
+            //return m_ReserveAmmoLeft;
+            return m_ReserveAmmo;
+        }
 
         return m_ReserveAmmo;
     }

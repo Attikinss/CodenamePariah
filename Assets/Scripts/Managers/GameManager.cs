@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour
 
     public PariahController m_Pariah;
 
+    public Achievements m_Achievements;
+
     //public List<Decal> m_allDecals = new List<Decal>();
 
     //private List<Decal> m_decalPool = new List<Decal>();
@@ -201,5 +203,17 @@ public class GameManager : MonoBehaviour
         {
             m_BloodSprayPool[i].Update();
         }
+    }
+
+    public void OnEnterScientist()
+    {
+        // If entering scientist for the first time.
+        if(!m_Achievements.hasEnteredScientist)
+            m_Achievements.EnteredScientist();
+        
+    }
+    public void OnEnterSoldier()
+    {
+        m_Achievements.EnteredSoldier();
     }
 }

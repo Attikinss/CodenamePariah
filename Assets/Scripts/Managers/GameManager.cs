@@ -123,7 +123,6 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UpdateDecals();
         UpdateBloodSprays();
     }
 
@@ -154,26 +153,6 @@ public class GameManager : MonoBehaviour
 
     public void PopDecal()
     { }
-
-    private void UpdateDecals()
-    {
-        //if (m_decalPool.Count > 0)
-        //{
-        //    for (int i = 0; i < m_decalPool.Count; i++)
-        //    {
-        //        m_decalPool[i].Update();
-        //    }
-        //}
-
-        if (m_BulletPool.Count > 0) // If we actually have any decals.
-        {
-            for (int i = 0; i < m_BulletPool.Count; i++)
-                m_BulletPool[i].Update(); // Refresh the projectors positions and stuff incase they are on moving objects.
-        }
-
-
-    }
-
 	private void OnDrawGizmos()
 	{
         //for (int i = 0; i < m_decalPool.Count; i++)

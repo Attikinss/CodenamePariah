@@ -151,7 +151,11 @@ namespace WhiteWillow
         public void Kill()
         {
             if (Possessed)
+            { 
                 Release();
+                // Also apply extra damage to Pariah's life essence.
+                PariahController?.TakeDamage(m_HostController.GetOnDestroyDamage());
+            }
 
             // TODO: Use object pooling / queued destruction system
             Destroy(gameObject);

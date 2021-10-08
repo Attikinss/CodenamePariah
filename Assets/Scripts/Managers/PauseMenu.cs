@@ -21,11 +21,11 @@ public class PauseMenu : MonoBehaviour
     [Tooltip("Whether the player is in the process of quitting the game (quit menu).")]
     private static bool m_IsQuitting = false;
 
-    [Tooltip("Whether their are settings to be applied.")]
-    private static bool m_SettingsToBeApplied = false;
+    //[Tooltip("Whether there are settings to be applied.")]
+    //private static bool m_SettingsToBeApplied = false;
 
-    [Tooltip("Whether the player has a dialogue box active.")]
-    private static bool m_InsideDialogueBox = false;
+    //[Tooltip("Whether the player has a dialogue box active.")]
+    //private static bool m_InsideDialogueBox = false;
 
     [Tooltip("All the gameobjects that need to be turned on or off when pausing or resuming the game.")]
     public GameObject[] m_PauseMenuUI;
@@ -52,22 +52,22 @@ public class PauseMenu : MonoBehaviour
         //just keyboard at this stage. needs to be readjusted for inputsystem
         if (Keyboard.current.escapeKey.wasPressedThisFrame) 
         {
-            if (m_InsideDialogueBox)
+            //if (m_InsideDialogueBox)
+            //{
+            //    CloseDialogueBox();
+            //}
+            /*else*/ if (m_OptionsOpen)
             {
-                CloseDialogueBox();
-            }
-            else if (m_OptionsOpen)
-            {
-                if (m_SettingsToBeApplied)
-                {
-                    OpenDialogueBox();
-                    SettingsChanged();
-                }
-                else
-                {
+                //if (m_SettingsToBeApplied)
+                //{
+                //    OpenDialogueBox();
+                //    SettingsChanged();
+                //}
+                //else
+                //{
                     OptionsClose();
                     Pause();
-                }
+                //}
             }
             else if (m_IsQuitting)
             {
@@ -192,7 +192,7 @@ public class PauseMenu : MonoBehaviour
             m_OptionsMenuUI[i].SetActive(false);
         }
         m_OptionsOpen = false;
-        m_SettingsToBeApplied = false;
+        //m_SettingsToBeApplied = false;
     }
     
     /// <summary>Upon opening the quit menu, sets isquitting to true.</summary>
@@ -217,42 +217,42 @@ public class PauseMenu : MonoBehaviour
         m_IsQuitting = false;
     }
 
-    /// <summary>Upon settings being changed, sets settings to be applied to true. NEED TO FIX.</summary>
-    public void SettingsChanged()
-    {
-        m_SettingsToBeApplied = true;
-    }
+    ///// <summary>Upon settings being changed, sets settings to be applied to true. NEED TO FIX.</summary>
+    //public void SettingsChanged()
+    //{
+    //    m_SettingsToBeApplied = true;
+    //}
 
-    /// <summary>Changes settings and disable dialogue box, then sets settings to be applied to false.</summary>
-    public void SettingsApplied()
-    {
-        //do all these changes.
-        m_DialogueBoxUI.SetActive(false);
-        m_SettingsToBeApplied = false;
-    }
+    ///// <summary>Changes settings and disable dialogue box, then sets settings to be applied to false.</summary>
+    //public void SettingsApplied()
+    //{
+    //    //do all these changes.
+    //    m_DialogueBoxUI.SetActive(false);
+    //    m_SettingsToBeApplied = false;
+    //}
 
-    /// <summary>Opens a dialogue box and sets insidedialoguebox to true.</summary>
-    public void OpenDialogueBox()
-    {
-        m_DialogueBoxUI.SetActive(true);
-        m_InsideDialogueBox = true;
-        Debug.Log("Discard Changes?");
-    }
+    ///// <summary>Opens a dialogue box and sets insidedialoguebox to true.</summary>
+    //public void OpenDialogueBox()
+    //{
+    //    m_DialogueBoxUI.SetActive(true);
+    //    m_InsideDialogueBox = true;
+    //    Debug.Log("Discard Changes?");
+    //}
 
-    /// <summary>Closes a dialogue box and sets insidedialoguebox to false.</summary>
-    public void CloseDialogueBox()
-    {
-        m_DialogueBoxUI.SetActive(false);
-        m_InsideDialogueBox = false;
-        Debug.Log("Settings still to be applied so cancelled.");
-    }
+    ///// <summary>Closes a dialogue box and sets insidedialoguebox to false.</summary>
+    //public void CloseDialogueBox()
+    //{
+    //    m_DialogueBoxUI.SetActive(false);
+    //    m_InsideDialogueBox = false;
+    //    Debug.Log("Settings still to be applied so cancelled.");
+    //}
 
-    /// <summary>Discards changes. DOESN'T CURRENTLY WORK.</summary>
-    public void DiscardChanges()
-    {
-        m_InsideDialogueBox = false;
-        Debug.Log("Discarded changes.");
-    }
+    ///// <summary>Discards changes. DOESN'T CURRENTLY WORK.</summary>
+    //public void DiscardChanges()
+    //{
+    //    m_InsideDialogueBox = false;
+    //    Debug.Log("Discarded changes.");
+    //}
 
     /// <summary>Exits the game to desktop.</summary>
     public void Exit()

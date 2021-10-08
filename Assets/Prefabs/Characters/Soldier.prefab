@@ -314,6 +314,8 @@ MonoBehaviour:
   m_Active: 0
   m_Dashing: 0
   m_DashCoolingDown: 0
+  m_StartingAgent: 0
+  m_OnDestroyedDamage: 25
   m_VerticalLock: 75
   m_JumpHeight: 2
   m_SecondJumpHeight: 2.5
@@ -369,6 +371,7 @@ MonoBehaviour:
     drawingDeathIncarnate: 0
     deathIncarnatePos: {x: 0, y: 0, z: 0}
     deathIncarnateUsed: 0
+  m_Mesh: {fileID: 0}
 --- !u!114 &5500129082491837181
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -930,6 +933,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5500129080964715735}
     m_Modifications:
+    - target: {fileID: 1121666832464311195, guid: db2a7dce86567b548977e248deeed374, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: eda4e81ec6629964990516b71871d0f0, type: 2}
     - target: {fileID: 7052651437313384602, guid: db2a7dce86567b548977e248deeed374, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 

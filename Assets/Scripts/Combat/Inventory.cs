@@ -72,6 +72,12 @@ public class Inventory : MonoBehaviour
                 else
                     Telemetry.TracePosition("Agent-PlayerKill", transform.position);
 
+                if (GameManager.s_CurrentHost)
+                { 
+                    GameManager.s_CurrentHost.m_HostsDestroyed++; // Incrementing this so the power bar charges up.
+                    // Set power bar ui to match.
+                    m_UIManager.SetDeathIncarnateBar((float)GameManager.s_CurrentHost.m_HostsDestroyed / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
+                }
                 agent.Kill();
             }
         }

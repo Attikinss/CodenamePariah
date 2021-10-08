@@ -6,14 +6,14 @@ public class EQSSceneNode : MonoBehaviour
 
     public bool m_DrawAlways = false;
 
-    private void Start()
-    {
+
+	private void Awake()
+	{
         EQSNode.GenerateID();
         EQSNode.Position = transform.position;
 
         EQSSceneNodeTracker.AddNode(this);
     }
-
     private void OnDrawGizmos()
     {
         if (m_DrawAlways)

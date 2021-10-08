@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour
 
     public PariahController m_Pariah;
 
+    public Achievements m_Achievements;
+
     //public List<Decal> m_allDecals = new List<Decal>();
 
     //private List<Decal> m_decalPool = new List<Decal>();
@@ -45,9 +47,13 @@ public class GameManager : MonoBehaviour
     public List<BloodSpray> m_BloodSprayPool;
     private int m_BloodSprayPoolRingBuffer = 0;
 
+    private MonoBehaviour m_Monobehaviour;
 
+    public static HostController s_CurrentHost; // Tracks current host
 	private void Awake()
 	{
+        m_Monobehaviour = this;
+
         m_BulletPool = new List<Decal>();
         m_BloodSprayPool = new List<BloodSpray>();
 
@@ -202,4 +208,15 @@ public class GameManager : MonoBehaviour
             m_BloodSprayPool[i].Update();
         }
     }
+
+    public void OnEnterEnemy(EnemyTypes type, Animators controller)
+    {
+        m_Achievements.FirstTimeEnemy(type, controller, this); // The only weapon with multiple arm/gun animators is the dual wield which will
+                                                                   // never be used as a first-time equip cinematic thing. So thats why we get the
+                                                                   // 0th element of the animators.
+
+        //WStartCoroutine(controller.RunWeaponInspect(5));
+    }
+
+
 }

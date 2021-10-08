@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 public class HostController : InputController
 {
     [Header("Settings")]
+    public EnemyTypes m_type;
 
     [SerializeField]
     [Tooltip("Set this agent to be the one the game starts in. There can only be one!")]
@@ -64,6 +65,10 @@ public class HostController : InputController
 
     // Mesh of the soldier or scientist.
     public GameObject m_Mesh;
+
+   
+    public int m_HostsDestroyed = 0;
+    
 
 	private void Awake()
 	{
@@ -186,6 +191,8 @@ public class HostController : InputController
     /// </summary>
     public override void Enable()
     {
+        GameManager.s_CurrentHost = this;
+
         GetComponent<PlayerInput>().enabled = true;
         m_Active = true;
         m_Camera.enabled = true;
@@ -208,6 +215,9 @@ public class HostController : InputController
         // Hide mesh when entering.
         if(m_Mesh)
             m_Mesh.SetActive(false);
+
+        // Letting the game manager we're entering a unit.
+        GameManager.s_Instance.OnEnterEnemy(m_type, GetCurrentWeapon().m_Animators);
     }
 
     /// <summary>
@@ -215,6 +225,8 @@ public class HostController : InputController
     /// </summary>
     public override void Disable()
     {
+        GameManager.s_CurrentHost = null;
+
         GetComponent<PlayerInput>().enabled = false;
         m_Active = false;
         m_Camera.enabled = false;
@@ -484,16 +496,19 @@ public class HostController : InputController
     // Experimental death incarnate ability thing
     public void OnAbility3(InputAction.CallbackContext value)
     {
-        if (value.performed && !m_DeathIncarnateAbility.deathIncarnateUsed)
+        if (value.performed && !m_DeathIncarnateAbility.deathIncarnateUsed && m_HostsDestroyed >= m_DeathIncarnateAbility.requiredKills)
         {
             m_DeathIncarnateAbility.chargeRoutine = StartCoroutine(Ability3Charge());
-            m_UIManager.ToggleBar(true);
+            //m_UIManager.ToggleBar(true);
         }
 
         else if (value.canceled)
-        { 
-            StopCoroutine(m_DeathIncarnateAbility.chargeRoutine); // When we let go, we stop the couritine to clear the time value in it.
-            m_UIManager.ToggleBar(false);
+        {
+            if (m_DeathIncarnateAbility.hasRoutineStarted)
+            { 
+                StopCoroutine(m_DeathIncarnateAbility.chargeRoutine); // When we let go, we stop the couritine to clear the time value in it.
+            }
+            //m_UIManager.ToggleBar(false);
         }
     }
 
@@ -840,6 +855,7 @@ public class HostController : InputController
         while (time < m_DeathIncarnateAbility.deathIncarnateCooldown)
         {
             time += Time.deltaTime;
+            
             yield return null;
         }
 
@@ -856,8 +872,7 @@ public class HostController : InputController
 
 			Debug.Log(time);
 
-            // Set power bar ui to match.
-            m_UIManager.SetDeathIncarnateBar(time / m_DeathIncarnateAbility.deathIncarnateRequiredHold);
+            
 
 			yield return null;
 		}
@@ -867,6 +882,7 @@ public class HostController : InputController
 		StartCoroutine(Ability3Delay());
 		Debug.Log("Ability3 delay started.");
 
+        m_DeathIncarnateAbility.hasRoutineStarted = false;
 		
 	}
 

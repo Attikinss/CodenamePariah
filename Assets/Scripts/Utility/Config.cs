@@ -18,6 +18,7 @@ public struct VideoConfig
     [Header("Video")]
     public bool Fullscreen;
     public ScreenResolution Resolution;
+    public int FieldOfView;
 
     [System.Serializable]
     public struct ScreenResolution

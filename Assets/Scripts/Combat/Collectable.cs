@@ -18,12 +18,15 @@ public class Collectable : MonoBehaviour
     public WEAPONTYPE m_RequiredTarget;
 
     [SerializeField]
+    [Tooltip("Speed at which the collectable rotates at.")]
     private float m_RotationSpeed = 60f;
 
     [SerializeField]
+    [Tooltip("Distance in height of which the collectable will bob above and below starting position.")]
     private float m_BobHeight = 0.125f;
 
     [SerializeField]
+    [Tooltip("Speed at which the collectable will bob.")]
     private float m_BobSpeed = 2f;
 
     private Vector3 m_StartPosition;

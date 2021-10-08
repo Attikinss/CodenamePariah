@@ -89,7 +89,7 @@ public class UIManager : MonoBehaviour
         }
 
         // Hide bar on start.
-        ToggleBar(true);
+        ToggleBar(false);
         SetDeathIncarnateBar(0);
 
         //// Temporarily getting all the Bullet Image components because I've discovered setting game objects to false is slow if you do it a lot of times.

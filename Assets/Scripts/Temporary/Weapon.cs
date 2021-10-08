@@ -682,7 +682,7 @@ public class Weapon : MonoBehaviour
             m_Camera.fieldOfView += requiredChange * 0.45f;
 
         }
-        else if (GetAimState())
+        else if (GetAimState() && CanAim())
         {
             // Had to put the sway code with the Aim() function since it was easier to just add the neccessary values to the calculations over there rather than try and split up the equations.
 
@@ -1001,7 +1001,7 @@ public class Weapon : MonoBehaviour
         else
             return (GetFireState() && !GetReloadState() && !m_Animators.CheckWeaponInspect());
     }
-    public bool CanAim() { return (GetAimState() && !GetReloadState()); }
+    public bool CanAim() { return (GetAimState() && !GetReloadState() && !m_Animators.m_WeaponInspectAnimation); }
     public void SetCamera(Camera camera) { m_Camera = camera; }
 
 }

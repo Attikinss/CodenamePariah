@@ -304,7 +304,8 @@ public class Weapon : MonoBehaviour
                     if (m_Inventory.Owner.Target != m_Inventory.Owner.PariahController.gameObject)
                         bullet?.SetTarget(m_Inventory.Owner.Target, (int)(m_BulletDamage * m_AIDamageModifier));
 
-                    bullet?.Fire(m_FiringPosition.position, m_Inventory.Owner.Target.transform.position);
+                    if(m_FiringPosition) // Quick check since dual wield has no firing position currently.
+                        bullet?.Fire(m_FiringPosition.position, m_Inventory.Owner.Target.transform.position);
                 }
             }
             else
@@ -348,7 +349,8 @@ public class Weapon : MonoBehaviour
         Vector3 aimPosition = Vector3.zero;
         aimPosition.x = (Screen.width / 2) + (-m_Controller.LookInput.x * weaponConfig.m_GunAimSwayStrength);
         aimPosition.y = (Screen.height / 2) + (-m_Controller.LookInput.y * weaponConfig.m_GunSwayStrength) - (m_Controller.transform.up.y * weaponConfig.m_GunAimHeight);
-        aimPosition.z = (m_Controller.transform.forward.z * weaponConfig.m_GunAimZPos) + weaponConfig.m_WeaponRecoilTransform.z * weaponConfig.m_ADSRecoilModifier;
+        //aimPosition.z = (m_Controller.transform.forward.z * weaponConfig.m_GunAimZPos) + weaponConfig.m_WeaponRecoilTransform.z * weaponConfig.m_ADSRecoilModifier;
+        aimPosition.z = (Vector3.forward.z * weaponConfig.m_GunAimZPos) + weaponConfig.m_WeaponRecoilTransform.z * weaponConfig.m_ADSRecoilModifier;
         
         Vector3 centre = m_Camera.ScreenToWorldPoint(aimPosition);
 

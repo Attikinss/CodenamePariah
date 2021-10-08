@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 public class HostController : InputController
 {
     [Header("Settings")]
+    public EnemyTypes m_type;
 
     [SerializeField]
     [Tooltip("Set this agent to be the one the game starts in. There can only be one!")]
@@ -206,6 +207,9 @@ public class HostController : InputController
         // Hide mesh when entering.
         if(m_Mesh)
             m_Mesh.SetActive(false);
+
+        // Letting the game manager we're entering a unit.
+        GameManager.s_Instance.OnEnterEnemy(m_type, GetCurrentWeapon().m_Animators);
     }
 
     /// <summary>

@@ -10,6 +10,37 @@ public struct Achievements
     public bool hasEnteredScientist { get; private set; }
     public bool hasEnteredSoldier { get; private set; }
 
-    public void EnteredScientist() { hasEnteredScientist = true; }
-    public void EnteredSoldier() { hasEnteredSoldier = true; }
+    public void FirstTimeEnemy(EnemyTypes enemy, Animators weaponAnimators, MonoBehaviour weaponMonobehaviour)
+    {
+        switch (enemy)
+        {
+            case EnemyTypes.SCIENTIST:
+                if (!hasEnteredScientist)
+                {
+                    weaponMonobehaviour.StartCoroutine(weaponAnimators.RunWeaponInspect(3));
+                    //weaponAnimators.RunWeaponInspect(5); // Hardcoded time of weapon inspect animation.
+                    Animator arms = weaponAnimators.m_ArmsAnimators[0];
+                    Animator gun = weaponAnimators.m_GunAnimators[0];
+                    hasEnteredScientist = true;
+                    arms.SetTrigger("Equip");
+                    gun.SetTrigger("Equip");
+                    break;
+                }
+                else
+                    break;
+            case EnemyTypes.SOLDIER:
+                if (!hasEnteredSoldier)
+                {
+                    weaponMonobehaviour.StartCoroutine(weaponAnimators.RunWeaponInspect(5));
+                    Animator arms = weaponAnimators.m_ArmsAnimators[0];
+                    Animator gun = weaponAnimators.m_GunAnimators[0];
+                    hasEnteredSoldier = true;
+                    arms.SetTrigger("Equip");
+                    gun.SetTrigger("Equip");
+                    break;
+                }
+                else
+                    break;
+        }
+    }
 }

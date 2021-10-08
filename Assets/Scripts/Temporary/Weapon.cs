@@ -307,7 +307,7 @@ public class Weapon : MonoBehaviour
             else
             {
                 // Do nothing / reload automatically
-                if (!ReserveAmmoEmpty(special))
+                if (!ReserveAmmoEmpty(special) && !m_Animators.CheckWeaponInspect())
                 {
                     CombatInfo combatInfo = m_Controller.m_CombatInfo;
 
@@ -329,7 +329,7 @@ public class Weapon : MonoBehaviour
 
     public void StartReload(bool dualWield)
     {
-        if (!PrimaryAmmoFull(dualWield) && !ReserveAmmoEmpty() && !GetReloadState(dualWield))
+        if (!PrimaryAmmoFull(dualWield) && !ReserveAmmoEmpty() && !GetReloadState(dualWield) && !m_Animators.CheckWeaponInspect())
         {
             CombatInfo combatInfo = m_Controller.m_CombatInfo;
             StartCoroutine(Reload(dualWield));
@@ -993,10 +993,10 @@ public class Weapon : MonoBehaviour
     {
         if (dual)
         {
-            return GetFireState() && !GetReloadState(dual); // The normal fire mode is the left gun in a dual wield scenario, so we must check if the left gun is not reloading.
+            return GetFireState() && !GetReloadState(dual) && !m_Animators.CheckWeaponInspect(); // The normal fire mode is the left gun in a dual wield scenario, so we must check if the left gun is not reloading.
         }
         else
-            return (GetFireState() && !GetReloadState());
+            return (GetFireState() && !GetReloadState() && !m_Animators.CheckWeaponInspect());
     }
     public bool CanAim() { return (GetAimState() && !GetReloadState()); }
     public void SetCamera(Camera camera) { m_Camera = camera; }

@@ -47,9 +47,11 @@ public class GameManager : MonoBehaviour
     public List<BloodSpray> m_BloodSprayPool;
     private int m_BloodSprayPoolRingBuffer = 0;
 
-
+    private MonoBehaviour m_Monobehaviour;
 	private void Awake()
 	{
+        m_Monobehaviour = this;
+
         m_BulletPool = new List<Decal>();
         m_BloodSprayPool = new List<BloodSpray>();
 
@@ -205,15 +207,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void OnEnterScientist()
+    public void OnEnterEnemy(EnemyTypes type, Animators controller)
     {
-        // If entering scientist for the first time.
-        if(!m_Achievements.hasEnteredScientist)
-            m_Achievements.EnteredScientist();
-        
+        m_Achievements.FirstTimeEnemy(type, controller, this); // The only weapon with multiple arm/gun animators is the dual wield which will
+                                                                   // never be used as a first-time equip cinematic thing. So thats why we get the
+                                                                   // 0th element of the animators.
+
+        //WStartCoroutine(controller.RunWeaponInspect(5));
     }
-    public void OnEnterSoldier()
-    {
-        m_Achievements.EnteredSoldier();
-    }
+
+
 }

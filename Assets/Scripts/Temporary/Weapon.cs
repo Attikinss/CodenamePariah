@@ -280,7 +280,7 @@ public class Weapon : MonoBehaviour
                         {
                             if (hitInfo.transform.TryGetComponent(out Inventory agentInventory))
                             {
-                                float damageMod = m_Inventory.Owner.Possessed ? m_AIDamageModifier : 1.0f;
+                                float damageMod = m_Inventory.Owner.Possessed ? 1.0f : m_AIDamageModifier;
                                 agentInventory.TakeDamage((int)(m_BulletDamage * damageMod));
                                 //Debug.Log("BAD");
                                 GameManager.s_Instance.PlaceBulletSpray(hitInfo.point, hitInfo.transform, (transform.position - hitInfo.point).normalized);
@@ -302,7 +302,7 @@ public class Weapon : MonoBehaviour
                 {
                     var bullet = BulletPooler.Instance?.GetNextAvailable();
                     if (m_Inventory.Owner.Target != m_Inventory.Owner.PariahController.gameObject)
-                        bullet?.SetTarget(m_Inventory.Owner.Target, m_BulletDamage);
+                        bullet?.SetTarget(m_Inventory.Owner.Target, (int)(m_BulletDamage * m_AIDamageModifier));
 
                     bullet?.Fire(m_FiringPosition.position, m_Inventory.Owner.Target.transform.position);
                 }

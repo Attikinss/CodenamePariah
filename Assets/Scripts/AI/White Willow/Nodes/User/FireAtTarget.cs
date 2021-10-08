@@ -20,11 +20,14 @@ public class FireAtTarget : Task
     private float m_ShootDelay = 0.1f;
     private float m_CurrentShootTime = 0.0f;
 
+    private CombatToken m_Token;
+
     // Called before node is executed
     protected override void OnEnter()
     {
         Target.Validate(Owner.Blackboard);
 
+        m_Token = AIDirector.Instance.RequestToken();
         m_ShotsToFire = Random.Range(MinimumShots, MaximumShots + 1);
     }
 
@@ -34,12 +37,15 @@ public class FireAtTarget : Task
         m_ShotsToFire = 0;
         m_CurrentShots = 0;
         m_CurrentShootTime = 0.0f;
+
+        m_Token?.Use();
+        m_Token = null;
     }
 
     // This is where the behaviour is updated
     protected override NodeResult OnTick()
     {
-        if (Target.Value != null)
+        if (Target.Value != null || m_Token != null)
         {
             // Turn to face target
             Owner.Agent.LookAt(Target.Value.transform.position);

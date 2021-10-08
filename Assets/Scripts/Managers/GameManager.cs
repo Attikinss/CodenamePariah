@@ -48,6 +48,8 @@ public class GameManager : MonoBehaviour
     private int m_BloodSprayPoolRingBuffer = 0;
 
     private MonoBehaviour m_Monobehaviour;
+
+    public static HostController s_CurrentHost; // Tracks current host
 	private void Awake()
 	{
         m_Monobehaviour = this;

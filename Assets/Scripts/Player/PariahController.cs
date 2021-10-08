@@ -328,8 +328,10 @@ public class PariahController : InputController
     /// <param name="target">Agent you want to control.</param>
     public void ForceInstantPossess(Agent target)
     {
-        target.Possess();
-        m_CurrentPossessed = target;
-        m_Possessing = false;
+        //target.Possess();
+        //m_CurrentPossessed = target;
+        //m_Possessing = false;
+
+        StartCoroutine(Possess(target));
     }
 }

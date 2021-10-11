@@ -239,6 +239,7 @@ GameObject:
   - component: {fileID: 4223981802772051965}
   - component: {fileID: 4223981802772051964}
   - component: {fileID: 4223981802772051963}
+  - component: {fileID: 3862463333085985278}
   m_Layer: 11
   m_Name: Soldier
   m_TagString: Untagged
@@ -314,6 +315,7 @@ MonoBehaviour:
   m_Active: 0
   m_Dashing: 0
   m_DashCoolingDown: 0
+  m_type: 0
   m_StartingAgent: 0
   m_OnDestroyedDamage: 25
   m_VerticalLock: 75
@@ -363,6 +365,7 @@ MonoBehaviour:
     drainCounter: 0
     isDraining: 0
   m_DeathIncarnateAbility:
+    requiredKills: 0
     deathIncarnateDamage: 100
     deathIncarnateRadius: 20
     deathIncarnateCooldown: 5
@@ -371,7 +374,9 @@ MonoBehaviour:
     drawingDeathIncarnate: 0
     deathIncarnatePos: {x: 0, y: 0, z: 0}
     deathIncarnateUsed: 0
+    hasRoutineStarted: 0
   m_Mesh: {fileID: 0}
+  m_HostsDestroyed: 0
 --- !u!114 &5500129082491837181
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -816,7 +821,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InputTree: {fileID: 11400000, guid: 5ac5d0e581cbd9e4fbf1fce2c1c67885, type: 2}
   Target: {fileID: 0}
-  m_ViewRange: 15
+  m_ViewRange: 20
   m_IgnoreMask:
     serializedVersion: 2
     m_Bits: 3895
@@ -844,6 +849,15 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!45 &3862463333085985278
+Skybox:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5500129082491837173}
+  m_Enabled: 1
+  m_CustomSkybox: {fileID: 2100000, guid: f48a62f49825fb347b08d5ab4fad25ff, type: 2}
 --- !u!1 &8732956786785647057
 GameObject:
   m_ObjectHideFlags: 0

@@ -196,7 +196,6 @@ public class PariahController : InputController
             }
         }
     }
-
     private void Move()
     {
         Vector3 moveDirection = (transform.right * m_MovementInput.x + transform.up * m_MovementInput.y + transform.forward * m_MovementInput.z)

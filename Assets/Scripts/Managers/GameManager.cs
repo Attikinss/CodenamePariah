@@ -54,7 +54,10 @@ public class GameManager : MonoBehaviour
     // To track whether the player is holding down the heal for regeneration statis pod button. // This applies to both pariah and the host controller so I though putting
     // the bool here would be more efficient rather than GetComponenting() the pariah/host controller on the fly.
     public bool IsHoldingHeal { get; set; }
-	private void Awake()
+
+    public Coroutine m_HealingRoutine;
+    public bool m_HealingRoutineActive { get; set; }
+    private void Awake()
 	{
         m_Monobehaviour = this;
 

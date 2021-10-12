@@ -63,6 +63,8 @@ public class GameManager : MonoBehaviour
     public static List<Door> s_AllDoors = new List<Door>();
     public static bool s_IsNotFirstLoad = false;
 
+    public static int s_HighestCheckPointLevel = 0;
+    public static Vector3 s_CheckPointPos;
 
 
     private void Awake()
@@ -143,6 +145,12 @@ public class GameManager : MonoBehaviour
         if(s_IsNotFirstLoad)
             RefreshDoors();
 
+        if (s_HighestCheckPointLevel > 0)
+        {
+            // If the player has reached a check point, spawn them there the next time they die.
+            SpawnAtCheckPoint();
+        }
+
     }
 
     // Update is called once per frame
@@ -193,7 +201,8 @@ public class GameManager : MonoBehaviour
             s_StartedAgent = startingAgent;
             GameManager instance = GameManager.s_Instance;
             // We can do it because there have been no other agents set to be started in.
-            instance.m_Pariah.ForceInstantPossess(s_StartedAgent);
+            if(s_HighestCheckPointLevel == 0) // We'll only ever start in an agent if we are starting a fresh world. If we've hit a check point we wont do this.
+                instance.m_Pariah.ForceInstantPossess(s_StartedAgent);
         }
         else
         {
@@ -289,5 +298,26 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
+    public static void SetCheckPoint(int checkPointLevel, Vector3 pos)
+    {
+        if (s_HighestCheckPointLevel == 0)
+        {
+            // If our highest check point is level 0, we'll take any we can get.
+            s_HighestCheckPointLevel = checkPointLevel;
+            s_CheckPointPos = pos;
+        }
+        else if (checkPointLevel > s_HighestCheckPointLevel)
+        {
+            // We've reached a higher check point, so we'll set ours to that one.
+            s_HighestCheckPointLevel = checkPointLevel;
+            s_CheckPointPos = pos;
+        }
+    }
+
+    public void SpawnAtCheckPoint()
+    {
+        // If we spawn at a check point, we wont spawn into an agent immediately.
+        m_Pariah.transform.position = s_CheckPointPos;
+    }
 
 }

@@ -52,6 +52,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Heal",
+                    "type": "Button",
+                    "id": "b7cacc26-89b1-4467-b8ba-a793ebde52d4",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -318,6 +326,17 @@
                     "action": "Lower",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c1eb2842-f5ae-42aa-abb1-0fe7aa9a3a08",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KBM",
+                    "action": "Heal",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -497,6 +516,14 @@
                     "name": "TestAddWeapon",
                     "type": "Button",
                     "id": "f316d8a8-f58e-4861-988e-db0f9c79e3ea",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Heal",
+                    "type": "Button",
+                    "id": "a720b1b7-c6ba-42fc-bcb8-db538afd4fec",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -973,6 +1000,17 @@
                     "processors": "",
                     "groups": "KBM",
                     "action": "TestAddWeapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3c315cc5-b99f-4260-8404-bc8909ee48d8",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KBM",
+                    "action": "Heal",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

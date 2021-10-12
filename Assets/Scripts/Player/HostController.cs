@@ -66,10 +66,6 @@ public class HostController : InputController
     // Mesh of the soldier or scientist.
     public GameObject m_Mesh;
 
-   
-    public int m_HostsDestroyed = 0;
-    
-
 	private void Awake()
 	{
         m_AccumulatedRecoil = new CameraRecoil();
@@ -223,6 +219,13 @@ public class HostController : InputController
     /// </summary>
     public override void Disable()
     {
+
+        // Setting the death incarnate bar must happenbefore we set GameManager.s_CurrentHost to null!
+        PariahController pariah = GameManager.s_Instance.m_Pariah;
+        m_UIManager.SetDeathIncarnateBar((float)pariah.m_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
+
+
+
         GameManager.s_CurrentHost = null;
 
         GetComponent<PlayerInput>().enabled = false;
@@ -243,6 +246,8 @@ public class HostController : InputController
         // Unhide the mesh when leaving.
         if(m_Mesh)
             m_Mesh.SetActive(true);
+
+       
     }
 
     // ========================================================== Input Events ========================================================== //
@@ -494,9 +499,11 @@ public class HostController : InputController
     // Experimental death incarnate ability thing
     public void OnAbility3(InputAction.CallbackContext value)
     {
-        if (value.performed && !m_DeathIncarnateAbility.deathIncarnateUsed && m_HostsDestroyed >= m_DeathIncarnateAbility.requiredKills)
+        PariahController pariah = GameManager.s_Instance.m_Pariah;
+        if (value.performed && !m_DeathIncarnateAbility.deathIncarnateUsed && pariah.m_Power >= m_DeathIncarnateAbility.requiredKills)
         {
             m_DeathIncarnateAbility.chargeRoutine = StartCoroutine(Ability3Charge());
+            pariah.m_Power = 0; // Consume all power, reset back to 0.
             //m_UIManager.ToggleBar(true);
         }
 

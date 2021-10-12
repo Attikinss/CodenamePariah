@@ -70,6 +70,9 @@ public class PariahController : InputController
 
     bool m_Dead = false;
 
+    [ReadOnly]
+    public int m_Power = 0; // Power is used for the death incarnate ability. It is gained by destroying agents.
+
     private void Awake() => m_Rigidbody = GetComponent<Rigidbody>();
 
     private void Start()

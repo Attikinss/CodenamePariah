@@ -153,7 +153,7 @@ public class HostController : InputController
                         m_Inventory.Owner?.PariahController.AddHealth(m_DrainAbility.restore);
 
                         m_DrainAbility.drainCounter = 0.0f;
-                        m_Inventory.TakeDamage(m_DrainAbility.damage);
+                        m_Inventory.TakeDamage(m_DrainAbility.damage, true);
                     }
                 }
             }

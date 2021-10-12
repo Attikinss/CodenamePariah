@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace WhiteWillow.Nodes
@@ -7,7 +5,7 @@ namespace WhiteWillow.Nodes
     public enum RepeatCondition { Indefinite, UntilCount, UntilFailure, UntilSuccess }
 
     [Category("Decorator")]
-    public class Repeat : Decorator
+    public sealed class Repeat : Decorator
     {
         public override string IconPath { get; } = "Icons/Repeat";
 

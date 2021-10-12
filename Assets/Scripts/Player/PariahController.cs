@@ -80,6 +80,7 @@ public class PariahController : InputController
         // Crude fix for allowing player to face any direction at start of runtime
         var euler = transform.rotation.eulerAngles;
         m_Rotation = new Vector2(euler.y, euler.x);
+        m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
 
         StartCoroutine(DrainHealth(m_HealthDrainDelay));
     }
@@ -104,6 +105,7 @@ public class PariahController : InputController
 
     private void LateUpdate()
     {
+        m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
         if (!PauseMenu.m_GameIsPaused)
         {
             if (m_Active)

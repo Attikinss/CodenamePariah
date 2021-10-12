@@ -24,6 +24,10 @@ public class Weapon : MonoBehaviour
     public int m_BulletDamage;
 
     [SerializeField]
+    [Tooltip("How much damage scales when weapon is used by an AI Agent.")]
+    public float m_AIDamageModifier = 0.5f;
+
+    [SerializeField]
     [Tooltip("Current ammo in magazine.")]
     private int m_RoundsInMagazine;
 
@@ -274,16 +278,15 @@ public class Weapon : MonoBehaviour
                     {
                         if (hitInfo.transform.gameObject != null)
                         {
-                            //Debug.Log("Bad");
                             if (hitInfo.transform.TryGetComponent(out Inventory agentInventory))
                             {
+                                float damageMod = m_Inventory.Owner.Possessed ? 1.0f : m_AIDamageModifier;
+                                agentInventory.TakeDamage((int)(m_BulletDamage * damageMod));
                                 //Debug.Log("BAD");
                                 GameManager.s_Instance.PlaceBulletSpray(hitInfo.point, hitInfo.transform, (transform.position - hitInfo.point).normalized);
-                                agentInventory.TakeDamage(m_BulletDamage);
                                 
 
                                 return;
-
                             }
 
                             GameManager.s_Instance?.PlaceDecal(hitInfo.transform, hitInfo.point, hitInfo.normal);
@@ -299,7 +302,7 @@ public class Weapon : MonoBehaviour
                 {
                     var bullet = BulletPooler.Instance?.GetNextAvailable();
                     if (m_Inventory.Owner.Target != m_Inventory.Owner.PariahController.gameObject)
-                        bullet?.SetTarget(m_Inventory.Owner.Target, m_BulletDamage);
+                        bullet?.SetTarget(m_Inventory.Owner.Target, (int)(m_BulletDamage * m_AIDamageModifier));
 
                     if(m_FiringPosition) // Quick check since dual wield has no firing position currently.
                         bullet?.Fire(m_FiringPosition.position, m_Inventory.Owner.Target.transform.position);

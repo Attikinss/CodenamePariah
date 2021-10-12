@@ -92,6 +92,7 @@ public class HostController : InputController
             if(meshResult)
                 m_Mesh = meshResult.gameObject;
         }
+        m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
 	}
 
 	private void Start()
@@ -104,6 +105,7 @@ public class HostController : InputController
     }
 	private void Update()
     {
+        m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
         if (!PauseMenu.m_GameIsPaused)
         {
             if (!m_Active) return;

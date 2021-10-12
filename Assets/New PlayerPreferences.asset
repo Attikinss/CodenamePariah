@@ -21,6 +21,7 @@ MonoBehaviour:
       Width: 1920
       Height: 1080
       RefreshRate: 60
+    FieldOfView: 90
   AudioConfig:
     MasterVolume: 100
     SFXVolume: 100

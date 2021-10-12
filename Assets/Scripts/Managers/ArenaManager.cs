@@ -4,11 +4,20 @@ using UnityEngine;
 
 public class ArenaManager : MonoBehaviour
 {
+    [Tooltip("Agents in the room.")]
     public GameObject[] m_ArenaAgents;
+
+    [Tooltip("Door gameobject to open.")]
     public GameObject m_OpenDoor;
+
+    [Tooltip("Door gameobject to close.")]
     public GameObject m_ClosedDoor;
+
     [SerializeField]
+    [Tooltip("Minimum amount of kills required before opening a door.")]
     private int m_MinimumKills = 5;
+
+    [Tooltip("Counter that increments when an agent in the room is dead.")]
     int counter = 0;
 
     private void Update()
@@ -22,6 +31,8 @@ public class ArenaManager : MonoBehaviour
         }
     }
 
+    /// <summary>Checks whether enough enemies are dead and if there are, opens door then deactivates this script.</summary>
+    /// <returns></returns>
     bool EnemyCount()
     {
         counter = 0;

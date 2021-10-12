@@ -302,6 +302,7 @@ public class PariahController : InputController
     // ****** Highly temporary ******
     private IEnumerator ReloadLevel()
     {
+        GameManager.s_IsNotFirstLoad = true; // Telling the game manager that it's not the games first load.
         yield return null;
 
         AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);

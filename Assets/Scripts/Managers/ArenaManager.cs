@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class ArenaManager : MonoBehaviour
 {
+    [Tooltip("This ID should be unique to this instance.")]
+    public int m_ID = 0;
+
     [Tooltip("Agents in the room.")]
     public GameObject[] m_ArenaAgents;
 
@@ -20,7 +23,16 @@ public class ArenaManager : MonoBehaviour
     [Tooltip("Counter that increments when an agent in the room is dead.")]
     int counter = 0;
 
-    private void Update()
+	private void Awake()
+	{
+        // On awake, we're gonna upload the doors to the GameManager so it has a reference to their state.
+        GameManager.AddDoor(m_ID, m_OpenDoor, m_ClosedDoor, false); // Telling the GameManager about this door.
+		
+	}
+	private void Start()
+	{
+	}
+	private void Update()
     {
         if (EnemyCount())
         {
@@ -28,6 +40,8 @@ public class ArenaManager : MonoBehaviour
             m_OpenDoor.SetActive(true);
             m_ClosedDoor.SetActive(false);
             this.GetComponent<ArenaManager>().enabled = false;
+
+            SendDoorData(true); // Telling the GameManager that this door has been opened.
         }
     }
 
@@ -46,5 +60,14 @@ public class ArenaManager : MonoBehaviour
             return true;
         else
             return false;
+    }
+
+    /// <summary>
+    /// Sends updated door information to the GameManager so it has memory of the state of the door when it reloads at a checkpoint.
+    /// </summary>
+    private void SendDoorData(bool isOpen)
+    {
+        Door ourDoor = GameManager.GetDoor(m_ID);
+        ourDoor.m_IsOpen = isOpen;
     }
 }

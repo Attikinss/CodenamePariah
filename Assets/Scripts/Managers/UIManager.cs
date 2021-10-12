@@ -70,6 +70,10 @@ public class UIManager : MonoBehaviour
     private Image m_Bar;
     private TextMeshProUGUI m_DeathIncarnateBarText;
 
+    [SerializeField]
+    [Tooltip("Regeneration Text UI")]
+    private TextMeshProUGUI m_RegenerationText;
+
 	public void Awake()
 	{
         if (!s_Instance)
@@ -441,6 +445,18 @@ public class UIManager : MonoBehaviour
     public void SetDeathIncarnateBar(float percentage)
     {
         m_Bar.fillAmount = percentage;
+    }
+
+    public void ToggleGenertationText(bool toggle)
+    {
+        if (toggle)
+        {
+            m_RegenerationText.enabled = true;
+        }
+        else
+        {
+            m_RegenerationText.enabled = false;
+        }
     }
     public void UnhideCanvas() { m_Canvas.gameObject.SetActive(true); }
     public void HideCanvas() { m_Canvas.gameObject.SetActive(false); }

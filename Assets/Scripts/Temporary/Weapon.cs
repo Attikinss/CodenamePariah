@@ -250,6 +250,7 @@ public class Weapon : MonoBehaviour
 
                 // Playing sounds.
                 PlayFireSound();
+                
                 PlayAnimations(special);
 
                 // Currently gets rid of bullet sprite before UI has fully updated //
@@ -266,6 +267,7 @@ public class Weapon : MonoBehaviour
                 Ray ray;
                 if (m_Inventory.Owner == null || m_Inventory.Owner.Possessed) // Added a check so that it can be used without being tied to the agent system.
                 {
+                    PlayBulletEffect();
                     ray = new Ray(m_Camera.transform.position, m_Camera.transform.forward);
                     WeaponConfiguration currentConfig = GetCurrentWeaponConfig();
                     // =========== TESTING =========== //
@@ -1044,5 +1046,10 @@ public class Weapon : MonoBehaviour
     {
         if (m_AudioEquipEvent)
             m_AudioEquipEvent.Trigger();
+    }
+
+    public void PlayBulletEffect()
+    {
+        m_Particles.PlayBulletEffect();
     }
 }

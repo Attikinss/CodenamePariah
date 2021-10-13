@@ -87,6 +87,14 @@ public struct ParticleEffects
 {
 	public List<VisualEffect> m_MuzzleFlashes;
 	public List<ParticleSystem> m_BulletCasings;
+
+	public ParticleSystem m_BulletParticle;
+
+	public void PlayBulletEffect()
+	{
+		if(m_BulletParticle)
+			m_BulletParticle.Play();
+	}
 }
 
 [System.Serializable]
@@ -118,4 +126,5 @@ public class Animators
 
 		m_WeaponInspectAnimation = false;
 	}
+
 }

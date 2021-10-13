@@ -266,7 +266,7 @@ public class Weapon : MonoBehaviour
                 Ray ray;
                 if (m_Inventory.Owner == null || m_Inventory.Owner.Possessed) // Added a check so that it can be used without being tied to the agent system.
                 {
-                    PlayBulletEffect();
+                    PlayBulletEffect(special);
                     ray = new Ray(m_Camera.transform.position, m_Camera.transform.forward);
                     WeaponConfiguration currentConfig = GetCurrentWeaponConfig();
                     // =========== TESTING =========== //
@@ -1047,8 +1047,8 @@ public class Weapon : MonoBehaviour
             m_AudioEquipEvent.Trigger();
     }
 
-    public void PlayBulletEffect()
+    public void PlayBulletEffect(bool isDualWield)
     {
-        m_Particles.PlayBulletEffect();
+        m_Particles.PlayBulletEffect(isDualWield);
     }
 }

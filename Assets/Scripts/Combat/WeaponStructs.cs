@@ -90,10 +90,22 @@ public struct ParticleEffects
 
 	public ParticleSystem m_BulletParticle;
 
-	public void PlayBulletEffect()
+	public ParticleSystem m_AdditionalBulletParticle;
+
+	public void PlayBulletEffect(bool dual)
 	{
-		if(m_BulletParticle)
-			m_BulletParticle.Play();
+		if (!dual)
+		{
+			if (m_BulletParticle)
+				m_BulletParticle.Play();
+		}
+		else // If dual is true, we play the additional bullet particle instead.
+		{
+			if (m_AdditionalBulletParticle)
+			{
+				m_AdditionalBulletParticle.Play();
+			}
+		}
 	}
 }
 

@@ -174,7 +174,7 @@ MonoBehaviour:
     drainCounter: 0
     isDraining: 0
   m_DeathIncarnateAbility:
-    requiredKills: 0
+    requiredKills: 10
     deathIncarnateDamage: 100
     deathIncarnateRadius: 20
     deathIncarnateCooldown: 5
@@ -185,7 +185,6 @@ MonoBehaviour:
     deathIncarnateUsed: 0
     hasRoutineStarted: 0
   m_Mesh: {fileID: 0}
-  m_HostsDestroyed: 0
 --- !u!114 &4480668722508770147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -575,6 +574,26 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: f316d8a8-f58e-4861-988e-db0f9c79e3ea
     m_ActionName: Host/TestAddWeapon[/Keyboard/o]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b7cacc26-89b1-4467-b8ba-a793ebde52d4
+    m_ActionName: Pariah/Heal[/Keyboard/x]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4480668722508770150}
+        m_TargetAssemblyTypeName: InputController, Assembly-CSharp
+        m_MethodName: OnHeal
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: a720b1b7-c6ba-42fc-bcb8-db538afd4fec
+    m_ActionName: Host/Heal[/Keyboard/x]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: KBM
   m_DefaultActionMap: Host
@@ -716,7 +735,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.01
-  far clip plane: 2000
+  far clip plane: 10000
   field of view: 60
   orthographic: 0
   orthographic size: 5

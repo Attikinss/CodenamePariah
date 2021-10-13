@@ -50,6 +50,7 @@ GameObject:
   - component: {fileID: 8557315745383636164}
   - component: {fileID: 8557315745383636170}
   - component: {fileID: 7218605912780461474}
+  - component: {fileID: 4944471648041337260}
   m_Layer: 11
   m_Name: AssaultRifle
   m_TagString: Untagged
@@ -254,7 +255,7 @@ MonoBehaviour:
     - {fileID: 978549044967703916}
     m_WeaponInspectAnimation: 0
   m_AudioFireEvent: {fileID: 7218605912780461474}
-  m_AudioReloadEvent: {fileID: 0}
+  m_AudioReloadEvent: {fileID: 4944471648041337260}
 --- !u!114 &7218605912780461474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -269,6 +270,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Type: 1
   EventID: event:/Firearms/AK Firing
+--- !u!114 &4944471648041337260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8557315744390728888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81dca6e7f82043a4fb85791a7d8e871d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 2
+  EventID: event:/Firearms/AK Reload
 --- !u!1 &8557315745014845795
 GameObject:
   m_ObjectHideFlags: 0

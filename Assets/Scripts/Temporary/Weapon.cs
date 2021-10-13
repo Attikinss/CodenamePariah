@@ -567,6 +567,7 @@ public class Weapon : MonoBehaviour
     public IEnumerator Reload(bool special = false)
     {
         StartReloadAnimation(special);
+        PlayReloadSound();
 
         if (special)
             m_WeaponActions.m_IsReloadingLeft = true;
@@ -1020,6 +1021,12 @@ public class Weapon : MonoBehaviour
     {
         if (m_AudioFireEvent)
             m_AudioFireEvent.Trigger();
+    }
+
+    private void PlayReloadSound()
+    {
+        if (m_AudioReloadEvent)
+            m_AudioReloadEvent.Trigger();
     }
 
 }

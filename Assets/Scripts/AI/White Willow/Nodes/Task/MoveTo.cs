@@ -3,14 +3,14 @@ using UnityEngine;
 namespace WhiteWillow.Nodes
 {
     [Category("Tasks")]
-    public class MoveTo : Task
+    public sealed class MoveTo : Task
     {
         public override string IconPath { get; } = "Icons/MoveTo";
         public NodeMember<Vector3> Position;
 
         protected override void OnEnter()
         {
-
+            Position.Validate(Owner.Blackboard);
         }
 
         protected override void OnExit()

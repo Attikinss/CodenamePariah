@@ -4,7 +4,7 @@ using UnityEngine.AI;
 namespace WhiteWillow.Nodes
 {
     [Category("Tasks")]
-    public class GetRandomPosition : Task
+    public sealed class GetRandomPosition : Task
     {
         public enum RangeValueType { Fixed, Varying }
         

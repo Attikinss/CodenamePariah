@@ -45,28 +45,31 @@ public class FireAtTarget : Task
     // This is where the behaviour is updated
     protected override NodeResult OnTick()
     {
-        if (Target.Value != null || m_Token != null)
+        if (Target.Value != null)
         {
             // Turn to face target
             Owner.Agent.LookAt(Target.Value.transform.position);
 
-            if (Owner.Agent.TargetWithinViewRange(Target.Value, EngagementDistance.Value))
+            if (m_Token != null)
             {
-                // Shoot volley
-                if (m_CurrentShootTime >= m_ShootDelay)
+                if (Owner.Agent.TargetWithinViewRange(Target.Value, EngagementDistance.Value))
                 {
-                    Owner.Agent.ShootAt(Target.Value, m_CurrentShots == 0);
-                    m_CurrentShots++;
-                    m_CurrentShootTime = 0.0f;
+                    // Shoot volley
+                    if (m_CurrentShootTime >= m_ShootDelay)
+                    {
+                        Owner.Agent.ShootAt(Target.Value, m_CurrentShots == 0);
+                        m_CurrentShots++;
+                        m_CurrentShootTime = 0.0f;
+                    }
+                    else
+                        m_CurrentShootTime += Time.deltaTime;
+
+                    if (m_CurrentShots >= m_ShotsToFire)
+                        return NodeResult.Success;
                 }
-                else
-                    m_CurrentShootTime += Time.deltaTime;
 
-                if (m_CurrentShots >= m_ShotsToFire)
-                    return NodeResult.Success;
+                return NodeResult.Running;
             }
-
-            return NodeResult.Running;
         }
 
 	    return NodeResult.Failure;

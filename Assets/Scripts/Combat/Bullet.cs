@@ -20,9 +20,10 @@ public class Bullet : MonoBehaviour
         m_Damage = damage;
     }
 
-    public void Fire(Vector3 origin, Vector3 destination)
+    public void Fire(Vector3 origin, Vector3 destination, Vector3 forward)
     {
         transform.position = origin;
+        transform.forward = forward;
         gameObject.SetActive(true);
         m_Rigidbody.AddForce((destination - origin).normalized * 60.0f, ForceMode.Impulse);
     }

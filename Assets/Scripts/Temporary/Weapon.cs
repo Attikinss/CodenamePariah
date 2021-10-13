@@ -319,7 +319,7 @@ public class Weapon : MonoBehaviour
                         bullet?.SetTarget(m_Inventory.Owner.Target, (int)(m_BulletDamage * m_AIDamageModifier));
 
                     if(m_FiringPosition) // Quick check since dual wield has no firing position currently.
-                        bullet?.Fire(m_FiringPosition.position, m_Inventory.Owner.Target.transform.position);
+                        bullet?.Fire(m_FiringPosition.position, m_Inventory.Owner.Target.transform.position, transform.forward);
                 }
             }
             else

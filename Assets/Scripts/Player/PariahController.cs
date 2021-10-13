@@ -70,6 +70,9 @@ public class PariahController : InputController
 
     bool m_Dead = false;
 
+    [ReadOnly]
+    public int m_Power = 0; // Power is used for the death incarnate ability. It is gained by destroying agents.
+
     private void Awake() => m_Rigidbody = GetComponent<Rigidbody>();
 
     private void Start()
@@ -77,6 +80,7 @@ public class PariahController : InputController
         // Crude fix for allowing player to face any direction at start of runtime
         var euler = transform.rotation.eulerAngles;
         m_Rotation = new Vector2(euler.y, euler.x);
+        m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
 
         StartCoroutine(DrainHealth(m_HealthDrainDelay));
     }
@@ -101,6 +105,7 @@ public class PariahController : InputController
 
     private void LateUpdate()
     {
+        m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
         if (!PauseMenu.m_GameIsPaused)
         {
             if (m_Active)
@@ -191,7 +196,6 @@ public class PariahController : InputController
             }
         }
     }
-
     private void Move()
     {
         Vector3 moveDirection = (transform.right * m_MovementInput.x + transform.up * m_MovementInput.y + transform.forward * m_MovementInput.z)
@@ -298,6 +302,7 @@ public class PariahController : InputController
     // ****** Highly temporary ******
     private IEnumerator ReloadLevel()
     {
+        GameManager.s_IsNotFirstLoad = true; // Telling the game manager that it's not the games first load.
         yield return null;
 
         AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
@@ -321,4 +326,17 @@ public class PariahController : InputController
     /// </summary>
     /// <returns></returns>
     public int GetHealth() { return m_Health; }
+
+    /// <summary>
+    /// ForceInstantPossess() is used to start the player in an agent. It is called from GameManager.
+    /// </summary>
+    /// <param name="target">Agent you want to control.</param>
+    public void ForceInstantPossess(Agent target)
+    {
+        //target.Possess();
+        //m_CurrentPossessed = target;
+        //m_Possessing = false;
+
+        StartCoroutine(Possess(target));
+    }
 }

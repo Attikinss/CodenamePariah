@@ -124,6 +124,9 @@ MonoBehaviour:
   m_Active: 0
   m_Dashing: 0
   m_DashCoolingDown: 0
+  m_type: 1
+  m_StartingAgent: 0
+  m_OnDestroyedDamage: 25
   m_VerticalLock: 75
   m_JumpHeight: 2
   m_SecondJumpHeight: 2.5
@@ -166,11 +169,12 @@ MonoBehaviour:
     m_MoveDirection: {x: 0, y: 0, z: 0}
   m_DrainAbility:
     damage: 2
-    restore: 2
+    restore: 4
     drainInterval: 0.15
     drainCounter: 0
     isDraining: 0
   m_DeathIncarnateAbility:
+    requiredKills: 0
     deathIncarnateDamage: 100
     deathIncarnateRadius: 20
     deathIncarnateCooldown: 5
@@ -179,7 +183,9 @@ MonoBehaviour:
     drawingDeathIncarnate: 0
     deathIncarnatePos: {x: 0, y: 0, z: 0}
     deathIncarnateUsed: 0
+    hasRoutineStarted: 0
   m_Mesh: {fileID: 0}
+  m_HostsDestroyed: 0
 --- !u!114 &4480668722508770147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -624,7 +630,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InputTree: {fileID: 11400000, guid: 5ac5d0e581cbd9e4fbf1fce2c1c67885, type: 2}
   Target: {fileID: 0}
-  m_ViewRange: 15
+  m_ViewRange: 25
   m_IgnoreMask:
     serializedVersion: 2
     m_Bits: 3895
@@ -663,6 +669,7 @@ GameObject:
   - component: {fileID: 4480668722962146633}
   - component: {fileID: 4480668722962146634}
   - component: {fileID: 4480668722962146636}
+  - component: {fileID: 2488907464710365074}
   m_Layer: 11
   m_Name: Camera
   m_TagString: MainCamera
@@ -709,7 +716,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.01
-  far clip plane: 1000
+  far clip plane: 2000
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -842,6 +849,15 @@ MonoBehaviour:
       enableFptlForForwardOpaque: 0
       enableBigTilePrepass: 0
       isFptlEnabled: 0
+--- !u!45 &2488907464710365074
+Skybox:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4480668722962146637}
+  m_Enabled: 1
+  m_CustomSkybox: {fileID: 2100000, guid: f48a62f49825fb347b08d5ab4fad25ff, type: 2}
 --- !u!1 &5999573691526251796
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,6 +7,15 @@ using UnityEngine.InputSystem;
 public class HostController : InputController
 {
     [Header("Settings")]
+    public EnemyTypes m_type;
+
+    [SerializeField]
+    [Tooltip("Set this agent to be the one the game starts in. There can only be one!")]
+    private bool m_StartingAgent;
+
+    [SerializeField]
+    [Min(0)]
+    private int m_OnDestroyedDamage = 25;
 
     [Header("Mouse Controls")]
     public float m_VerticalLock = 75.0f;
@@ -83,14 +92,20 @@ public class HostController : InputController
             if(meshResult)
                 m_Mesh = meshResult.gameObject;
         }
+        m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
 	}
 
 	private void Start()
 	{
         m_UIManager = UIManager.s_Instance;
+
+        // If this is the starting agent, let the GameManager know.
+        if (m_StartingAgent)
+            GameManager.SetStartAgent(GetComponent<WhiteWillow.Agent>());
     }
 	private void Update()
     {
+        m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
         if (!PauseMenu.m_GameIsPaused)
         {
             if (!m_Active) return;
@@ -140,7 +155,7 @@ public class HostController : InputController
                         m_Inventory.Owner?.PariahController.AddHealth(m_DrainAbility.restore);
 
                         m_DrainAbility.drainCounter = 0.0f;
-                        m_Inventory.TakeDamage(m_DrainAbility.damage);
+                        m_Inventory.TakeDamage(m_DrainAbility.damage, true);
                     }
                 }
             }
@@ -172,6 +187,8 @@ public class HostController : InputController
     /// </summary>
     public override void Enable()
     {
+        GameManager.s_CurrentHost = this;
+
         GetComponent<PlayerInput>().enabled = true;
         m_Active = true;
         m_Camera.enabled = true;
@@ -194,6 +211,9 @@ public class HostController : InputController
         // Hide mesh when entering.
         if(m_Mesh)
             m_Mesh.SetActive(false);
+
+        // Letting the game manager we're entering a unit.
+        GameManager.s_Instance.OnEnterEnemy(m_type, GetCurrentWeapon().m_Animators);
     }
 
     /// <summary>
@@ -201,6 +221,15 @@ public class HostController : InputController
     /// </summary>
     public override void Disable()
     {
+
+        // Setting the death incarnate bar must happenbefore we set GameManager.s_CurrentHost to null!
+        PariahController pariah = GameManager.s_Instance.m_Pariah;
+        m_UIManager.SetDeathIncarnateBar((float)pariah.m_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
+
+
+
+        GameManager.s_CurrentHost = null;
+
         GetComponent<PlayerInput>().enabled = false;
         m_Active = false;
         m_Camera.enabled = false;
@@ -219,6 +248,8 @@ public class HostController : InputController
         // Unhide the mesh when leaving.
         if(m_Mesh)
             m_Mesh.SetActive(true);
+
+       
     }
 
     // ========================================================== Input Events ========================================================== //
@@ -422,7 +453,10 @@ public class HostController : InputController
         if (!PauseMenu.m_GameIsPaused)
         {
             if (value.performed)
-                GetCurrentWeapon().StartReload();
+            { 
+                GetCurrentWeapon().StartReload(false); // Reload normal gun.
+                GetCurrentWeapon().StartReload(true); // Reload additional dual wielded gun.
+            }
         }
     }
 
@@ -467,16 +501,21 @@ public class HostController : InputController
     // Experimental death incarnate ability thing
     public void OnAbility3(InputAction.CallbackContext value)
     {
-        if (value.performed && !m_DeathIncarnateAbility.deathIncarnateUsed)
+        PariahController pariah = GameManager.s_Instance.m_Pariah;
+        if (value.performed && !m_DeathIncarnateAbility.deathIncarnateUsed && pariah.m_Power >= m_DeathIncarnateAbility.requiredKills)
         {
             m_DeathIncarnateAbility.chargeRoutine = StartCoroutine(Ability3Charge());
-            m_UIManager.ToggleBar(true);
+            pariah.m_Power = 0; // Consume all power, reset back to 0.
+            //m_UIManager.ToggleBar(true);
         }
 
         else if (value.canceled)
-        { 
-            StopCoroutine(m_DeathIncarnateAbility.chargeRoutine); // When we let go, we stop the couritine to clear the time value in it.
-            m_UIManager.ToggleBar(false);
+        {
+            if (m_DeathIncarnateAbility.hasRoutineStarted)
+            { 
+                StopCoroutine(m_DeathIncarnateAbility.chargeRoutine); // When we let go, we stop the couritine to clear the time value in it.
+            }
+            //m_UIManager.ToggleBar(false);
         }
     }
 
@@ -823,6 +862,7 @@ public class HostController : InputController
         while (time < m_DeathIncarnateAbility.deathIncarnateCooldown)
         {
             time += Time.deltaTime;
+            
             yield return null;
         }
 
@@ -847,6 +887,7 @@ public class HostController : InputController
 		StartCoroutine(Ability3Delay());
 		Debug.Log("Ability3 delay started.");
 
+        m_DeathIncarnateAbility.hasRoutineStarted = false;
 		
 	}
 
@@ -998,4 +1039,5 @@ public class HostController : InputController
         }
     }
 
+    public int GetOnDestroyDamage() { return m_OnDestroyedDamage; }
 }

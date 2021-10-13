@@ -19,6 +19,7 @@ public struct DeathIncarnateAbility
     //}
 
     // temporary death incarnate ability stuff.
+    public int requiredKills;
     public int deathIncarnateDamage;
     public float deathIncarnateRadius;
     public float deathIncarnateCooldown;
@@ -40,6 +41,7 @@ public struct DeathIncarnateAbility
     // testing couroutines.
     [HideInInspector]
     public Coroutine chargeRoutine;
+    public bool hasRoutineStarted;
 }
 
 // damage - 100;

@@ -90,8 +90,32 @@ public struct ParticleEffects
 }
 
 [System.Serializable]
-public struct Animators
+public class Animators
 {
 	public List<Animator> m_GunAnimators;
 	public List<Animator> m_ArmsAnimators;
+
+	public bool m_WeaponInspectAnimation;
+
+	public Coroutine m_WeaponInspectRoutine;
+
+	//public bool CheckCinematic()
+	//{ 
+	//	m_GunAnimators[0].GetCurrentAnimatorStateInfo(0).isName("Equip")
+	//}
+	public bool CheckWeaponInspect() { return m_WeaponInspectAnimation; }
+	public IEnumerator RunWeaponInspect(float length)
+	{
+		m_WeaponInspectAnimation = true;
+		float counter = 0;
+		float testLength = length;
+
+		while (counter < testLength)
+		{ 
+			counter += Time.deltaTime;
+			yield return null;
+		}
+
+		m_WeaponInspectAnimation = false;
+	}
 }

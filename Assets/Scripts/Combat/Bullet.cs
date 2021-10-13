@@ -34,7 +34,7 @@ public class Bullet : MonoBehaviour
             if (collision.gameObject == m_Target)
                 m_Target.GetComponent<Inventory>()?.TakeDamage(m_Damage);
 
-            GameManager.Instance?.PlaceDecal(collision.transform, collision.GetContact(0).point, collision.GetContact(0).normal);
+            GameManager.s_Instance?.PlaceDecal(collision.transform, collision.GetContact(0).point, collision.GetContact(0).normal);
         }
 
         gameObject.SetActive(false);

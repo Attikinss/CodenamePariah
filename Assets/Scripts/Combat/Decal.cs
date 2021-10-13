@@ -51,16 +51,29 @@ public class Decal
 
     //public Decal()
     //{ 
-        
+
     //}
 
+    // =============================================== NOTE =============================================== //
+    // rotate bullet decal randomly, with up vector.
     public void SetDecal(Transform obj, Vector3 hitPoint, Vector3 dir)
     {
         m_objAttached = obj;
+
+
         m_hitPoint = m_objAttached.InverseTransformPoint(hitPoint);
         m_Dir = m_objAttached.InverseTransformDirection(dir);
         m_LocalMat = m_objAttached.worldToLocalMatrix;
         m_hitPointWorld = hitPoint;
+
+        // Setting transforms.
+
+        Vector3 localPos = m_objAttached.TransformPoint(m_hitPoint);
+        localPos += m_objAttached.TransformVector(m_Dir) * 0.009f;
+        //m_ProjectorObj.transform.LookAt(localPos + m_objAttached.TransformVector(m_Dir));
+        m_ProjectorObj.transform.eulerAngles = dir;
+
+        m_ProjectorObj.transform.position = localPos;
     }
 
     //public void SetDecal(Transform obj, Vector3 hitPoint, Vector3 dir, GameObject decal)
@@ -73,23 +86,7 @@ public class Decal
 
     //    m_Decal = decal;
     //}
-    public void Update()
-    {
-
-        if (m_objAttached)
-        {
-            //Vector3 localPos = m_objAttached.TransformPoint(m_hitPoint);
-            //m_Decal.transform.LookAt(localPos + m_objAttached.TransformVector(m_Dir));
-            //localPos += m_objAttached.TransformVector(m_Dir) * 0.009f;
-            //m_Decal.transform.position = localPos;
-
-            Vector3 localPos = m_objAttached.TransformPoint(m_hitPoint);
-            m_ProjectorObj.transform.LookAt(localPos + m_objAttached.TransformVector(m_Dir));
-            localPos += m_objAttached.TransformVector(m_Dir) * 0.009f;
-
-            m_ProjectorObj.transform.position = localPos;
-        }
-    }
+    
 
 }
 

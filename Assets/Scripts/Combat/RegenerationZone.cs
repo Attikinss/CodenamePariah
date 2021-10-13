@@ -157,7 +157,7 @@ public class RegenerationZone : MonoBehaviour
 		}
 	}
 
-	private void TryRegenerate(int healingPerTick, int tickRate, Inventory agentInv = null, PariahController pariah = null)
+	private void TryRegenerate(int healingPerTick, float tickRate, Inventory agentInv = null, PariahController pariah = null)
 	{
 		if (GameManager.s_Instance.IsHoldingHeal && !GameManager.s_Instance.m_HealingRoutineActive)
 		{
@@ -165,7 +165,7 @@ public class RegenerationZone : MonoBehaviour
 			GameManager.s_Instance.m_HealingRoutineActive = true;
 		}
 	}
-	IEnumerator Regenerate(int healingPerTick, int tickRate, Inventory agentInv = null, PariahController pariah = null)
+	IEnumerator Regenerate(int healingPerTick, float tickRate, Inventory agentInv = null, PariahController pariah = null)
 	{
 		float time = 0;
 		while (m_StandingInZone)

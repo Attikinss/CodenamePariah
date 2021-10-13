@@ -343,7 +343,7 @@ public class @InputMap : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""c1eb2842-f5ae-42aa-abb1-0fe7aa9a3a08"",
-                    ""path"": ""<Keyboard>/x"",
+                    ""path"": ""<Keyboard>/t"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KBM"",
@@ -1019,7 +1019,7 @@ public class @InputMap : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""3c315cc5-b99f-4260-8404-bc8909ee48d8"",
-                    ""path"": ""<Keyboard>/x"",
+                    ""path"": ""<Keyboard>/t"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KBM"",

@@ -13,9 +13,8 @@ GameObject:
   - component: {fileID: 5488115989255903691}
   - component: {fileID: 5488115989255903690}
   - component: {fileID: 5488115989255903695}
-  - component: {fileID: -6513908037956115129}
-  - component: {fileID: 145829224575598051}
   - component: {fileID: 145288805}
+  - component: {fileID: 145288806}
   m_Layer: 0
   m_Name: Pariah
   m_TagString: Untagged
@@ -77,7 +76,7 @@ MonoBehaviour:
   m_CurrentPossessed: {fileID: 0}
   m_LowHealthThreshold: 40
   m_Power: 0
-  m_AudioLowHPEvent: {fileID: 145829224575598051}
+  m_AudioLowHPEvent: {fileID: 145288806}
 --- !u!114 &5488115989255903691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -356,22 +355,6 @@ MonoBehaviour:
     m_ActionId: ef142069-848d-41fb-81e7-af98a812f8b8
     m_ActionName: Host/ToggleHUD[/Keyboard/f4]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5488115989255903688}
-        m_TargetAssemblyTypeName: InputController, Assembly-CSharp
-        m_MethodName: OnHeal
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: b7cacc26-89b1-4467-b8ba-a793ebde52d4
-    m_ActionName: Pariah/Heal[/Keyboard/x]
-  - m_PersistentCalls:
       m_Calls: []
     m_ActionId: d4f92224-f67a-4ec1-8d7c-d353b6c6f058
     m_ActionName: Host/DeleteWep1[/Keyboard/7]
@@ -387,6 +370,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: f316d8a8-f58e-4861-988e-db0f9c79e3ea
     m_ActionName: Host/TestAddWeapon[/Keyboard/o]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5488115989255903688}
+        m_TargetAssemblyTypeName: InputController, Assembly-CSharp
+        m_MethodName: OnHeal
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: b7cacc26-89b1-4467-b8ba-a793ebde52d4
+    m_ActionName: Pariah/Heal[/Keyboard/x]
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: a720b1b7-c6ba-42fc-bcb8-db538afd4fec
@@ -425,7 +424,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.25
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-6513908037956115129
+--- !u!114 &145288805
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -439,7 +438,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attenuationObject: {fileID: 0}
   ListenerNumber: -1
---- !u!114 &145829224575598051
+--- !u!114 &145288806
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -453,15 +452,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Type: 0
   EventID: event:/Pariah SFX/Low Health Heartbeat
---- !u!45 &145288805
-Skybox:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5488115989255903284}
-  m_Enabled: 1
-  m_CustomSkybox: {fileID: 2100000, guid: f48a62f49825fb347b08d5ab4fad25ff, type: 2}
 --- !u!1 &5488115990317370183
 GameObject:
   m_ObjectHideFlags: 0
@@ -473,6 +463,7 @@ GameObject:
   - component: {fileID: 5488115990317370203}
   - component: {fileID: 5488115990317370180}
   - component: {fileID: 5488115990317370182}
+  - component: {fileID: 387475389}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -518,7 +509,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.01
-  far clip plane: 1000
+  far clip plane: 10000
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -651,6 +642,15 @@ MonoBehaviour:
       enableFptlForForwardOpaque: 0
       enableBigTilePrepass: 0
       isFptlEnabled: 0
+--- !u!45 &387475389
+Skybox:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5488115990317370183}
+  m_Enabled: 1
+  m_CustomSkybox: {fileID: 2100000, guid: f48a62f49825fb347b08d5ab4fad25ff, type: 2}
 --- !u!1001 &440828157269051503
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -661,6 +661,10 @@ PrefabInstance:
     - target: {fileID: 1711229719397737206, guid: dfe3838a30220b54bb009dde46c0b528, type: 3}
       propertyPath: m_Name
       value: PFX_Pariah_001
+      objectReference: {fileID: 0}
+    - target: {fileID: 1711229719397737206, guid: dfe3838a30220b54bb009dde46c0b528, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1711229719397737209, guid: dfe3838a30220b54bb009dde46c0b528, type: 3}
       propertyPath: m_RootOrder
@@ -707,6 +711,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1711229720302342912, guid: dfe3838a30220b54bb009dde46c0b528, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1711229720302342912, guid: dfe3838a30220b54bb009dde46c0b528, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 0}
@@ -721,6 +729,10 @@ PrefabInstance:
     - target: {fileID: 1711229720302342912, guid: dfe3838a30220b54bb009dde46c0b528, type: 3}
       propertyPath: m_Materials.Array.data[3]
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1711229721249071263, guid: dfe3838a30220b54bb009dde46c0b528, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1711229721249071263, guid: dfe3838a30220b54bb009dde46c0b528, type: 3}
       propertyPath: m_Materials.Array.data[0]

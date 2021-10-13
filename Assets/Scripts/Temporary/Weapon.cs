@@ -203,6 +203,8 @@ public class Weapon : MonoBehaviour
 
         if (ReadyToFire(special))
         {
+            
+
             // Getting the correct rounds in magazine. There are two, the normal one and the one for the left gun.
             int RoundsInMag;
             if (special)
@@ -244,6 +246,8 @@ public class Weapon : MonoBehaviour
                 //    m_Animators.m_ArmsAnimators[0].SetTrigger("IsFiring");
                 //}
 
+                // Playing sounds.
+                PlayFireSound();
                 PlayAnimations(special);
 
                 // Currently gets rid of bullet sprite before UI has fully updated //
@@ -1011,5 +1015,11 @@ public class Weapon : MonoBehaviour
     }
     public bool CanAim() { return (GetAimState() && !GetReloadState() && !m_Animators.m_WeaponInspectAnimation); }
     public void SetCamera(Camera camera) { m_Camera = camera; }
+
+    private void PlayFireSound()
+    {
+        if (m_AudioFireEvent)
+            m_AudioFireEvent.Trigger();
+    }
 
 }

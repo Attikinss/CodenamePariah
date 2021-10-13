@@ -15,7 +15,7 @@ public class RegenerationZone : MonoBehaviour
 	public int m_HealingPerTick = 5;
 
 	[Range(0, 10)]
-	public int m_TickRate = 1;
+	public float m_TickRate = 1;
 
 	
 

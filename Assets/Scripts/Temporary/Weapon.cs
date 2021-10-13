@@ -139,7 +139,6 @@ public class Weapon : MonoBehaviour
 	private void Start()
 	{
         m_UIManager = UIManager.s_Instance;
-        m_UIManager?.UpdateWeaponUI(this);
 	}
 
 	// Update is called once per frame

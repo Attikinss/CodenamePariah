@@ -239,7 +239,6 @@ GameObject:
   - component: {fileID: 4223981802772051965}
   - component: {fileID: 4223981802772051964}
   - component: {fileID: 4223981802772051963}
-  - component: {fileID: 3862463333085985278}
   m_Layer: 11
   m_Name: Soldier
   m_TagString: Untagged
@@ -336,7 +335,6 @@ MonoBehaviour:
   m_EnableDebug: 1
   m_Orientation: {fileID: 5500129082077037361}
   m_Inventory: {fileID: 4223981802077641485}
-  m_HUD: {fileID: 0}
   m_XRotation: 0
   m_DesiredX: 0
   m_MovInfo:
@@ -868,15 +866,6 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!45 &3862463333085985278
-Skybox:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5500129082491837173}
-  m_Enabled: 1
-  m_CustomSkybox: {fileID: 2100000, guid: f48a62f49825fb347b08d5ab4fad25ff, type: 2}
 --- !u!1 &8732956786785647057
 GameObject:
   m_ObjectHideFlags: 0

@@ -145,7 +145,6 @@ MonoBehaviour:
   m_EnableDebug: 1
   m_Orientation: {fileID: 4480668721917031087}
   m_Inventory: {fileID: 5252449668698434195}
-  m_HUD: {fileID: 0}
   m_XRotation: 0
   m_DesiredX: 0
   m_MovInfo:
@@ -688,7 +687,6 @@ GameObject:
   - component: {fileID: 4480668722962146633}
   - component: {fileID: 4480668722962146634}
   - component: {fileID: 4480668722962146636}
-  - component: {fileID: 2488907464710365074}
   m_Layer: 11
   m_Name: Camera
   m_TagString: MainCamera
@@ -868,15 +866,6 @@ MonoBehaviour:
       enableFptlForForwardOpaque: 0
       enableBigTilePrepass: 0
       isFptlEnabled: 0
---- !u!45 &2488907464710365074
-Skybox:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4480668722962146637}
-  m_Enabled: 1
-  m_CustomSkybox: {fileID: 2100000, guid: f48a62f49825fb347b08d5ab4fad25ff, type: 2}
 --- !u!1 &5999573691526251796
 GameObject:
   m_ObjectHideFlags: 0

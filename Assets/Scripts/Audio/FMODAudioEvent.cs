@@ -28,5 +28,9 @@ public class FMODAudioEvent : MonoBehaviour
     }
 
     public void Trigger() => m_EventInstance.start();
-    private void Update() => m_EventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
+	public void StopSound(FMOD.Studio.STOP_MODE mode)
+	{
+        m_EventInstance.stop(mode);
+	}
+	private void Update() => m_EventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
 }

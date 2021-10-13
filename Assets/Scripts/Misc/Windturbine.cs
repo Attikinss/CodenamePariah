@@ -10,5 +10,6 @@ public class Windturbine : MonoBehaviour
 	{
 		if (m_AudioTurbineEvent)
 			m_AudioTurbineEvent.Trigger();
+		
 	}
 }

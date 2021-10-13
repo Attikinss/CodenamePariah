@@ -108,6 +108,7 @@ public class Weapon : MonoBehaviour
     public FMODAudioEvent m_AudioFireEvent;
     public FMODAudioEvent m_AudioReloadEvent;
     public FMODAudioEvent m_AudioEmptyClipEvent;
+    public FMODAudioEvent m_AudioEquipEvent;
 
 	private void Awake()
 	{

@@ -3,7 +3,7 @@
 namespace WhiteWillow.Nodes
 {
     [Category("Tasks")]
-    public class Wait : Task
+    public sealed class Wait : Task
     {
         public override string IconPath { get; } = "Icons/Wait";
 

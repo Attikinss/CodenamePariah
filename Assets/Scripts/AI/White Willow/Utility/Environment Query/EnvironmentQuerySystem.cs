@@ -26,7 +26,6 @@ public static class EnvironmentQuerySystem
         lock (s_Requests)
         {
             s_Requests.Enqueue(request);
-            Debug.Log("Request submitted.");
         }
         s_RequestsLocked = false;
 
@@ -79,8 +78,6 @@ public static class EnvironmentQuerySystem
                 {
                     query = s_ResolvedQueries.Find(q => q.ID == request.ID);
                     s_ResolvedQueries.Remove(query);
-
-                    Debug.Log($"Query retrieved: {query != null}");
                 }
 
                 s_QueriesLocked = false;
@@ -221,12 +218,7 @@ public static class EnvironmentQuerySystem
             lock (s_ResolvedQueries)
             {
                 if (s_ResolvedQueries.Find(q => q.ID == query.ID) == null)
-                {
                     s_ResolvedQueries.Add(query);
-                    Debug.Log("Query resolved.");
-                }
-                else
-                    Debug.Log("Query already resolved.");
             }
 
             s_QueriesLocked = false;

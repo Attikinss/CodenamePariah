@@ -49,6 +49,8 @@ namespace WhiteWillow.Nodes
         [HideInInspector]
         public Rect GraphDimensions;
 
+        private bool m_Aborted = false;
+
         /// <summary>The file path to the icon the node will display in the graph view.</summary>
         public virtual string IconPath { get; } = "Icons/Task";
 
@@ -127,5 +129,7 @@ namespace WhiteWillow.Nodes
 
         /// <summary>Executes post-operation code once the node returns an exit state.</summary>
         protected abstract void OnExit();
+
+        public virtual void Abort() => m_Aborted = true;
     }
 }

@@ -1,4 +1,4 @@
-/*using UnityEngine;
+using UnityEngine;
 
 public class FMODAudioEvent : MonoBehaviour
 {
@@ -30,4 +30,3 @@ public class FMODAudioEvent : MonoBehaviour
     public void Trigger() => m_EventInstance.start();
     private void Update() => m_EventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
 }
-*/

@@ -105,6 +105,9 @@ public class Weapon : MonoBehaviour
     public Animators m_Animators;
 
 
+    public FMODAudioEvent m_AudioFireEvent;
+    public FMODAudioEvent m_AudioReloadEvent;
+
 	private void Awake()
 	{
         m_TransformInfo.m_OriginalLocalPosition = transform.localPosition;
@@ -126,7 +129,10 @@ public class Weapon : MonoBehaviour
 
 
         // Setting up the left gun's ammo pools and stuff to match the right gun.
-        //m_ReserveAmmoLeft = m_ReserveAmmo; // Removed reserve ammo for the left gun because the left and right gun ammo pools are going to be the same.        m_RoundsInMagazineLeft = m_RoundsInMagazine;
+        //m_ReserveAmmoLeft = m_ReserveAmmo; // Removed reserve ammo for the left gun because the left and right gun ammo pools are going to be the same.        m_RoundsInMagazineLeft = m_RoundsInMagazine;
+
+
+
     }
 	private void Start()
 	{

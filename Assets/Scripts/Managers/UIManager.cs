@@ -70,6 +70,10 @@ public class UIManager : MonoBehaviour
     private Image m_Bar;
     private TextMeshProUGUI m_DeathIncarnateBarText;
 
+    [SerializeField]
+    [Tooltip("Regeneration Text UI")]
+    private TextMeshProUGUI m_RegenerationText;
+
 	public void Awake()
 	{
         if (!s_Instance)
@@ -89,8 +93,9 @@ public class UIManager : MonoBehaviour
         }
 
         // Hide bar on start.
-        ToggleBar(false);
+        ToggleBar(true);
         SetDeathIncarnateBar(0);
+        ToggleGenertationText(false); // Hide on startup.
 
         //// Temporarily getting all the Bullet Image components because I've discovered setting game objects to false is slow if you do it a lot of times.
         //// Also I'm getting the components through code so I don't change the player prefab.
@@ -441,6 +446,18 @@ public class UIManager : MonoBehaviour
     public void SetDeathIncarnateBar(float percentage)
     {
         m_Bar.fillAmount = percentage;
+    }
+
+    public void ToggleGenertationText(bool toggle)
+    {
+        if (toggle)
+        {
+            m_RegenerationText.enabled = true;
+        }
+        else
+        {
+            m_RegenerationText.enabled = false;
+        }
     }
     public void UnhideCanvas() { m_Canvas.gameObject.SetActive(true); }
     public void HideCanvas() { m_Canvas.gameObject.SetActive(false); }

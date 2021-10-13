@@ -70,6 +70,9 @@ public class PariahController : InputController
 
     bool m_Dead = false;
 
+    [ReadOnly]
+    public int m_Power = 0; // Power is used for the death incarnate ability. It is gained by destroying agents.
+
     private void Awake() => m_Rigidbody = GetComponent<Rigidbody>();
 
     private void Start()
@@ -193,7 +196,6 @@ public class PariahController : InputController
             }
         }
     }
-
     private void Move()
     {
         Vector3 moveDirection = (transform.right * m_MovementInput.x + transform.up * m_MovementInput.y + transform.forward * m_MovementInput.z)
@@ -300,6 +302,7 @@ public class PariahController : InputController
     // ****** Highly temporary ******
     private IEnumerator ReloadLevel()
     {
+        GameManager.s_IsNotFirstLoad = true; // Telling the game manager that it's not the games first load.
         yield return null;
 
         AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);

@@ -50,7 +50,24 @@ public class GameManager : MonoBehaviour
     private MonoBehaviour m_Monobehaviour;
 
     public static HostController s_CurrentHost; // Tracks current host
-	private void Awake()
+
+    // To track whether the player is holding down the heal for regeneration statis pod button. // This applies to both pariah and the host controller so I though putting
+    // the bool here would be more efficient rather than GetComponenting() the pariah/host controller on the fly.
+    public bool IsHoldingHeal { get; set; }
+
+    public Coroutine m_HealingRoutine;
+    public bool m_HealingRoutineActive { get; set; }
+
+
+    // Storing door information for when reloading at a checkpoint.
+    public static List<Door> s_AllDoors = new List<Door>();
+    public static bool s_IsNotFirstLoad = false;
+
+    public static int s_HighestCheckPointLevel = 0;
+    public static Vector3 s_CheckPointPos;
+
+
+    private void Awake()
 	{
         m_Monobehaviour = this;
 
@@ -124,6 +141,16 @@ public class GameManager : MonoBehaviour
             m_BloodSprayPool.Add(newSpray);
         }
 
+        // After a scene reload, we refresh the doors.
+        if(s_IsNotFirstLoad)
+            RefreshDoors();
+
+        if (s_HighestCheckPointLevel > 0)
+        {
+            // If the player has reached a check point, spawn them there the next time they die.
+            SpawnAtCheckPoint();
+        }
+
     }
 
     // Update is called once per frame
@@ -174,7 +201,8 @@ public class GameManager : MonoBehaviour
             s_StartedAgent = startingAgent;
             GameManager instance = GameManager.s_Instance;
             // We can do it because there have been no other agents set to be started in.
-            instance.m_Pariah.ForceInstantPossess(s_StartedAgent);
+            if(s_HighestCheckPointLevel == 0) // We'll only ever start in an agent if we are starting a fresh world. If we've hit a check point we wont do this.
+                instance.m_Pariah.ForceInstantPossess(s_StartedAgent);
         }
         else
         {
@@ -218,5 +246,78 @@ public class GameManager : MonoBehaviour
         //WStartCoroutine(controller.RunWeaponInspect(5));
     }
 
+    public static void AddDoor(int arenaID, GameObject openDoor, GameObject closeDoor, bool isOpen)
+    {
+        // To prevent the same monobehaviour ArenaManager's from sending the GameManager their doors on the following reloads of the game, we check
+        // the ID of the requested created door with the doors we already have. If they match, it means we already know about that door and don't need it.
+        for (int i = 0; i < s_AllDoors.Count; i++)
+        {
+            if (arenaID == s_AllDoors[i].ID)
+            {
+                // Although we already have this door, we still need to re-grab the game objects. This is because on a scene reload the old game object
+                // references become null.
+                s_AllDoors[i].m_openDoorObj = openDoor;
+                s_AllDoors[i].m_closedDoorObj = closeDoor;
+
+                return; // Early out, we already have this door!
+            }
+        }
+
+        // Otherwise, this means that it's the first time we're receiving these doors (The first time the scene is loaded.)
+
+        Door newDoor = new Door(arenaID, openDoor, closeDoor, isOpen);
+
+        s_AllDoors.Add(newDoor);
+    }
+
+    /// <summary>
+    /// After reloading from a checkpoint, call this function to set doors to their proper open/close state.
+    /// </summary>
+    public static void RefreshDoors() 
+    {
+        for (int i = 0; i < s_AllDoors.Count; i++)
+        {
+            s_AllDoors[i].Toggle(s_AllDoors[i].m_IsOpen);
+        }
+    }
+
+    /// <summary>
+    /// Gets a door with a matching arena ID.
+    /// </summary>
+    /// <param name="arenaID"></param>
+    public static Door GetDoor(int arenaID)
+    {
+        for (int i = 0; i < s_AllDoors.Count; i++)
+        {
+            if (s_AllDoors[i].ID == arenaID)
+            {
+                return s_AllDoors[i];
+            }
+        }
+
+        return null;
+    }
+
+    public static void SetCheckPoint(int checkPointLevel, Vector3 pos)
+    {
+        if (s_HighestCheckPointLevel == 0)
+        {
+            // If our highest check point is level 0, we'll take any we can get.
+            s_HighestCheckPointLevel = checkPointLevel;
+            s_CheckPointPos = pos;
+        }
+        else if (checkPointLevel > s_HighestCheckPointLevel)
+        {
+            // We've reached a higher check point, so we'll set ours to that one.
+            s_HighestCheckPointLevel = checkPointLevel;
+            s_CheckPointPos = pos;
+        }
+    }
+
+    public void SpawnAtCheckPoint()
+    {
+        // If we spawn at a check point, we wont spawn into an agent immediately.
+        m_Pariah.transform.position = s_CheckPointPos;
+    }
 
 }

@@ -37,7 +37,7 @@ namespace WhiteWillow
                 var root = node as Root;
                 if (root != null)
                 {
-                    var childNode = newTree.Nodes.Find(itr => string.CompareOrdinal(itr.GUID, root.Child.GUID) == 0);
+                    var childNode = newTree.Nodes.Find(itr => itr.GUID == root.Child.GUID /*string.CompareOrdinal(itr.GUID, root.Child.GUID) == 0*/);
                     root.ClearChild();
                     root.SetChild(childNode);
                     newTree.RootNode = root;
@@ -46,8 +46,8 @@ namespace WhiteWillow
                 var composite = node as Composite;
                 if (composite != null)
                 {
-                    var children = newTree.Nodes.Where(itr => composite.Children.Any(child =>
-                        string.CompareOrdinal(itr.GUID, child.GUID) == 0)).ToArray();
+                    var children = newTree.Nodes.Where(itr => composite.Children.Any(child => itr.GUID == child.GUID
+                        /*string.CompareOrdinal(itr.GUID, child.GUID) == 0*/)).ToArray();
                     composite.Children.Clear();
                     composite.SetRunningChild(null);
                     composite.AddChildren(children);
@@ -56,7 +56,7 @@ namespace WhiteWillow
                 var decorator = node as Decorator;
                 if (decorator != null)
                 {
-                    var childNode = newTree.Nodes.Find(itr => string.CompareOrdinal(itr.GUID, decorator.Child.GUID) == 0);
+                    var childNode = newTree.Nodes.Find(itr => itr.GUID == decorator.Child.GUID /*string.CompareOrdinal(itr.GUID, decorator.Child.GUID) == 0*/);
                     decorator.ClearChild();
                     decorator.SetChild(childNode);
                 }

@@ -89,7 +89,7 @@ namespace WhiteWillow.Nodes
 
         /// <summary>Sets the parent of the node.</summary>
         /// <param name="node">The guid that will be used to find the parent.</param>
-        public void SetParent(string guid) => Parent = Owner.Nodes.Find(itr => string.CompareOrdinal(itr.GUID, guid) == 0);
+        public void SetParent(string guid) => Parent = Owner.Nodes.Find(itr => itr.GUID == GUID /*string.CompareOrdinal(itr.GUID, guid) == 0*/);
 
         /// <summary>Sets the order of execution for the node.</summary>
         /// <param name="order">The value defining execution order.</param>

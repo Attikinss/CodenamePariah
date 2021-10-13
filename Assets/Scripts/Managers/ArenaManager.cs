@@ -44,9 +44,10 @@ public class ArenaManager : MonoBehaviour
         {
             //Temporary code - will need animations.
             PlayDoorOpenSound();
-
-            m_OpenDoor.SetActive(true);
-            m_ClosedDoor.SetActive(false);
+            if (m_OpenDoor != null)
+                m_OpenDoor.SetActive(true);
+            if (m_ClosedDoor != null)
+                m_ClosedDoor.SetActive(false);
             this.GetComponent<ArenaManager>().enabled = false;
 
             SendDoorData(true); // Telling the GameManager that this door has been opened.

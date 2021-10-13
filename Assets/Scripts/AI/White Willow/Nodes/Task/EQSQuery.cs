@@ -28,8 +28,7 @@ public class EQSQuery : Task
     // Called before node is executed
     protected override void OnEnter()
     {
-        if (Target.Value == null && Target.BlackboardValue)
-            Target.Validate(Owner.Blackboard);
+        Target.Validate(Owner.Blackboard);
     }
 
     // Called after node has finished executing or is aborted
@@ -55,9 +54,7 @@ public class EQSQuery : Task
 
             // If something went wrong, bail until the next tick
             if (!m_EQSRequestSent || !m_EQSRequest.QueryResolved || !EnvironmentQuerySystem.RetrieveQuery(m_EQSRequest, out Owner.Agent.CurrentQuery))
-            {
                 return NodeResult.Running;
-            }
 
             QueryAngleCheck(ref Owner.Agent.CurrentQuery);
             QueryDistanceCheck(ref Owner.Agent.CurrentQuery);

@@ -10,7 +10,7 @@ namespace WhiteWillow.Nodes
 
         protected override void OnEnter()
         {
-
+            Position.Validate(Owner.Blackboard);
         }
 
         protected override void OnExit()

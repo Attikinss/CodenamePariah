@@ -63,7 +63,7 @@ public static class EnvironmentQuerySystem
 
     public static Query RetrieveQuery(QueryRequest request)
     {
-        return s_ResolvedQueries.Find(query => query.ID == request.ID);
+        return s_ResolvedQueries.Find(query => string.CompareOrdinal(query.ID, request.ID) == 0);
     }
 
     public static bool RetrieveQuery(QueryRequest request, out Query query)
@@ -76,7 +76,7 @@ public static class EnvironmentQuerySystem
 
                 lock (s_ResolvedQueries)
                 {
-                    query = s_ResolvedQueries.Find(q => q.ID == request.ID);
+                    query = s_ResolvedQueries.Find(q => string.CompareOrdinal(q.ID, request.ID) == 0);
                     s_ResolvedQueries.Remove(query);
                 }
 
@@ -217,7 +217,7 @@ public static class EnvironmentQuerySystem
 
             lock (s_ResolvedQueries)
             {
-                if (s_ResolvedQueries.Find(q => q.ID == query.ID) == null)
+                if (s_ResolvedQueries.Find(q => string.CompareOrdinal(q.ID, query.ID) == 0) == null)
                     s_ResolvedQueries.Add(query);
             }
 

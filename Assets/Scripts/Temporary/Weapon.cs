@@ -660,8 +660,8 @@ public class Weapon : MonoBehaviour
 
         SetFireTime(special); // Added so that if the player is holding down fire while reloading, they will begin firing at t=0. Without this the fire time is what is what when they
                        // originally started firing.
-
-        m_UIManager?.UpdateWeaponUI(this);
+        if(m_Inventory.Owner.Possessed)
+            m_UIManager?.UpdateWeaponUI(this);
 
         if (special)
             m_WeaponActions.m_IsReloadingLeft = false;

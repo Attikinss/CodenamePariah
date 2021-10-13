@@ -13,7 +13,7 @@ namespace WhiteWillow
 
         public void AddEntry<T>(string name, T value)
         {
-            if (Entries.Exists(e => string.CompareOrdinal(e.Name, name) == 0))
+            if (Entries.Exists(e => e.Name == name /*string.CompareOrdinal(e.Name, name) == 0*/))
             {
                 Debug.LogWarning($"An entry with the name <{name}> is already on the blackboard!");
                 return;
@@ -97,7 +97,7 @@ namespace WhiteWillow
 
         public void RemoveEntry(string name)
         {
-            var entry = Entries.FirstOrDefault(e => string.CompareOrdinal(e.Name, name) == 0);
+            var entry = Entries.FirstOrDefault(e => e.Name == name /*string.CompareOrdinal(e.Name, name) == 0*/);
 
             if (entry == null)
             {
@@ -120,7 +120,7 @@ namespace WhiteWillow
 
         public BlackboardEntry GetEntry<T>(string name)
         {
-            var entry = Entries.FirstOrDefault(e => string.CompareOrdinal(e.Name, name) == 0);
+            var entry = Entries.FirstOrDefault(e => e.Name == name /*string.CompareOrdinal(e.Name, name) == 0*/);
 
             if (entry != null)
                 return entry;
@@ -131,12 +131,12 @@ namespace WhiteWillow
 
         public BlackboardEntry this[string name]
         {
-            get => Entries.FirstOrDefault(e => string.CompareOrdinal(e.Name, name) == 0);
+            get => Entries.FirstOrDefault(e => e.Name == name /*string.CompareOrdinal(e.Name, name) == 0*/);
         }
 
         public object UpdateEntryValue<T>(string name, object value)
         {
-            var entry = Entries.FirstOrDefault(e => string.CompareOrdinal(e.Name, name) == 0);
+            var entry = Entries.FirstOrDefault(e => e.Name == name /*string.CompareOrdinal(e.Name, name) == 0*/);
 
             if (!entry.Equals(null))
             {
@@ -154,7 +154,7 @@ namespace WhiteWillow
         {
             if (name == newName) return;
 
-            var entry = Entries.FirstOrDefault(e => string.CompareOrdinal(e.Name, name) == 0);
+            var entry = Entries.FirstOrDefault(e => e.Name == name /*string.CompareOrdinal(e.Name, name) == 0*/);
 
             if (!entry.Equals(null))
             {

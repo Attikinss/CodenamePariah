@@ -97,7 +97,7 @@ public class RegenerationZone : MonoBehaviour
 			case GENERATION_TYPE.HOST:
 				if (m_currentInv)
 				{
-					TryRegenerate(m_HealingPerTick, m_TickRate, m_currentInv, null);
+					TryRegenerate(m_HealingPerTick, m_TickRate, null, GameManager.s_Instance.m_Pariah);
 				}
 				break;
 			case GENERATION_TYPE.PARIAH:

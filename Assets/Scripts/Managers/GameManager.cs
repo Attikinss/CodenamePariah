@@ -237,9 +237,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void OnEnterEnemy(EnemyTypes type, Animators controller)
+    public void OnEnterEnemy(EnemyTypes type, Animators controller, Weapon weapon)
     {
-        m_Achievements.FirstTimeEnemy(type, controller, this); // The only weapon with multiple arm/gun animators is the dual wield which will
+        m_Achievements.FirstTimeEnemy(type, controller, this, weapon); // The only weapon with multiple arm/gun animators is the dual wield which will
                                                                    // never be used as a first-time equip cinematic thing. So thats why we get the
                                                                    // 0th element of the animators.
 

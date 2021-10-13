@@ -213,7 +213,7 @@ public class HostController : InputController
             m_Mesh.SetActive(false);
 
         // Letting the game manager we're entering a unit.
-        GameManager.s_Instance.OnEnterEnemy(m_type, GetCurrentWeapon().m_Animators);
+        GameManager.s_Instance.OnEnterEnemy(m_type, GetCurrentWeapon().m_Animators, GetCurrentWeapon());
     }
 
     /// <summary>

@@ -1036,4 +1036,13 @@ public class Weapon : MonoBehaviour
         if (m_AudioEmptyClipEvent)
             m_AudioEmptyClipEvent.Trigger();
     }
+
+    /// <summary>
+    /// This gets called from GameManager when the player enters the unit for the first time.
+    /// </summary>
+    public void PlayEquipSound()
+    {
+        if (m_AudioEquipEvent)
+            m_AudioEquipEvent.Trigger();
+    }
 }

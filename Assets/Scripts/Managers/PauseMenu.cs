@@ -46,6 +46,11 @@ public class PauseMenu : MonoBehaviour
     [Tooltip("Time it takes for transition between scenes.")]
     private float m_TransitionTime = 2f;
 
+    private void Awake()
+    {
+        Cursor.lockState = CursorLockMode.None;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -129,7 +134,7 @@ public class PauseMenu : MonoBehaviour
 //#if UNITY_EDITOR
 //        SceneManager.LoadScene("Test_Lauchlan_002");
 //#else
-        SceneManager.LoadScene("Arena_001");
+        SceneManager.LoadScene("Level_001");
 //#endif
 
         //while (!asyncLoad.isDone)

@@ -25,8 +25,10 @@ public class ArenaManager : MonoBehaviour
         if (EnemyCount())
         {
             //Temporary code - will need animations.
-            m_OpenDoor.SetActive(true);
-            m_ClosedDoor.SetActive(false);
+            if (m_OpenDoor != null)
+                m_OpenDoor.SetActive(true);
+            if (m_ClosedDoor != null)
+                m_ClosedDoor.SetActive(false);
             this.GetComponent<ArenaManager>().enabled = false;
         }
     }

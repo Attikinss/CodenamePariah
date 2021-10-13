@@ -413,6 +413,7 @@ MonoBehaviour:
   m_AudioFireEvent: {fileID: -3288425278748849051}
   m_AudioReloadEvent: {fileID: 8715216991693660737}
   m_AudioEmptyClipEvent: {fileID: -6885795307638770724}
+  m_AudioEquipEvent: {fileID: 0}
 --- !u!114 &-3288425278748849051
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3193,6 +3194,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 11
       objectReference: {fileID: 0}
+    - target: {fileID: 1124699299317227159, guid: baec3ce215c58d94ea5ff7bc220b1c58, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: eda4e81ec6629964990516b71871d0f0, type: 2}
     - target: {fileID: 1125789477036888218, guid: baec3ce215c58d94ea5ff7bc220b1c58, type: 3}
       propertyPath: m_Layer
       value: 11
@@ -4121,6 +4126,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Mesh_Weapon_Rifle_002
       objectReference: {fileID: 0}
+    - target: {fileID: 4604010986806747467, guid: 982a197209986df4d9ae134e8bdc28d4, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: eda4e81ec6629964990516b71871d0f0, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 982a197209986df4d9ae134e8bdc28d4, type: 3}
 --- !u!1 &3878702092497883143 stripped

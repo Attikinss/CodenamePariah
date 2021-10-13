@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2238759060784313516}
   - component: {fileID: 5738261813503353504}
   - component: {fileID: 6136833324851593153}
+  - component: {fileID: -3411329375080389410}
   m_Layer: 11
   m_Name: Pistol
   m_TagString: Untagged
@@ -217,6 +218,8 @@ MonoBehaviour:
     m_WeaponInspectAnimation: 0
   m_AudioFireEvent: {fileID: 5738261813503353504}
   m_AudioReloadEvent: {fileID: 6136833324851593153}
+  m_AudioEmptyClipEvent: {fileID: -3411329375080389410}
+  m_AudioEquipEvent: {fileID: 0}
 --- !u!114 &5738261813503353504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -245,6 +248,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Type: 2
   EventID: event:/Firearms/Pistol Unload and Reload
+--- !u!114 &-3411329375080389410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2238759060784313553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81dca6e7f82043a4fb85791a7d8e871d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 0
+  EventID: event:/Firearms/AK Empty Clip
 --- !u!1 &2238759061623623577
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 5488115989255903691}
   - component: {fileID: 5488115989255903690}
   - component: {fileID: 5488115989255903695}
+  - component: {fileID: 145288805}
+  - component: {fileID: 145288806}
   m_Layer: 0
   m_Name: Pariah
   m_TagString: Untagged
@@ -72,7 +74,9 @@ MonoBehaviour:
   m_CameraTilt: 0
   m_Possessing: 0
   m_CurrentPossessed: {fileID: 0}
+  m_LowHealthThreshold: 40
   m_Power: 0
+  m_AudioLowHPEvent: {fileID: 145288806}
 --- !u!114 &5488115989255903691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -420,6 +424,34 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.25
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &145288805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5488115989255903284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attenuationObject: {fileID: 0}
+  ListenerNumber: -1
+--- !u!114 &145288806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5488115989255903284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81dca6e7f82043a4fb85791a7d8e871d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 0
+  EventID: event:/Pariah SFX/Low Health Heartbeat
 --- !u!1 &5488115990317370183
 GameObject:
   m_ObjectHideFlags: 0

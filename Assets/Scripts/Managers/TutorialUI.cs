@@ -23,8 +23,10 @@ public class TutorialUI : MonoBehaviour
 
     void Update()
     {
-        this.transform.LookAt(m_Player);
-
+        if (m_Player != null)
+        {
+            this.transform.LookAt(m_Player);
+        }
 
         //possibly fixed update or late update
         if (m_Target != null)

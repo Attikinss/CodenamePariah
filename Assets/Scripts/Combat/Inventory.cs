@@ -74,6 +74,8 @@ public class Inventory : MonoBehaviour
                     }
                     else
                         Telemetry.TracePosition("Agent-Death", transform.position);
+
+                    UIManager.s_Instance.HideCanvas();
                 }
                 else
                 { 

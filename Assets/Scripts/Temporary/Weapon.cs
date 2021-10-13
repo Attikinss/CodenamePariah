@@ -107,6 +107,7 @@ public class Weapon : MonoBehaviour
 
     public FMODAudioEvent m_AudioFireEvent;
     public FMODAudioEvent m_AudioReloadEvent;
+    public FMODAudioEvent m_AudioEmptyClipEvent;
 
 	private void Awake()
 	{
@@ -333,7 +334,7 @@ public class Weapon : MonoBehaviour
                 }
                 else
                 {
-                    //m_EmptySoundEmitter?.Trigger();
+                    PlayEmptyClipSound();
                 }
                 //else if (TotalAmmoEmpty())
                 //    this.GetComponentInParent<UIManager>().DisableMagazine();
@@ -1029,4 +1030,9 @@ public class Weapon : MonoBehaviour
             m_AudioReloadEvent.Trigger();
     }
 
+    private void PlayEmptyClipSound()
+    {
+        if (m_AudioEmptyClipEvent)
+            m_AudioEmptyClipEvent.Trigger();
+    }
 }

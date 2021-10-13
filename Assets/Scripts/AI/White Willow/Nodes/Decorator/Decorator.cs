@@ -42,7 +42,7 @@ namespace WhiteWillow.Nodes
             }
 
             // Set the new child's parent to this node
-            var node = Owner.Nodes.Find(itr => itr.GUID == nodeGuid);
+            var node = Owner.Nodes.Find(itr => itr.GUID == nodeGuid /*string.CompareOrdinal(itr.GUID, nodeGuid) == 0*/);
             node.SetParent(this);
 
             Child = node;

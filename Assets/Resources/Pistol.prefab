@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 2238759060784313555}
   - component: {fileID: 2238759060784313554}
   - component: {fileID: 2238759060784313516}
+  - component: {fileID: 5738261813503353504}
+  - component: {fileID: 6136833324851593153}
   m_Layer: 11
   m_Name: Pistol
   m_TagString: Untagged
@@ -169,6 +171,7 @@ MonoBehaviour:
   m_TypeTag: 1
   m_Camera: {fileID: 0}
   m_BulletDamage: 26
+  m_AIDamageModifier: 0.5
   m_RoundsInMagazine: 7
   m_MagazineSize: 7
   m_ReserveAmmo: 14
@@ -176,8 +179,10 @@ MonoBehaviour:
   m_FireRate: 400
   m_ReloadTime: 2.4
   m_LowAmmoWarningPercentage: 0.3
+  m_FiringPosition: {fileID: 0}
   m_Controller: {fileID: 0}
   m_FireStartTime: 0
+  m_FireStartTimeLeft: 0
   m_Inventory: {fileID: 0}
   m_SemiAuto: 1
   m_DualWield: 0
@@ -192,6 +197,7 @@ MonoBehaviour:
     m_IsFiring: 0
     m_IsAiming: 0
     m_IsReloading: 0
+    m_IsReloadingLeft: 0
   m_RecoilTesting:
     m_RecoilTestIntervals: 3
     m_RecoilTestRestTime: 2
@@ -208,6 +214,37 @@ MonoBehaviour:
     - {fileID: 7225071218260326938}
     m_ArmsAnimators:
     - {fileID: 7225071218558725821}
+    m_WeaponInspectAnimation: 0
+  m_AudioFireEvent: {fileID: 5738261813503353504}
+  m_AudioReloadEvent: {fileID: 6136833324851593153}
+--- !u!114 &5738261813503353504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2238759060784313553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81dca6e7f82043a4fb85791a7d8e871d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 1
+  EventID: event:/Firearms/Pistol Laser Shot
+--- !u!114 &6136833324851593153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2238759060784313553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81dca6e7f82043a4fb85791a7d8e871d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 2
+  EventID: event:/Firearms/Pistol Unload and Reload
 --- !u!1 &2238759061623623577
 GameObject:
   m_ObjectHideFlags: 0

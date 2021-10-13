@@ -105,6 +105,11 @@ public class Weapon : MonoBehaviour
     public Animators m_Animators;
 
 
+    public FMODAudioEvent m_AudioFireEvent;
+    public FMODAudioEvent m_AudioReloadEvent;
+    public FMODAudioEvent m_AudioEmptyClipEvent;
+    public FMODAudioEvent m_AudioEquipEvent;
+
 	private void Awake()
 	{
         m_TransformInfo.m_OriginalLocalPosition = transform.localPosition;
@@ -126,7 +131,10 @@ public class Weapon : MonoBehaviour
 
 
         // Setting up the left gun's ammo pools and stuff to match the right gun.
-        //m_ReserveAmmoLeft = m_ReserveAmmo; // Removed reserve ammo for the left gun because the left and right gun ammo pools are going to be the same.        m_RoundsInMagazineLeft = m_RoundsInMagazine;
+        //m_ReserveAmmoLeft = m_ReserveAmmo; // Removed reserve ammo for the left gun because the left and right gun ammo pools are going to be the same.        m_RoundsInMagazineLeft = m_RoundsInMagazine;
+
+
+
     }
 	private void Start()
 	{
@@ -197,6 +205,8 @@ public class Weapon : MonoBehaviour
 
         if (ReadyToFire(special))
         {
+            
+
             // Getting the correct rounds in magazine. There are two, the normal one and the one for the left gun.
             int RoundsInMag;
             if (special)
@@ -238,6 +248,8 @@ public class Weapon : MonoBehaviour
                 //    m_Animators.m_ArmsAnimators[0].SetTrigger("IsFiring");
                 //}
 
+                // Playing sounds.
+                PlayFireSound();
                 PlayAnimations(special);
 
                 // Currently gets rid of bullet sprite before UI has fully updated //
@@ -323,7 +335,7 @@ public class Weapon : MonoBehaviour
                 }
                 else
                 {
-                    //m_EmptySoundEmitter?.Trigger();
+                    PlayEmptyClipSound();
                 }
                 //else if (TotalAmmoEmpty())
                 //    this.GetComponentInParent<UIManager>().DisableMagazine();
@@ -557,6 +569,7 @@ public class Weapon : MonoBehaviour
     public IEnumerator Reload(bool special = false)
     {
         StartReloadAnimation(special);
+        PlayReloadSound();
 
         if (special)
             m_WeaponActions.m_IsReloadingLeft = true;
@@ -1006,4 +1019,30 @@ public class Weapon : MonoBehaviour
     public bool CanAim() { return (GetAimState() && !GetReloadState() && !m_Animators.m_WeaponInspectAnimation); }
     public void SetCamera(Camera camera) { m_Camera = camera; }
 
+    private void PlayFireSound()
+    {
+        if (m_AudioFireEvent)
+            m_AudioFireEvent.Trigger();
+    }
+
+    private void PlayReloadSound()
+    {
+        if (m_AudioReloadEvent)
+            m_AudioReloadEvent.Trigger();
+    }
+
+    private void PlayEmptyClipSound()
+    {
+        if (m_AudioEmptyClipEvent)
+            m_AudioEmptyClipEvent.Trigger();
+    }
+
+    /// <summary>
+    /// This gets called from GameManager when the player enters the unit for the first time.
+    /// </summary>
+    public void PlayEquipSound()
+    {
+        if (m_AudioEquipEvent)
+            m_AudioEquipEvent.Trigger();
+    }
 }

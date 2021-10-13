@@ -19,10 +19,13 @@ namespace WhiteWillow
 
         public void Validate(Blackboard blackboard)
         {
-            var value = (T)blackboard.GetEntry<T>(Name)?.Value;
+            if (BlackboardValue)
+            {
+                var value = (T)blackboard.GetEntry<T>(Name)?.Value;
 
-            if (value != null)
-                Value = value;
+                if (value != null)
+                    Value = value;
+            }
         }
     }
 }

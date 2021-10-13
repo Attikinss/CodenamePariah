@@ -49,6 +49,8 @@ namespace WhiteWillow.Nodes
         [HideInInspector]
         public Rect GraphDimensions;
 
+        private bool m_Aborted = false;
+
         /// <summary>The file path to the icon the node will display in the graph view.</summary>
         public virtual string IconPath { get; } = "Icons/Task";
 
@@ -87,7 +89,7 @@ namespace WhiteWillow.Nodes
 
         /// <summary>Sets the parent of the node.</summary>
         /// <param name="node">The guid that will be used to find the parent.</param>
-        public void SetParent(string guid) => Parent = Owner.Nodes.Find(itr => itr.GUID == guid);
+        public void SetParent(string guid) => Parent = Owner.Nodes.Find(itr => itr.GUID == GUID /*string.CompareOrdinal(itr.GUID, guid) == 0*/);
 
         /// <summary>Sets the order of execution for the node.</summary>
         /// <param name="order">The value defining execution order.</param>
@@ -127,5 +129,7 @@ namespace WhiteWillow.Nodes
 
         /// <summary>Executes post-operation code once the node returns an exit state.</summary>
         protected abstract void OnExit();
+
+        public virtual void Abort() => m_Aborted = true;
     }
 }

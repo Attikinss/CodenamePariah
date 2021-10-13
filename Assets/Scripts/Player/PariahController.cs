@@ -70,8 +70,13 @@ public class PariahController : InputController
 
     bool m_Dead = false;
 
+    public int m_LowHealthThreshold = 40;
+
     [ReadOnly]
     public int m_Power = 0; // Power is used for the death incarnate ability. It is gained by destroying agents.
+
+    public FMODAudioEvent m_AudioLowHPEvent;
+    private bool m_IsPlayingLowHP = false;
 
     private void Awake() => m_Rigidbody = GetComponent<Rigidbody>();
 
@@ -100,6 +105,15 @@ public class PariahController : InputController
                     m_Rotation.y = m_CurrentPossessed.Orientation.localEulerAngles.x;
                 }
             }
+
+
+            // Stop playing low hp sound.
+            // We should stop playing the low health sound if we are playing it.
+            if (m_IsPlayingLowHP && m_Health > m_LowHealthThreshold)
+            {
+                StopLowHPSound();
+            }
+
         }
     }
 
@@ -269,6 +283,12 @@ public class PariahController : InputController
         if (m_Dead) return;
 
         m_Health = Mathf.Clamp(m_Health - amount, 0, m_MaxHealth);
+        if (m_Health <= m_LowHealthThreshold)
+        {
+            PlayLowHPSound();
+        }
+
+
         if (m_Health == 0)
         {
             // TODO: Kill pariah
@@ -285,6 +305,13 @@ public class PariahController : InputController
             if (!m_Dead && m_Active && !m_Possessing && !PauseMenu.m_GameIsPaused)
             {
                 m_Health -= m_HealthDrainAmount;
+
+                if (m_Health <= m_LowHealthThreshold)
+                {
+                    PlayLowHPSound();
+                }
+
+
                 if (m_Health <= 0)
                 {
                     m_Health = 0;
@@ -338,5 +365,23 @@ public class PariahController : InputController
         //m_Possessing = false;
 
         StartCoroutine(Possess(target));
+    }
+
+    private void PlayLowHPSound()
+    {
+        if (m_AudioLowHPEvent && !m_IsPlayingLowHP)
+        {
+            m_IsPlayingLowHP = true;
+            m_AudioLowHPEvent.Trigger();
+        }
+    }
+
+    private void StopLowHPSound()
+    {
+        if (m_AudioLowHPEvent)
+        {
+            m_IsPlayingLowHP = false;
+            m_AudioLowHPEvent.StopSound(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        }
     }
 }

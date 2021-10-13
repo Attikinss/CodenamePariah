@@ -10,7 +10,7 @@ public struct Achievements
     public bool hasEnteredScientist { get; private set; }
     public bool hasEnteredSoldier { get; private set; }
 
-    public void FirstTimeEnemy(EnemyTypes enemy, Animators weaponAnimators, MonoBehaviour weaponMonobehaviour)
+    public void FirstTimeEnemy(EnemyTypes enemy, Animators weaponAnimators, MonoBehaviour weaponMonobehaviour, Weapon weapon)
     {
         switch (enemy)
         {
@@ -24,6 +24,9 @@ public struct Achievements
                     hasEnteredScientist = true;
                     arms.SetTrigger("Equip");
                     gun.SetTrigger("Equip");
+
+                    weapon.PlayEquipSound();
+
                     break;
                 }
                 else
@@ -37,6 +40,9 @@ public struct Achievements
                     hasEnteredSoldier = true;
                     arms.SetTrigger("Equip");
                     gun.SetTrigger("Equip");
+
+                    weapon.PlayEquipSound();
+
                     break;
                 }
                 else

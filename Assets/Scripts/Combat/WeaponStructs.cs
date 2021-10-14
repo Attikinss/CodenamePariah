@@ -90,10 +90,41 @@ public struct ParticleEffects
 
 	public ParticleSystem m_BulletParticle;
 
-	public void PlayBulletEffect()
+	public ParticleSystem m_AdditionalBulletParticle;
+
+	public void PlayBulletEffect(bool dual, bool hasHit, Vector3 direction)
 	{
-		if(m_BulletParticle)
-			m_BulletParticle.Play();
+		if (!dual)
+		{
+			if (m_BulletParticle)
+			{
+				if (hasHit)
+				{
+					// Rotate particle to thing.
+					Vector3 tempFix;
+					m_BulletParticle.transform.forward = (direction - m_BulletParticle.transform.position).normalized;
+					tempFix = m_BulletParticle.transform.eulerAngles;
+					tempFix.x -= 90;
+					m_BulletParticle.transform.eulerAngles = tempFix;
+					
+				}
+				m_BulletParticle.Play();
+			}
+		}
+		else // If dual is true, we play the additional bullet particle instead.
+		{
+			if (m_AdditionalBulletParticle)
+			{
+				if (hasHit)
+				{
+					m_AdditionalBulletParticle.transform.forward = (direction - m_AdditionalBulletParticle.transform.position).normalized;
+					Vector3 tempFix = m_AdditionalBulletParticle.transform.eulerAngles;
+					tempFix.x = -90;
+					m_AdditionalBulletParticle.transform.eulerAngles = tempFix;
+				}
+				m_AdditionalBulletParticle.Play();
+			}
+		}
 	}
 }
 

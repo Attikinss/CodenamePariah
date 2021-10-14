@@ -266,7 +266,7 @@ public class Weapon : MonoBehaviour
                 Ray ray;
                 if (m_Inventory.Owner == null || m_Inventory.Owner.Possessed) // Added a check so that it can be used without being tied to the agent system.
                 {
-                    PlayBulletEffect();
+                    
                     ray = new Ray(m_Camera.transform.position, m_Camera.transform.forward);
                     WeaponConfiguration currentConfig = GetCurrentWeaponConfig();
                     // =========== TESTING =========== //
@@ -287,27 +287,34 @@ public class Weapon : MonoBehaviour
 
                     // ========================= TEMPORARY SHOOT COLLISION ========================= //
 
-                    if (Physics.Raycast(ray, out RaycastHit hitInfo))
+                    if (Physics.Raycast(ray, out RaycastHit hitInfo, 500))
                     {
                         if (hitInfo.transform.gameObject != null)
                         {
+                            
+
                             if (hitInfo.transform.TryGetComponent(out Inventory agentInventory))
                             {
                                 float damageMod = m_Inventory.Owner.Possessed ? 1.0f : m_AIDamageModifier;
                                 agentInventory.TakeDamage((int)(m_BulletDamage * damageMod));
                                 //Debug.Log("BAD");
                                 GameManager.s_Instance.PlaceBulletSpray(hitInfo.point, hitInfo.transform, (transform.position - hitInfo.point).normalized);
-                                
+
 
                                 return;
                             }
-
+                            PlayBulletEffect(special, true, hitInfo.point);
                             GameManager.s_Instance?.PlaceDecal(hitInfo.transform, hitInfo.point, hitInfo.normal);
 
                             // Adding a force to the hit object.
                             if (hitInfo.rigidbody != null)
                                 hitInfo.rigidbody.AddForce(m_Camera.transform.forward * GetCurrentWeaponConfig().m_BulletForce, ForceMode.Impulse);
                         }
+                    }
+                    else
+                    {
+                        // Shot did not hit gameobject.
+                        PlayBulletEffect(special, false, Vector3.zero);
                     }
                     // ============================================================================= //
                 }
@@ -694,8 +701,11 @@ public class Weapon : MonoBehaviour
             float currentFOV = m_Camera.fieldOfView;
             float desiredFOV = 60;
 
-            float requiredChange = desiredFOV - currentFOV;
-            m_Camera.fieldOfView += requiredChange * 0.45f;
+            if (!m_DualWield)
+            { 
+                float requiredChange = desiredFOV - currentFOV;
+                m_Camera.fieldOfView += requiredChange * 0.45f;
+            }
 
         }
         else if (GetAimState() && CanAim())
@@ -708,7 +718,7 @@ public class Weapon : MonoBehaviour
             float requiredChange = desiredFOV - currentFOV;
 
             if(!GetReloadState() && !m_DualWield) // Wont zoom in if we are reloading or if we are using a dual wielded weapon.
-            m_Camera.fieldOfView += requiredChange * 0.45f;
+                m_Camera.fieldOfView += requiredChange * 0.45f;
 
 
 
@@ -1047,8 +1057,8 @@ public class Weapon : MonoBehaviour
             m_AudioEquipEvent.Trigger();
     }
 
-    public void PlayBulletEffect()
+    public void PlayBulletEffect(bool isDualWield, bool hasHit, Vector3 direction)
     {
-        m_Particles.PlayBulletEffect();
+        m_Particles.PlayBulletEffect(isDualWield, hasHit, direction);
     }
 }

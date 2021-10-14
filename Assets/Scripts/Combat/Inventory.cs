@@ -32,6 +32,8 @@ public class Inventory : MonoBehaviour
     public Camera m_Camera; // This transform will be used when we add new weapons to the inventory.
     private HostController m_Controller;
 
+    public FMODAudioEvent m_AudioDestroySound;
+
     /// <summary>
     /// I've added a Awake() function here because m_CurrentWeapon was always unintialised. I'm going to initialise it here.
     /// </summary>
@@ -90,6 +92,8 @@ public class Inventory : MonoBehaviour
                     }
                 }
 
+               
+                PlayDestroySound();
                 agent.Kill();
             }
         }
@@ -259,4 +263,10 @@ public class Inventory : MonoBehaviour
     }
 
     public int GetWeaponNum() { return m_CurrentWeaponNum; }
+
+    public void PlayDestroySound()
+    {
+        if (m_AudioDestroySound)
+            m_AudioDestroySound.Trigger();
+    }
 }

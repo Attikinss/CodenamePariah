@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.01.00">
 	<object class="Event" id="{5077fe34-94c2-452d-b3a8-3cbcfa20cfaf}">
 		<property name="name">
-			<value>AK Reload</value>
+			<value>AK Unload.Reload.Cock</value>
 		</property>
 		<property name="outputFormat">
 			<value>2</value>
@@ -92,7 +92,7 @@
 	</object>
 	<object class="MultiSound" id="{7b4c8f75-29f0-4ccf-9f86-1cfc44875210}">
 		<relationship name="sounds">
-			<destination>{02b4d67a-7fe7-4615-b2d3-2f3cec1339c3}</destination>
+			<destination>{70f53671-f4a0-45c8-828c-0b36950dab6c}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusEffectChain" id="{72a28f66-483f-4ea1-b627-8fa789dea0ec}">
@@ -122,9 +122,9 @@
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{861ac186-1249-4b22-a125-1abc7001314c}" />
-	<object class="SingleSound" id="{02b4d67a-7fe7-4615-b2d3-2f3cec1339c3}">
+	<object class="SingleSound" id="{70f53671-f4a0-45c8-828c-0b36950dab6c}">
 		<relationship name="audioFile">
-			<destination>{f7d64f1e-2ed9-41a0-bd79-4083f8101c84}</destination>
+			<destination>{ff01deb8-a935-4537-9ccb-f618f9c9da9c}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusFader" id="{3e5755ad-7901-4909-8b62-31878f622ca3}" />

@@ -249,7 +249,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 2
-  EventID: event:/Firearms/Pistol Unload.Reload.Cock
+  EventID: event:/Firearms/Pistol Mag
 --- !u!114 &-3411329375080389410
 MonoBehaviour:
   m_ObjectHideFlags: 0

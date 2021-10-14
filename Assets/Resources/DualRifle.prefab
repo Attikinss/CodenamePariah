@@ -403,8 +403,7 @@ MonoBehaviour:
     m_BulletCasings:
     - {fileID: 7715845259356758369}
     - {fileID: 7715845260220573547}
-    m_BulletParticle: {fileID: 4565488625694104865}
-    m_AdditionalBulletParticle: {fileID: 6630513579285251878}
+    m_BulletParticle: {fileID: 0}
   m_Animators:
     m_GunAnimators:
     - {fileID: 4112493244399381525}
@@ -444,7 +443,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 2
-  EventID: event:/Firearms/AK Reload
+  EventID: event:/Firearms/AK Unload.Reload.Cock
 --- !u!114 &-6885795307638770724
 MonoBehaviour:
   m_ObjectHideFlags: 0

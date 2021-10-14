@@ -289,7 +289,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 2
-  EventID: event:/Firearms/AK Reload
+  EventID: event:/Firearms/AK Unload.Reload.Cock
 --- !u!114 &9135183314569356306
 MonoBehaviour:
   m_ObjectHideFlags: 0

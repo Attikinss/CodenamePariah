@@ -701,8 +701,11 @@ public class Weapon : MonoBehaviour
             float currentFOV = m_Camera.fieldOfView;
             float desiredFOV = 60;
 
-            float requiredChange = desiredFOV - currentFOV;
-            m_Camera.fieldOfView += requiredChange * 0.45f;
+            if (!m_DualWield)
+            { 
+                float requiredChange = desiredFOV - currentFOV;
+                m_Camera.fieldOfView += requiredChange * 0.45f;
+            }
 
         }
         else if (GetAimState() && CanAim())
@@ -715,7 +718,7 @@ public class Weapon : MonoBehaviour
             float requiredChange = desiredFOV - currentFOV;
 
             if(!GetReloadState() && !m_DualWield) // Wont zoom in if we are reloading or if we are using a dual wielded weapon.
-            m_Camera.fieldOfView += requiredChange * 0.45f;
+                m_Camera.fieldOfView += requiredChange * 0.45f;
 
 
 

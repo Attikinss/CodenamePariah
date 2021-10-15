@@ -239,6 +239,7 @@ GameObject:
   - component: {fileID: 4223981802772051965}
   - component: {fileID: 4223981802772051964}
   - component: {fileID: 4223981802772051963}
+  - component: {fileID: 8629804007589015081}
   m_Layer: 11
   m_Name: Soldier
   m_TagString: Untagged
@@ -805,6 +806,7 @@ MonoBehaviour:
   - {fileID: 2055328196769995445}
   m_CurrentWeapon: {fileID: 0}
   m_Camera: {fileID: 5500129080964715732}
+  m_AudioDestroySound: {fileID: 8629804007589015081}
 --- !u!114 &4223981802772051965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -866,6 +868,20 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &8629804007589015081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5500129082491837173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81dca6e7f82043a4fb85791a7d8e871d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 0
+  EventID: event:/Pariah SFX/Wilhelm Scream
 --- !u!1 &8732956786785647057
 GameObject:
   m_ObjectHideFlags: 0

@@ -46,6 +46,11 @@ public class PauseMenu : MonoBehaviour
     [Tooltip("Time it takes for transition between scenes.")]
     private float m_TransitionTime = 2f;
 
+    private void Awake()
+    {
+        Cursor.lockState = CursorLockMode.None;
+    }
+
     // Update is called once per frame
     void Update()
     {

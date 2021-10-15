@@ -23,15 +23,23 @@ public class Door
     {
         if (toggle)
         {
-            m_IsOpen = true;
-            m_openDoorObj.SetActive(true);
-            m_closedDoorObj.SetActive(false);
+            // Currently theres an issue that some doors are not "Awoken" when the game starts, so they wont send the GameManager their object straight away.
+            // The GameManager then tries to refresh all doors but doesn't have references to the doors. Safety check for now so it fails gracefully.
+            if (m_openDoorObj && m_closedDoorObj)
+            { 
+                m_IsOpen = true;
+                m_openDoorObj.SetActive(true);
+                m_closedDoorObj.SetActive(false);
+            }
         }
         else
         {
-            m_IsOpen = false;
-            m_openDoorObj.SetActive(false);
-            m_closedDoorObj.SetActive(true);
+            if (m_openDoorObj && m_closedDoorObj)
+            { 
+                m_IsOpen = false;
+                m_openDoorObj.SetActive(false);
+                m_closedDoorObj.SetActive(true);
+            }
         }
 
     }

@@ -105,6 +105,11 @@ public class Weapon : MonoBehaviour
     public Animators m_Animators;
 
 
+    public FMODAudioEvent m_AudioFireEvent;
+    public FMODAudioEvent m_AudioReloadEvent;
+    public FMODAudioEvent m_AudioEmptyClipEvent;
+    public FMODAudioEvent m_AudioEquipEvent;
+
 	private void Awake()
 	{
         m_TransformInfo.m_OriginalLocalPosition = transform.localPosition;
@@ -126,12 +131,14 @@ public class Weapon : MonoBehaviour
 
 
         // Setting up the left gun's ammo pools and stuff to match the right gun.
-        //m_ReserveAmmoLeft = m_ReserveAmmo; // Removed reserve ammo for the left gun because the left and right gun ammo pools are going to be the same.        m_RoundsInMagazineLeft = m_RoundsInMagazine;
+        //m_ReserveAmmoLeft = m_ReserveAmmo; // Removed reserve ammo for the left gun because the left and right gun ammo pools are going to be the same.        m_RoundsInMagazineLeft = m_RoundsInMagazine;
+
+
+
     }
 	private void Start()
 	{
         m_UIManager = UIManager.s_Instance;
-        m_UIManager?.UpdateWeaponUI(this);
 	}
 
 	// Update is called once per frame
@@ -197,6 +204,8 @@ public class Weapon : MonoBehaviour
 
         if (ReadyToFire(special))
         {
+            
+
             // Getting the correct rounds in magazine. There are two, the normal one and the one for the left gun.
             int RoundsInMag;
             if (special)
@@ -238,6 +247,9 @@ public class Weapon : MonoBehaviour
                 //    m_Animators.m_ArmsAnimators[0].SetTrigger("IsFiring");
                 //}
 
+                // Playing sounds.
+                PlayFireSound();
+                
                 PlayAnimations(special);
 
                 // Currently gets rid of bullet sprite before UI has fully updated //
@@ -254,6 +266,7 @@ public class Weapon : MonoBehaviour
                 Ray ray;
                 if (m_Inventory.Owner == null || m_Inventory.Owner.Possessed) // Added a check so that it can be used without being tied to the agent system.
                 {
+                    
                     ray = new Ray(m_Camera.transform.position, m_Camera.transform.forward);
                     WeaponConfiguration currentConfig = GetCurrentWeaponConfig();
                     // =========== TESTING =========== //
@@ -274,27 +287,34 @@ public class Weapon : MonoBehaviour
 
                     // ========================= TEMPORARY SHOOT COLLISION ========================= //
 
-                    if (Physics.Raycast(ray, out RaycastHit hitInfo))
+                    if (Physics.Raycast(ray, out RaycastHit hitInfo, 500))
                     {
                         if (hitInfo.transform.gameObject != null)
                         {
+                            
+
                             if (hitInfo.transform.TryGetComponent(out Inventory agentInventory))
                             {
                                 float damageMod = m_Inventory.Owner.Possessed ? 1.0f : m_AIDamageModifier;
                                 agentInventory.TakeDamage((int)(m_BulletDamage * damageMod));
                                 //Debug.Log("BAD");
                                 GameManager.s_Instance.PlaceBulletSpray(hitInfo.point, hitInfo.transform, (transform.position - hitInfo.point).normalized);
-                                
+
 
                                 return;
                             }
-
+                            PlayBulletEffect(special, true, hitInfo.point);
                             GameManager.s_Instance?.PlaceDecal(hitInfo.transform, hitInfo.point, hitInfo.normal);
 
                             // Adding a force to the hit object.
                             if (hitInfo.rigidbody != null)
                                 hitInfo.rigidbody.AddForce(m_Camera.transform.forward * GetCurrentWeaponConfig().m_BulletForce, ForceMode.Impulse);
                         }
+                    }
+                    else
+                    {
+                        // Shot did not hit gameobject.
+                        PlayBulletEffect(special, false, Vector3.zero);
                     }
                     // ============================================================================= //
                 }
@@ -305,7 +325,7 @@ public class Weapon : MonoBehaviour
                         bullet?.SetTarget(m_Inventory.Owner.Target, (int)(m_BulletDamage * m_AIDamageModifier));
 
                     if(m_FiringPosition) // Quick check since dual wield has no firing position currently.
-                        bullet?.Fire(m_FiringPosition.position, m_Inventory.Owner.Target.transform.position);
+                        bullet?.Fire(m_FiringPosition.position, m_Inventory.Owner.Target.transform.position, transform.forward);
                 }
             }
             else
@@ -323,7 +343,7 @@ public class Weapon : MonoBehaviour
                 }
                 else
                 {
-                    //m_EmptySoundEmitter?.Trigger();
+                    PlayEmptyClipSound();
                 }
                 //else if (TotalAmmoEmpty())
                 //    this.GetComponentInParent<UIManager>().DisableMagazine();
@@ -557,6 +577,7 @@ public class Weapon : MonoBehaviour
     public IEnumerator Reload(bool special = false)
     {
         StartReloadAnimation(special);
+        PlayReloadSound();
 
         if (special)
             m_WeaponActions.m_IsReloadingLeft = true;
@@ -646,8 +667,8 @@ public class Weapon : MonoBehaviour
 
         SetFireTime(special); // Added so that if the player is holding down fire while reloading, they will begin firing at t=0. Without this the fire time is what is what when they
                        // originally started firing.
-
-        m_UIManager?.UpdateWeaponUI(this);
+        if(m_Inventory.Owner.Possessed)
+            m_UIManager?.UpdateWeaponUI(this);
 
         if (special)
             m_WeaponActions.m_IsReloadingLeft = false;
@@ -680,8 +701,11 @@ public class Weapon : MonoBehaviour
             float currentFOV = m_Camera.fieldOfView;
             float desiredFOV = 60;
 
-            float requiredChange = desiredFOV - currentFOV;
-            m_Camera.fieldOfView += requiredChange * 0.45f;
+            if (!m_DualWield)
+            { 
+                float requiredChange = desiredFOV - currentFOV;
+                m_Camera.fieldOfView += requiredChange * 0.45f;
+            }
 
         }
         else if (GetAimState() && CanAim())
@@ -694,7 +718,7 @@ public class Weapon : MonoBehaviour
             float requiredChange = desiredFOV - currentFOV;
 
             if(!GetReloadState() && !m_DualWield) // Wont zoom in if we are reloading or if we are using a dual wielded weapon.
-            m_Camera.fieldOfView += requiredChange * 0.45f;
+                m_Camera.fieldOfView += requiredChange * 0.45f;
 
 
 
@@ -1006,4 +1030,35 @@ public class Weapon : MonoBehaviour
     public bool CanAim() { return (GetAimState() && !GetReloadState() && !m_Animators.m_WeaponInspectAnimation); }
     public void SetCamera(Camera camera) { m_Camera = camera; }
 
+    private void PlayFireSound()
+    {
+        if (m_AudioFireEvent)
+            m_AudioFireEvent.Trigger();
+    }
+
+    private void PlayReloadSound()
+    {
+        if (m_AudioReloadEvent)
+            m_AudioReloadEvent.Trigger();
+    }
+
+    private void PlayEmptyClipSound()
+    {
+        if (m_AudioEmptyClipEvent)
+            m_AudioEmptyClipEvent.Trigger();
+    }
+
+    /// <summary>
+    /// This gets called from GameManager when the player enters the unit for the first time.
+    /// </summary>
+    public void PlayEquipSound()
+    {
+        if (m_AudioEquipEvent)
+            m_AudioEquipEvent.Trigger();
+    }
+
+    public void PlayBulletEffect(bool isDualWield, bool hasHit, Vector3 direction)
+    {
+        m_Particles.PlayBulletEffect(isDualWield, hasHit, direction);
+    }
 }

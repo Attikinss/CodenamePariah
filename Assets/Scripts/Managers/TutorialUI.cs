@@ -23,13 +23,15 @@ public class TutorialUI : MonoBehaviour
 
     void Update()
     {
-        this.transform.LookAt(m_Player);
-
+        if (m_Player != null)
+        {
+            this.transform.LookAt(m_Player);
+        }
 
         //possibly fixed update or late update
         if (m_Target != null)
         {
-            this.gameObject.transform.position = new Vector3(m_Target.transform.position.x, m_Target.transform.position.y + m_Distance, m_Target.transform.position.z);
+            this.gameObject.transform.position = new Vector3(this.transform.position.x, m_Target.transform.position.y + m_Distance, this.transform.position.z);
         }
     }
 }

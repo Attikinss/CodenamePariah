@@ -23,6 +23,8 @@ public class ArenaManager : MonoBehaviour
     [Tooltip("Counter that increments when an agent in the room is dead.")]
     int counter = 0;
 
+    public FMODAudioEvent m_AudioOpenEvent;
+
 	private void Awake()
 	{
         // On awake, we're gonna upload the doors to the GameManager so it has a reference to their state.
@@ -31,14 +33,21 @@ public class ArenaManager : MonoBehaviour
 	}
 	private void Start()
 	{
+        // Moving to doors position. Super temporary until we get door managers or something.
+        // This is also just to save Michael some time from moving all of these by hand.
+        //this.transform.position = m_ClosedDoor.transform.position;
+
 	}
 	private void Update()
     {
         if (EnemyCount())
         {
             //Temporary code - will need animations.
-            m_OpenDoor.SetActive(true);
-            m_ClosedDoor.SetActive(false);
+            PlayDoorOpenSound();
+            if (m_OpenDoor != null)
+                m_OpenDoor.SetActive(true);
+            if (m_ClosedDoor != null)
+                m_ClosedDoor.SetActive(false);
             this.GetComponent<ArenaManager>().enabled = false;
 
             SendDoorData(true); // Telling the GameManager that this door has been opened.
@@ -69,5 +78,11 @@ public class ArenaManager : MonoBehaviour
     {
         Door ourDoor = GameManager.GetDoor(m_ID);
         ourDoor.m_IsOpen = isOpen;
+    }
+
+    private void PlayDoorOpenSound()
+    {
+        if (m_AudioOpenEvent)
+            m_AudioOpenEvent.Trigger();
     }
 }

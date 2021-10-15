@@ -56,6 +56,23 @@ public abstract class InputController : MonoBehaviour
     public abstract void OnSlide(InputAction.CallbackContext value);
     public abstract void OnPossess(InputAction.CallbackContext value);
 
+    public virtual void OnHeal(InputAction.CallbackContext value)
+    {
+        if (!PauseMenu.m_GameIsPaused)
+        {
+            if (value.control.IsPressed())
+                GameManager.s_Instance.IsHoldingHeal = true;
+            else if (value.canceled)
+            { 
+                GameManager.s_Instance.IsHoldingHeal = false;
+                if (GameManager.s_Instance.m_HealingRoutineActive)
+                { 
+                    GameManager.s_Instance.m_HealingRoutineActive = false;
+                    GameManager.s_Instance.StopCoroutine(GameManager.s_Instance.m_HealingRoutine);
+                }
+            }
+        }
+    }
     protected IEnumerator Dash(Vector3 destination, Vector3 offset, float duration)
     {
         if (!m_DashCoolingDown)

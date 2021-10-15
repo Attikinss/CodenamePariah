@@ -49,6 +49,10 @@ GameObject:
   - component: {fileID: 8557315744390728889}
   - component: {fileID: 8557315745383636164}
   - component: {fileID: 8557315745383636170}
+  - component: {fileID: 7218605912780461474}
+  - component: {fileID: 4944471648041337260}
+  - component: {fileID: 9135183314569356306}
+  - component: {fileID: -1431870692015168824}
   m_Layer: 11
   m_Name: AssaultRifle
   m_TagString: Untagged
@@ -73,6 +77,7 @@ Transform:
   - {fileID: 7052651437313384604}
   - {fileID: 6886623512333823982}
   - {fileID: 7515428529033491362}
+  - {fileID: 6291421135516054066}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -208,6 +213,7 @@ MonoBehaviour:
   m_TypeTag: 0
   m_Camera: {fileID: 0}
   m_BulletDamage: 15
+  m_AIDamageModifier: 0.5
   m_RoundsInMagazine: 30
   m_MagazineSize: 30
   m_ReserveAmmo: 60
@@ -218,6 +224,7 @@ MonoBehaviour:
   m_FiringPosition: {fileID: 0}
   m_Controller: {fileID: 0}
   m_FireStartTime: 0
+  m_FireStartTimeLeft: 0
   m_Inventory: {fileID: 0}
   m_SemiAuto: 0
   m_DualWield: 0
@@ -232,6 +239,7 @@ MonoBehaviour:
     m_IsFiring: 0
     m_IsAiming: 0
     m_IsReloading: 0
+    m_IsReloadingLeft: 0
   m_RecoilTesting:
     m_RecoilTestIntervals: 3
     m_RecoilTestRestTime: 2
@@ -243,11 +251,73 @@ MonoBehaviour:
     - {fileID: 7052651437313384603}
     m_BulletCasings:
     - {fileID: 6886623512333823983}
+    m_BulletParticle: {fileID: 6291421135516054067}
   m_Animators:
     m_GunAnimators:
     - {fileID: 978549044318533465}
     m_ArmsAnimators:
     - {fileID: 978549044967703916}
+    m_WeaponInspectAnimation: 0
+  m_AudioFireEvent: {fileID: 7218605912780461474}
+  m_AudioReloadEvent: {fileID: 4944471648041337260}
+  m_AudioEmptyClipEvent: {fileID: 9135183314569356306}
+  m_AudioEquipEvent: {fileID: -1431870692015168824}
+--- !u!114 &7218605912780461474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8557315744390728888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81dca6e7f82043a4fb85791a7d8e871d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 1
+  EventID: event:/Firearms/AK Firing
+--- !u!114 &4944471648041337260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8557315744390728888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81dca6e7f82043a4fb85791a7d8e871d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 2
+  EventID: event:/Firearms/AK Unload.Reload.Cock
+--- !u!114 &9135183314569356306
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8557315744390728888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81dca6e7f82043a4fb85791a7d8e871d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 3
+  EventID: event:/Firearms/AK Empty Clip
+--- !u!114 &-1431870692015168824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8557315744390728888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81dca6e7f82043a4fb85791a7d8e871d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 0
+  EventID: event:/Firearms/AK Cock (Slow)
 --- !u!1 &8557315745014845795
 GameObject:
   m_ObjectHideFlags: 0
@@ -2120,6 +2190,73 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0b0f9a58bbfb9064098d14dcf43f0480, type: 3}
   m_PrefabInstance: {fileID: 978549045018998850}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1849138999260044153
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 8557315744390728889}
+    m_Modifications:
+    - target: {fileID: 5685486868664609096, guid: 47b78849cecc16647bab60ed9352180d, type: 3}
+      propertyPath: m_Name
+      value: PFX_Weapon_BulletBeam_001_Default
+      objectReference: {fileID: 0}
+    - target: {fileID: 5685486868664609099, guid: 47b78849cecc16647bab60ed9352180d, type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5685486868664609099, guid: 47b78849cecc16647bab60ed9352180d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.00858
+      objectReference: {fileID: 0}
+    - target: {fileID: 5685486868664609099, guid: 47b78849cecc16647bab60ed9352180d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.05906
+      objectReference: {fileID: 0}
+    - target: {fileID: 5685486868664609099, guid: 47b78849cecc16647bab60ed9352180d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.42259
+      objectReference: {fileID: 0}
+    - target: {fileID: 5685486868664609099, guid: 47b78849cecc16647bab60ed9352180d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 5685486868664609099, guid: 47b78849cecc16647bab60ed9352180d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 5685486868664609099, guid: 47b78849cecc16647bab60ed9352180d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5685486868664609099, guid: 47b78849cecc16647bab60ed9352180d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5685486868664609099, guid: 47b78849cecc16647bab60ed9352180d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 5685486868664609099, guid: 47b78849cecc16647bab60ed9352180d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5685486868664609099, guid: 47b78849cecc16647bab60ed9352180d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 47b78849cecc16647bab60ed9352180d, type: 3}
+--- !u!4 &6291421135516054066 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5685486868664609099, guid: 47b78849cecc16647bab60ed9352180d, type: 3}
+  m_PrefabInstance: {fileID: 1849138999260044153}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &6291421135516054067 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 5685486868664609098, guid: 47b78849cecc16647bab60ed9352180d, type: 3}
+  m_PrefabInstance: {fileID: 1849138999260044153}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8054286683771622473
 PrefabInstance:

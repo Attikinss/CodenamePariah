@@ -32,6 +32,8 @@ public class Inventory : MonoBehaviour
     public Camera m_Camera; // This transform will be used when we add new weapons to the inventory.
     private HostController m_Controller;
 
+    public FMODAudioEvent m_AudioDestroySound;
+
     /// <summary>
     /// I've added a Awake() function here because m_CurrentWeapon was always unintialised. I'm going to initialise it here.
     /// </summary>
@@ -62,16 +64,36 @@ public class Inventory : MonoBehaviour
         {
             if (TryGetComponent(out WhiteWillow.Agent agent))
             {
+                PariahController pariah = GameManager.s_Instance.m_Pariah;
                 if (agent.Possessed)
                 {
                     if (fromAbility)
+                    { 
                         Telemetry.TracePosition("Agent-PlayerKill", transform.position);
+                        pariah.m_Power++; // Incrementing this so the power bar charges up.
+                        // Set power bar ui to match.
+                        m_UIManager.SetDeathIncarnateBar((float)pariah.m_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
+                    }
                     else
                         Telemetry.TracePosition("Agent-Death", transform.position);
+
+                    UIManager.s_Instance.HideCanvas();
                 }
                 else
+                { 
                     Telemetry.TracePosition("Agent-PlayerKill", transform.position);
 
+                    if (GameManager.s_CurrentHost)
+                    {
+                        
+                        pariah.m_Power++; // Incrementing this so the power bar charges up.
+                        // Set power bar ui to match.
+                        m_UIManager.SetDeathIncarnateBar((float)pariah.m_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
+                    }
+                }
+
+               
+                PlayDestroySound();
                 agent.Kill();
             }
         }
@@ -241,4 +263,10 @@ public class Inventory : MonoBehaviour
     }
 
     public int GetWeaponNum() { return m_CurrentWeaponNum; }
+
+    public void PlayDestroySound()
+    {
+        if (m_AudioDestroySound)
+            m_AudioDestroySound.Trigger();
+    }
 }

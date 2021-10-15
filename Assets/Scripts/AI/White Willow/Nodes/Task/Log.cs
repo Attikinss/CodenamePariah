@@ -3,7 +3,7 @@
 namespace WhiteWillow.Nodes
 {
     [Category("Tasks")]
-    public class Log : Task
+    public sealed class Log : Task
     {
         public override string IconPath { get; } = "Icons/Log";
 

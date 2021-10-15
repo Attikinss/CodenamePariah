@@ -36,8 +36,8 @@ namespace WhiteWillow
         public Vector3 Destination { get; private set; }
         public Vector3 FacingDirection { get; private set; }
 
-        private void Start()
-        {
+		private void Awake()
+		{
             m_RuntimeTree = InputTree?.Clone(gameObject.name);
             m_RuntimeTree?.SetAgent(this);
             m_LastPosition = transform.position;
@@ -47,8 +47,8 @@ namespace WhiteWillow
 
             PariahController = FindObjectOfType<PariahController>();
             m_RuntimeTree.Blackboard?.UpdateEntryValue<GameObject>("Target", PariahController?.gameObject);
-        }
 
+        }
         private void Update()
         {
             if (Possessed)
@@ -151,7 +151,11 @@ namespace WhiteWillow
         public void Kill()
         {
             if (Possessed)
+            { 
                 Release();
+                // Also apply extra damage to Pariah's life essence.
+                PariahController?.TakeDamage(m_HostController.GetOnDestroyDamage());
+            }
 
             // TODO: Use object pooling / queued destruction system
             Destroy(gameObject);

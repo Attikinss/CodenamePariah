@@ -49,6 +49,7 @@ GameObject:
   - component: {fileID: 5252449669079828067}
   - component: {fileID: 5252449669079828066}
   - component: {fileID: 5252449669079828069}
+  - component: {fileID: 7179454552038115072}
   m_Layer: 11
   m_Name: Scientist
   m_TagString: Untagged
@@ -124,6 +125,9 @@ MonoBehaviour:
   m_Active: 0
   m_Dashing: 0
   m_DashCoolingDown: 0
+  m_type: 1
+  m_StartingAgent: 0
+  m_OnDestroyedDamage: 25
   m_VerticalLock: 75
   m_JumpHeight: 2
   m_SecondJumpHeight: 2.5
@@ -142,7 +146,6 @@ MonoBehaviour:
   m_EnableDebug: 1
   m_Orientation: {fileID: 4480668721917031087}
   m_Inventory: {fileID: 5252449668698434195}
-  m_HUD: {fileID: 0}
   m_XRotation: 0
   m_DesiredX: 0
   m_MovInfo:
@@ -166,11 +169,12 @@ MonoBehaviour:
     m_MoveDirection: {x: 0, y: 0, z: 0}
   m_DrainAbility:
     damage: 2
-    restore: 2
+    restore: 4
     drainInterval: 0.15
     drainCounter: 0
     isDraining: 0
   m_DeathIncarnateAbility:
+    requiredKills: 10
     deathIncarnateDamage: 100
     deathIncarnateRadius: 20
     deathIncarnateCooldown: 5
@@ -179,6 +183,7 @@ MonoBehaviour:
     drawingDeathIncarnate: 0
     deathIncarnatePos: {x: 0, y: 0, z: 0}
     deathIncarnateUsed: 0
+    hasRoutineStarted: 0
   m_Mesh: {fileID: 0}
 --- !u!114 &4480668722508770147
 MonoBehaviour:
@@ -569,6 +574,26 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: f316d8a8-f58e-4861-988e-db0f9c79e3ea
     m_ActionName: Host/TestAddWeapon[/Keyboard/o]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b7cacc26-89b1-4467-b8ba-a793ebde52d4
+    m_ActionName: Pariah/Heal[/Keyboard/x]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4480668722508770150}
+        m_TargetAssemblyTypeName: InputController, Assembly-CSharp
+        m_MethodName: OnHeal
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: a720b1b7-c6ba-42fc-bcb8-db538afd4fec
+    m_ActionName: Host/Heal[/Keyboard/x]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: KBM
   m_DefaultActionMap: Host
@@ -591,6 +616,7 @@ MonoBehaviour:
   - {fileID: 3524539271116116222}
   m_CurrentWeapon: {fileID: 0}
   m_Camera: {fileID: 4480668722962146634}
+  m_AudioDestroySound: {fileID: 7179454552038115072}
 --- !u!114 &5252449669079828067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -624,7 +650,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InputTree: {fileID: 11400000, guid: 5ac5d0e581cbd9e4fbf1fce2c1c67885, type: 2}
   Target: {fileID: 0}
-  m_ViewRange: 15
+  m_ViewRange: 25
   m_IgnoreMask:
     serializedVersion: 2
     m_Bits: 3895
@@ -652,6 +678,20 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &7179454552038115072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4480668722508770155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81dca6e7f82043a4fb85791a7d8e871d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 0
+  EventID: event:/Pariah SFX/Wilhelm Scream
 --- !u!1 &4480668722962146637
 GameObject:
   m_ObjectHideFlags: 0
@@ -709,7 +749,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.01
-  far clip plane: 1000
+  far clip plane: 10000
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -1043,6 +1083,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[4]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 5097915449212692319, guid: c09c029d69a612d48a5dfa6fdefbb62e, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 88a84870ada44db4f82f7c19bab42ee3, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c09c029d69a612d48a5dfa6fdefbb62e, type: 3}
 --- !u!4 &3524539271116116097 stripped

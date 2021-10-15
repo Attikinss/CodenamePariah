@@ -20,11 +20,14 @@ public class FireAtTarget : Task
     private float m_ShootDelay = 0.1f;
     private float m_CurrentShootTime = 0.0f;
 
+    private CombatToken m_Token;
+
     // Called before node is executed
     protected override void OnEnter()
     {
         Target.Validate(Owner.Blackboard);
 
+        m_Token = AIDirector.Instance.RequestToken();
         m_ShotsToFire = Random.Range(MinimumShots, MaximumShots + 1);
     }
 
@@ -34,6 +37,9 @@ public class FireAtTarget : Task
         m_ShotsToFire = 0;
         m_CurrentShots = 0;
         m_CurrentShootTime = 0.0f;
+
+        m_Token?.Use();
+        m_Token = null;
     }
 
     // This is where the behaviour is updated
@@ -44,23 +50,26 @@ public class FireAtTarget : Task
             // Turn to face target
             Owner.Agent.LookAt(Target.Value.transform.position);
 
-            if (Owner.Agent.TargetWithinViewRange(Target.Value, EngagementDistance.Value))
+            if (m_Token != null)
             {
-                // Shoot volley
-                if (m_CurrentShootTime >= m_ShootDelay)
+                if (Owner.Agent.TargetWithinViewRange(Target.Value, EngagementDistance.Value))
                 {
-                    Owner.Agent.ShootAt(Target.Value, m_CurrentShots == 0);
-                    m_CurrentShots++;
-                    m_CurrentShootTime = 0.0f;
+                    // Shoot volley
+                    if (m_CurrentShootTime >= m_ShootDelay)
+                    {
+                        Owner.Agent.ShootAt(Target.Value, m_CurrentShots == 0);
+                        m_CurrentShots++;
+                        m_CurrentShootTime = 0.0f;
+                    }
+                    else
+                        m_CurrentShootTime += Time.deltaTime;
+
+                    if (m_CurrentShots >= m_ShotsToFire)
+                        return NodeResult.Success;
                 }
-                else
-                    m_CurrentShootTime += Time.deltaTime;
 
-                if (m_CurrentShots >= m_ShotsToFire)
-                    return NodeResult.Success;
+                return NodeResult.Running;
             }
-
-            return NodeResult.Running;
         }
 
 	    return NodeResult.Failure;

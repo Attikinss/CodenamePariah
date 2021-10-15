@@ -20,9 +20,10 @@ public class Bullet : MonoBehaviour
         m_Damage = damage;
     }
 
-    public void Fire(Vector3 origin, Vector3 destination)
+    public void Fire(Vector3 origin, Vector3 destination, Vector3 forward)
     {
         transform.position = origin;
+        transform.forward = forward;
         gameObject.SetActive(true);
         m_Rigidbody.AddForce((destination - origin).normalized * 60.0f, ForceMode.Impulse);
     }
@@ -34,7 +35,7 @@ public class Bullet : MonoBehaviour
             if (collision.gameObject == m_Target)
                 m_Target.GetComponent<Inventory>()?.TakeDamage(m_Damage);
 
-            GameManager.Instance?.PlaceDecal(collision.transform, collision.GetContact(0).point, collision.GetContact(0).normal);
+            GameManager.s_Instance?.PlaceDecal(collision.transform, collision.GetContact(0).point, collision.GetContact(0).normal);
         }
 
         gameObject.SetActive(false);

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="AudioFile" id="{ff01deb8-a935-4537-9ccb-f618f9c9da9c}">
+		<property name="assetPath">
+			<value>AK Reload And Cock.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>2.2002040816326529</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{c506c6b6-b09d-408b-9b83-d4ca2175faed}</destination>
+		</relationship>
+	</object>
+</objects>

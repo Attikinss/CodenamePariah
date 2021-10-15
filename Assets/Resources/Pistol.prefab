@@ -11,6 +11,9 @@ GameObject:
   - component: {fileID: 2238759060784313555}
   - component: {fileID: 2238759060784313554}
   - component: {fileID: 2238759060784313516}
+  - component: {fileID: 5738261813503353504}
+  - component: {fileID: 6136833324851593153}
+  - component: {fileID: -3411329375080389410}
   m_Layer: 11
   m_Name: Pistol
   m_TagString: Untagged
@@ -34,6 +37,7 @@ Transform:
   - {fileID: 2334909279921509137}
   - {fileID: 3351752865165105985}
   - {fileID: 7191723603034917278}
+  - {fileID: 1858636755127845483}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -169,6 +173,7 @@ MonoBehaviour:
   m_TypeTag: 1
   m_Camera: {fileID: 0}
   m_BulletDamage: 26
+  m_AIDamageModifier: 0.5
   m_RoundsInMagazine: 7
   m_MagazineSize: 7
   m_ReserveAmmo: 14
@@ -176,8 +181,10 @@ MonoBehaviour:
   m_FireRate: 400
   m_ReloadTime: 2.4
   m_LowAmmoWarningPercentage: 0.3
+  m_FiringPosition: {fileID: 0}
   m_Controller: {fileID: 0}
   m_FireStartTime: 0
+  m_FireStartTimeLeft: 0
   m_Inventory: {fileID: 0}
   m_SemiAuto: 1
   m_DualWield: 0
@@ -192,6 +199,7 @@ MonoBehaviour:
     m_IsFiring: 0
     m_IsAiming: 0
     m_IsReloading: 0
+    m_IsReloadingLeft: 0
   m_RecoilTesting:
     m_RecoilTestIntervals: 3
     m_RecoilTestRestTime: 2
@@ -203,11 +211,59 @@ MonoBehaviour:
     - {fileID: 2334909279921509136}
     m_BulletCasings:
     - {fileID: 3351752865165105984}
+    m_BulletParticle: {fileID: 1858636755127845482}
   m_Animators:
     m_GunAnimators:
     - {fileID: 7225071218260326938}
     m_ArmsAnimators:
     - {fileID: 7225071218558725821}
+    m_WeaponInspectAnimation: 0
+  m_AudioFireEvent: {fileID: 5738261813503353504}
+  m_AudioReloadEvent: {fileID: 6136833324851593153}
+  m_AudioEmptyClipEvent: {fileID: -3411329375080389410}
+  m_AudioEquipEvent: {fileID: 0}
+--- !u!114 &5738261813503353504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2238759060784313553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81dca6e7f82043a4fb85791a7d8e871d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 1
+  EventID: event:/Firearms/Pistol Laser Shot
+--- !u!114 &6136833324851593153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2238759060784313553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81dca6e7f82043a4fb85791a7d8e871d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 2
+  EventID: event:/Firearms/Pistol Mag
+--- !u!114 &-3411329375080389410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2238759060784313553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81dca6e7f82043a4fb85791a7d8e871d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 0
+  EventID: event:/Firearms/AK Empty Clip
 --- !u!1 &2238759061623623577
 GameObject:
   m_ObjectHideFlags: 0
@@ -3587,4 +3643,71 @@ GameObject:
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5ceb676312004ed4c90a040b67b2e12a, type: 3}
   m_PrefabInstance: {fileID: 7627779259333441027}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &9144757189388341378
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 2238759060784313555}
+    m_Modifications:
+    - target: {fileID: 7431925090713883366, guid: 18bb325078ea5fa4897a1c08b852076b, type: 3}
+      propertyPath: m_Name
+      value: PFX_Weapon_LaserBeam_001_Default
+      objectReference: {fileID: 0}
+    - target: {fileID: 7431925090713883369, guid: 18bb325078ea5fa4897a1c08b852076b, type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7431925090713883369, guid: 18bb325078ea5fa4897a1c08b852076b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.0245
+      objectReference: {fileID: 0}
+    - target: {fileID: 7431925090713883369, guid: 18bb325078ea5fa4897a1c08b852076b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.03623
+      objectReference: {fileID: 0}
+    - target: {fileID: 7431925090713883369, guid: 18bb325078ea5fa4897a1c08b852076b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.09729
+      objectReference: {fileID: 0}
+    - target: {fileID: 7431925090713883369, guid: 18bb325078ea5fa4897a1c08b852076b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 7431925090713883369, guid: 18bb325078ea5fa4897a1c08b852076b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 7431925090713883369, guid: 18bb325078ea5fa4897a1c08b852076b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7431925090713883369, guid: 18bb325078ea5fa4897a1c08b852076b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7431925090713883369, guid: 18bb325078ea5fa4897a1c08b852076b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 7431925090713883369, guid: 18bb325078ea5fa4897a1c08b852076b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7431925090713883369, guid: 18bb325078ea5fa4897a1c08b852076b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 18bb325078ea5fa4897a1c08b852076b, type: 3}
+--- !u!4 &1858636755127845483 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7431925090713883369, guid: 18bb325078ea5fa4897a1c08b852076b, type: 3}
+  m_PrefabInstance: {fileID: 9144757189388341378}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &1858636755127845482 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 7431925090713883368, guid: 18bb325078ea5fa4897a1c08b852076b, type: 3}
+  m_PrefabInstance: {fileID: 9144757189388341378}
   m_PrefabAsset: {fileID: 0}

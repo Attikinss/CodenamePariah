@@ -57,7 +57,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.01
-  far clip plane: 1000
+  far clip plane: 10000
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -239,6 +239,7 @@ GameObject:
   - component: {fileID: 4223981802772051965}
   - component: {fileID: 4223981802772051964}
   - component: {fileID: 4223981802772051963}
+  - component: {fileID: 8629804007589015081}
   m_Layer: 11
   m_Name: Soldier
   m_TagString: Untagged
@@ -314,6 +315,9 @@ MonoBehaviour:
   m_Active: 0
   m_Dashing: 0
   m_DashCoolingDown: 0
+  m_type: 0
+  m_StartingAgent: 0
+  m_OnDestroyedDamage: 25
   m_VerticalLock: 75
   m_JumpHeight: 2
   m_SecondJumpHeight: 2.5
@@ -332,7 +336,6 @@ MonoBehaviour:
   m_EnableDebug: 1
   m_Orientation: {fileID: 5500129082077037361}
   m_Inventory: {fileID: 4223981802077641485}
-  m_HUD: {fileID: 0}
   m_XRotation: 0
   m_DesiredX: 0
   m_MovInfo:
@@ -361,6 +364,7 @@ MonoBehaviour:
     drainCounter: 0
     isDraining: 0
   m_DeathIncarnateAbility:
+    requiredKills: 10
     deathIncarnateDamage: 100
     deathIncarnateRadius: 20
     deathIncarnateCooldown: 5
@@ -369,6 +373,8 @@ MonoBehaviour:
     drawingDeathIncarnate: 0
     deathIncarnatePos: {x: 0, y: 0, z: 0}
     deathIncarnateUsed: 0
+    hasRoutineStarted: 0
+  m_Mesh: {fileID: 0}
 --- !u!114 &5500129082491837181
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -758,6 +764,26 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: f316d8a8-f58e-4861-988e-db0f9c79e3ea
     m_ActionName: Host/TestAddWeapon[/Keyboard/o]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b7cacc26-89b1-4467-b8ba-a793ebde52d4
+    m_ActionName: Pariah/Heal[/Keyboard/x]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5500129082491837176}
+        m_TargetAssemblyTypeName: InputController, Assembly-CSharp
+        m_MethodName: OnHeal
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: a720b1b7-c6ba-42fc-bcb8-db538afd4fec
+    m_ActionName: Host/Heal[/Keyboard/x]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: KBM
   m_DefaultActionMap: Host
@@ -780,6 +806,7 @@ MonoBehaviour:
   - {fileID: 2055328196769995445}
   m_CurrentWeapon: {fileID: 0}
   m_Camera: {fileID: 5500129080964715732}
+  m_AudioDestroySound: {fileID: 8629804007589015081}
 --- !u!114 &4223981802772051965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -813,7 +840,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InputTree: {fileID: 11400000, guid: 5ac5d0e581cbd9e4fbf1fce2c1c67885, type: 2}
   Target: {fileID: 0}
-  m_ViewRange: 15
+  m_ViewRange: 20
   m_IgnoreMask:
     serializedVersion: 2
     m_Bits: 3895
@@ -841,6 +868,20 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &8629804007589015081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5500129082491837173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81dca6e7f82043a4fb85791a7d8e871d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 0
+  EventID: event:/Pariah SFX/Wilhelm Scream
 --- !u!1 &8732956786785647057
 GameObject:
   m_ObjectHideFlags: 0
@@ -930,6 +971,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5500129080964715735}
     m_Modifications:
+    - target: {fileID: 1121666832464311195, guid: db2a7dce86567b548977e248deeed374, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: eda4e81ec6629964990516b71871d0f0, type: 2}
     - target: {fileID: 7052651437313384602, guid: db2a7dce86567b548977e248deeed374, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 

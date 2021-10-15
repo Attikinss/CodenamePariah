@@ -134,8 +134,9 @@ public class PauseMenu : MonoBehaviour
 //#if UNITY_EDITOR
 //        SceneManager.LoadScene("Test_Lauchlan_002");
 //#else
-        SceneManager.LoadScene("Level_001");
-//#endif
+        SceneManager.LoadScene("Level_001", LoadSceneMode.Single);
+        //SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
+        //#endif
 
         //while (!asyncLoad.isDone)
         //{
@@ -151,7 +152,8 @@ public class PauseMenu : MonoBehaviour
 
         yield return new WaitForSeconds(m_TransitionTime);
 
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
+        //SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
     }
 
     /// <summary>Pauses the game.</summary>

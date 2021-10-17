@@ -273,6 +273,49 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-4986907129095439292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/Pistol Laser Shot
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/Pistol Laser Shot
+  guid: 44920fc0559c304bbb6971c41b1f41e4
+  Banks:
+  - {fileID: -4822692692206257876}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-4822692692206257876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Audio/FMOD/Build/Desktop/Master.bank
+  Name: Master
+  StudioPath: bank:/Master
+  lastModified: 637698981171286879
+  FileSizes:
+  - Name: Desktop
+    Value: 876832
+  Exists: 1
 --- !u!114 &-4520736879419315369
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -289,6 +332,29 @@ MonoBehaviour:
   guid: 34fe7750c2942d45b3a83cbcfa20cfaf
   Banks:
   - {fileID: -4274408702794356451}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-4443755497042544398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Castle Thunder
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Castle Thunder
+  guid: 87abfc9386b0be45835aab2347ec9c41
+  Banks:
+  - {fileID: -4822692692206257876}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -423,6 +489,29 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 8250
+--- !u!114 &-2520245095811035369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environment/Wind Turbine
+  m_EditorClassIdentifier: 
+  Path: event:/Environment/Wind Turbine
+  guid: 49a91868f5c93d429e3ca9f5657b8ef4
+  Banks:
+  - {fileID: -4822692692206257876}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 50
+  Length: 60500
 --- !u!114 &-1816168227492750112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -512,6 +601,29 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-490638765070038951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/AK Empty Clip
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/AK Empty Clip
+  guid: 6d82762665ba6c4392ff50b24177dd21
+  Banks:
+  - {fileID: -4822692692206257876}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 8.2
+  Length: 0
 --- !u!114 &-369440511728946510
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -571,30 +683,99 @@ MonoBehaviour:
   m_Name: FMODStudioCache
   m_EditorClassIdentifier: 
   EditorBanks:
-  - {fileID: 3866169052533423134}
-  - {fileID: -3765004934953834099}
+  - {fileID: 6311231197331021390}
+  - {fileID: -4822692692206257876}
   EditorEvents:
-  - {fileID: 2315921855083289795}
-  - {fileID: -6433608157438271582}
-  - {fileID: 7700522873110491985}
-  - {fileID: 7739998490758143080}
-  - {fileID: -9003733366050351740}
-  - {fileID: -7907370174655305502}
-  - {fileID: 8511645704504445916}
-  - {fileID: -1086870289437730575}
-  - {fileID: 6890634328029692328}
-  - {fileID: 7958627147256063750}
-  - {fileID: 7915684354335363288}
-  - {fileID: 3866750050152825820}
-  - {fileID: 5167836875364715051}
-  - {fileID: 8327293444565243796}
+  - {fileID: 7866986282020178811}
+  - {fileID: -4986907129095439292}
+  - {fileID: -2520245095811035369}
+  - {fileID: 7282364883036044116}
+  - {fileID: -490638765070038951}
+  - {fileID: 65402594442948426}
+  - {fileID: -4443755497042544398}
+  - {fileID: 1604897803659654572}
+  - {fileID: 8446436272648077492}
+  - {fileID: 646007612570676072}
+  - {fileID: 7797321716750913626}
+  - {fileID: 8772723656449767988}
+  - {fileID: 7244824325830204152}
+  - {fileID: 7127701816471132555}
   EditorParameters: []
   MasterBanks:
-  - {fileID: -3765004934953834099}
+  - {fileID: -4822692692206257876}
   StringsBanks:
-  - {fileID: 3866169052533423134}
-  stringsBankWriteTime: 637697446207436365
+  - {fileID: 6311231197331021390}
+  stringsBankWriteTime: 637698981171246974
   cacheVersion: 8
+--- !u!114 &65402594442948426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Doors/Door Open and Close
+  m_EditorClassIdentifier: 
+  Path: event:/Doors/Door Open and Close
+  guid: 772f8dcee3a5454bb3b02e71350a4dbb
+  Banks:
+  - {fileID: -4822692692206257876}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &646007612570676072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/AK Cock (Slow)
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/AK Cock (Slow)
+  guid: b24fc8b1199f0745a34add9de856e687
+  Banks:
+  - {fileID: -4822692692206257876}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &1604897803659654572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Death Heartbeat
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Death Heartbeat
+  guid: 8afa65d368218448af1047e284133e2a
+  Banks:
+  - {fileID: -4822692692206257876}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &2085823984476209860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -845,6 +1026,26 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 60500
+--- !u!114 &6311231197331021390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.strings.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Audio/FMOD/Build/Desktop/Master.strings.bank
+  Name: Master.strings
+  StudioPath: bank:/Master.strings
+  lastModified: 637698981171246974
+  FileSizes:
+  - Name: Desktop
+    Value: 1416
+  Exists: 1
 --- !u!114 &6890634328029692328
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -868,6 +1069,75 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 6.6
   Length: 0
+--- !u!114 &7127701816471132555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/AK Firing
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/AK Firing
+  guid: f0073fcbe5c16940ae74a9c029ecec5b
+  Banks:
+  - {fileID: -4822692692206257876}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &7244824325830204152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Low Health Heartbeat
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Low Health Heartbeat
+  guid: e83182871534e7478d24c7272ac9df77
+  Banks:
+  - {fileID: -4822692692206257876}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 6000
+--- !u!114 &7282364883036044116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Alarm
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Alarm
+  guid: 5c3e20579b90e74e8bbba3807b8a10bc
+  Banks:
+  - {fileID: -4822692692206257876}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 8250
 --- !u!114 &7700522873110491985
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -914,6 +1184,52 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 60500
+--- !u!114 &7797321716750913626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Wilhelm Scream
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Wilhelm Scream
+  guid: d0380bb792a46e428c6be9cad76e716f
+  Banks:
+  - {fileID: -4822692692206257876}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &7866986282020178811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/AK Unload.Reload.Cock
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/AK Unload.Reload.Cock
+  guid: 34fe7750c2942d45b3a83cbcfa20cfaf
+  Banks:
+  - {fileID: -4822692692206257876}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &7915684354335363288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1052,6 +1368,29 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &8446436272648077492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/Pistol Empty Clip
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/Pistol Empty Clip
+  guid: ae0b37b6da136a40b755b03cbf39d58d
+  Banks:
+  - {fileID: -4822692692206257876}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 6.6
+  Length: 0
 --- !u!114 &8511645704504445916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1097,6 +1436,29 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 6.6
+  Length: 0
+--- !u!114 &8772723656449767988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/Pistol Mag
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/Pistol Mag
+  guid: d31a34a2db107d4cb837fffd4a826d77
+  Banks:
+  - {fileID: -4822692692206257876}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
   Length: 0
 --- !u!114 &8874075213507392195
 MonoBehaviour:

@@ -103,9 +103,9 @@ public struct ParticleEffects
 					// Rotate particle to thing.
 					Vector3 tempFix;
 					m_BulletParticle.transform.forward = (direction - m_BulletParticle.transform.position).normalized;
-					tempFix = m_BulletParticle.transform.eulerAngles;
-					tempFix.x -= 90;
-					m_BulletParticle.transform.eulerAngles = tempFix;
+					//tempFix = m_BulletParticle.transform.eulerAngles;
+					//tempFix.x -= 90;
+					//m_BulletParticle.transform.eulerAngles = tempFix;
 					
 				}
 				m_BulletParticle.Play();

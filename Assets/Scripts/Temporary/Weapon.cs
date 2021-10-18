@@ -204,8 +204,6 @@ public class Weapon : MonoBehaviour
 
         if (ReadyToFire(special))
         {
-            
-
             // Getting the correct rounds in magazine. There are two, the normal one and the one for the left gun.
             int RoundsInMag;
             if (special)
@@ -251,6 +249,7 @@ public class Weapon : MonoBehaviour
                 PlayFireSound();
                 
                 PlayAnimations(special);
+                m_Inventory.Owner.PlayAnimation("Shoot", true);
 
                 // Currently gets rid of bullet sprite before UI has fully updated //
                 //m_UIManager.DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);

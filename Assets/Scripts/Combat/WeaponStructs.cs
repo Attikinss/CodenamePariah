@@ -90,7 +90,30 @@ public struct ParticleEffects
 
 	public ParticleSystem m_BulletParticle;
 
+	public ParticleSystem m_ClonedBulletParticle;
+
 	public ParticleSystem m_AdditionalBulletParticle;
+
+	Vector3 CachedGunSpaceBulletPos;
+	Vector3 CachedAdditionalGunSpaceBulletPos;
+	Transform BulletParent;
+	Transform AdditionalBulletParent;
+
+	public void CacheBulletParticle()
+	{
+		if (m_BulletParticle)
+		{ 
+			CachedGunSpaceBulletPos = m_BulletParticle.transform.localPosition;
+			BulletParent = m_BulletParticle.transform.parent;
+			m_BulletParticle.transform.parent = null;
+		}
+		if (m_AdditionalBulletParticle)
+		{
+			CachedAdditionalGunSpaceBulletPos = m_AdditionalBulletParticle.transform.localPosition;
+			AdditionalBulletParent = m_AdditionalBulletParticle.transform.parent;
+			m_AdditionalBulletParticle.transform.parent = null;
+		}
+	}
 
 	public void PlayBulletEffect(bool dual, bool hasHit, Vector3 direction)
 	{
@@ -100,13 +123,9 @@ public struct ParticleEffects
 			{
 				if (hasHit)
 				{
-					// Rotate particle to thing.
-					//Vector3 tempFix;
-					m_BulletParticle.transform.forward = (direction - m_BulletParticle.transform.position).normalized;
-					//tempFix = m_BulletParticle.transform.eulerAngles;
-					//tempFix.x -= 90;
-					//m_BulletParticle.transform.eulerAngles = tempFix;
-					
+					m_BulletParticle.transform.position = BulletParent.TransformPoint(CachedGunSpaceBulletPos);
+
+					m_BulletParticle.transform.forward = (direction - m_BulletParticle.transform.position).normalized;	
 				}
 				m_BulletParticle.Play();
 			}
@@ -117,6 +136,7 @@ public struct ParticleEffects
 			{
 				if (hasHit)
 				{
+					m_AdditionalBulletParticle.transform.position = AdditionalBulletParent.TransformPoint(CachedAdditionalGunSpaceBulletPos);
 					m_AdditionalBulletParticle.transform.forward = (direction - m_AdditionalBulletParticle.transform.position).normalized;
 					//Vector3 tempFix = m_AdditionalBulletParticle.transform.eulerAngles;
 					//tempFix.x = -90;
@@ -124,6 +144,29 @@ public struct ParticleEffects
 				}
 				m_AdditionalBulletParticle.Play();
 			}
+		}
+	}
+
+	public void DrawBulletPFXGizmo()
+	{
+		Gizmos.color = Color.cyan;
+		if (m_BulletParticle)
+		{
+			// If we have the bullet particle, draw the gizmo.
+			Gizmos.DrawRay(m_BulletParticle.transform.position, m_BulletParticle.transform.forward * 1000);
+			Ray bulletRay = new Ray(m_BulletParticle.transform.position, m_BulletParticle.transform.forward);
+
+			RaycastHit hit;
+			if (Physics.Raycast(bulletRay, out hit, 1000))
+			{
+
+				Gizmos.DrawSphere(hit.point, 0.25f);
+			}
+		}
+		if (m_AdditionalBulletParticle)
+		{
+			// This would be used for the dual wield since it has two of those bullet particles.
+			Gizmos.DrawLine(m_AdditionalBulletParticle.transform.position, m_BulletParticle.transform.position + m_AdditionalBulletParticle.transform.forward);
 		}
 	}
 }

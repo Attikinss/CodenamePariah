@@ -192,13 +192,7 @@ namespace WhiteWillow
 
         public void ShootAt(GameObject target, bool forceMiss = false)
         {
-            m_HostController.GetCurrentWeapon()?.Fire();
-            
-            //if (TempPrefab)
-            //{
-            //    var bullet = Instantiate(TempPrefab, transform.position + transform.forward + Vector3.up, Quaternion.identity);
-            //    bullet.GetComponent<Rigidbody>().AddForce(((target.transform.position + Vector3.up * 0.7f) - transform.position).normalized * 60.0f, ForceMode.Impulse);
-            //}
+            m_HostController.GetCurrentWeapon()?.FireAt(target);
         }
 
         public void PlayAnimation(string name, bool forcePlay = false, float transitionSpeed = 0.25f)

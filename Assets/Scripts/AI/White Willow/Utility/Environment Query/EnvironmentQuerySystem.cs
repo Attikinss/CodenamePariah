@@ -310,19 +310,14 @@ public static class EnvironmentQuerySystem
         public float Range { get; }
         public Type QueryType;
 
-        public List<EQSNode> Nodes;
+        public IEnumerable<EQSNode> Nodes;
 
-        //public int RadialDensity { get; }
-        //public float Spacing { get; }
-
-        public QueryRequest(Vector3 origin, float range/*int radialDensity = 30, float spacing = 1.5f*/)
+        public QueryRequest(Vector3 origin, float range)
         {
             ID = System.Guid.NewGuid().ToString();
             Origin = origin;
             Range = range;
             Nodes = EQSSceneNodeTracker.GetNodesInRange(origin, range);
-            //RadialDensity = radialDensity;
-            //Spacing = spacing;
         }
 
         public void Resolve()
@@ -418,13 +413,11 @@ public static class EnvironmentQuerySystem
             m_Query = new Query(m_Request.ID);
 
             //List<Vector3> agentPositions = WhiteWillow.AgentTracker.GetPositions();
-            m_Request.Nodes.ForEach(node =>
+            foreach (var node in m_Request.Nodes)
             {
                 if (!node.Taken && (node.Position - m_Request.Origin).sqrMagnitude <= m_Request.Range * m_Request.Range)
                     m_Query.AddNode(node);
-
-
-            });
+            }
         }
 
         /*

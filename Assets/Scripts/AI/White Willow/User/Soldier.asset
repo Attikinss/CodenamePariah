@@ -19,10 +19,10 @@ MonoBehaviour:
   Title: MoveTo
   GUID: eccd71ba-1fe0-4e0e-9b57-65540a24112d
   Locked: 0
-  ExecutionOrder: 2
+  ExecutionOrder: 1
   GraphDimensions:
     serializedVersion: 2
-    x: 355
+    x: 345
     y: 469
     width: 165
     height: 81
@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Active: 0
   Owner: {fileID: 11400000}
-  Parent: {fileID: -1632813149957266194}
+  Parent: {fileID: 5787509954937239651}
   State: 0
   Title: EQSQuery
   GUID: 194f0a00-ed68-40f6-8d99-aa01f4d29866
@@ -55,7 +55,7 @@ MonoBehaviour:
   GraphDimensions:
     serializedVersion: 2
     x: 178
-    y: 469
+    y: 581
     width: 165
     height: 81
   Interruptable: 0
@@ -95,12 +95,12 @@ MonoBehaviour:
     serializedVersion: 2
     x: 260
     y: 343
-    width: 166
+    width: 167
     height: 82
   RunningChild: {fileID: 0}
   Children:
-  - {fileID: -2873006661844372805}
   - {fileID: -3631744306323239417}
+  - {fileID: 5787509954937239651}
 --- !u!114 &-1014698060343594665
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -192,6 +192,7 @@ MonoBehaviour:
   - {fileID: 2304292368187985714}
   - {fileID: 1635078181476274910}
   - {fileID: 3610415081122974839}
+  - {fileID: 5787509954937239651}
 --- !u!114 &125078122012639803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -378,6 +379,35 @@ MonoBehaviour:
     width: 165
     height: 83
   Child: {fileID: 1635078181476274910}
+--- !u!114 &5787509954937239651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c925eb3958ba5b44894aa72f80da9bb0, type: 3}
+  m_Name: Cooldown
+  m_EditorClassIdentifier: 
+  Active: 0
+  Owner: {fileID: 11400000}
+  Parent: {fileID: -1632813149957266194}
+  State: 0
+  Title: Cooldown
+  GUID: c147a42a-db23-43f7-8a45-5166162a4f70
+  Locked: 0
+  ExecutionOrder: 1
+  GraphDimensions:
+    serializedVersion: 2
+    x: 178
+    y: 470
+    width: 165
+    height: 82
+  Child: {fileID: -2873006661844372805}
+  m_CooldownTime: 2.5
+  m_CurrentTime: 0
 --- !u!114 &5969798697368172460
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -44,28 +44,21 @@ public class EQSQuery : Task
     {
         if (Target.Value != null)
         {
-            // Ensure a request is available for submission
-            if (m_EQSRequest == null)
-                m_EQSRequest = new EnvironmentQuerySystem.QueryRequest(Owner.Agent.transform.position, Range);
-
-            // Ensure a request was submitted successfully to the EQS
-            if (!m_EQSRequestSent)
-                m_EQSRequestSent = EnvironmentQuerySystem.NewQuery(m_EQSRequest);
-
             // If something went wrong, bail until the next tick
-            if (!m_EQSRequestSent || !m_EQSRequest.QueryResolved || !EnvironmentQuerySystem.RetrieveQuery(m_EQSRequest, out Owner.Agent.CurrentQuery))
+            if (!QueryResolved())
                 return NodeResult.Running;
 
-            QueryAngleCheck(ref Owner.Agent.CurrentQuery);
-            QueryDistanceCheck(ref Owner.Agent.CurrentQuery);
+            QueryAngleCheck(Owner.Agent.CurrentQuery);
+            QueryDistanceCheck(Owner.Agent.CurrentQuery);
 
             if (!Owner.Agent.CurrentQuery.Empty())
             {
+                Owner.Agent.CurrentQuery.ShuffleValues();
+
                 // Offset to simulate eye height
                 Vector3 verticalOffset = Vector3.up * 1.5f;
 
-                Owner.Agent.CurrentQuery.ShuffleValues();
-                float prevPathLength = float.MaxValue;
+                //float prevPathLength = float.MaxValue;
                 foreach (var node in Owner.Agent.CurrentQuery.Values)
                 {
                     Vector3 direction = Target.Value.transform.position - (node.Position + verticalOffset);
@@ -100,8 +93,6 @@ public class EQSQuery : Task
                             m_CurrentNode.Reserve(Owner.Agent);
                             Owner.Agent.SetDestination(m_CurrentNode.Position);
 
-                            Debug.Log($"Success: {Owner.Agent.gameObject}");
-
                             return NodeResult.Success;
                         }
                     }
@@ -116,7 +107,7 @@ public class EQSQuery : Task
         return NodeResult.Failure;
     }
 
-    private void QueryAngleCheck(ref Query query)
+    private void QueryAngleCheck(Query query)
     {
         switch (AngleCheck)
         {
@@ -142,7 +133,7 @@ public class EQSQuery : Task
         }
     }
 
-    private void QueryDistanceCheck(ref Query query)
+    private void QueryDistanceCheck(Query query)
     {
         switch (DistanceCheck)
         {
@@ -160,5 +151,23 @@ public class EQSQuery : Task
 
             default: break;
         }
+    }
+
+    private void SubmitQuery()
+    {
+        // Ensure a request is available for submission
+        if (m_EQSRequest == null)
+            m_EQSRequest = new EnvironmentQuerySystem.QueryRequest(Owner.Agent.transform.position, Range);
+
+        // Ensure a request was submitted successfully to the EQS
+        if (!m_EQSRequestSent)
+            m_EQSRequestSent = EnvironmentQuerySystem.NewQuery(m_EQSRequest);
+    }
+
+    private bool QueryResolved()
+    {
+        SubmitQuery();
+
+        return m_EQSRequestSent && m_EQSRequest.QueryResolved && EnvironmentQuerySystem.RetrieveQuery(m_EQSRequest, out Owner.Agent.CurrentQuery);
     }
 }

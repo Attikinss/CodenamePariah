@@ -19,14 +19,14 @@ public static class EQSSceneNodeTracker
             Nodes.Remove(node);
     }
 
-    public static List<EnvironmentQuerySystem.EQSNode> GetNodes(params EnvironmentQuerySystem.EQSNode[] exclude)
+    public static IEnumerable<EnvironmentQuerySystem.EQSNode> GetNodes(params EnvironmentQuerySystem.EQSNode[] exclude)
     {
-        return new List<EnvironmentQuerySystem.EQSNode>(Nodes.Where(node => !exclude.Any(excl => excl == node.EQSNode)).Select(x => x.EQSNode));
+        return Nodes.Where(node => !exclude.Any(excl => excl == node.EQSNode)).Select(x => x.EQSNode);
     }
 
-    public static List<EnvironmentQuerySystem.EQSNode> GetNodesInRange(Vector3 position, float range, params EnvironmentQuerySystem.EQSNode[] exclude)
+    public static IEnumerable<EnvironmentQuerySystem.EQSNode> GetNodesInRange(Vector3 position, float range, params EnvironmentQuerySystem.EQSNode[] exclude)
     {
-        return new List<EnvironmentQuerySystem.EQSNode>(Nodes.Where(node => !exclude.Any(excl => excl == node.EQSNode) &&
-            (node.EQSNode.Position - position).sqrMagnitude < range * range).Select(x => x.EQSNode));
+        return Nodes.Where(node => !exclude.Any(excl => excl == node.EQSNode) &&
+            (node.EQSNode.Position - position).sqrMagnitude < range * range).Select(x => x.EQSNode);
     }
 }

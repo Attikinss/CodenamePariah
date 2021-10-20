@@ -289,8 +289,8 @@ public class Weapon : MonoBehaviour
                     {
                         if (hitInfo.transform.gameObject != null)
                         {
-                            
 
+                            PlayBulletEffect(special, true, hitInfo.point);
                             if (hitInfo.transform.TryGetComponent(out Inventory agentInventory))
                             {
                                 float damageMod = m_Inventory.Owner.Possessed ? 1.0f : m_AIDamageModifier;
@@ -301,7 +301,7 @@ public class Weapon : MonoBehaviour
 
                                 return;
                             }
-                            PlayBulletEffect(special, true, hitInfo.point);
+                            
                             GameManager.s_Instance?.PlaceDecal(hitInfo.transform, hitInfo.point, hitInfo.normal);
 
                             // Adding a force to the hit object.

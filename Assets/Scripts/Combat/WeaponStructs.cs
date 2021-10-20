@@ -101,11 +101,11 @@ public struct ParticleEffects
 				if (hasHit)
 				{
 					// Rotate particle to thing.
-					Vector3 tempFix;
+					//Vector3 tempFix;
 					m_BulletParticle.transform.forward = (direction - m_BulletParticle.transform.position).normalized;
-					tempFix = m_BulletParticle.transform.eulerAngles;
-					tempFix.x -= 90;
-					m_BulletParticle.transform.eulerAngles = tempFix;
+					//tempFix = m_BulletParticle.transform.eulerAngles;
+					//tempFix.x -= 90;
+					//m_BulletParticle.transform.eulerAngles = tempFix;
 					
 				}
 				m_BulletParticle.Play();
@@ -118,9 +118,9 @@ public struct ParticleEffects
 				if (hasHit)
 				{
 					m_AdditionalBulletParticle.transform.forward = (direction - m_AdditionalBulletParticle.transform.position).normalized;
-					Vector3 tempFix = m_AdditionalBulletParticle.transform.eulerAngles;
-					tempFix.x = -90;
-					m_AdditionalBulletParticle.transform.eulerAngles = tempFix;
+					//Vector3 tempFix = m_AdditionalBulletParticle.transform.eulerAngles;
+					//tempFix.x = -90;
+					//m_AdditionalBulletParticle.transform.eulerAngles = tempFix;
 				}
 				m_AdditionalBulletParticle.Play();
 			}

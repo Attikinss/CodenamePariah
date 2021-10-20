@@ -184,7 +184,7 @@ MonoBehaviour:
     deathIncarnatePos: {x: 0, y: 0, z: 0}
     deathIncarnateUsed: 0
     hasRoutineStarted: 0
-  m_Mesh: {fileID: 0}
+  m_Mesh: {fileID: 7094497905823826397}
 --- !u!114 &4480668722508770147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -948,7 +948,7 @@ PrefabInstance:
     - target: {fileID: 2238759060784313516, guid: c09c029d69a612d48a5dfa6fdefbb62e, type: 3}
       propertyPath: m_Particles.m_BulletParticle
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 3604508780755664134}
     - target: {fileID: 2238759060784313553, guid: c09c029d69a612d48a5dfa6fdefbb62e, type: 3}
       propertyPath: m_Name
       value: Pistol
@@ -1061,6 +1061,11 @@ MonoBehaviour:
 --- !u!4 &1125695211050776387 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2334909279921509137, guid: c09c029d69a612d48a5dfa6fdefbb62e, type: 3}
+  m_PrefabInstance: {fileID: 3456519629046162514}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &3604508780755664134 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 2161111997767326036, guid: c09c029d69a612d48a5dfa6fdefbb62e, type: 3}
   m_PrefabInstance: {fileID: 3456519629046162514}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7977512732241755276

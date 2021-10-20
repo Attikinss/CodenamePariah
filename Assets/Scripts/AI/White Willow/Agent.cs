@@ -137,6 +137,7 @@ namespace WhiteWillow
             m_NavAgent.enabled = false;
 
             m_RuntimeTree.Blackboard?.UpdateEntryValue<GameObject>("Target", this.gameObject);
+
             PariahController?.Disable();
             m_HostController?.Enable();
         }
@@ -146,6 +147,10 @@ namespace WhiteWillow
             Possessed = false;
             m_NavAgent.enabled = true;
 
+            // The issue of pariah not being orientated the same way as the soldier or scientist on release comes from if the soldier/scientist parent prefab
+            // is rotated. The parent prefab is the one that has the mesh.
+            // The problem is solved in the FixedUpdate() in PariahController.cs.
+       
             m_HostController?.Disable();
             PariahController?.Enable();
             m_RuntimeTree.Blackboard?.UpdateEntryValue<GameObject>("Target", PariahController.gameObject);

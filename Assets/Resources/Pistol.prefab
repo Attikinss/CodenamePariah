@@ -212,6 +212,7 @@ MonoBehaviour:
     m_BulletCasings:
     - {fileID: 3351752865165105984}
     m_BulletParticle: {fileID: 2161111997767326036}
+    m_ClonedBulletParticle: {fileID: 0}
     m_AdditionalBulletParticle: {fileID: 0}
   m_Animators:
     m_GunAnimators:

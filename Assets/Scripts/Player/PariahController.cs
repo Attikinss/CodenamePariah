@@ -101,8 +101,11 @@ public class PariahController : InputController
                 if (m_CurrentPossessed != null)
                 {
                     transform.position = m_CurrentPossessed.transform.position + Vector3.up * 0.75f;
-                    m_Rotation.x = m_CurrentPossessed.Orientation.localEulerAngles.y;
-                    m_Rotation.y = m_CurrentPossessed.Orientation.localEulerAngles.x;
+                    m_Rotation.x = m_CurrentPossessed.Orientation.eulerAngles.y;
+                    m_Rotation.y = m_CurrentPossessed.Orientation.eulerAngles.x;
+
+                    // Changed those localEulerAngles to just normal eulerAngles because the parent prefab of m_Orientation may be rotated.
+                    // This is the case now because the parent of m_Orientation is where the soldier/scientist mesh is.
                 }
             }
 

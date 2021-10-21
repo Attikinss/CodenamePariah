@@ -23,12 +23,13 @@ namespace WhiteWillow
         private NavMeshAgent m_NavAgent;
         public Query CurrentQuery;
         public Weapon m_Weapon;
-        
+
+        [SerializeField]
+        private Animator m_Animator;
+
         [HideInInspector]
         public PariahController PariahController;
         private HostController m_HostController;
-
-        private Vector3 m_LastPosition;
 
         public bool Possessed { get; private set; } = false;
         public bool EngagingTarget { get; private set; } = true;
@@ -40,7 +41,6 @@ namespace WhiteWillow
 		{
             m_RuntimeTree = InputTree?.Clone(gameObject.name);
             m_RuntimeTree?.SetAgent(this);
-            m_LastPosition = transform.position;
 
             m_NavAgent = GetComponent<NavMeshAgent>();
             m_HostController = GetComponent<HostController>();
@@ -102,6 +102,8 @@ namespace WhiteWillow
 
         public void MoveToPosition()
         {
+            PlayAnimation("Run");
+
             if (Vector3.Distance(m_NavAgent.destination, Destination)
                 >= Mathf.Epsilon + m_NavAgent.stoppingDistance)
             {
@@ -112,13 +114,14 @@ namespace WhiteWillow
 
         public bool SetDestination(Vector3 destination)
         {
-            m_LastPosition = transform.position;
             Destination = destination;
             return true;
         }
 
         public void Stop()
         {
+            PlayAnimation("IdleCombat");
+
             m_NavAgent.ResetPath();
             m_NavAgent.isStopped = true;
         }
@@ -134,6 +137,7 @@ namespace WhiteWillow
             m_NavAgent.enabled = false;
 
             m_RuntimeTree.Blackboard?.UpdateEntryValue<GameObject>("Target", this.gameObject);
+
             PariahController?.Disable();
             m_HostController?.Enable();
         }
@@ -143,6 +147,10 @@ namespace WhiteWillow
             Possessed = false;
             m_NavAgent.enabled = true;
 
+            // The issue of pariah not being orientated the same way as the soldier or scientist on release comes from if the soldier/scientist parent prefab
+            // is rotated. The parent prefab is the one that has the mesh.
+            // The problem is solved in the FixedUpdate() in PariahController.cs.
+       
             m_HostController?.Disable();
             PariahController?.Enable();
             m_RuntimeTree.Blackboard?.UpdateEntryValue<GameObject>("Target", PariahController.gameObject);
@@ -196,6 +204,17 @@ namespace WhiteWillow
             //    var bullet = Instantiate(TempPrefab, transform.position + transform.forward + Vector3.up, Quaternion.identity);
             //    bullet.GetComponent<Rigidbody>().AddForce(((target.transform.position + Vector3.up * 0.7f) - transform.position).normalized * 60.0f, ForceMode.Impulse);
             //}
+        }
+
+        public void PlayAnimation(string name, bool forcePlay = false, float transitionSpeed = 0.25f)
+        {
+            if (m_Animator != null)
+            {
+                var animInfo = m_Animator.GetCurrentAnimatorStateInfo(0);
+
+                if (!animInfo.IsName(name) || forcePlay)
+                    m_Animator.CrossFade(name, transitionSpeed, 0, 0.0f);
+            }
         }
 
         public bool TargetWithinRange(GameObject target, float distance = 0.0f)

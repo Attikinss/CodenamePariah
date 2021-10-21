@@ -845,6 +845,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 3891
   m_Weapon: {fileID: 0}
+  m_Animator: {fileID: 0}
   PariahController: {fileID: 0}
 --- !u!195 &4223981802772051963
 NavMeshAgent:
@@ -975,6 +976,42 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: eda4e81ec6629964990516b71871d0f0, type: 2}
+    - target: {fileID: 6886623512333823968, guid: db2a7dce86567b548977e248deeed374, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 90620108f8ab4364eb617cc16295dc39, type: 2}
+    - target: {fileID: 6886623512333823982, guid: db2a7dce86567b548977e248deeed374, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.01590088
+      objectReference: {fileID: 0}
+    - target: {fileID: 6886623512333823982, guid: db2a7dce86567b548977e248deeed374, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.07109991
+      objectReference: {fileID: 0}
+    - target: {fileID: 6886623512333823982, guid: db2a7dce86567b548977e248deeed374, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.094403386
+      objectReference: {fileID: 0}
+    - target: {fileID: 6886623512333823982, guid: db2a7dce86567b548977e248deeed374, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 6886623512333823982, guid: db2a7dce86567b548977e248deeed374, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6886623512333823982, guid: db2a7dce86567b548977e248deeed374, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 6886623512333823982, guid: db2a7dce86567b548977e248deeed374, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6886623512333823982, guid: db2a7dce86567b548977e248deeed374, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
     - target: {fileID: 7052651437313384602, guid: db2a7dce86567b548977e248deeed374, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 

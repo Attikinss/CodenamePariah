@@ -149,6 +149,9 @@ public class GameManager : MonoBehaviour
         {
             // If the player has reached a check point, spawn them there the next time they die.
             SpawnAtCheckPoint();
+
+            // Technically, somewhere we are still trying to have Pariah automatically posess the starting agent but because that system has a distance check this
+            // works.
         }
 
     }
@@ -319,5 +322,11 @@ public class GameManager : MonoBehaviour
         // If we spawn at a check point, we wont spawn into an agent immediately.
         m_Pariah.transform.position = s_CheckPointPos;
     }
+
+    public static void ResetCheckpoint()
+    {
+        s_HighestCheckPointLevel = 0;
+        s_CheckPointPos = Vector3.zero;
+}
 
 }

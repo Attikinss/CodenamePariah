@@ -134,6 +134,8 @@ public class Weapon : MonoBehaviour
         //m_ReserveAmmoLeft = m_ReserveAmmo; // Removed reserve ammo for the left gun because the left and right gun ammo pools are going to be the same.        m_RoundsInMagazineLeft = m_RoundsInMagazine;
 
 
+        m_Particles.CacheBulletParticle();
+
 
     }
 	private void Start()
@@ -204,8 +206,6 @@ public class Weapon : MonoBehaviour
 
         if (ReadyToFire(special))
         {
-            
-
             // Getting the correct rounds in magazine. There are two, the normal one and the one for the left gun.
             int RoundsInMag;
             if (special)
@@ -251,6 +251,7 @@ public class Weapon : MonoBehaviour
                 PlayFireSound();
                 
                 PlayAnimations(special);
+                m_Inventory.Owner.PlayAnimation("Shoot", true);
 
                 // Currently gets rid of bullet sprite before UI has fully updated //
                 //m_UIManager.DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);
@@ -291,8 +292,8 @@ public class Weapon : MonoBehaviour
                     {
                         if (hitInfo.transform.gameObject != null)
                         {
-                            
 
+                            PlayBulletEffect(special, true, hitInfo.point);
                             if (hitInfo.transform.TryGetComponent(out Inventory agentInventory))
                             {
                                 float damageMod = m_Inventory.Owner.Possessed ? 1.0f : m_AIDamageModifier;
@@ -303,7 +304,7 @@ public class Weapon : MonoBehaviour
 
                                 return;
                             }
-                            PlayBulletEffect(special, true, hitInfo.point);
+                            
                             GameManager.s_Instance?.PlaceDecal(hitInfo.transform, hitInfo.point, hitInfo.normal);
 
                             // Adding a force to the hit object.
@@ -1060,5 +1061,26 @@ public class Weapon : MonoBehaviour
     public void PlayBulletEffect(bool isDualWield, bool hasHit, Vector3 direction)
     {
         m_Particles.PlayBulletEffect(isDualWield, hasHit, direction);
+        
     }
+
+	public void OnDrawGizmos()
+	{
+        // Only draw if we are in this agent.
+        if (m_Inventory && m_Inventory.Owner && m_Inventory.Owner.Possessed)
+        { 
+            m_Particles.DrawBulletPFXGizmo();
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(m_Camera.transform.position, m_Camera.transform.forward * 1000);
+            Ray cameraRay = new Ray(m_Camera.transform.position, m_Camera.transform.forward);
+
+            RaycastHit hit;
+            if (Physics.Raycast(cameraRay, out hit, 1000))
+            {
+
+                Gizmos.DrawSphere(hit.point, 0.25f);
+            }
+        }
+
+	}
 }

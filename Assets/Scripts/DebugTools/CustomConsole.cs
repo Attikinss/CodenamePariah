@@ -25,16 +25,22 @@ public static class CustomConsole
     public static void Activate()
     {
         // Turn on the console.
-        m_Activated = true;
-        m_Canvas.enabled = true;
-        m_Handler.Activate();
+        if (m_Canvas)
+        { 
+            m_Activated = true;
+            m_Canvas.enabled = true;
+            m_Handler.Activate();
+        }
     }
     public static void Deactivate()
     {
-        // Turn off the console.
-        m_Activated = false;
-        m_Canvas.enabled = false;
-        m_Handler.Deactivate();
+        if (m_Canvas)
+        { 
+            // Turn off the console.
+            m_Activated = false;
+            m_Canvas.enabled = false;
+            m_Handler.Deactivate();
+        }
     }
 
     public static void ParseCommand(string cmd)

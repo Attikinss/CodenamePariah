@@ -594,6 +594,26 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: a720b1b7-c6ba-42fc-bcb8-db538afd4fec
     m_ActionName: Host/Heal[/Keyboard/x]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: cc55ea85-71d3-427a-9992-0c91ad4b4796
+    m_ActionName: Pariah/Console[/Keyboard/quote]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4480668722508770150}
+        m_TargetAssemblyTypeName: InputController, Assembly-CSharp
+        m_MethodName: OnConsoleToggle
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 21ee1f3a-b743-43ca-87b1-c189f7302e80
+    m_ActionName: Host/Console[/Keyboard/quote]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: KBM
   m_DefaultActionMap: Host

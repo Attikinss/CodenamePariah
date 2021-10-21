@@ -73,6 +73,14 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Console"",
+                    ""type"": ""Button"",
+                    ""id"": ""cc55ea85-71d3-427a-9992-0c91ad4b4796"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -350,6 +358,17 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""action"": ""Heal"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e5d48bc6-fd95-45ab-b66b-a75c1db6fc3b"",
+                    ""path"": ""<Keyboard>/quote"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Console"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -537,6 +556,14 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""name"": ""Heal"",
                     ""type"": ""Button"",
                     ""id"": ""a720b1b7-c6ba-42fc-bcb8-db538afd4fec"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Console"",
+                    ""type"": ""Button"",
+                    ""id"": ""21ee1f3a-b743-43ca-87b1-c189f7302e80"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -1026,6 +1053,17 @@ public class @InputMap : IInputActionCollection, IDisposable
                     ""action"": ""Heal"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a3931781-f36a-4e3d-a043-ab9f56205b97"",
+                    ""path"": ""<Keyboard>/quote"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Console"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1074,6 +1112,7 @@ public class @InputMap : IInputActionCollection, IDisposable
         m_Pariah_Raise = m_Pariah.FindAction("Raise", throwIfNotFound: true);
         m_Pariah_Lower = m_Pariah.FindAction("Lower", throwIfNotFound: true);
         m_Pariah_Heal = m_Pariah.FindAction("Heal", throwIfNotFound: true);
+        m_Pariah_Console = m_Pariah.FindAction("Console", throwIfNotFound: true);
         // Host
         m_Host = asset.FindActionMap("Host", throwIfNotFound: true);
         m_Host_Movement = m_Host.FindAction("Movement", throwIfNotFound: true);
@@ -1099,6 +1138,7 @@ public class @InputMap : IInputActionCollection, IDisposable
         m_Host_DeleteWep3 = m_Host.FindAction("DeleteWep3", throwIfNotFound: true);
         m_Host_TestAddWeapon = m_Host.FindAction("TestAddWeapon", throwIfNotFound: true);
         m_Host_Heal = m_Host.FindAction("Heal", throwIfNotFound: true);
+        m_Host_Console = m_Host.FindAction("Console", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1155,6 +1195,7 @@ public class @InputMap : IInputActionCollection, IDisposable
     private readonly InputAction m_Pariah_Raise;
     private readonly InputAction m_Pariah_Lower;
     private readonly InputAction m_Pariah_Heal;
+    private readonly InputAction m_Pariah_Console;
     public struct PariahActions
     {
         private @InputMap m_Wrapper;
@@ -1166,6 +1207,7 @@ public class @InputMap : IInputActionCollection, IDisposable
         public InputAction @Raise => m_Wrapper.m_Pariah_Raise;
         public InputAction @Lower => m_Wrapper.m_Pariah_Lower;
         public InputAction @Heal => m_Wrapper.m_Pariah_Heal;
+        public InputAction @Console => m_Wrapper.m_Pariah_Console;
         public InputActionMap Get() { return m_Wrapper.m_Pariah; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1196,6 +1238,9 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Heal.started -= m_Wrapper.m_PariahActionsCallbackInterface.OnHeal;
                 @Heal.performed -= m_Wrapper.m_PariahActionsCallbackInterface.OnHeal;
                 @Heal.canceled -= m_Wrapper.m_PariahActionsCallbackInterface.OnHeal;
+                @Console.started -= m_Wrapper.m_PariahActionsCallbackInterface.OnConsole;
+                @Console.performed -= m_Wrapper.m_PariahActionsCallbackInterface.OnConsole;
+                @Console.canceled -= m_Wrapper.m_PariahActionsCallbackInterface.OnConsole;
             }
             m_Wrapper.m_PariahActionsCallbackInterface = instance;
             if (instance != null)
@@ -1221,6 +1266,9 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Heal.started += instance.OnHeal;
                 @Heal.performed += instance.OnHeal;
                 @Heal.canceled += instance.OnHeal;
+                @Console.started += instance.OnConsole;
+                @Console.performed += instance.OnConsole;
+                @Console.canceled += instance.OnConsole;
             }
         }
     }
@@ -1252,6 +1300,7 @@ public class @InputMap : IInputActionCollection, IDisposable
     private readonly InputAction m_Host_DeleteWep3;
     private readonly InputAction m_Host_TestAddWeapon;
     private readonly InputAction m_Host_Heal;
+    private readonly InputAction m_Host_Console;
     public struct HostActions
     {
         private @InputMap m_Wrapper;
@@ -1279,6 +1328,7 @@ public class @InputMap : IInputActionCollection, IDisposable
         public InputAction @DeleteWep3 => m_Wrapper.m_Host_DeleteWep3;
         public InputAction @TestAddWeapon => m_Wrapper.m_Host_TestAddWeapon;
         public InputAction @Heal => m_Wrapper.m_Host_Heal;
+        public InputAction @Console => m_Wrapper.m_Host_Console;
         public InputActionMap Get() { return m_Wrapper.m_Host; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1357,6 +1407,9 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Heal.started -= m_Wrapper.m_HostActionsCallbackInterface.OnHeal;
                 @Heal.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnHeal;
                 @Heal.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnHeal;
+                @Console.started -= m_Wrapper.m_HostActionsCallbackInterface.OnConsole;
+                @Console.performed -= m_Wrapper.m_HostActionsCallbackInterface.OnConsole;
+                @Console.canceled -= m_Wrapper.m_HostActionsCallbackInterface.OnConsole;
             }
             m_Wrapper.m_HostActionsCallbackInterface = instance;
             if (instance != null)
@@ -1430,6 +1483,9 @@ public class @InputMap : IInputActionCollection, IDisposable
                 @Heal.started += instance.OnHeal;
                 @Heal.performed += instance.OnHeal;
                 @Heal.canceled += instance.OnHeal;
+                @Console.started += instance.OnConsole;
+                @Console.performed += instance.OnConsole;
+                @Console.canceled += instance.OnConsole;
             }
         }
     }
@@ -1461,6 +1517,7 @@ public class @InputMap : IInputActionCollection, IDisposable
         void OnRaise(InputAction.CallbackContext context);
         void OnLower(InputAction.CallbackContext context);
         void OnHeal(InputAction.CallbackContext context);
+        void OnConsole(InputAction.CallbackContext context);
     }
     public interface IHostActions
     {
@@ -1487,5 +1544,6 @@ public class @InputMap : IInputActionCollection, IDisposable
         void OnDeleteWep3(InputAction.CallbackContext context);
         void OnTestAddWeapon(InputAction.CallbackContext context);
         void OnHeal(InputAction.CallbackContext context);
+        void OnConsole(InputAction.CallbackContext context);
     }
 }

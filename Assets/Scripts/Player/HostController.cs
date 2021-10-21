@@ -106,7 +106,7 @@ public class HostController : InputController
 	private void Update()
     {
         m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
-        if (!PauseMenu.m_GameIsPaused)
+        if (!PauseMenu.m_GameIsPaused && !CustomConsole.m_Activated)
         {
             if (!m_Active) return;
 
@@ -163,7 +163,7 @@ public class HostController : InputController
     }
     private void LateUpdate()
     {
-        if (!PauseMenu.m_GameIsPaused)
+        if (!PauseMenu.m_GameIsPaused && !CustomConsole.m_Activated)
         {
             if (m_Active)
                 Look();
@@ -172,7 +172,7 @@ public class HostController : InputController
 
     private void FixedUpdate()
 	{
-        if (!PauseMenu.m_GameIsPaused)
+        if (!PauseMenu.m_GameIsPaused && !CustomConsole.m_Activated)
         {
             if (!m_Active) return;
 
@@ -268,7 +268,7 @@ public class HostController : InputController
 
     public override void OnJump(InputAction.CallbackContext value)
     {
-        if (!PauseMenu.m_GameIsPaused)
+        if (!PauseMenu.m_GameIsPaused && !CustomConsole.m_Activated)
         {
             if (value.performed)
             {
@@ -314,7 +314,7 @@ public class HostController : InputController
 
     public override void OnPossess(InputAction.CallbackContext value)
     {
-        if (value.performed)
+        if (value.performed && !PauseMenu.m_GameIsPaused && !CustomConsole.m_Activated)
         {
             if (TryGetComponent(out WhiteWillow.Agent agent))
                 agent.Release();

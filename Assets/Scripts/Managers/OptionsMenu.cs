@@ -8,11 +8,35 @@ public class OptionsMenu : MonoBehaviour
 {
     [SerializeField]
     [Tooltip("Input field of this option.")]
-    public TMP_InputField m_InputField;
+    public TMP_InputField m_MasterVolumeInputField;
 
     [SerializeField]
     [Tooltip("Slider of this option.")]
-    public Slider m_Slider;
+    public Slider m_MasterVolumeSlider;
+
+    [SerializeField]
+    [Tooltip("Input field of this option.")]
+    public TMP_InputField m_DialogueVolumeInputField;
+
+    [SerializeField]
+    [Tooltip("Slider of this option.")]
+    public Slider m_DialogueVolumeSlider;
+
+    [SerializeField]
+    [Tooltip("Input field of this option.")]
+    public TMP_InputField m_SFXVolumeInputField;
+
+    [SerializeField]
+    [Tooltip("Slider of this option.")]
+    public Slider m_SFXVolumeSlider;
+
+    [SerializeField]
+    [Tooltip("Input field of this option.")]
+    public TMP_InputField m_MusicVolumeInputField;
+
+    [SerializeField]
+    [Tooltip("Slider of this option.")]
+    public Slider m_MusicVolumeSlider;
 
     [SerializeField]
     [Tooltip("Mouse sensitivity slider.")]
@@ -43,15 +67,35 @@ public class OptionsMenu : MonoBehaviour
 
     [SerializeField]
     [ReadOnly]
-    private static float m_MouseSensitivity;   //multiply looksensitivity by this
+    private static float m_MouseSensitivity;
 
     [SerializeField]
     [ReadOnly]
-    private static float m_ControllerSensitivity;//or multiply looksensitivity by this. convert each value of 1-8 to a float??
+    private static float m_ControllerSensitivity;
 
     [SerializeField]
     [ReadOnly]
     private static int m_FieldOfView;
+
+    [SerializeField]
+    [ReadOnly]
+    private static int m_MasterVolume;
+
+    [SerializeField]
+    [ReadOnly]
+    private static int m_DialogueVolume;
+
+    [SerializeField]
+    [ReadOnly]
+    private static int m_SFXVolume;
+
+    [SerializeField]
+    [ReadOnly]
+    private static int m_MusicVolume;
+
+    Resolution[] resolutions;
+
+    public TMP_Dropdown resolutionDropdown;
 
     private void Awake()
     {
@@ -68,8 +112,42 @@ public class OptionsMenu : MonoBehaviour
         m_FOVSlider.value = m_FieldOfView;
         m_FOVInputField.text = m_FieldOfView.ToString();
 
-        //m_Slider.value = m_MouseSensitivity;                  //TEMPORARY
-        //m_InputField.text = m_MouseSensitivity.ToString("F2");//TEMPORARY
+        m_MasterVolume = m_PlayerPrefs.AudioConfig.MasterVolume;
+        m_DialogueVolume = m_PlayerPrefs.AudioConfig.DialogueVolume;
+        m_SFXVolume = m_PlayerPrefs.AudioConfig.SFXVolume;
+        m_MusicVolume = m_PlayerPrefs.AudioConfig.MusicVolume;
+
+        m_MasterVolumeSlider.value = m_MasterVolume;
+        m_DialogueVolumeSlider.value = m_DialogueVolume;
+        m_SFXVolumeSlider.value = m_SFXVolume;
+        m_MusicVolumeSlider.value = m_MusicVolume;
+
+        m_MasterVolumeInputField.text = m_MasterVolume.ToString();
+        m_DialogueVolumeInputField.text = m_DialogueVolume.ToString();
+        m_SFXVolumeInputField.text = m_SFXVolume.ToString();
+        m_MusicVolumeInputField.text = m_MusicVolume.ToString();
+
+        //CHANGE THIS
+        resolutions = Screen.resolutions;
+        resolutionDropdown.ClearOptions();
+        List<string> options = new List<string>();
+
+        int currentResolutionIndex = 0;
+        for (int i = 0; i < resolutions.Length; i++)
+        {
+            string option = resolutions[i].width + " x " + resolutions[i].height + " (" + resolutions[i].refreshRate + ")";//TEST THIS ON OTHER MONITORS
+            options.Add(option);
+
+            if (resolutions[i].width == Screen.currentResolution.width &&
+                resolutions[i].height == Screen.currentResolution.height) 
+            {
+                currentResolutionIndex = i;
+            }
+        }
+        resolutionDropdown.AddOptions(options);
+        resolutionDropdown.value = currentResolutionIndex;
+        resolutionDropdown.RefreshShownValue();
+        //player prefs for resolution and fullscreen.
     }
 
     public void SetMasterVolume(float value)
@@ -93,125 +171,226 @@ public class OptionsMenu : MonoBehaviour
     }
 
     /// <summary>Gets called when an audio slider value has changed. NEED TO MAKE SURE TO IGNORE ON AWAKE/START.</summary>
-    public void SliderValueChanged()
+    public void MasterVolumeSliderValueChanged()
     {
-        //if (m_Slider) m_Slider.value = value;
-        if (m_InputField) 
-            m_InputField.text = m_Slider.value.ToString();
-        //controller sensitivity - may need an override as this is also used for audio volumes.
+        if (m_MasterVolumeInputField) 
+            m_MasterVolumeInputField.text = m_MasterVolumeSlider.value.ToString();
+        m_MasterVolume = (int)m_MasterVolumeSlider.value;
+        m_PlayerPrefs.AudioConfig.MasterVolume = m_MasterVolume;
+    }
+    public void DialogueVolumeSliderValueChanged()
+    {
+        if (m_DialogueVolumeInputField)
+            m_DialogueVolumeInputField.text = m_DialogueVolumeSlider.value.ToString();
+        m_DialogueVolume = (int)m_DialogueVolumeSlider.value;
+        m_PlayerPrefs.AudioConfig.DialogueVolume = m_DialogueVolume;
+    }
+    public void SFXVolumeSliderValueChanged()
+    {
+        if (m_SFXVolumeInputField)
+            m_SFXVolumeInputField.text = m_SFXVolumeSlider.value.ToString();
+        m_SFXVolume = (int)m_SFXVolumeSlider.value;
+        m_PlayerPrefs.AudioConfig.SFXVolume = m_SFXVolume;
+    }
+    public void MusicVolumeSliderValueChanged()
+    {
+        if (m_MusicVolumeInputField)
+            m_MusicVolumeInputField.text = m_MusicVolumeSlider.value.ToString();
+        m_MusicVolume = (int)m_MusicVolumeSlider.value;
+        m_PlayerPrefs.AudioConfig.MusicVolume = m_MusicVolume;
     }
 
     public void FOVSliderValueChanged()
     {
-        if (m_InputField)
-            m_InputField.text = m_Slider.value.ToString();
-        m_FieldOfView = (int)m_Slider.value;//
+        if (m_FOVInputField)
+            m_FOVInputField.text = m_FOVSlider.value.ToString();
+        m_FieldOfView = (int)m_FOVSlider.value;
         m_PlayerPrefs.VideoConfig.FieldOfView = m_FieldOfView;
     }
 
     /// <summary>Gets called when the controller sensitivity has been changed.</summary>
     public void ControllerSensitivitySliderValueChanged()
     {
-        if (m_InputField)
-            m_InputField.text = m_Slider.value.ToString("F2");
-        m_ControllerSensitivity = m_Slider.value;
+        if (m_ControllerInputField)
+            m_ControllerInputField.text = m_ControllerSensitivitySlider.value.ToString("F2");
+        m_ControllerSensitivity = m_ControllerSensitivitySlider.value;
         m_PlayerPrefs.GameplayConfig.ControllerSensitivity = m_ControllerSensitivity;
     }
 
     /// <summary>Gets called when the mouse sensitivity has been changed.</summary>
     public void MouseSensitivitySliderChanged()
     {
-        //if (m_Slider) m_Slider.value = value;
-        if (m_InputField)
-            m_InputField.text = m_Slider.value.ToString("F2");
-        m_MouseSensitivity = m_Slider.value;
+        if (m_MouseInputField)
+            m_MouseInputField.text = m_MouseSensitivitySlider.value.ToString("F2");
+        m_MouseSensitivity = m_MouseSensitivitySlider.value;
         m_PlayerPrefs.GameplayConfig.MouseSensitivity = m_MouseSensitivity;
     }
 
     /// <summary>Gets called when a volume input field value has been changed.</summary>
-    public void VolumeInputValueChanged()
+    public void MasterVolumeInputValueChanged()
     {
-        if (m_InputField.text.Length > 0 && m_InputField.text[0] == '-')//
+        if (m_MasterVolumeInputField.text.Length > 0 && m_MasterVolumeInputField.text[0] == '-')
         {
-            m_InputField.text = "0";
+            m_MasterVolumeInputField.text = "0";
             return;
         }
-        if (m_InputField.text.Length == 0)//
+        if (m_MasterVolumeInputField.text.Length == 0)
         {
-            m_InputField.text = "0";
+            m_MasterVolumeInputField.text = "0";
         }
 
-        int value = int.Parse(m_InputField.text);
-        value = Mathf.Clamp(int.Parse(m_InputField.text), 0, 100);//
-        m_InputField.text = value.ToString();//
-        if (m_Slider) 
-            m_Slider.value = value;
-        //if (m_InputField) m_InputField.text = value;
+        int value = int.Parse(m_MasterVolumeInputField.text);
+        value = Mathf.Clamp(int.Parse(m_MasterVolumeInputField.text), 0, 100);
+        m_MasterVolumeInputField.text = value.ToString();
+        if (m_MasterVolumeSlider) 
+            m_MasterVolumeSlider.value = value;
+        m_MasterVolume = value;
+        m_PlayerPrefs.AudioConfig.MasterVolume = m_MasterVolume;
+    }
+
+    /// <summary>Gets called when a volume input field value has been changed.</summary>
+    public void DialogueVolumeInputValueChanged()
+    {
+        if (m_DialogueVolumeInputField.text.Length > 0 && m_DialogueVolumeInputField.text[0] == '-')
+        {
+            m_DialogueVolumeInputField.text = "0";
+            return;
+        }
+        if (m_DialogueVolumeInputField.text.Length == 0)
+        {
+            m_DialogueVolumeInputField.text = "0";
+        }
+
+        int value = int.Parse(m_DialogueVolumeInputField.text);
+        value = Mathf.Clamp(int.Parse(m_DialogueVolumeInputField.text), 0, 100);
+        m_DialogueVolumeInputField.text = value.ToString();
+        if (m_DialogueVolumeSlider)
+            m_DialogueVolumeSlider.value = value;
+        m_DialogueVolume = value;
+        m_PlayerPrefs.AudioConfig.DialogueVolume = m_DialogueVolume;
+    }
+
+    /// <summary>Gets called when a volume input field value has been changed.</summary>
+    public void SFXVolumeInputValueChanged()
+    {
+        if (m_SFXVolumeInputField.text.Length > 0 && m_SFXVolumeInputField.text[0] == '-')
+        {
+            m_SFXVolumeInputField.text = "0";
+            return;
+        }
+        if (m_SFXVolumeInputField.text.Length == 0)
+        {
+            m_SFXVolumeInputField.text = "0";
+        }
+
+        int value = int.Parse(m_SFXVolumeInputField.text);
+        value = Mathf.Clamp(int.Parse(m_SFXVolumeInputField.text), 0, 100);
+        m_SFXVolumeInputField.text = value.ToString();
+        if (m_SFXVolumeSlider)
+            m_SFXVolumeSlider.value = value;
+        m_SFXVolume = value;
+        m_PlayerPrefs.AudioConfig.SFXVolume = m_SFXVolume;
+    }
+
+    /// <summary>Gets called when a volume input field value has been changed.</summary>
+    public void MusicVolumeInputValueChanged()
+    {
+        if (m_MusicVolumeInputField.text.Length > 0 && m_MusicVolumeInputField.text[0] == '-')
+        {
+            m_MusicVolumeInputField.text = "0";
+            return;
+        }
+        if (m_MusicVolumeInputField.text.Length == 0)
+        {
+            m_MusicVolumeInputField.text = "0";
+        }
+
+        int value = int.Parse(m_MusicVolumeInputField.text);
+        value = Mathf.Clamp(int.Parse(m_MusicVolumeInputField.text), 0, 100);
+        m_MusicVolumeInputField.text = value.ToString();
+        if (m_MusicVolumeSlider)
+            m_MusicVolumeSlider.value = value;
+        m_MusicVolume = value;
+        m_PlayerPrefs.AudioConfig.MusicVolume = m_MusicVolume;
     }
 
     public void FOVInputValueChanged()
     {
-        if (m_InputField.text.Length > 0 && m_InputField.text[0] == '-')//
+        if (m_FOVInputField.text.Length > 0 && m_FOVInputField.text[0] == '-')
         {
-            m_InputField.text = "70";
+            m_FOVInputField.text = "70";
             return;
         }
-        if (m_InputField.text.Length == 0)//
+        if (m_FOVInputField.text.Length == 0)
         {
-            m_InputField.text = "70";
+            m_FOVInputField.text = "70";
         }
 
-        int value = int.Parse(m_InputField.text);
-        value = Mathf.Clamp(int.Parse(m_InputField.text), 70, 120);//
-        m_InputField.text = value.ToString();//
-        if (m_Slider)
-            m_Slider.value = value;
-        //if (m_InputField) m_InputField.text = value;
+        int value = int.Parse(m_FOVInputField.text);
+        value = Mathf.Clamp(int.Parse(m_FOVInputField.text), 70, 120);
+        m_FOVInputField.text = value.ToString();
+        if (m_FOVSlider)
+            m_FOVSlider.value = value;
+        m_FieldOfView = value;
+        m_PlayerPrefs.VideoConfig.FieldOfView = m_FieldOfView;
     }
 
     /// <summary>Gets called when the controller sensitivity input field value has been changed.</summary>
     public void ControllerSensitivityInputValueChanged()
     {
-        if (m_InputField.text.Length > 0 && m_InputField.text[0] == '-')//
+        if (m_ControllerInputField.text.Length > 0 && m_ControllerInputField.text[0] == '-')
         {
-            m_InputField.text = "5.00";
+            m_ControllerInputField.text = "5.00";
             return;
         }
-        if (m_InputField.text.Length == 0)//
+        if (m_ControllerInputField.text.Length == 0)
         {
-            m_InputField.text = "5.00";
+            m_ControllerInputField.text = "5.00";
         }
 
-        float value = float.Parse(m_InputField.text);
-        value = Mathf.Clamp(float.Parse(m_InputField.text), 5.00f, 100.00f);//
-        m_InputField.text = value.ToString();//
-        if (m_Slider)
-            m_Slider.value = value;
+        float value = float.Parse(m_ControllerInputField.text);
+        value = Mathf.Clamp(float.Parse(m_ControllerInputField.text), 5.00f, 100.00f);
+        m_ControllerInputField.text = value.ToString();
+        if (m_ControllerSensitivitySlider)
+            m_ControllerSensitivitySlider.value = value;
         m_ControllerSensitivity = value;
         m_PlayerPrefs.GameplayConfig.ControllerSensitivity = m_ControllerSensitivity;
-        //if (m_InputField) m_InputField.text = value;
     }
 
     /// <summary>Gets called when the mouse sensitivity input field value has been changed.</summary>
     public void MouseSensitivityInputValueChanged()
     {
-        if (m_InputField.text.Length > 0 && m_InputField.text[0] == '-')//
+        if (m_MouseInputField.text.Length > 0 && m_MouseInputField.text[0] == '-')
         {
-            m_InputField.text = "5.00";
+            m_MouseInputField.text = "5.00";
             return;
         }
-        if (m_InputField.text.Length == 0)//
+        if (m_MouseInputField.text.Length == 0)
         {
-            m_InputField.text = "5.00";
+            m_MouseInputField.text = "5.00";
         }
 
-        float value = float.Parse(m_InputField.text);
-        value = Mathf.Clamp(float.Parse(m_InputField.text), 5.00f, 100.00f);//
-        m_InputField.text = value.ToString("F2");//
-        if (m_Slider)
-            m_Slider.value = value;
+        float value = float.Parse(m_MouseInputField.text);
+        value = Mathf.Clamp(float.Parse(m_MouseInputField.text), 5.00f, 100.00f);
+        m_MouseInputField.text = value.ToString("F2");
+        if (m_MouseSensitivitySlider)
+            m_MouseSensitivitySlider.value = value;
         m_MouseSensitivity = value;
         m_PlayerPrefs.GameplayConfig.MouseSensitivity = m_MouseSensitivity;
-        //if (m_InputField) m_InputField.text = value;
+    }
+
+    public void SetFullScreen(bool isFullscreen)
+    {
+        Screen.fullScreen = isFullscreen;
+        m_PlayerPrefs.VideoConfig.Fullscreen = isFullscreen;
+    }
+
+    public void SetResolution(int resolutionIndex)
+    {
+        Resolution resolution = resolutions[resolutionIndex];
+        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen, resolution.refreshRate);
+        m_PlayerPrefs.VideoConfig.Resolution.Width = resolution.width;
+        m_PlayerPrefs.VideoConfig.Resolution.Height = resolution.height;
+        m_PlayerPrefs.VideoConfig.Resolution.RefreshRate = resolution.refreshRate;
     }
 }

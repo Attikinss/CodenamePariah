@@ -653,7 +653,7 @@ MonoBehaviour:
   m_ViewRange: 25
   m_IgnoreMask:
     serializedVersion: 2
-    m_Bits: 3895
+    m_Bits: 3891
   m_Weapon: {fileID: 0}
   PariahController: {fileID: 0}
 --- !u!195 &5252449669079828069

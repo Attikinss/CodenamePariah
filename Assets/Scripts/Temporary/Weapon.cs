@@ -379,7 +379,7 @@ public class Weapon : MonoBehaviour
         Vector3 currentPosition = weaponConfig.m_ScopeCentre.position;
         Vector3 requiredChange = centre - currentPosition;
 
-        gunTransform.position += requiredChange * weaponConfig.m_GunAimSpeed;
+        gunTransform.position += requiredChange * weaponConfig.m_GunAimSpeed * Time.deltaTime;
     }
 
     private Vector3 WeaponBob()
@@ -719,7 +719,7 @@ public class Weapon : MonoBehaviour
             float requiredChange = desiredFOV - currentFOV;
 
             if(!GetReloadState() && !m_DualWield) // Wont zoom in if we are reloading or if we are using a dual wielded weapon.
-                m_Camera.fieldOfView += requiredChange * 0.45f;
+                m_Camera.fieldOfView += requiredChange * 0.45f * Time.deltaTime;
 
 
 

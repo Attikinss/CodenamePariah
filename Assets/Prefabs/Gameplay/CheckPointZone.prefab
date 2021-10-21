@@ -59,6 +59,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_CheckPointLevel: 1
+  m_SpawningAgentPrefab: {fileID: 4480668722508770155, guid: 952a5126ed3ee024f84ce0f16d5d061d, type: 3}
 --- !u!114 &7651870476908008085
 MonoBehaviour:
   m_ObjectHideFlags: 0

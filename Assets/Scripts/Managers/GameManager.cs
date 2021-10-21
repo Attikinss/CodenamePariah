@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
-
+using UnityEngine.AI;
 using UnityEngine.Rendering.HighDefinition;
 
 /// <summary>
@@ -65,6 +65,7 @@ public class GameManager : MonoBehaviour
 
     public static int s_HighestCheckPointLevel = 0;
     public static Vector3 s_CheckPointPos;
+    public static GameObject s_CheckpointAgentPrefab; // It's important that this is the prefab because we will be instantiating it.
 
 
     private void Awake()
@@ -301,19 +302,21 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
-    public static void SetCheckPoint(int checkPointLevel, Vector3 pos)
+    public static void SetCheckPoint(int checkPointLevel, Vector3 pos, GameObject agentPrefab)
     {
         if (s_HighestCheckPointLevel == 0)
         {
             // If our highest check point is level 0, we'll take any we can get.
             s_HighestCheckPointLevel = checkPointLevel;
             s_CheckPointPos = pos;
+            s_CheckpointAgentPrefab = agentPrefab;
         }
         else if (checkPointLevel > s_HighestCheckPointLevel)
         {
             // We've reached a higher check point, so we'll set ours to that one.
             s_HighestCheckPointLevel = checkPointLevel;
             s_CheckPointPos = pos;
+            s_CheckpointAgentPrefab = agentPrefab;
         }
     }
 
@@ -321,6 +324,25 @@ public class GameManager : MonoBehaviour
     {
         // If we spawn at a check point, we wont spawn into an agent immediately.
         m_Pariah.transform.position = s_CheckPointPos;
+        if (s_CheckpointAgentPrefab)
+        {
+            // There is an agent prefab that we have to spawn into. For now, because we don't force spawning into agents, we should instantiate the agent at the same
+            // location we are spawning at and then immediately call Possess() to get into the agent.
+            GameObject newAgent = GameObject.Instantiate(s_CheckpointAgentPrefab);
+            newAgent.transform.parent = null;
+
+            // For Unity reasons, we have to disable the NavMeshAgent component before we can move the agent. This is because the component locks the position.
+            // I think disabling/enabling like this is okay, but if issues arise maybe try deactivate the gameobject of the agent completely, move it, and then re enable the
+            // game object.
+            NavMeshAgent navAgent = newAgent.GetComponent<NavMeshAgent>();
+            navAgent.enabled = false;
+            newAgent.transform.position = s_CheckPointPos;
+            newAgent.name = "Test Agent";
+            navAgent.enabled = true;
+            
+
+            m_Pariah.ForceInstantPossess(newAgent.GetComponent<WhiteWillow.Agent>());
+        }
     }
 
     public static void ResetCheckpoint()

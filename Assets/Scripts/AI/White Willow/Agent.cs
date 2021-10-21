@@ -23,6 +23,9 @@ namespace WhiteWillow
         private NavMeshAgent m_NavAgent;
         public Query CurrentQuery;
         public Weapon m_Weapon;
+        [Tooltip("The mesh that we apply the possession shader to.")]
+        public GameObject m_Mesh;
+        public Material m_PossessionMaterial;
 
         [SerializeField]
         private Animator m_Animator;
@@ -37,6 +40,9 @@ namespace WhiteWillow
         public Vector3 Destination { get; private set; }
         public Vector3 FacingDirection { get; private set; }
 
+        private Material m_OriginalMat;
+        private MeshRenderer m_CurrentMat;
+
 		private void Awake()
 		{
             m_RuntimeTree = InputTree?.Clone(gameObject.name);
@@ -47,6 +53,8 @@ namespace WhiteWillow
 
             PariahController = FindObjectOfType<PariahController>();
             m_RuntimeTree.Blackboard?.UpdateEntryValue<GameObject>("Target", PariahController?.gameObject);
+
+            CacheOriginalMaterial();
 
         }
         private void Update()
@@ -284,6 +292,19 @@ namespace WhiteWillow
             return false;
         }
 
+        private void CacheOriginalMaterial()
+        {
+            m_OriginalMat = m_Mesh.GetComponent<Material>();
+            m_CurrentMat = m_Mesh.GetComponent<MeshRenderer>();
+        }
+        public void SelectAgent()
+        {
+            m_CurrentMat.material = m_PossessionMaterial;
+        }
+        public void DeselectAgent()
+        {
+            m_CurrentMat.material = m_OriginalMat;
+        }
         private void OnDrawGizmos()
         {
             DrawArrow(transform.position - Vector3.up, Destination, Color.white);

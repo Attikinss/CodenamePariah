@@ -78,6 +78,9 @@ public class PariahController : InputController
     public FMODAudioEvent m_AudioLowHPEvent;
     private bool m_IsPlayingLowHP = false;
 
+    [HideInInspector]
+    public Agent m_LookedAtAgent = null;
+
     private void Awake() => m_Rigidbody = GetComponent<Rigidbody>();
 
     private void Start()
@@ -90,7 +93,51 @@ public class PariahController : InputController
         StartCoroutine(DrainHealth(m_HealthDrainDelay));
     }
 
-    private void FixedUpdate()
+	private void Update()
+	{
+        // Currently I'm using this update function to handle tracking what agent Pariah is looking at.
+        // When Pariah looks at an agent, we want to apply the possession shader.
+        RaycastHit lookHit;
+        if (Physics.Raycast(m_Camera.transform.position, m_Camera.transform.forward, out lookHit, m_DashDistance))
+        {
+            // This is the same raycast settings as used in the OnPossession function.
+            if (lookHit.transform.TryGetComponent(out Agent agent))
+            {
+                // We are looking at a selectable agent!
+
+                if (m_LookedAtAgent) // If we have a reference to a previous looked at agent, we have to reset their shader before we select a new agent.
+                {
+                    m_LookedAtAgent.DeselectAgent();
+                }
+
+                // Now that we have reset the previously looked at agent's shader, we can work with the new agent.
+                // Set currently looked at agent to this one.
+                m_LookedAtAgent = agent;
+                // Set the new agent's shader to the possession one.
+                m_LookedAtAgent.SelectAgent();
+            }
+            else
+            {
+                // We are looking at something, but not an agent. So let's clear the currently looked at agent if we have one.
+                if (m_LookedAtAgent)
+                { 
+                    m_LookedAtAgent.DeselectAgent();
+                    m_LookedAtAgent = null;
+                }
+            }
+        }
+        else
+        {
+            // The raycast failed to hit anything. We should deselect and reset the shader on any selected agent, if we have one.
+            if (m_LookedAtAgent)
+            { 
+                m_LookedAtAgent.DeselectAgent();
+                m_LookedAtAgent = null;
+            }
+        }
+	}
+
+	private void FixedUpdate()
     {
         if (!PauseMenu.m_GameIsPaused)
         {

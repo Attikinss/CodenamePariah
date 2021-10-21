@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.VFX;
 using UnityEngine.AI;
 using UnityEngine.Rendering.HighDefinition;
+using System;
 
 /// <summary>
 /// This GameManager is a temporary class by Daniel. I'm using it now just as a place to store all the weapon shot decals.
@@ -60,7 +59,7 @@ public class GameManager : MonoBehaviour
 
 
     // Storing door information for when reloading at a checkpoint.
-    public static List<Door> s_AllDoors = new List<Door>();
+    public static List<ToggableObject> s_AllToggables = new List<ToggableObject>();
     public static bool s_IsNotFirstLoad = false;
 
     public static int s_HighestCheckPointLevel = 0;
@@ -250,18 +249,18 @@ public class GameManager : MonoBehaviour
         //WStartCoroutine(controller.RunWeaponInspect(5));
     }
 
-    public static void AddDoor(int arenaID, GameObject openDoor, GameObject closeDoor, bool isOpen)
+    public static void AddToggable(int arenaID, GameObject openObj, GameObject closeObj, bool isOpen)
     {
         // To prevent the same monobehaviour ArenaManager's from sending the GameManager their doors on the following reloads of the game, we check
         // the ID of the requested created door with the doors we already have. If they match, it means we already know about that door and don't need it.
-        for (int i = 0; i < s_AllDoors.Count; i++)
+        for (int i = 0; i < s_AllToggables.Count; i++)
         {
-            if (arenaID == s_AllDoors[i].ID)
+            if (arenaID == s_AllToggables[i].ID)
             {
                 // Although we already have this door, we still need to re-grab the game objects. This is because on a scene reload the old game object
                 // references become null.
-                s_AllDoors[i].m_openDoorObj = openDoor;
-                s_AllDoors[i].m_closedDoorObj = closeDoor;
+                s_AllToggables[i].m_openObj = openObj;
+                s_AllToggables[i].m_closedObj = closeObj;
 
                 return; // Early out, we already have this door!
             }
@@ -269,9 +268,9 @@ public class GameManager : MonoBehaviour
 
         // Otherwise, this means that it's the first time we're receiving these doors (The first time the scene is loaded.)
 
-        Door newDoor = new Door(arenaID, openDoor, closeDoor, isOpen);
+        ToggableObject newToggable = new ToggableObject(arenaID, openObj, closeObj, isOpen);
 
-        s_AllDoors.Add(newDoor);
+        s_AllToggables.Add(newToggable);
     }
 
     /// <summary>
@@ -279,9 +278,9 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public static void RefreshDoors() 
     {
-        for (int i = 0; i < s_AllDoors.Count; i++)
+        for (int i = 0; i < s_AllToggables.Count; i++)
         {
-            s_AllDoors[i].Toggle(s_AllDoors[i].m_IsOpen);
+            s_AllToggables[i].Toggle(s_AllToggables[i].m_IsOpen);
         }
     }
 
@@ -289,13 +288,13 @@ public class GameManager : MonoBehaviour
     /// Gets a door with a matching arena ID.
     /// </summary>
     /// <param name="arenaID"></param>
-    public static Door GetDoor(int arenaID)
+    public static ToggableObject GetDoor(int arenaID)
     {
-        for (int i = 0; i < s_AllDoors.Count; i++)
+        for (int i = 0; i < s_AllToggables.Count; i++)
         {
-            if (s_AllDoors[i].ID == arenaID)
+            if (s_AllToggables[i].ID == arenaID)
             {
-                return s_AllDoors[i];
+                return s_AllToggables[i];
             }
         }
 
@@ -349,6 +348,22 @@ public class GameManager : MonoBehaviour
     {
         s_HighestCheckPointLevel = 0;
         s_CheckPointPos = Vector3.zero;
-}
+    }
+
+    /// <summary>
+    /// Sends updated door information to the GameManager so it has memory of the state of the door when it reloads at a checkpoint.
+    /// </summary>
+    public void SendDoorData(bool isOpen, int doorID)
+    {
+        ToggableObject ourDoor = GameManager.GetDoor(doorID);
+        ourDoor.m_IsOpen = isOpen;
+    }
+
+    public static Guid GetGUID()
+    {
+        Guid newGuid = Guid.NewGuid();
+        return newGuid;
+    }
+
 
 }

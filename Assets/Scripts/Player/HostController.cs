@@ -635,7 +635,8 @@ public class HostController : InputController
         if (m_MovInfo.m_GroundNormal != Vector3.zero)
         {
             xMov = m_MovInfo.m_ModifiedRight * x;
-            zMov = m_MovInfo.m_ModifiedForward * z;
+            //zMov = m_MovInfo.m_ModifiedForward * z;
+            zMov = m_Orientation.transform.forward * z;
         }
         else
         { 

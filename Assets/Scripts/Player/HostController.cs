@@ -249,6 +249,8 @@ public class HostController : InputController
         if(m_Mesh)
             m_Mesh.SetActive(true);
 
+        GameManager.s_Instance.m_Pariah.ClearCurrentPossessed();
+
        
     }
 

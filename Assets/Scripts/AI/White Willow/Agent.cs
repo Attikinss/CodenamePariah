@@ -45,6 +45,8 @@ namespace WhiteWillow
 
         private Material m_OriginalMat;
         private SkinnedMeshRenderer m_CurrentMat;
+        private MeshRenderer m_CurrentMatNoRenderer; // Because the soldiers don't have an animation yet, we have the temporary case of needing to
+                                                     // use a normal MeshRenderer instead.
 
 		private void Awake()
 		{
@@ -299,8 +301,19 @@ namespace WhiteWillow
         {
             if (m_Mesh)
             {
-                m_CurrentMat = m_Mesh.GetComponent<SkinnedMeshRenderer>();
-                m_OriginalMat = m_CurrentMat.material;
+                if (m_Mesh.TryGetComponent<SkinnedMeshRenderer>(out SkinnedMeshRenderer renderer))
+                {
+                    m_CurrentMat = renderer;
+                }
+                else if (m_Mesh.TryGetComponent<MeshRenderer>(out MeshRenderer rendererLame))
+                {
+                    m_CurrentMatNoRenderer = rendererLame;
+                }
+
+                if (m_CurrentMat)
+                    m_OriginalMat = m_CurrentMat.material;
+                else if (m_CurrentMatNoRenderer)
+                    m_OriginalMat = m_CurrentMatNoRenderer.material;
             }
             else
             {
@@ -310,8 +323,11 @@ namespace WhiteWillow
         public void SelectAgent()
         {
             if (m_Mesh) // If m_Mesh hasn't been set, then neither has m_CurrentMat.
-            { 
-                m_CurrentMat.material = m_PossessionMaterial;
+            {
+                if (m_CurrentMat)
+                    m_CurrentMat.material = m_PossessionMaterial;
+                else if (m_CurrentMatNoRenderer)
+                    m_CurrentMatNoRenderer.material = m_PossessionMaterial;
             }
             if (m_PossessionHeart && m_PossessionPulse) // If they have set these, we can turn them on.
             {
@@ -323,7 +339,10 @@ namespace WhiteWillow
         {
             if (m_Mesh) // If m_Mesh hasn't been set, then neither has m_CurrentMat.
             {
-                m_CurrentMat.material = m_OriginalMat;
+                if (m_CurrentMat)
+                    m_CurrentMat.material = m_OriginalMat;
+                else if (m_CurrentMatNoRenderer)
+                    m_CurrentMatNoRenderer.material = m_OriginalMat;
             }
             if (m_PossessionHeart && m_PossessionPulse) // If they have set these, we can turn them off.
             {

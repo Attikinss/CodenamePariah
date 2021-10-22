@@ -4,6 +4,8 @@ using UnityEngine.InputSystem;
 using Tweening;
 using WhiteWillow;
 using UnityEngine.SceneManagement;
+//using FMOD;
+using FMODUnity;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PariahController : InputController
@@ -81,6 +83,8 @@ public class PariahController : InputController
     [HideInInspector]
     public Agent m_LookedAtAgent = null;
 
+    public SkinnedMeshRenderer m_Arms;
+
     private void Awake() => m_Rigidbody = GetComponent<Rigidbody>();
 
     private void Start()
@@ -91,6 +95,9 @@ public class PariahController : InputController
         m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
 
         StartCoroutine(DrainHealth(m_HealthDrainDelay));
+
+        FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
+        allBussess.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
     }
 
 	private void Update()
@@ -191,6 +198,8 @@ public class PariahController : InputController
         GetComponent<Collider>().enabled = true;
         m_Active = true;
         m_Camera.enabled = true;
+
+        ToggleArms(true);
     }
 
     public override void Disable()
@@ -198,6 +207,8 @@ public class PariahController : InputController
         GetComponent<PlayerInput>().enabled = false;
         m_Active = false;
         m_Camera.enabled = false;
+
+        ToggleArms(false);
     }
 
     public override void OnLook(InputAction.CallbackContext value)
@@ -348,6 +359,8 @@ public class PariahController : InputController
             // TODO: Kill pariah
             // Temporary: Reloads the current scene
             m_Dead = true;
+            FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
+            allBussess.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
             StartCoroutine(ReloadLevel());
         }
     }
@@ -370,6 +383,8 @@ public class PariahController : InputController
                 {
                     m_Health = 0;
                     m_Dead = true;
+                    FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
+                    allBussess.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
                     StartCoroutine(ReloadLevel());
                 }
 
@@ -428,6 +443,7 @@ public class PariahController : InputController
             m_IsPlayingLowHP = true;
             m_AudioLowHPEvent.Trigger();
         }
+       
     }
 
     private void StopLowHPSound()
@@ -437,6 +453,7 @@ public class PariahController : InputController
             m_IsPlayingLowHP = false;
             m_AudioLowHPEvent.StopSound(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         }
+        
     }
 
 
@@ -444,4 +461,20 @@ public class PariahController : InputController
     /// Made this function so I wouldn't have to make m_CurrentPossessed a public variable. I needed to be able to clear this back to null.
     /// </summary>
     public void ClearCurrentPossessed() { m_CurrentPossessed = null; }
+
+    /// <summary>
+    /// Used to hide and unhide Pariah's arms.
+    /// </summary>
+    private void ToggleArms(bool mode)
+    {
+        if (m_Arms)
+        {
+            if (mode)
+                m_Arms.enabled = true;
+            else
+                m_Arms.enabled = false;
+        }
+        else
+            Debug.LogWarning("Pariah's arms have not been set!");
+    }
 }

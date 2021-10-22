@@ -105,7 +105,7 @@ MonoBehaviour:
   m_BulletForce: 5
   m_GunAimZPos: 0.195
   m_GunAimHeight: 1
-  m_GunAimSpeed: 0.25
+  m_GunAimSpeed: 12
   m_GunAimSwayStrength: 0.5
   m_GunSwayStrength: 1
   m_GunSwayReturn: 6
@@ -252,6 +252,7 @@ MonoBehaviour:
     m_BulletCasings:
     - {fileID: 6886623512333823983}
     m_BulletParticle: {fileID: 1980285582285465663}
+    m_ClonedBulletParticle: {fileID: 0}
     m_AdditionalBulletParticle: {fileID: 0}
   m_Animators:
     m_GunAnimators:

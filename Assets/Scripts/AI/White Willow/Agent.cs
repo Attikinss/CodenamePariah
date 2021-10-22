@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.VFX;
 
 namespace WhiteWillow
 {
@@ -26,6 +27,8 @@ namespace WhiteWillow
         [Tooltip("The mesh that we apply the possession shader to.")]
         public GameObject m_Mesh;
         public Material m_PossessionMaterial;
+        public ParticleSystem m_PossessionHeart;
+        public ParticleSystem m_PossessionPulse;
 
         [SerializeField]
         private Animator m_Animator;
@@ -41,7 +44,7 @@ namespace WhiteWillow
         public Vector3 FacingDirection { get; private set; }
 
         private Material m_OriginalMat;
-        private MeshRenderer m_CurrentMat;
+        private SkinnedMeshRenderer m_CurrentMat;
 
 		private void Awake()
 		{
@@ -294,16 +297,39 @@ namespace WhiteWillow
 
         private void CacheOriginalMaterial()
         {
-            m_OriginalMat = m_Mesh.GetComponent<Material>();
-            m_CurrentMat = m_Mesh.GetComponent<MeshRenderer>();
+            if (m_Mesh)
+            {
+                m_CurrentMat = m_Mesh.GetComponent<SkinnedMeshRenderer>();
+                m_OriginalMat = m_CurrentMat.material;
+            }
+            else
+            {
+                Debug.LogWarning("An agent is missing a reference to their Mesh! Possession selection will not work.");
+            }
         }
         public void SelectAgent()
         {
-            m_CurrentMat.material = m_PossessionMaterial;
+            if (m_Mesh) // If m_Mesh hasn't been set, then neither has m_CurrentMat.
+            { 
+                m_CurrentMat.material = m_PossessionMaterial;
+            }
+            if (m_PossessionHeart && m_PossessionPulse) // If they have set these, we can turn them on.
+            {
+                m_PossessionHeart.Play();
+                m_PossessionPulse.Play();
+            }
         }
         public void DeselectAgent()
         {
-            m_CurrentMat.material = m_OriginalMat;
+            if (m_Mesh) // If m_Mesh hasn't been set, then neither has m_CurrentMat.
+            {
+                m_CurrentMat.material = m_OriginalMat;
+            }
+            if (m_PossessionHeart && m_PossessionPulse) // If they have set these, we can turn them off.
+            {
+                m_PossessionHeart.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                m_PossessionPulse.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            }
         }
         private void OnDrawGizmos()
         {

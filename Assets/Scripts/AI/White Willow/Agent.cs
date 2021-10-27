@@ -35,7 +35,8 @@ namespace WhiteWillow
 
         [HideInInspector]
         public PariahController PariahController;
-        private HostController m_HostController;
+        [HideInInspector]
+        public HostController m_HostController;
 
         public bool Possessed { get; private set; } = false;
         public bool EngagingTarget { get; private set; } = true;

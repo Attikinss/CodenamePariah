@@ -148,25 +148,14 @@ public class PariahController : InputController
         }
 	}
 
+    
+
 	private void FixedUpdate()
     {
         if (!PauseMenu.m_GameIsPaused)
         {
             if (m_Active)
                 Move();
-            else
-            {
-                if (m_CurrentPossessed != null)
-                {
-                    transform.position = m_CurrentPossessed.transform.position + Vector3.up * 0.75f;
-                    m_Rotation.x = m_CurrentPossessed.Orientation.eulerAngles.y;
-                    m_Rotation.y = m_CurrentPossessed.Orientation.eulerAngles.x;
-
-                    // Changed those localEulerAngles to just normal eulerAngles because the parent prefab of m_Orientation may be rotated.
-                    // This is the case now because the parent of m_Orientation is where the soldier/scientist mesh is.
-                }
-            }
-
 
             // Stop playing low hp sound.
             // We should stop playing the low health sound if we are playing it.
@@ -187,7 +176,30 @@ public class PariahController : InputController
                 Look();
             else
             {
+                // I moved this position and rotation update function from FixedUpdate() into this LateUpdate().
+                // I had to move it because I wanted Pariah's arms to match the direction and position of the agent that way we can play an animation from here
+                // when the user is in the agent and it will be correctly positioned.
+                // The reason why its LateUpdate is because the Look() code for the HostController is in LateUpdate() and so to match the HostController's 
+                // camera movement we had to put this in here.
+                if(m_CurrentPossessed != null)
+                {
+                    transform.position = m_CurrentPossessed.transform.position + Vector3.up * 0.75f;
 
+                    // Changed those localEulerAngles to just normal eulerAngles because the parent prefab of m_Orientation may be rotated.
+                    // This is the case now because the parent of m_Orientation is where the soldier/scientist mesh is.
+                    m_Rotation.x = m_CurrentPossessed.Orientation.eulerAngles.y;
+                    m_Rotation.y = m_CurrentPossessed.Orientation.eulerAngles.x;
+
+                    // Updating the rotation because now we have the animations that will sometimes play from Pariah even when the user is in an agent.
+                    // We need the arms to be rotated the correct way.
+
+                    // Old transform update.
+                    //transform.rotation = Quaternion.Euler(-m_Rotation.y, m_Rotation.x, 0.0f);
+
+                    // New transform update. // We want to make Pariah face the same direction in the X rotation as the player when they're in controlling the agent.
+                    transform.rotation = Quaternion.Euler(m_CurrentPossessed.m_HostController.Camera.transform.rotation.eulerAngles.x, m_Rotation.x, 0);
+                    m_Rotation.y = -m_CurrentPossessed.m_HostController.GetXRotation();
+                }
             }
         }
     }

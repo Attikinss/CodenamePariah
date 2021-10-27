@@ -1045,4 +1045,6 @@ public class HostController : InputController
     }
 
     public int GetOnDestroyDamage() { return m_OnDestroyedDamage; }
+
+    public float GetXRotation() { return m_XRotation; }
 }

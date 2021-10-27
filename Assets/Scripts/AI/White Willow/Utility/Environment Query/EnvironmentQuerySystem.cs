@@ -19,15 +19,16 @@ public static class EnvironmentQuerySystem
     public static bool NewQuery(QueryRequest request)
     {
         // Find the first thread available.
-        if (s_RequestsLocked)
-            return false;
-
-        s_RequestsLocked = true;
+        bool requestEnqueued = false;
+        
         lock (s_Requests)
         {
             s_Requests.Enqueue(request);
+            requestEnqueued = true;
         }
-        s_RequestsLocked = false;
+
+        if (!requestEnqueued)
+            return false;
 
         EQSThread thread = s_QueryThreads.FirstOrDefault(t => !t.Busy);
         if (thread == null && s_QueryThreads.Count < s_QueryThreads.Capacity)
@@ -410,14 +411,10 @@ public static class EnvironmentQuerySystem
 
         private void ResolveCurrentRequest()
         {
-            m_Query = new Query(m_Request.ID);
+            m_Request.Nodes.ToList().RemoveAll(node => node.Taken ||
+                (node.Position - m_Request.Origin).sqrMagnitude <= m_Request.Range * m_Request.Range);
 
-            //List<Vector3> agentPositions = WhiteWillow.AgentTracker.GetPositions();
-            foreach (var node in m_Request.Nodes)
-            {
-                if (!node.Taken && (node.Position - m_Request.Origin).sqrMagnitude <= m_Request.Range * m_Request.Range)
-                    m_Query.AddNode(node);
-            }
+            m_Query = new Query(m_Request.ID, m_Request.Nodes.ToList());
         }
 
         /*

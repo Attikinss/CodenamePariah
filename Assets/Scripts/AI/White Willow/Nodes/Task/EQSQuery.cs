@@ -22,7 +22,6 @@ public class EQSQuery : Task
     public float Angle = 75.0f;
 
     private EnvironmentQuerySystem.QueryRequest m_EQSRequest = null;
-    private EnvironmentQuerySystem.EQSNode m_CurrentNode = null;
     private bool m_EQSRequestSent = false;
 
     // Called before node is executed
@@ -61,6 +60,9 @@ public class EQSQuery : Task
                 //float prevPathLength = float.MaxValue;
                 foreach (var node in Owner.Agent.CurrentQuery.Values)
                 {
+                    if (node.Taken)
+                        continue;
+
                     Vector3 direction = Target.Value.transform.position - (node.Position + verticalOffset);
 
                     // Line of sight
@@ -70,30 +72,33 @@ public class EQSQuery : Task
                     if (Physics.Raycast(node.Position + verticalOffset, direction, out RaycastHit hitInfo))
                     {
                         //Debug.Log($"Success: {Owner.Agent.gameObject}");
-                        if (hitInfo.transform.gameObject == Target.Value &&
-                            Vector3.Distance(node.Position, Target.Value.transform.position) <= Owner.Agent.m_ViewRange)
+                        if (hitInfo.transform.gameObject == Target.Value)
                         {
-                            //float pathLength = Owner.Agent.CalculateTravelDistance(node.Position);
-                            //
-                            //if (pathLength < prevPathLength)
-                            //    prevPathLength = pathLength;
-
-                            if (MaintainTargetsSight)
+                            float distanceToPlayer = Vector3.Distance(node.Position, Target.Value.transform.position);
+                            if (distanceToPlayer <= Owner.Agent.m_ViewRange)
                             {
-                                float targetFacingAngle = Vector3.Angle((node.Position + verticalOffset)
-                                    - Target.Value.transform.position, Target.Value.transform.forward);
+                                //float pathLength = Owner.Agent.CalculateTravelDistance(node.Position);
+                                //
+                                //if (pathLength < prevPathLength)
+                                //    prevPathLength = pathLength;
 
-                                // Not in players peripheral/immediate view
-                                if (targetFacingAngle < -Angle || targetFacingAngle > Angle)
-                                    continue;
+                                if (MaintainTargetsSight)
+                                {
+                                    float targetFacingAngle = Vector3.Angle((node.Position + verticalOffset)
+                                        - Target.Value.transform.position, Target.Value.transform.forward);
+
+                                    // Not in players peripheral/immediate view
+                                    if (targetFacingAngle < -Angle || targetFacingAngle > Angle)
+                                        continue;
+                                }
+
+                                Owner.Agent.CurrentNode?.Release();
+                                Owner.Agent.CurrentNode = node;
+                                Owner.Agent.CurrentNode.Reserve(Owner.Agent);
+                                Owner.Agent.SetDestination(Owner.Agent.CurrentNode.Position);
+
+                                return NodeResult.Success;
                             }
-
-                            m_CurrentNode?.Release();
-                            m_CurrentNode = node;
-                            m_CurrentNode.Reserve(Owner.Agent);
-                            Owner.Agent.SetDestination(m_CurrentNode.Position);
-
-                            return NodeResult.Success;
                         }
                     }
                 }
@@ -138,15 +143,15 @@ public class EQSQuery : Task
         switch (DistanceCheck)
         {
             case DistanceCheck.ClosestTarget:
-                query.FilterByClosest(Target.Value.transform.position, Threshold);
+                query.FilterByClosest(Target.Value.transform.position, Distance);
                 break;
 
             case DistanceCheck.FurthestSelf:
-                query.FilterByFurthest(Owner.Agent.transform.position, Threshold);
+                query.FilterByFurthest(Owner.Agent.transform.position, Distance);
                 break;
 
             case DistanceCheck.FurthestTarget:
-                query.FilterByFurthest(Target.Value.transform.position, Threshold);
+                query.FilterByFurthest(Target.Value.transform.position, Distance);
                 break;
 
             default: break;
@@ -157,7 +162,12 @@ public class EQSQuery : Task
     {
         // Ensure a request is available for submission
         if (m_EQSRequest == null)
+        {
             m_EQSRequest = new EnvironmentQuerySystem.QueryRequest(Owner.Agent.transform.position, Range);
+
+            if (m_EQSRequest.Nodes.Count() == 0)
+                return;
+        }
 
         // Ensure a request was submitted successfully to the EQS
         if (!m_EQSRequestSent)

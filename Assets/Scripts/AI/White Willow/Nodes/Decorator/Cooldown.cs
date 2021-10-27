@@ -12,19 +12,17 @@ namespace WhiteWillow.Nodes
 
         protected override void OnEnter() { }
 
-        protected override void OnExit()
-        {
-            m_CachedTime = Time.time;
-        }
+        protected override void OnExit() { }
 
         protected override NodeResult OnTick()
         {
-            if (Time.time - m_CachedTime >= m_CooldownTime)
+            if (m_CachedTime < Time.time)
             {
-                if (Child == null)
+                if (Child != null)
+                {
+                    m_CachedTime = Time.time + m_CooldownTime;
                     return Child.Tick();
-
-                return NodeResult.Failure;
+                }
             }
 
             return NodeResult.Failure;

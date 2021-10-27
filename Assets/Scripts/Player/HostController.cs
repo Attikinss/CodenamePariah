@@ -64,6 +64,7 @@ public class HostController : InputController
     public DeathIncarnateAbility m_DeathIncarnateAbility;
 
     // Mesh of the soldier or scientist.
+    [Tooltip("Mesh of soldier or scientist to hide when entering unit.")]
     public GameObject m_Mesh;
 
 	private void Awake()

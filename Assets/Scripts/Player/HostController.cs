@@ -477,6 +477,9 @@ public class HostController : InputController
                     StartCoroutine(Dash(hitInfo.point, -forwardDir * 0.5f, m_DashDuration));
                 else
                     StartCoroutine(Dash(transform.position + forwardDir * m_DashDistance, Vector3.zero, m_DashDuration));
+
+                // Play Pariah's arms dash animation.
+                GameManager.s_Instance.m_Pariah.PlayArmAnim("OnDash");
             }
         }
     }

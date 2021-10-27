@@ -77,6 +77,9 @@ public abstract class InputController : MonoBehaviour
     {
         if (!m_DashCoolingDown)
         {
+            // Play Pariah's arms dash animation.
+            GameManager.s_Instance.m_Pariah.PlayArmAnim("OnDash");
+
             m_DashCoolingDown = true;
             float currentTime = 0.0f;
 

@@ -85,6 +85,8 @@ public class PariahController : InputController
 
     public SkinnedMeshRenderer m_Arms;
 
+    public Animator m_ArmsAnimator;
+
     private void Awake() => m_Rigidbody = GetComponent<Rigidbody>();
 
     private void Start()
@@ -282,7 +284,10 @@ public class PariahController : InputController
                 if (Physics.Raycast(m_Camera.transform.position, m_Camera.transform.forward, out RaycastHit hitInfo, m_DashDistance))
                 {
                     if (hitInfo.transform.TryGetComponent(out Agent agent))
+                    { 
                         StartCoroutine(Possess(agent));
+                        PlayArmAnim("OnDash");
+                    }
                 }
             }
         }
@@ -488,5 +493,49 @@ public class PariahController : InputController
         }
         else
             Debug.LogWarning("Pariah's arms have not been set!");
+    }
+
+    /// <summary>
+    /// Pass in the name of the trigger and this will call .SetTrigger().
+    /// </summary>
+    /// <param name="triggerName"></param>
+    public void PlayArmAnim(string triggerName)
+    {
+        if (m_ArmsAnimator == null)
+        {
+            Debug.LogWarning("Tried to play Pariah arm animation but PariahController is missing a reference to the arms animation controller.");
+            return;
+        }
+        else // Otherwise, we could find the arms animator.
+        { 
+            if (triggerName == "OnDash")
+            {
+                if (m_Arms.enabled == false) // If the arms are hidden, unhide them for the duration of the dash animation. This is so the hosts can use this animation.
+                {
+                    m_Arms.enabled = true;
+                    StartCoroutine(HideArms(1f)); // 1.02f is around about the time it takes for the animation to complete.
+                 
+                }
+                m_ArmsAnimator.SetTrigger(triggerName);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Will hide Pariah's arms in time amount of seconds.
+    /// </summary>
+    /// <param name="time">Elapsed time required before hiding Pariah's arms.</param>
+    /// <returns></returns>
+    IEnumerator HideArms(float time)
+    {
+        float elapsedTime = 0;
+
+        while (elapsedTime <= time)
+        {
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        m_Arms.enabled = false; // Hide Pariah's arms after this counter has completed.
     }
 }

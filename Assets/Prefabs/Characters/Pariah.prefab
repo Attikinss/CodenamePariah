@@ -78,7 +78,8 @@ MonoBehaviour:
   m_Power: 0
   m_AudioLowHPEvent: {fileID: 145288806}
   m_LookedAtAgent: {fileID: 0}
-  m_Arms: {fileID: 0}
+  m_Arms: {fileID: 8271582055200175944}
+  m_ArmsAnimator: {fileID: 1834799838}
 --- !u!114 &5488115989255903691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -662,6 +663,25 @@ Skybox:
   m_GameObject: {fileID: 5488115990317370183}
   m_Enabled: 1
   m_CustomSkybox: {fileID: 2100000, guid: f48a62f49825fb347b08d5ab4fad25ff, type: 2}
+--- !u!95 &1834799838
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5680244423843014648}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3fdcf2e4288acd14694f402a5cf30c67, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &440828157269051503
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -931,6 +951,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 3521729049090125281, guid: fe7bc427212c3fa469a8a757082dd85d, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 3f62a8c127e29ef489f359f1d2550212, type: 2}
     - target: {fileID: 4001389979216824790, guid: fe7bc427212c3fa469a8a757082dd85d, type: 3}
       propertyPath: m_Layer
       value: 12
@@ -973,8 +997,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe7bc427212c3fa469a8a757082dd85d, type: 3}
+--- !u!1 &5680244423843014648 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: fe7bc427212c3fa469a8a757082dd85d, type: 3}
+  m_PrefabInstance: {fileID: 4761749447178934953}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5016896296204516674 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fe7bc427212c3fa469a8a757082dd85d, type: 3}
+  m_PrefabInstance: {fileID: 4761749447178934953}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &8271582055200175944 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 3521729049090125281, guid: fe7bc427212c3fa469a8a757082dd85d, type: 3}
   m_PrefabInstance: {fileID: 4761749447178934953}
   m_PrefabAsset: {fileID: 0}

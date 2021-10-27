@@ -201,4 +201,12 @@ public class Animators
 		m_WeaponInspectAnimation = false;
 	}
 
+	/// <summary>
+	/// This is used to allow the player to fire even if they are inspecting their weapon.
+	/// </summary>
+	public void CancelWeaponInspect()
+	{
+		m_WeaponInspectAnimation = false;
+	}
+
 }

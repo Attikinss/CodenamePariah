@@ -65,7 +65,7 @@ MonoBehaviour:
   m_BulletForce: 5
   m_GunAimZPos: 0.195
   m_GunAimHeight: 1
-  m_GunAimSpeed: 0.25
+  m_GunAimSpeed: 9
   m_GunAimSwayStrength: 0.5
   m_GunSwayStrength: 1
   m_GunSwayReturn: 6

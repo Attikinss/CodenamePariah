@@ -60,6 +60,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Console",
+                    "type": "Button",
+                    "id": "cc55ea85-71d3-427a-9992-0c91ad4b4796",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -337,6 +345,17 @@
                     "action": "Heal",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e5d48bc6-fd95-45ab-b66b-a75c1db6fc3b",
+                    "path": "<Keyboard>/quote",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KBM",
+                    "action": "Console",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -524,6 +543,14 @@
                     "name": "Heal",
                     "type": "Button",
                     "id": "a720b1b7-c6ba-42fc-bcb8-db538afd4fec",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Console",
+                    "type": "Button",
+                    "id": "21ee1f3a-b743-43ca-87b1-c189f7302e80",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -1011,6 +1038,17 @@
                     "processors": "",
                     "groups": "KBM",
                     "action": "Heal",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a3931781-f36a-4e3d-a043-ab9f56205b97",
+                    "path": "<Keyboard>/quote",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KBM",
+                    "action": "Console",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

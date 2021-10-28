@@ -89,6 +89,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SmallCrate_001
       objectReference: {fileID: 0}
+    - target: {fileID: 8209737149241857114, guid: ff2050da3703af3479a6397231826d94, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 71accc6d7b398a245b1803178a05dda7, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ff2050da3703af3479a6397231826d94, type: 3}
 --- !u!4 &663105168919922383 stripped
@@ -275,6 +279,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SmallCrate_001 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8209737149241857114, guid: ff2050da3703af3479a6397231826d94, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 71accc6d7b398a245b1803178a05dda7, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ff2050da3703af3479a6397231826d94, type: 3}
 --- !u!4 &7939591271636903627 stripped

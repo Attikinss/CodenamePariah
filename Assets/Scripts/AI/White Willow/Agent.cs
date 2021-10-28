@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.VFX;
 
 namespace WhiteWillow
 {
@@ -26,6 +27,11 @@ namespace WhiteWillow
         public Query CurrentQuery;
         public EnvironmentQuerySystem.EQSNode CurrentNode { get; set; }
         public Weapon m_Weapon;
+        [Tooltip("The mesh that we apply the possession shader to.")]
+        public GameObject m_Mesh;
+        public Material m_PossessionMaterial;
+        public ParticleSystem m_PossessionHeart;
+        public ParticleSystem m_PossessionPulse;
 
         [SerializeField]
         private Animator m_Animator;
@@ -40,7 +46,12 @@ namespace WhiteWillow
         public Vector3 Destination { get; private set; }
         public Vector3 FacingDirection { get; private set; }
 
-        private void Awake()
+        private Material m_OriginalMat;
+        private SkinnedMeshRenderer m_CurrentMat;
+        private MeshRenderer m_CurrentMatNoRenderer; // Because the soldiers don't have an animation yet, we have the temporary case of needing to
+                                                     // use a normal MeshRenderer instead.
+
+		private void Awake()
 		{
             m_RuntimeTree = InputTree?.Clone(gameObject.name);
             m_RuntimeTree?.SetAgent(this);
@@ -50,6 +61,8 @@ namespace WhiteWillow
 
             PariahController = FindObjectOfType<PariahController>();
             m_RuntimeTree.Blackboard?.UpdateEntryValue<GameObject>("Target", PariahController?.gameObject);
+
+            CacheOriginalMaterial();
 
         }
         private void Update()
@@ -140,6 +153,7 @@ namespace WhiteWillow
             m_NavAgent.enabled = false;
 
             m_RuntimeTree.Blackboard?.UpdateEntryValue<GameObject>("Target", this.gameObject);
+
             PariahController?.Disable();
             m_HostController?.Enable();
         }
@@ -149,6 +163,10 @@ namespace WhiteWillow
             Possessed = false;
             m_NavAgent.enabled = true;
 
+            // The issue of pariah not being orientated the same way as the soldier or scientist on release comes from if the soldier/scientist parent prefab
+            // is rotated. The parent prefab is the one that has the mesh.
+            // The problem is solved in the FixedUpdate() in PariahController.cs.
+       
             m_HostController?.Disable();
             PariahController?.Enable();
             m_RuntimeTree.Blackboard?.UpdateEntryValue<GameObject>("Target", PariahController.gameObject);
@@ -291,6 +309,59 @@ namespace WhiteWillow
             return false;
         }
 
+        private void CacheOriginalMaterial()
+        {
+            if (m_Mesh)
+            {
+                if (m_Mesh.TryGetComponent<SkinnedMeshRenderer>(out SkinnedMeshRenderer renderer))
+                {
+                    m_CurrentMat = renderer;
+                }
+                else if (m_Mesh.TryGetComponent<MeshRenderer>(out MeshRenderer rendererLame))
+                {
+                    m_CurrentMatNoRenderer = rendererLame;
+                }
+
+                if (m_CurrentMat)
+                    m_OriginalMat = m_CurrentMat.material;
+                else if (m_CurrentMatNoRenderer)
+                    m_OriginalMat = m_CurrentMatNoRenderer.material;
+            }
+            else
+            {
+                Debug.LogWarning("An agent is missing a reference to their Mesh! Possession selection will not work.");
+            }
+        }
+        public void SelectAgent()
+        {
+            if (m_Mesh) // If m_Mesh hasn't been set, then neither has m_CurrentMat.
+            {
+                if (m_CurrentMat)
+                    m_CurrentMat.material = m_PossessionMaterial;
+                else if (m_CurrentMatNoRenderer)
+                    m_CurrentMatNoRenderer.material = m_PossessionMaterial;
+            }
+            if (m_PossessionHeart && m_PossessionPulse) // If they have set these, we can turn them on.
+            {
+                m_PossessionHeart.Play();
+                m_PossessionPulse.Play();
+            }
+        }
+        public void DeselectAgent()
+        {
+            if (m_Mesh) // If m_Mesh hasn't been set, then neither has m_CurrentMat.
+            {
+                if (m_CurrentMat)
+                    m_CurrentMat.material = m_OriginalMat;
+                else if (m_CurrentMatNoRenderer)
+                    m_CurrentMatNoRenderer.material = m_OriginalMat;
+            }
+            if (m_PossessionHeart && m_PossessionPulse) // If they have set these, we can turn them off.
+            {
+                m_PossessionHeart.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                m_PossessionPulse.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            }
+        }
         private void OnDrawGizmos()
         {
             DrawArrow(transform.position - Vector3.up, Destination, Color.white);

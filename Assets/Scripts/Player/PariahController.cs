@@ -78,6 +78,9 @@ public class PariahController : InputController
     public FMODAudioEvent m_AudioLowHPEvent;
     private bool m_IsPlayingLowHP = false;
 
+    [HideInInspector]
+    public Agent m_LookedAtAgent = null;
+
     private void Awake() => m_Rigidbody = GetComponent<Rigidbody>();
 
     private void Start()
@@ -90,7 +93,55 @@ public class PariahController : InputController
         StartCoroutine(DrainHealth(m_HealthDrainDelay));
     }
 
-    private void FixedUpdate()
+	private void Update()
+	{
+        // Currently I'm using this update function to handle tracking what agent Pariah is looking at.
+        // When Pariah looks at an agent, we want to apply the possession shader.
+
+        if (m_CurrentPossessed == null) // Only do this if we are not in a unit.
+        {
+            RaycastHit lookHit;
+            if (Physics.Raycast(m_Camera.transform.position, m_Camera.transform.forward, out lookHit, m_DashDistance))
+            {
+                // This is the same raycast settings as used in the OnPossession function.
+                if (lookHit.transform.TryGetComponent(out Agent agent))
+                {
+                    // We are looking at a selectable agent!
+
+                    if (m_LookedAtAgent) // If we have a reference to a previous looked at agent, we have to reset their shader before we select a new agent.
+                    {
+                        m_LookedAtAgent.DeselectAgent();
+                    }
+
+                    // Now that we have reset the previously looked at agent's shader, we can work with the new agent.
+                    // Set currently looked at agent to this one.
+                    m_LookedAtAgent = agent;
+                    // Set the new agent's shader to the possession one.
+                    m_LookedAtAgent.SelectAgent();
+                }
+                else
+                {
+                    // We are looking at something, but not an agent. So let's clear the currently looked at agent if we have one.
+                    if (m_LookedAtAgent)
+                    {
+                        m_LookedAtAgent.DeselectAgent();
+                        m_LookedAtAgent = null;
+                    }
+                }
+            }
+            else
+            {
+                // The raycast failed to hit anything. We should deselect and reset the shader on any selected agent, if we have one.
+                if (m_LookedAtAgent)
+                {
+                    m_LookedAtAgent.DeselectAgent();
+                    m_LookedAtAgent = null;
+                }
+            }
+        }
+	}
+
+	private void FixedUpdate()
     {
         if (!PauseMenu.m_GameIsPaused)
         {
@@ -101,8 +152,11 @@ public class PariahController : InputController
                 if (m_CurrentPossessed != null)
                 {
                     transform.position = m_CurrentPossessed.transform.position + Vector3.up * 0.75f;
-                    m_Rotation.x = m_CurrentPossessed.Orientation.localEulerAngles.y;
-                    m_Rotation.y = m_CurrentPossessed.Orientation.localEulerAngles.x;
+                    m_Rotation.x = m_CurrentPossessed.Orientation.eulerAngles.y;
+                    m_Rotation.y = m_CurrentPossessed.Orientation.eulerAngles.x;
+
+                    // Changed those localEulerAngles to just normal eulerAngles because the parent prefab of m_Orientation may be rotated.
+                    // This is the case now because the parent of m_Orientation is where the soldier/scientist mesh is.
                 }
             }
 
@@ -384,4 +438,10 @@ public class PariahController : InputController
             m_AudioLowHPEvent.StopSound(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         }
     }
+
+
+    /// <summary>
+    /// Made this function so I wouldn't have to make m_CurrentPossessed a public variable. I needed to be able to clear this back to null.
+    /// </summary>
+    public void ClearCurrentPossessed() { m_CurrentPossessed = null; }
 }

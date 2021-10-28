@@ -102,7 +102,13 @@ public abstract class InputController : MonoBehaviour
         m_DashCoolingDown = false;
     }
 
-
+    public void OnConsoleToggle(InputAction.CallbackContext value)
+    {
+        if (value.performed)
+        {
+            CustomConsole.Toggle();
+        }
+    }
     public void ControllerRumbleOnce(float stength)
     {
         Haptics.Rumble(stength);

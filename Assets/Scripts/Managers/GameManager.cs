@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.VFX;
-
+using UnityEngine.AI;
 using UnityEngine.Rendering.HighDefinition;
+using System;
 
 /// <summary>
 /// This GameManager is a temporary class by Daniel. I'm using it now just as a place to store all the weapon shot decals.
@@ -60,11 +59,12 @@ public class GameManager : MonoBehaviour
 
 
     // Storing door information for when reloading at a checkpoint.
-    public static List<Door> s_AllDoors = new List<Door>();
+    public static List<ToggableObject> s_AllToggables = new List<ToggableObject>();
     public static bool s_IsNotFirstLoad = false;
 
     public static int s_HighestCheckPointLevel = 0;
     public static Vector3 s_CheckPointPos;
+    public static GameObject s_CheckpointAgentPrefab; // It's important that this is the prefab because we will be instantiating it.
 
 
     private void Awake()
@@ -149,6 +149,9 @@ public class GameManager : MonoBehaviour
         {
             // If the player has reached a check point, spawn them there the next time they die.
             SpawnAtCheckPoint();
+
+            // Technically, somewhere we are still trying to have Pariah automatically posess the starting agent but because that system has a distance check this
+            // works.
         }
 
     }
@@ -246,18 +249,18 @@ public class GameManager : MonoBehaviour
         //WStartCoroutine(controller.RunWeaponInspect(5));
     }
 
-    public static void AddDoor(int arenaID, GameObject openDoor, GameObject closeDoor, bool isOpen)
+    public static void AddToggable(int arenaID, GameObject openObj, GameObject closeObj, bool isOpen)
     {
         // To prevent the same monobehaviour ArenaManager's from sending the GameManager their doors on the following reloads of the game, we check
         // the ID of the requested created door with the doors we already have. If they match, it means we already know about that door and don't need it.
-        for (int i = 0; i < s_AllDoors.Count; i++)
+        for (int i = 0; i < s_AllToggables.Count; i++)
         {
-            if (arenaID == s_AllDoors[i].ID)
+            if (arenaID == s_AllToggables[i].ID)
             {
                 // Although we already have this door, we still need to re-grab the game objects. This is because on a scene reload the old game object
                 // references become null.
-                s_AllDoors[i].m_openDoorObj = openDoor;
-                s_AllDoors[i].m_closedDoorObj = closeDoor;
+                s_AllToggables[i].m_openObj = openObj;
+                s_AllToggables[i].m_closedObj = closeObj;
 
                 return; // Early out, we already have this door!
             }
@@ -265,9 +268,9 @@ public class GameManager : MonoBehaviour
 
         // Otherwise, this means that it's the first time we're receiving these doors (The first time the scene is loaded.)
 
-        Door newDoor = new Door(arenaID, openDoor, closeDoor, isOpen);
+        ToggableObject newToggable = new ToggableObject(arenaID, openObj, closeObj, isOpen);
 
-        s_AllDoors.Add(newDoor);
+        s_AllToggables.Add(newToggable);
     }
 
     /// <summary>
@@ -275,9 +278,9 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public static void RefreshDoors() 
     {
-        for (int i = 0; i < s_AllDoors.Count; i++)
+        for (int i = 0; i < s_AllToggables.Count; i++)
         {
-            s_AllDoors[i].Toggle(s_AllDoors[i].m_IsOpen);
+            s_AllToggables[i].Toggle(s_AllToggables[i].m_IsOpen);
         }
     }
 
@@ -285,32 +288,34 @@ public class GameManager : MonoBehaviour
     /// Gets a door with a matching arena ID.
     /// </summary>
     /// <param name="arenaID"></param>
-    public static Door GetDoor(int arenaID)
+    public static ToggableObject GetDoor(int arenaID)
     {
-        for (int i = 0; i < s_AllDoors.Count; i++)
+        for (int i = 0; i < s_AllToggables.Count; i++)
         {
-            if (s_AllDoors[i].ID == arenaID)
+            if (s_AllToggables[i].ID == arenaID)
             {
-                return s_AllDoors[i];
+                return s_AllToggables[i];
             }
         }
 
         return null;
     }
 
-    public static void SetCheckPoint(int checkPointLevel, Vector3 pos)
+    public static void SetCheckPoint(int checkPointLevel, Vector3 pos, GameObject agentPrefab)
     {
         if (s_HighestCheckPointLevel == 0)
         {
             // If our highest check point is level 0, we'll take any we can get.
             s_HighestCheckPointLevel = checkPointLevel;
             s_CheckPointPos = pos;
+            s_CheckpointAgentPrefab = agentPrefab;
         }
         else if (checkPointLevel > s_HighestCheckPointLevel)
         {
             // We've reached a higher check point, so we'll set ours to that one.
             s_HighestCheckPointLevel = checkPointLevel;
             s_CheckPointPos = pos;
+            s_CheckpointAgentPrefab = agentPrefab;
         }
     }
 
@@ -318,6 +323,47 @@ public class GameManager : MonoBehaviour
     {
         // If we spawn at a check point, we wont spawn into an agent immediately.
         m_Pariah.transform.position = s_CheckPointPos;
+        if (s_CheckpointAgentPrefab)
+        {
+            // There is an agent prefab that we have to spawn into. For now, because we don't force spawning into agents, we should instantiate the agent at the same
+            // location we are spawning at and then immediately call Possess() to get into the agent.
+            GameObject newAgent = GameObject.Instantiate(s_CheckpointAgentPrefab);
+            newAgent.transform.parent = null;
+
+            // For Unity reasons, we have to disable the NavMeshAgent component before we can move the agent. This is because the component locks the position.
+            // I think disabling/enabling like this is okay, but if issues arise maybe try deactivate the gameobject of the agent completely, move it, and then re enable the
+            // game object.
+            NavMeshAgent navAgent = newAgent.GetComponent<NavMeshAgent>();
+            navAgent.enabled = false;
+            newAgent.transform.position = s_CheckPointPos;
+            newAgent.name = "Test Agent";
+            navAgent.enabled = true;
+            
+
+            m_Pariah.ForceInstantPossess(newAgent.GetComponent<WhiteWillow.Agent>());
+        }
     }
+
+    public static void ResetCheckpoint()
+    {
+        s_HighestCheckPointLevel = 0;
+        s_CheckPointPos = Vector3.zero;
+    }
+
+    /// <summary>
+    /// Sends updated door information to the GameManager so it has memory of the state of the door when it reloads at a checkpoint.
+    /// </summary>
+    public void SendDoorData(bool isOpen, int doorID)
+    {
+        ToggableObject ourDoor = GameManager.GetDoor(doorID);
+        ourDoor.m_IsOpen = isOpen;
+    }
+
+    public static Guid GetGUID()
+    {
+        Guid newGuid = Guid.NewGuid();
+        return newGuid;
+    }
+
 
 }

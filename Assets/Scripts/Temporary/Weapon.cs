@@ -134,6 +134,8 @@ public class Weapon : MonoBehaviour
         //m_ReserveAmmoLeft = m_ReserveAmmo; // Removed reserve ammo for the left gun because the left and right gun ammo pools are going to be the same.        m_RoundsInMagazineLeft = m_RoundsInMagazine;
 
 
+        m_Particles.CacheBulletParticle();
+
 
     }
 	private void Start()
@@ -478,7 +480,7 @@ public class Weapon : MonoBehaviour
         Vector3 currentPosition = weaponConfig.m_ScopeCentre.position;
         Vector3 requiredChange = centre - currentPosition;
 
-        gunTransform.position += requiredChange * weaponConfig.m_GunAimSpeed;
+        gunTransform.position += requiredChange * weaponConfig.m_GunAimSpeed * Time.deltaTime;
     }
 
     private Vector3 WeaponBob()
@@ -818,7 +820,7 @@ public class Weapon : MonoBehaviour
             float requiredChange = desiredFOV - currentFOV;
 
             if(!GetReloadState() && !m_DualWield) // Wont zoom in if we are reloading or if we are using a dual wielded weapon.
-                m_Camera.fieldOfView += requiredChange * 0.45f;
+                m_Camera.fieldOfView += requiredChange * 0.45f * Time.deltaTime;
 
 
 
@@ -1162,5 +1164,26 @@ public class Weapon : MonoBehaviour
     public void PlayBulletEffect(bool isDualWield, bool hasHit, Vector3 direction)
     {
         m_Particles.PlayBulletEffect(isDualWield, hasHit, direction);
+        
     }
+
+	public void OnDrawGizmos()
+	{
+        // Only draw if we are in this agent.
+        if (m_Inventory && m_Inventory.Owner && m_Inventory.Owner.Possessed)
+        { 
+            m_Particles.DrawBulletPFXGizmo();
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(m_Camera.transform.position, m_Camera.transform.forward * 1000);
+            Ray cameraRay = new Ray(m_Camera.transform.position, m_Camera.transform.forward);
+
+            RaycastHit hit;
+            if (Physics.Raycast(cameraRay, out hit, 1000))
+            {
+
+                Gizmos.DrawSphere(hit.point, 0.25f);
+            }
+        }
+
+	}
 }

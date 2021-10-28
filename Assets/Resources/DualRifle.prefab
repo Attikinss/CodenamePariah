@@ -404,6 +404,7 @@ MonoBehaviour:
     - {fileID: 7715845259356758369}
     - {fileID: 7715845260220573547}
     m_BulletParticle: {fileID: 1477674573549178284}
+    m_ClonedBulletParticle: {fileID: 0}
     m_AdditionalBulletParticle: {fileID: 3847315552241256018}
   m_Animators:
     m_GunAnimators:
@@ -507,7 +508,7 @@ PrefabInstance:
     - target: {fileID: 5910608044124843168, guid: fbd60bdd8f7766f4883e45cb72840469, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2100000, guid: 90620108f8ab4364eb617cc16295dc39, type: 2}
     - target: {fileID: 5910608044124843169, guid: fbd60bdd8f7766f4883e45cb72840469, type: 3}
       propertyPath: m_Name
       value: PFX_AssaultRifle_Cartridges
@@ -4156,7 +4157,7 @@ PrefabInstance:
     - target: {fileID: 5910608044124843168, guid: fbd60bdd8f7766f4883e45cb72840469, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2100000, guid: 90620108f8ab4364eb617cc16295dc39, type: 2}
     - target: {fileID: 5910608044124843169, guid: fbd60bdd8f7766f4883e45cb72840469, type: 3}
       propertyPath: m_Name
       value: PFX_AssaultRifle_Cartridges

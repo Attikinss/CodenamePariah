@@ -118,6 +118,10 @@ public class PauseMenu : MonoBehaviour
         //StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex + 1));
         
         StartCoroutine(LoadLevel());
+
+
+        // When clicking the play button, we want to start a new game afresh. So this means wiping the checkpoint history.
+        GameManager.ResetCheckpoint();
     }
 
     /// <summary>Loads the gameplay scene.</summary>

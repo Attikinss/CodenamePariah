@@ -855,7 +855,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 3895
   m_Weapon: {fileID: 0}
-  m_Mesh: {fileID: 8941653022888739124}
+  m_Mesh: {fileID: 6828119586766531441}
   m_PossessionMaterial: {fileID: 2100000, guid: 830099173e63fe849b967b38832db2a1, type: 2}
   m_PossessionHeart: {fileID: 2170632257535050417}
   m_PossessionPulse: {fileID: 2170632256913018863}
@@ -1217,7 +1217,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b861ad0d423527f409951c13742f95ad, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b861ad0d423527f409951c13742f95ad, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1257,13 +1257,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b861ad0d423527f409951c13742f95ad, type: 3}
+--- !u!4 &8601016158396914574 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b861ad0d423527f409951c13742f95ad, type: 3}
+  m_PrefabInstance: {fileID: 8130769590932864101}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &8941653022888739124 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: b861ad0d423527f409951c13742f95ad, type: 3}
   m_PrefabInstance: {fileID: 8130769590932864101}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &8601016158396914574 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b861ad0d423527f409951c13742f95ad, type: 3}
+--- !u!1 &6828119586766531441 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3320297839485179668, guid: b861ad0d423527f409951c13742f95ad, type: 3}
   m_PrefabInstance: {fileID: 8130769590932864101}
   m_PrefabAsset: {fileID: 0}

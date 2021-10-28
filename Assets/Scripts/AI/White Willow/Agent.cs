@@ -261,6 +261,12 @@ namespace WhiteWillow
 
         public bool TargetVisible(GameObject target, out float distance)
         {
+            if (target == null)
+            {
+                distance = 0.0f;
+                return false;
+            }
+
             // Do a simple raycast to target
             if (Physics.Raycast(transform.position, (target.transform.position
                 - transform.position).normalized, out RaycastHit hitInfo, m_ViewRange, m_IgnoreMask))

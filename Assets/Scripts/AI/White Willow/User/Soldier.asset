@@ -28,9 +28,9 @@ MonoBehaviour:
     height: 82
   Child: {fileID: -1972453154264525992}
   Target:
-    BlackboardValue: 0
+    BlackboardValue: 1
     Value: {fileID: 0}
-    Name: 
+    Name: Target
     Selection: 0
 --- !u!114 &-2873006661844372805
 MonoBehaviour:

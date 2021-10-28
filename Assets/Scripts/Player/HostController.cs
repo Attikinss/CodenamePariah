@@ -74,6 +74,7 @@ public class HostController : InputController
 
         
         Rigidbody = GetComponent<Rigidbody>();
+        Rigidbody.isKinematic = true;
 
         Cursor.lockState = CursorLockMode.Locked;
 
@@ -189,6 +190,7 @@ public class HostController : InputController
     {
         GameManager.s_CurrentHost = this;
 
+        Rigidbody.isKinematic = false;
         GetComponent<PlayerInput>().enabled = true;
         m_Active = true;
         m_Camera.enabled = true;
@@ -227,7 +229,7 @@ public class HostController : InputController
         m_UIManager.SetDeathIncarnateBar((float)pariah.m_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
 
 
-
+        Rigidbody.isKinematic = true;
         GameManager.s_CurrentHost = null;
 
         GetComponent<PlayerInput>().enabled = false;

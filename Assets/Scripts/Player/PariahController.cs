@@ -87,6 +87,7 @@ public class PariahController : InputController
 
     public Animator m_ArmsAnimator;
 
+    private bool m_IsDelayedDashing;
     private void Awake() => m_Rigidbody = GetComponent<Rigidbody>();
 
     private void Start()
@@ -249,10 +250,30 @@ public class PariahController : InputController
         {
             if (value.performed && !m_Dashing && !m_DashCoolingDown && !m_Possessing)
             {
-                if (Physics.Raycast(m_Camera.transform.position, m_Camera.transform.forward, out RaycastHit hitInfo, m_DashDistance))
-                    StartCoroutine(Dash(hitInfo.point, -m_Camera.transform.forward * 0.5f, m_DashDuration));
+
+                // This is an additional "layer" of dash code to have a delay before the actual dash begins.
+                // This snipper of code is copied from the HostController, there are more detailed comments located there too.
+
+                if (m_IsDelayedDashing) // This means we already have a dash in the process of being done.
+                {
+                    if (!m_Dashing && !m_DashCoolingDown) // If we aren't dashing, and the dash has cooled down, we can reset the m_IsDelayedDashing.
+                        m_IsDelayedDashing = false;
+                }
                 else
-                    StartCoroutine(Dash(m_Camera.transform.position + m_Camera.transform.forward * m_DashDistance, Vector3.zero, m_DashDuration));
+                {
+                    Debug.Log("====================================delay dashed====================================");
+                    m_IsDelayedDashing = true;
+                    m_Dashing = true;
+                    StartCoroutine(DelayedDash(GameManager.s_Instance.m_DashDelay));
+                }
+
+
+                // This peice of code is now moved into the DelayedDash() function.
+                 
+                //if (Physics.Raycast(m_Camera.transform.position, m_Camera.transform.forward, out RaycastHit hitInfo, m_DashDistance))
+                //    StartCoroutine(Dash(hitInfo.point, -m_Camera.transform.forward * 0.5f, m_DashDuration));
+                //else
+                //    StartCoroutine(Dash(m_Camera.transform.position + m_Camera.transform.forward * m_DashDistance, Vector3.zero, m_DashDuration));
             }
         }
     }
@@ -299,7 +320,7 @@ public class PariahController : InputController
 
         m_MoveVelocity += (moveDirection - m_MoveVelocity) * m_Acceleration;
 
-        if (!m_Dashing && !m_Possessing)
+        if (/*!m_Dashing && */!m_Possessing) // Commented out m_Dashing here to allow Pariah to move while dashing.
             m_Rigidbody.velocity = m_MoveVelocity;
 
         Telemetry.TracePosition("Pariah-Movement", transform.position, 0.05f, 150);
@@ -537,5 +558,47 @@ public class PariahController : InputController
         }
 
         m_Arms.enabled = false; // Hide Pariah's arms after this counter has completed.
+    }
+
+    /// <summary>
+    /// DelayedDash() acts as a wrapper around the old dash code to cause a delay coroutine to start before the actual dash can begin.
+    /// This is used because we want the dash to perform a few milliseconds after the animations plays, to make it look like Pariah is pulling the
+    /// unit forward.
+    /// </summary>
+    /// <param name="t">Amount of delay.</param>
+    /// <returns></returns>
+    IEnumerator DelayedDash(float t)
+    {
+        m_IsDelayedDashing = true;
+        // Play dash animation.
+        GameManager.s_Instance.m_Pariah.PlayArmAnim("OnDash");
+
+        float delayTime = 0.0f;
+        // Adding a start delay before actual dash is performed.
+        while (delayTime <= t)
+        {
+            delayTime += Time.deltaTime;
+            yield return null;
+        }
+
+
+        // Getting the correct forward vector. If we are in the air, we want to be able to move in any direction, however, when we are grounded, we want to
+        // ignore the camera being able to look up and down (rotation on the x axis).
+        Vector3 forwardDir = m_Camera.transform.forward;
+        //if (m_MovInfo.m_IsGrounded) This was copied from the HostController, but seeing as Pariah can't be grounded, I'll ignore this.
+        //    forwardDir = m_Orientation.forward;
+
+
+
+        // When we get to this point, we just continue with the ordinary dash.
+
+        if (Physics.Raycast(m_Camera.transform.position, m_Camera.transform.forward, out RaycastHit hitInfo, m_DashDistance))
+        {
+            StartCoroutine(Dash(hitInfo.point, -m_Camera.transform.forward * 0.5f, m_DashDuration, true));
+        }
+        else
+        { 
+            StartCoroutine(Dash(m_Camera.transform.position + m_Camera.transform.forward * m_DashDistance, Vector3.zero, m_DashDuration, true));
+        }
     }
 }

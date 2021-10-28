@@ -60,8 +60,8 @@ public class HostController : InputController
     public MovementInfo m_MovInfo = new MovementInfo();
     public CombatInfo m_CombatInfo = new CombatInfo();
 
-    [Tooltip("Delay that occurs at the start of a dash measured in seconds.")]
-    public float m_DashDelay = 0.08f;
+    //[Tooltip("Delay that occurs at the start of a dash measured in seconds.")]
+    //public float m_DashDelay = 0.08f;
     public DrainAbility m_DrainAbility;
     public DeathIncarnateAbility m_DeathIncarnateAbility;
 
@@ -490,8 +490,10 @@ public class HostController : InputController
                         m_IsDelayedDashing = false;
                 }
                 else 
-                { 
-                    StartCoroutine(DelayedDash(m_DashDelay));
+                {
+                    Debug.Log("====================================delay dashed====================================");
+                    m_Dashing = true;
+                    StartCoroutine(DelayedDash(GameManager.s_Instance.m_DashDelay));
                 }
                 
 

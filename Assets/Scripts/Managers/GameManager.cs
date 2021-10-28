@@ -66,7 +66,10 @@ public class GameManager : MonoBehaviour
     public static Vector3 s_CheckPointPos;
     public static GameObject s_CheckpointAgentPrefab; // It's important that this is the prefab because we will be instantiating it.
 
-
+    // This variable is used as the dash animation delay for soldiers, scientists and pariah so that the dash animation
+    // looks like it is pulling the player forwards, rather than playing instantly.
+    [Tooltip("Universal dash delay to match animation.")]
+    public float m_DashDelay = 1;
     private void Awake()
 	{
         m_Monobehaviour = this;

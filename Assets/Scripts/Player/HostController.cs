@@ -197,6 +197,8 @@ public class HostController : InputController
 
         CustomDebugUI.s_Instance.SetController(this);
 
+        // When the player controls a unit we also have to enable the skinned mesh renderers of the arms and weapons of that unit.
+        GetCurrentWeapon().ToggleWeapon(true);
 
         // When the player is controlling a unit, we set the weapons to be overlayed so they don't stick inside walls and stuff. It's reverted back in Disable().
         for (int i = 0; i < m_Inventory.m_Weapons.Count; i++)
@@ -237,6 +239,9 @@ public class HostController : InputController
         //HideHUD();
 
         CustomDebugUI.s_Instance.ClearController();
+
+        // When the player leaves a unit, we have to hide the skinned mesh renderers of the guns and arms.
+        GetCurrentWeapon().ToggleWeapon(false);
 
         // Reverting the layer back to what it was.
         for (int i = 0; i < m_Inventory.m_Weapons.Count; i++)

@@ -141,6 +141,12 @@ public class Weapon : MonoBehaviour
 	private void Start()
 	{
         m_UIManager = UIManager.s_Instance;
+
+        InitSkinnedMeshes();
+
+        // Hide the skinned mesh renderers of the weapons and arms. We only want them to show if the player is in FPS mode.
+        ToggleWeapon(false);
+
 	}
 
 	// Update is called once per frame
@@ -1091,6 +1097,63 @@ public class Weapon : MonoBehaviour
                 Gizmos.DrawSphere(hit.point, 0.25f);
             }
         }
-
 	}
+
+    /// <summary>
+    /// Used to turn the FPS gun on and off.
+    /// </summary>
+    /// <param name="toggle">Set to true if you want to show the arms and false if you want to hide them.</param>
+    public void ToggleWeapon(bool toggle)
+    {
+        for (int i = 0; i < m_Animators.m_SkinnedMeshes.Count; i++)
+        {
+            // First we will hide all the arms.
+            m_Animators.m_SkinnedMeshes[i].enabled = toggle;
+        }
+    }
+
+    /// <summary>
+    /// Temporary function to grab all the arm and gun skinned mesh renderers so that we have a reference to them.
+    /// The reference helps us enable/disable these meshes when the player leaves and enters the host.
+    /// This is temporary until I can work on the scientist/soldier prefabs.
+    /// </summary>
+    private void InitSkinnedMeshes()
+    {
+        // This whole function is relying on the first child of these animators be the skinned mesh renderer we're looking for.
+        // Really bad but I can't change the soldier/scientist prefabs right now so this will have to do.
+
+        for (int i = 0; i < m_Animators.m_ArmsAnimators.Count; i++)
+        {
+            // First we'll grab all the arms.
+            SkinnedMeshRenderer mesh = m_Animators.m_ArmsAnimators[i].transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
+            if (mesh == null) // If we couldn't find the skinned mesh renderer, log an error.
+            {
+                Debug.LogError("InitSkinnedMeshes could not find the skinned mesh renderer!");
+                return;
+            }
+            else // Otherwise, if we have found it, add it to the collection.
+            {
+                m_Animators.m_SkinnedMeshes.Add(mesh);
+            }
+        }
+
+        // Now we'll do the same for the guns.
+        for (int i = 0; i < m_Animators.m_GunAnimators.Count; i++)
+        {
+            SkinnedMeshRenderer mesh = m_Animators.m_GunAnimators[i].transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
+
+            if (mesh == null)
+            {
+                Debug.LogError("InitSkinnedMeshes could not find the skinned mesh renderer!");
+                return;
+            }
+            else // Otherwise, if we have found it, add it to the collection.
+            {
+                m_Animators.m_SkinnedMeshes.Add(mesh);
+            }
+        }
+
+        // Now, presumably we have found all the required skinned mesh renderers.
+
+    }
 }

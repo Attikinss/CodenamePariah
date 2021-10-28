@@ -1081,6 +1081,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: 3351752865165105999, guid: c09c029d69a612d48a5dfa6fdefbb62e, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 21b625e2b2d06e1479f5d0a13f85e98f, type: 2}
     - target: {fileID: 5097915449212692319, guid: c09c029d69a612d48a5dfa6fdefbb62e, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -1266,6 +1270,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Mesh_Character_Scientist_001
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d0f0307eaf2445843ba27deae9ffd875, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1392748651557730294, guid: d0f0307eaf2445843ba27deae9ffd875, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1392748651557730294, guid: d0f0307eaf2445843ba27deae9ffd875, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 698c386d04c6db34cbd75b42134f035d, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d0f0307eaf2445843ba27deae9ffd875, type: 3}
 --- !u!1 &7094497905823826397 stripped

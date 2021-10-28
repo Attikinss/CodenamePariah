@@ -4,6 +4,8 @@ using UnityEngine.InputSystem;
 using Tweening;
 using WhiteWillow;
 using UnityEngine.SceneManagement;
+//using FMOD;
+using FMODUnity;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PariahController : InputController
@@ -81,6 +83,10 @@ public class PariahController : InputController
     [HideInInspector]
     public Agent m_LookedAtAgent = null;
 
+    public SkinnedMeshRenderer m_Arms;
+
+    public Animator m_ArmsAnimator;
+
     private void Awake() => m_Rigidbody = GetComponent<Rigidbody>();
 
     private void Start()
@@ -91,6 +97,9 @@ public class PariahController : InputController
         m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
 
         StartCoroutine(DrainHealth(m_HealthDrainDelay));
+
+        FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
+        allBussess.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
     }
 
 	private void Update()
@@ -141,25 +150,14 @@ public class PariahController : InputController
         }
 	}
 
+    
+
 	private void FixedUpdate()
     {
         if (!PauseMenu.m_GameIsPaused)
         {
             if (m_Active)
                 Move();
-            else
-            {
-                if (m_CurrentPossessed != null)
-                {
-                    transform.position = m_CurrentPossessed.transform.position + Vector3.up * 0.75f;
-                    m_Rotation.x = m_CurrentPossessed.Orientation.eulerAngles.y;
-                    m_Rotation.y = m_CurrentPossessed.Orientation.eulerAngles.x;
-
-                    // Changed those localEulerAngles to just normal eulerAngles because the parent prefab of m_Orientation may be rotated.
-                    // This is the case now because the parent of m_Orientation is where the soldier/scientist mesh is.
-                }
-            }
-
 
             // Stop playing low hp sound.
             // We should stop playing the low health sound if we are playing it.
@@ -180,7 +178,30 @@ public class PariahController : InputController
                 Look();
             else
             {
+                // I moved this position and rotation update function from FixedUpdate() into this LateUpdate().
+                // I had to move it because I wanted Pariah's arms to match the direction and position of the agent that way we can play an animation from here
+                // when the user is in the agent and it will be correctly positioned.
+                // The reason why its LateUpdate is because the Look() code for the HostController is in LateUpdate() and so to match the HostController's 
+                // camera movement we had to put this in here.
+                if(m_CurrentPossessed != null)
+                {
+                    transform.position = m_CurrentPossessed.transform.position + Vector3.up * 0.75f;
 
+                    // Changed those localEulerAngles to just normal eulerAngles because the parent prefab of m_Orientation may be rotated.
+                    // This is the case now because the parent of m_Orientation is where the soldier/scientist mesh is.
+                    m_Rotation.x = m_CurrentPossessed.Orientation.eulerAngles.y;
+                    m_Rotation.y = m_CurrentPossessed.Orientation.eulerAngles.x;
+
+                    // Updating the rotation because now we have the animations that will sometimes play from Pariah even when the user is in an agent.
+                    // We need the arms to be rotated the correct way.
+
+                    // Old transform update.
+                    //transform.rotation = Quaternion.Euler(-m_Rotation.y, m_Rotation.x, 0.0f);
+
+                    // New transform update. // We want to make Pariah face the same direction in the X rotation as the player when they're in controlling the agent.
+                    transform.rotation = Quaternion.Euler(m_CurrentPossessed.m_HostController.Camera.transform.rotation.eulerAngles.x, m_Rotation.x, 0);
+                    m_Rotation.y = -m_CurrentPossessed.m_HostController.GetXRotation();
+                }
             }
         }
     }
@@ -191,6 +212,8 @@ public class PariahController : InputController
         GetComponent<Collider>().enabled = true;
         m_Active = true;
         m_Camera.enabled = true;
+
+        ToggleArms(true);
     }
 
     public override void Disable()
@@ -198,6 +221,8 @@ public class PariahController : InputController
         GetComponent<PlayerInput>().enabled = false;
         m_Active = false;
         m_Camera.enabled = false;
+
+        ToggleArms(false);
     }
 
     public override void OnLook(InputAction.CallbackContext value)
@@ -259,7 +284,10 @@ public class PariahController : InputController
                 if (Physics.Raycast(m_Camera.transform.position, m_Camera.transform.forward, out RaycastHit hitInfo, m_DashDistance))
                 {
                     if (hitInfo.transform.TryGetComponent(out Agent agent))
+                    { 
                         StartCoroutine(Possess(agent));
+                        PlayArmAnim("OnDash");
+                    }
                 }
             }
         }
@@ -348,6 +376,8 @@ public class PariahController : InputController
             // TODO: Kill pariah
             // Temporary: Reloads the current scene
             m_Dead = true;
+            FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
+            allBussess.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
             StartCoroutine(ReloadLevel());
         }
     }
@@ -370,6 +400,8 @@ public class PariahController : InputController
                 {
                     m_Health = 0;
                     m_Dead = true;
+                    FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
+                    allBussess.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
                     StartCoroutine(ReloadLevel());
                 }
 
@@ -428,6 +460,7 @@ public class PariahController : InputController
             m_IsPlayingLowHP = true;
             m_AudioLowHPEvent.Trigger();
         }
+       
     }
 
     private void StopLowHPSound()
@@ -437,6 +470,7 @@ public class PariahController : InputController
             m_IsPlayingLowHP = false;
             m_AudioLowHPEvent.StopSound(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         }
+        
     }
 
 
@@ -444,4 +478,64 @@ public class PariahController : InputController
     /// Made this function so I wouldn't have to make m_CurrentPossessed a public variable. I needed to be able to clear this back to null.
     /// </summary>
     public void ClearCurrentPossessed() { m_CurrentPossessed = null; }
+
+    /// <summary>
+    /// Used to hide and unhide Pariah's arms.
+    /// </summary>
+    private void ToggleArms(bool mode)
+    {
+        if (m_Arms)
+        {
+            if (mode)
+                m_Arms.enabled = true;
+            else
+                m_Arms.enabled = false;
+        }
+        else
+            Debug.LogWarning("Pariah's arms have not been set!");
+    }
+
+    /// <summary>
+    /// Pass in the name of the trigger and this will call .SetTrigger().
+    /// </summary>
+    /// <param name="triggerName"></param>
+    public void PlayArmAnim(string triggerName)
+    {
+        if (m_ArmsAnimator == null)
+        {
+            Debug.LogWarning("Tried to play Pariah arm animation but PariahController is missing a reference to the arms animation controller.");
+            return;
+        }
+        else // Otherwise, we could find the arms animator.
+        { 
+            if (triggerName == "OnDash")
+            {
+                if (m_Arms.enabled == false) // If the arms are hidden, unhide them for the duration of the dash animation. This is so the hosts can use this animation.
+                {
+                    m_Arms.enabled = true;
+                    StartCoroutine(HideArms(1f)); // 1.02f is around about the time it takes for the animation to complete.
+                 
+                }
+                m_ArmsAnimator.SetTrigger(triggerName);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Will hide Pariah's arms in time amount of seconds.
+    /// </summary>
+    /// <param name="time">Elapsed time required before hiding Pariah's arms.</param>
+    /// <returns></returns>
+    IEnumerator HideArms(float time)
+    {
+        float elapsedTime = 0;
+
+        while (elapsedTime <= time)
+        {
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        m_Arms.enabled = false; // Hide Pariah's arms after this counter has completed.
+    }
 }

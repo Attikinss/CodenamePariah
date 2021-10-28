@@ -64,6 +64,7 @@ public class HostController : InputController
     public DeathIncarnateAbility m_DeathIncarnateAbility;
 
     // Mesh of the soldier or scientist.
+    [Tooltip("Mesh of soldier or scientist to hide when entering unit.")]
     public GameObject m_Mesh;
 
 	private void Awake()
@@ -476,6 +477,8 @@ public class HostController : InputController
                     StartCoroutine(Dash(hitInfo.point, -forwardDir * 0.5f, m_DashDuration));
                 else
                     StartCoroutine(Dash(transform.position + forwardDir * m_DashDistance, Vector3.zero, m_DashDuration));
+
+                
             }
         }
     }
@@ -636,7 +639,8 @@ public class HostController : InputController
 
         if (m_MovInfo.m_GroundNormal != Vector3.zero)
         {
-            xMov = m_MovInfo.m_ModifiedRight * x;
+            //xMov = m_MovInfo.m_ModifiedRight * x;
+            xMov = m_Orientation.transform.right * x;
             //zMov = m_MovInfo.m_ModifiedForward * z;
             zMov = m_Orientation.transform.forward * z;
         }
@@ -1043,4 +1047,6 @@ public class HostController : InputController
     }
 
     public int GetOnDestroyDamage() { return m_OnDestroyedDamage; }
+
+    public float GetXRotation() { return m_XRotation; }
 }

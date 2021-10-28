@@ -386,10 +386,10 @@ public class PariahController : InputController
     {
         while (true)
         {
-            if (!m_Dead && m_Active && !m_Possessing && !PauseMenu.m_GameIsPaused)
-            {
-                m_Health -= m_HealthDrainAmount;
-
+            if (!m_Dead && m_Active && !m_Possessing && !PauseMenu.m_GameIsPaused && GameManager.s_Instance.m_Achievements.hasEnteredUnit) // This added on check is
+            {                                                                                                                              // to only lose health
+                m_Health -= m_HealthDrainAmount;                                                                                           // after we have entered a
+                                                                                                                                           // unit for the first time.
                 if (m_Health <= m_LowHealthThreshold)
                 {
                     PlayLowHPSound();

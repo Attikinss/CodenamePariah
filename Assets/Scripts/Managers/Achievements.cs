@@ -7,6 +7,7 @@ using UnityEngine;
 /// </summary>
 public struct Achievements
 {
+    public bool hasEnteredUnit { get; private set; }
     public bool hasEnteredScientist { get; private set; }
     public bool hasEnteredSoldier { get; private set; }
 
@@ -27,6 +28,8 @@ public struct Achievements
 
                     weapon.PlayEquipSound();
 
+                    hasEnteredUnit = true;
+
                     break;
                 }
                 else
@@ -42,6 +45,8 @@ public struct Achievements
                     gun.SetTrigger("Equip");
 
                     weapon.PlayEquipSound();
+
+                    hasEnteredUnit = true;
 
                     break;
                 }

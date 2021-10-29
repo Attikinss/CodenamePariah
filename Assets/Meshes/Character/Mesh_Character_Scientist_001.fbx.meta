@@ -15,6 +15,12 @@ ModelImporter:
   - first:
       74: -3642767424479275067
     second: Pistol_Rig|rigAction
+  - first:
+      74: 7008296336672895754
+    second: rig|Armature|mixamo.com|Layer0
+  - first:
+      74: 3374748389425109202
+    second: rig|rigAction
   externalObjects: {}
   materials:
     materialImportMode: 2

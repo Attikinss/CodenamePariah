@@ -1270,6 +1270,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Mesh_Character_Scientist_001
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d0f0307eaf2445843ba27deae9ffd875, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1392748651557730294, guid: d0f0307eaf2445843ba27deae9ffd875, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1392748651557730294, guid: d0f0307eaf2445843ba27deae9ffd875, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 698c386d04c6db34cbd75b42134f035d, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d0f0307eaf2445843ba27deae9ffd875, type: 3}
 --- !u!1 &7094497905823826397 stripped

@@ -174,12 +174,20 @@ public struct ParticleEffects
 [System.Serializable]
 public class Animators
 {
+	[HideInInspector]
+	public List<SkinnedMeshRenderer> m_SkinnedMeshes;
+
 	public List<Animator> m_GunAnimators;
 	public List<Animator> m_ArmsAnimators;
 
 	public bool m_WeaponInspectAnimation;
 
 	public Coroutine m_WeaponInspectRoutine;
+
+	
+
+	// Prevents CancelWeaponInspect() from being called repeadetly.
+	public bool IsCancellingEquip = false;
 
 	//public bool CheckCinematic()
 	//{ 
@@ -199,6 +207,30 @@ public class Animators
 		}
 
 		m_WeaponInspectAnimation = false;
+	}
+
+	/// <summary>
+	/// This is used to allow the player to fire even if they are inspecting their weapon.
+	/// </summary>
+	/// <param name="t">Time until it is cancelled.</param>
+	public IEnumerator CancelWeaponInspect(float t)
+	{
+		if (!IsCancellingEquip) // Will only do this if we aren't already cancelling the animation.
+		{
+			IsCancellingEquip = true;
+			float elapsedTime = 0;
+			m_GunAnimators[0].SetTrigger("CancelEquip");
+			m_ArmsAnimators[0].SetTrigger("CancelEquip");
+
+			while (elapsedTime <= t)
+			{
+				elapsedTime += Time.deltaTime;
+				yield return null;
+			}
+
+			m_WeaponInspectAnimation = false;
+			IsCancellingEquip = false;
+		}
 	}
 
 }

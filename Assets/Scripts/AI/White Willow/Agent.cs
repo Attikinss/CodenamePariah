@@ -38,7 +38,8 @@ namespace WhiteWillow
 
         [HideInInspector]
         public PariahController PariahController;
-        private HostController m_HostController;
+        [HideInInspector]
+        public HostController m_HostController;
 
         public bool Possessed { get; private set; } = false;
         public bool EngagingTarget { get; private set; } = true;
@@ -46,6 +47,8 @@ namespace WhiteWillow
         public Vector3 Destination { get; private set; }
         public Vector3 FacingDirection { get; private set; }
 
+        // These references here are used to handle "selecting" the agent with the possession shader.
+        // We have to store it's original material and also have a reference to its mesh renderer so we can apply a new material.
         private Material m_OriginalMat;
         private SkinnedMeshRenderer m_CurrentMat;
         private MeshRenderer m_CurrentMatNoRenderer; // Because the soldiers don't have an animation yet, we have the temporary case of needing to

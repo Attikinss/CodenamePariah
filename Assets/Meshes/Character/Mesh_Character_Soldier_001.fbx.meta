@@ -2,7 +2,13 @@ fileFormatVersion: 2
 guid: 3ca196ae5397daf40bcafdeb5f35ebe9
 ModelImporter:
   serializedVersion: 21100
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      74: 9189011021669670985
+    second: Rig_Soldier|Armature|mixamo.com|Layer0
+  - first:
+      74: -7828737546772681206
+    second: Rifle|Armature|mixamo.com|Layer0
   externalObjects: {}
   materials:
     materialImportMode: 2

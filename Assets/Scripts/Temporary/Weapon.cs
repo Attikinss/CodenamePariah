@@ -141,6 +141,12 @@ public class Weapon : MonoBehaviour
 	private void Start()
 	{
         m_UIManager = UIManager.s_Instance;
+
+        InitSkinnedMeshes();
+
+        // Hide the skinned mesh renderers of the weapons and arms. We only want them to show if the player is in FPS mode.
+        ToggleWeapon(false);
+
 	}
 
 	// Update is called once per frame
@@ -657,11 +663,21 @@ public class Weapon : MonoBehaviour
         {
             if (m_SemiAuto) // If the gun is semi auto, we have one other check to do.
             {
+                // I've commented out this code so that the pistol can shoot as fast as the player can click.
+
                 // To prevent people from being able to spam semi automatic guns really fast, I'm going to prevent them from firing unless the animation is complete.
-                if (!m_Animators.m_GunAnimators[0].GetCurrentAnimatorStateInfo(0).IsName("Idle")) // Only semi automatic weapons in the game are not dual wielded so we don't have to check the whole list of gun animators.
-                {
-                    return false;
-                }
+                //if (!m_Animators.m_GunAnimators[0].GetCurrentAnimatorStateInfo(0).IsName("Idle")) // Only semi automatic weapons in the game are not dual wielded so we don't have to check the whole list of gun animators.
+                //{
+                //    return false;
+                //}
+               
+            }
+            if (m_Animators.CheckWeaponInspect()) // If we are inspecting our weapon, the first time we shoot should cancel the animation and the second time should
+            {                                     // allow us to shoot.
+                if(!m_Animators.IsCancellingEquip) // Will prevent us from starting the coroutine when it's already started.
+                    StartCoroutine(m_Animators.CancelWeaponInspect(0.4f));
+
+                return false; // Not ready to fire until weapon inspect has been cancelled.
             }
 
             // Defines the firing rate as rounds per minute (hard coded 60s)
@@ -1126,10 +1142,10 @@ public class Weapon : MonoBehaviour
     {
         if (dual)
         {
-            return GetFireState() && !GetReloadState(dual) && !m_Animators.CheckWeaponInspect(); // The normal fire mode is the left gun in a dual wield scenario, so we must check if the left gun is not reloading.
+            return GetFireState() && !GetReloadState(dual)/* && !m_Animators.CheckWeaponInspect()*/; // The normal fire mode is the left gun in a dual wield scenario, so we must check if the left gun is not reloading.
         }
         else
-            return (GetFireState() && !GetReloadState() && !m_Animators.CheckWeaponInspect());
+            return (GetFireState() && !GetReloadState()/* && !m_Animators.CheckWeaponInspect()*/);
     }
     public bool CanAim() { return (GetAimState() && !GetReloadState() && !m_Animators.m_WeaponInspectAnimation); }
     public void SetCamera(Camera camera) { m_Camera = camera; }
@@ -1184,6 +1200,63 @@ public class Weapon : MonoBehaviour
                 Gizmos.DrawSphere(hit.point, 0.25f);
             }
         }
-
 	}
+
+    /// <summary>
+    /// Used to turn the FPS gun on and off.
+    /// </summary>
+    /// <param name="toggle">Set to true if you want to show the arms and false if you want to hide them.</param>
+    public void ToggleWeapon(bool toggle)
+    {
+        for (int i = 0; i < m_Animators.m_SkinnedMeshes.Count; i++)
+        {
+            // First we will hide all the arms.
+            m_Animators.m_SkinnedMeshes[i].enabled = toggle;
+        }
+    }
+
+    /// <summary>
+    /// Temporary function to grab all the arm and gun skinned mesh renderers so that we have a reference to them.
+    /// The reference helps us enable/disable these meshes when the player leaves and enters the host.
+    /// This is temporary until I can work on the scientist/soldier prefabs.
+    /// </summary>
+    private void InitSkinnedMeshes()
+    {
+        // This whole function is relying on the first child of these animators be the skinned mesh renderer we're looking for.
+        // Really bad but I can't change the soldier/scientist prefabs right now so this will have to do.
+
+        for (int i = 0; i < m_Animators.m_ArmsAnimators.Count; i++)
+        {
+            // First we'll grab all the arms.
+            SkinnedMeshRenderer mesh = m_Animators.m_ArmsAnimators[i].transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
+            if (mesh == null) // If we couldn't find the skinned mesh renderer, log an error.
+            {
+                Debug.LogError("InitSkinnedMeshes could not find the skinned mesh renderer!");
+                return;
+            }
+            else // Otherwise, if we have found it, add it to the collection.
+            {
+                m_Animators.m_SkinnedMeshes.Add(mesh);
+            }
+        }
+
+        // Now we'll do the same for the guns.
+        for (int i = 0; i < m_Animators.m_GunAnimators.Count; i++)
+        {
+            SkinnedMeshRenderer mesh = m_Animators.m_GunAnimators[i].transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
+
+            if (mesh == null)
+            {
+                Debug.LogError("InitSkinnedMeshes could not find the skinned mesh renderer!");
+                return;
+            }
+            else // Otherwise, if we have found it, add it to the collection.
+            {
+                m_Animators.m_SkinnedMeshes.Add(mesh);
+            }
+        }
+
+        // Now, presumably we have found all the required skinned mesh renderers.
+
+    }
 }

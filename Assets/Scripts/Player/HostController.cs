@@ -60,11 +60,16 @@ public class HostController : InputController
     public MovementInfo m_MovInfo = new MovementInfo();
     public CombatInfo m_CombatInfo = new CombatInfo();
 
+    [Tooltip("Delay that occurs at the start of a dash measured in seconds.")]
+    public float m_DashDelay = 0.08f;
     public DrainAbility m_DrainAbility;
     public DeathIncarnateAbility m_DeathIncarnateAbility;
 
     // Mesh of the soldier or scientist.
+    [Tooltip("Mesh of soldier or scientist to hide when entering unit.")]
     public GameObject m_Mesh;
+
+    private bool m_IsDelayedDashing = false;
 
 	private void Awake()
 	{
@@ -198,6 +203,8 @@ public class HostController : InputController
 
         CustomDebugUI.s_Instance.SetController(this);
 
+        // When the player controls a unit we also have to enable the skinned mesh renderers of the arms and weapons of that unit.
+        GetCurrentWeapon().ToggleWeapon(true);
 
         // When the player is controlling a unit, we set the weapons to be overlayed so they don't stick inside walls and stuff. It's reverted back in Disable().
         for (int i = 0; i < m_Inventory.m_Weapons.Count; i++)
@@ -238,6 +245,9 @@ public class HostController : InputController
         //HideHUD();
 
         CustomDebugUI.s_Instance.ClearController();
+
+        // When the player leaves a unit, we have to hide the skinned mesh renderers of the guns and arms.
+        GetCurrentWeapon().ToggleWeapon(false);
 
         // Reverting the layer back to what it was.
         for (int i = 0; i < m_Inventory.m_Weapons.Count; i++)
@@ -470,14 +480,24 @@ public class HostController : InputController
         {
             if (value.performed && !m_Dashing && !m_DashCoolingDown)
             {
-                Vector3 forwardDir = m_Camera.transform.forward;
-                if (m_MovInfo.m_IsGrounded)
-                    forwardDir = m_Orientation.forward;
+                // The code below has been incorporated into the DelayedDash() function.
 
-                if (Physics.Raycast(m_Orientation.position, forwardDir, out RaycastHit hitInfo, m_DashDistance))
-                    StartCoroutine(Dash(hitInfo.point, -forwardDir * 0.5f, m_DashDuration));
-                else
-                    StartCoroutine(Dash(transform.position + forwardDir * m_DashDistance, Vector3.zero, m_DashDuration));
+                //Vector3 forwardDir = m_Camera.transform.forward;
+                //if (m_MovInfo.m_IsGrounded)
+                //    forwardDir = m_Orientation.forward;
+
+                if (m_IsDelayedDashing) // This means we already have a dash in the process of being done.
+                {
+                    if (!m_Dashing && !m_DashCoolingDown) // If we aren't dashing, and the dash has cooled down, we can reset the m_IsDelayedDashing.
+                        m_IsDelayedDashing = false;
+                }
+                else 
+                { 
+                    StartCoroutine(DelayedDash(m_DashDelay));
+                }
+                
+
+                
             }
         }
     }
@@ -638,7 +658,8 @@ public class HostController : InputController
 
         if (m_MovInfo.m_GroundNormal != Vector3.zero)
         {
-            xMov = m_MovInfo.m_ModifiedRight * x;
+            //xMov = m_MovInfo.m_ModifiedRight * x;
+            xMov = m_Orientation.transform.right * x;
             //zMov = m_MovInfo.m_ModifiedForward * z;
             zMov = m_Orientation.transform.forward * z;
         }
@@ -1045,4 +1066,43 @@ public class HostController : InputController
     }
 
     public int GetOnDestroyDamage() { return m_OnDestroyedDamage; }
+
+    public float GetXRotation() { return m_XRotation; }
+
+
+    IEnumerator DelayedDash(float t)
+    {
+        m_IsDelayedDashing = true;
+        // Play dash animation.
+        GameManager.s_Instance.m_Pariah.PlayArmAnim("OnDash");
+
+        float delayTime = 0.0f;
+        // Adding a start delay before actual dash is performed.
+        while (delayTime <= t)
+        {
+            delayTime += Time.deltaTime;
+            yield return null;
+        }
+
+
+        // Getting the correct forward vector. If we are in the air, we want to be able to move in any direction, however, when we are grounded, we want to
+        // ignore the camera being able to look up and down (rotation on the x axis).
+        Vector3 forwardDir = m_Camera.transform.forward;
+        if (m_MovInfo.m_IsGrounded)
+            forwardDir = m_Orientation.forward;
+
+        // When we get to this point, the delay has been done and we can continue with the rest of the dash.
+        if (Physics.Raycast(m_Orientation.position, forwardDir, out RaycastHit hitInfo, m_DashDistance))
+        {
+            //StartCoroutine(Dash(hitInfo.point, -forwardDir * 0.5f, m_DashDuration));
+            StartCoroutine(Dash(hitInfo.point, -forwardDir * 0.5f, m_DashDuration, true));
+        }
+        else
+        {
+            //StartCoroutine(Dash(transform.position + forwardDir * m_DashDistance, Vector3.zero, m_DashDuration));
+            StartCoroutine(Dash(transform.position + forwardDir * m_DashDistance, Vector3.zero, m_DashDuration, true));
+        }
+
+        
+    }
 }

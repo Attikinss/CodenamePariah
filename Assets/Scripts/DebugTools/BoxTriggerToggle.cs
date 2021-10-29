@@ -18,6 +18,9 @@ public class BoxTriggerToggle : MonoBehaviour
         Toggle
     }
 
+    [Tooltip("This determines whether or not the toggable object will be remembered between checkpoint loads.")]
+    public bool m_ShouldSaveData = true;
+
     [Tooltip("This ID should be unique to this instance.")]
     public int m_ID = 0;
 
@@ -65,17 +68,20 @@ public class BoxTriggerToggle : MonoBehaviour
         if (m_Exit)
             OnExit = Trigger;
 
-        // Telling the game manager about this toggle.
-        // The ArenaManager script contains both an open and close game object since it is really a door manager script.
-        // This script only has a reference to the object it will turn on or off, so we have to find out what this script will be doing (turning on or off) and
-        // then pass that information to the GameManager.
-        if (m_ToggleType == ToggleType.TurnOn)
-        {
-            GameManager.AddToggable(m_ID, m_ToggleObject, null, false); // This assumes closed by default.
-        }
-        else if (m_ToggleType == ToggleType.TurnOff)
-        {
-            GameManager.AddToggable(m_ID, null, m_ToggleObject, true); // This assumes open by default.
+        if (m_ShouldSaveData)
+        { 
+            // Telling the game manager about this toggle.
+            // The ArenaManager script contains both an open and close game object since it is really a door manager script.
+            // This script only has a reference to the object it will turn on or off, so we have to find out what this script will be doing (turning on or off) and
+            // then pass that information to the GameManager.
+            if (m_ToggleType == ToggleType.TurnOn)
+            {
+                GameManager.AddToggable(m_ID, m_ToggleObject, null, false); // This assumes closed by default.
+            }
+            else if (m_ToggleType == ToggleType.TurnOff)
+            {
+                GameManager.AddToggable(m_ID, null, m_ToggleObject, true); // This assumes open by default.
+            }
         }
     }
     
@@ -88,11 +94,13 @@ public class BoxTriggerToggle : MonoBehaviour
         {
             case ToggleType.TurnOn:
                 m_ToggleObject?.SetActive(true);
-                GameManager.s_Instance.SendDoorData(true, m_ID);
+                if(m_ShouldSaveData)
+                    GameManager.s_Instance.SendDoorData(true, m_ID);
                 break;
             case ToggleType.TurnOff:
                 m_ToggleObject?.SetActive(false);
-                GameManager.s_Instance.SendDoorData(false, m_ID);
+                if(m_ShouldSaveData)
+                    GameManager.s_Instance.SendDoorData(false, m_ID);
                 break;
             case ToggleType.Toggle:
                 m_ToggleObject?.SetActive(!m_ToggleObject.activeSelf);

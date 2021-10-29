@@ -86,7 +86,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 53c1efc1c660fbf4788aa6e6712abd8b, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 8556262120643298411, guid: c7fbcfedb43310a4dbf4adc37385182c, type: 3}
+      objectReference: {fileID: 2100000, guid: 699e0e6c24fc4e542ba292ed6b2f3068, type: 2}
     - target: {fileID: 919132149155446097, guid: 53c1efc1c660fbf4788aa6e6712abd8b, type: 3}
       propertyPath: m_Name
       value: Prop_Jar_001
@@ -149,6 +149,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: c63405a5d00a6f04188a80ebefdab390, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 699e0e6c24fc4e542ba292ed6b2f3068, type: 2}
     - target: {fileID: 919132149155446097, guid: c63405a5d00a6f04188a80ebefdab390, type: 3}
       propertyPath: m_Name
       value: Prop_Lid_001

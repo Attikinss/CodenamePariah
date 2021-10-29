@@ -358,6 +358,7 @@ MonoBehaviour:
     m_ModifiedRight: {x: 0, y: 0, z: 0}
     m_ModifiedForward: {x: 0, y: 0, z: 0}
     m_MoveDirection: {x: 0, y: 0, z: 0}
+  m_DashDelay: 0.08
   m_DrainAbility:
     damage: 2
     restore: 2
@@ -853,7 +854,7 @@ MonoBehaviour:
   m_FiringRange: 15
   m_IgnoreMask:
     serializedVersion: 2
-    m_Bits: 3895
+    m_Bits: 3891
   m_Weapon: {fileID: 0}
   m_Mesh: {fileID: 6828119586766531441}
   m_PossessionMaterial: {fileID: 2100000, guid: 830099173e63fe849b967b38832db2a1, type: 2}
@@ -861,6 +862,7 @@ MonoBehaviour:
   m_PossessionPulse: {fileID: 2170632256913018863}
   m_Animator: {fileID: 5616885186835425853}
   PariahController: {fileID: 0}
+  m_HostController: {fileID: 0}
 --- !u!195 &4223981802772051963
 NavMeshAgent:
   m_ObjectHideFlags: 0

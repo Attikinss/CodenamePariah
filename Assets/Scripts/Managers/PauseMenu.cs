@@ -48,6 +48,11 @@ public class PauseMenu : MonoBehaviour
 
     private void Awake()
     {
+       if (m_IsPauseMenu)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+       else
         Cursor.lockState = CursorLockMode.None;
     }
 

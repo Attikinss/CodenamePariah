@@ -6,10 +6,10 @@ using UnityEngine;
 public struct AudioConfig
 {
     [Header("Audio")]
-    public float MasterVolume;
-    public float SFXVolume;
-    public float MusicVolume;
-    public float DialogueVolume;
+    public int MasterVolume;
+    public int SFXVolume;
+    public int MusicVolume;
+    public int DialogueVolume;
 }
 
 [System.Serializable]

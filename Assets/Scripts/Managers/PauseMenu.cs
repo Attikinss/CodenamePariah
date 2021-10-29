@@ -46,6 +46,15 @@ public class PauseMenu : MonoBehaviour
     [Tooltip("Time it takes for transition between scenes.")]
     private float m_TransitionTime = 2f;
 
+    AsyncOperation asyncOperation;
+
+    private void Start()
+    {
+        Debug.Log("Loaded");
+        if (!m_IsPauseMenu)
+            StartCoroutine(StartLoadingLevel());
+    }
+
     private void Awake()
     {
        if (m_IsPauseMenu)
@@ -129,6 +138,19 @@ public class PauseMenu : MonoBehaviour
         GameManager.ResetCheckpoint();
     }
 
+    IEnumerator StartLoadingLevel()
+    {
+        asyncOperation = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1);
+        asyncOperation.allowSceneActivation = false;
+
+        while (!asyncOperation.isDone)
+        {
+            Debug.Log($"Progress: {asyncOperation.progress * 100}%");
+
+            yield return null;
+        }
+    }
+
     /// <summary>Loads the gameplay scene.</summary>
     /// <returns></returns>
     IEnumerator LoadLevel(/*int levelIndex*/)
@@ -140,11 +162,17 @@ public class PauseMenu : MonoBehaviour
         yield return new WaitForSeconds(m_TransitionTime);
 
         //SceneManager.LoadScene(levelIndex);
-//#if UNITY_EDITOR
-//        SceneManager.LoadScene("Test_Lauchlan_002");
-//#else
-        SceneManager.LoadScene("Level_001");
-//#endif
+        //#if UNITY_EDITOR
+        //        SceneManager.LoadScene("Test_Lauchlan_002");
+        //#else
+        if (asyncOperation.progress >= 0.9f)
+        {
+            Debug.Log("Loading");
+            asyncOperation.allowSceneActivation = true;
+        }
+        //SceneManager.LoadScene("Level_001", LoadSceneMode.Single);
+        //SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
+        //#endif
 
         //while (!asyncLoad.isDone)
         //{
@@ -160,7 +188,8 @@ public class PauseMenu : MonoBehaviour
 
         yield return new WaitForSeconds(m_TransitionTime);
 
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
+        //SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
     }
 
     /// <summary>Pauses the game.</summary>

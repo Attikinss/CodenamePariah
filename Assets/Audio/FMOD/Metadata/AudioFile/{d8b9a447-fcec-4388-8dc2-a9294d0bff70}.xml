@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="AudioFile" id="{d8b9a447-fcec-4388-8dc2-a9294d0bff70}">
+		<property name="assetPath">
+			<value>You Are Mine Low.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>2.6249886621315195</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{c506c6b6-b09d-408b-9b83-d4ca2175faed}</destination>
+		</relationship>
+	</object>
+</objects>

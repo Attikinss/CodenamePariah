@@ -60,16 +60,14 @@ public class HostController : InputController
     public MovementInfo m_MovInfo = new MovementInfo();
     public CombatInfo m_CombatInfo = new CombatInfo();
 
-    [Tooltip("Delay that occurs at the start of a dash measured in seconds.")]
-    public float m_DashDelay = 0.08f;
+    //[Tooltip("Delay that occurs at the start of a dash measured in seconds.")]
+    //public float m_DashDelay = 0.08f;
     public DrainAbility m_DrainAbility;
     public DeathIncarnateAbility m_DeathIncarnateAbility;
 
     // Mesh of the soldier or scientist.
     [Tooltip("Mesh of soldier or scientist to hide when entering unit.")]
     public GameObject m_Mesh;
-
-    private bool m_IsDelayedDashing = false;
 
 	private void Awake()
 	{
@@ -201,8 +199,12 @@ public class HostController : InputController
 
         CustomDebugUI.s_Instance.SetController(this);
 
-        // When the player controls a unit we also have to enable the skinned mesh renderers of the arms and weapons of that unit.
-        GetCurrentWeapon().ToggleWeapon(true);
+        // When the player controls a unit we also have to enable the skinned mesh renderers of the arms and weapons for every weapon of that unit.
+        for (int i = 0; i < m_Inventory.m_Weapons.Count; i++)
+        { 
+            // Enabling every weapon this unit has.
+            m_Inventory.m_Weapons[i].ToggleWeapon(true);
+        }
 
         // When the player is controlling a unit, we set the weapons to be overlayed so they don't stick inside walls and stuff. It's reverted back in Disable().
         for (int i = 0; i < m_Inventory.m_Weapons.Count; i++)
@@ -244,8 +246,13 @@ public class HostController : InputController
 
         CustomDebugUI.s_Instance.ClearController();
 
-        // When the player leaves a unit, we have to hide the skinned mesh renderers of the guns and arms.
-        GetCurrentWeapon().ToggleWeapon(false);
+        // When the player leaves a unit, we have to hide the skinned mesh renderers of the guns and arms for every weapon on this unit.
+        for (int i = 0; i < m_Inventory.m_Weapons.Count; i++)
+        {
+            // Enabling every weapon this unit has.
+            m_Inventory.m_Weapons[i].ToggleWeapon(false);
+        }
+
 
         // Reverting the layer back to what it was.
         for (int i = 0; i < m_Inventory.m_Weapons.Count; i++)
@@ -476,7 +483,7 @@ public class HostController : InputController
     {
         if (!PauseMenu.m_GameIsPaused)
         {
-            if (value.performed && !m_Dashing && !m_DashCoolingDown)
+            if (value.performed && !m_Dashing && m_CurrentDashCharges > 0 && !m_IsDelayedDashing)
             {
                 // The code below has been incorporated into the DelayedDash() function.
 
@@ -484,15 +491,17 @@ public class HostController : InputController
                 //if (m_MovInfo.m_IsGrounded)
                 //    forwardDir = m_Orientation.forward;
 
-                if (m_IsDelayedDashing) // This means we already have a dash in the process of being done.
-                {
-                    if (!m_Dashing && !m_DashCoolingDown) // If we aren't dashing, and the dash has cooled down, we can reset the m_IsDelayedDashing.
-                        m_IsDelayedDashing = false;
-                }
-                else 
-                { 
-                    StartCoroutine(DelayedDash(m_DashDelay));
-                }
+                //if (m_IsDelayedDashing) // This means we already have a dash in the process of being done.
+                //{
+                //    if (!m_Dashing && !m_DashCoolingDown) // If we aren't dashing, and the dash has cooled down, we can reset the m_IsDelayedDashing.
+                //        m_IsDelayedDashing = false;
+                //}
+                //else 
+                //{
+                Debug.Log("====================================delay dashed====================================");
+                m_Dashing = true;
+                StartCoroutine(DelayedDash(GameManager.s_Instance.m_DashDelay));
+                //}
                 
 
                 
@@ -600,6 +609,10 @@ public class HostController : InputController
             Rigidbody.useGravity = true;
 
             direction.y = Rigidbody.velocity.y;
+
+            // If we are dashing we want to set the downwards velocity to 0, so it feels like we have been given a push into the air.
+            if (m_Dashing)
+                direction.y = 0;
         }
         //else
         //{
@@ -733,6 +746,9 @@ public class HostController : InputController
         //m_Inventory.m_CurrentWeapon.gameObject.SetActive(true);
 
         m_Inventory.SetWeapon(index);
+
+        // Just incase the renderer is disabled, we enable it.
+        GetCurrentWeapon().ToggleWeapon(true);
 
         m_UIManager?.UpdateWeaponUI(m_Inventory.m_CurrentWeapon);
     }

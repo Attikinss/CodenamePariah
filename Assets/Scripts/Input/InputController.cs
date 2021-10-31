@@ -46,6 +46,13 @@ public abstract class InputController : MonoBehaviour
     [ReadOnly]
     protected bool m_DashCoolingDown = false;
 
+    [SerializeField]
+    [ReadOnly]
+    protected bool m_IsDelayedDashing = false;
+
+    protected int m_MaxDashCharges = 2;
+    protected int m_CurrentDashCharges = 2;
+
     public abstract void Enable();
     public abstract void Disable();
 
@@ -75,21 +82,23 @@ public abstract class InputController : MonoBehaviour
     }
     protected IEnumerator Dash(Vector3 destination, Vector3 offset, float duration, bool delayed = false) // Extra bool is so I can call the animation for the host
     {                                                                                                     // differently.
-        if (!m_DashCoolingDown)
+        if (m_CurrentDashCharges > 0)
         {
             // Play Pariah's arms dash animation.
-            if(!delayed) // Only play animation here if this is Pariah's dash, if it is the host's dash it will be delayed.
-                GameManager.s_Instance.m_Pariah.PlayArmAnim("OnDash");
+            //if(!delayed) // Only play animation here if this is Pariah's dash, if it is the host's dash it will be delayed.
+            //    GameManager.s_Instance.m_Pariah.PlayArmAnim("OnDash");
 
             m_DashCoolingDown = true;
             float currentTime = 0.0f;
+
+            // Consume a dash charge.
+            m_CurrentDashCharges--;
 
             // TODO: Use epsilon and replace distance check with non sqrt function
             while (currentTime < duration)
             {
                 if (Vector3.Distance(transform.position, destination + offset) < 0.5f)
                 {
-                    m_Dashing = false;
                     break;
                 }
 
@@ -102,8 +111,20 @@ public abstract class InputController : MonoBehaviour
             }
         }
 
+        // Dash ends a bit after the actual dash distance is covered. This is so the animation
+        // doesn't try playing too quickly with the new dash charge system.
+        yield return new WaitForSeconds(0.30f);
+        m_Dashing = false;
+
+        // Start replenishing the used dash charge.
+        StartCoroutine(ReplenishDashCharge(m_DashCooldown));
+        m_IsDelayedDashing = false;
+
         yield return new WaitForSeconds(m_DashCooldown);
         m_DashCoolingDown = false;
+
+
+        
         
     }
 
@@ -138,4 +159,23 @@ public abstract class InputController : MonoBehaviour
     {
         Haptics.StopRumble();
     }
+
+    /// <summary>
+    /// To be called after a dash is performed. It waits duration amount of time and then restores one dash charge.
+    /// </summary>
+    /// <param name="duration">Time required before dash charge is restored.</param>
+    /// <returns></returns>
+    IEnumerator ReplenishDashCharge(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+
+        // After we've waited the time required, we can attempt to restore a dash charge.
+        if (m_CurrentDashCharges < m_MaxDashCharges) // We only restore a dash charge if the current charges is below the maximum.
+        {
+            m_CurrentDashCharges++;
+        }
+
+    }
+
+    
 }

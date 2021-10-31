@@ -110,6 +110,13 @@ public class Weapon : MonoBehaviour
     public FMODAudioEvent m_AudioEmptyClipEvent;
     public FMODAudioEvent m_AudioEquipEvent;
 
+    // To be used when initalising the skinned mesh renderers of weapons.
+    // The problem with initialising on Start() or Awake() is that many of the weapons in the game are deactivated by default and only
+    // Awake() when the user swaps to them.
+    // But we still need to initialise the renderers even if the user hasn't held the weapon before.
+    [HideInInspector]
+    public bool m_InitialisedSkinnedMeshRenderers = false;
+
 	private void Awake()
 	{
         m_TransformInfo.m_OriginalLocalPosition = transform.localPosition;
@@ -142,10 +149,13 @@ public class Weapon : MonoBehaviour
 	{
         m_UIManager = UIManager.s_Instance;
 
-        InitSkinnedMeshes();
+        if(!m_InitialisedSkinnedMeshRenderers)
+            InitSkinnedMeshes();
 
         // Hide the skinned mesh renderers of the weapons and arms. We only want them to show if the player is in FPS mode.
-        ToggleWeapon(false);
+        // We hide all weapons that are on agents who aren't being controlled by the player.
+        if(!m_Inventory.Owner.Possessed)
+            ToggleWeapon(false);
 
 	}
 
@@ -1117,10 +1127,12 @@ public class Weapon : MonoBehaviour
     /// The reference helps us enable/disable these meshes when the player leaves and enters the host.
     /// This is temporary until I can work on the scientist/soldier prefabs.
     /// </summary>
-    private void InitSkinnedMeshes()
+    public void InitSkinnedMeshes()
     {
         // This whole function is relying on the first child of these animators be the skinned mesh renderer we're looking for.
         // Really bad but I can't change the soldier/scientist prefabs right now so this will have to do.
+
+        m_InitialisedSkinnedMeshRenderers = true;
 
         for (int i = 0; i < m_Animators.m_ArmsAnimators.Count; i++)
         {

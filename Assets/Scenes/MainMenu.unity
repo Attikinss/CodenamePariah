@@ -223,6 +223,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5784749309381455066, guid: dd1fceda78d67b547a83b6b5416771e8, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5784749310233106521, guid: dd1fceda78d67b547a83b6b5416771e8, type: 3}
       propertyPath: m_Name
       value: MainMenu
@@ -309,6 +313,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5784749310233106532, guid: dd1fceda78d67b547a83b6b5416771e8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5784749310818590724, guid: dd1fceda78d67b547a83b6b5416771e8, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

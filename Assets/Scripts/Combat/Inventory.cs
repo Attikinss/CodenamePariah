@@ -169,6 +169,8 @@ public class Inventory : MonoBehaviour
             if (m_Weapons.Count == 1) // If we just added the only weapon we have, set current weapon to this weapon and update UI.
                 SetWeapon(0);
 
+            m_UIManager.UpdateWeaponUI(m_CurrentWeapon);
+
             return true;
 
         }
@@ -250,6 +252,8 @@ public class Inventory : MonoBehaviour
 
         // Since the new weapon is on the end of the list, we'll swap to the last element to make it seem like they are still holding on to the same gun.
         SetWeapon(m_Weapons.Count - 1);
+
+        m_UIManager.UpdateWeaponUI(m_CurrentWeapon);
 
         return true;
     }

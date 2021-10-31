@@ -851,7 +851,7 @@ MonoBehaviour:
   m_ViewRange: 20
   m_IgnoreMask:
     serializedVersion: 2
-    m_Bits: 3895
+    m_Bits: 3891
   m_Weapon: {fileID: 0}
   m_Mesh: {fileID: 8732956786785647057}
   m_PossessionMaterial: {fileID: 2100000, guid: 830099173e63fe849b967b38832db2a1, type: 2}

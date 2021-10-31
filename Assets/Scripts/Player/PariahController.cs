@@ -247,24 +247,24 @@ public class PariahController : InputController
     {
         if (!PauseMenu.m_GameIsPaused)
         {
-            if (value.performed && !m_Dashing && !m_DashCoolingDown && !m_Possessing)
+            if (value.performed && !m_Dashing && !m_Possessing && m_CurrentDashCharges > 0)
             {
 
                 // This is an additional "layer" of dash code to have a delay before the actual dash begins.
                 // This snipper of code is copied from the HostController, there are more detailed comments located there too.
 
-                if (m_IsDelayedDashing) // This means we already have a dash in the process of being done.
-                {
-                    if (!m_Dashing && !m_DashCoolingDown) // If we aren't dashing, and the dash has cooled down, we can reset the m_IsDelayedDashing.
-                        m_IsDelayedDashing = false;
-                }
-                else
-                {
+                //if (m_IsDelayedDashing) // This means we already have a dash in the process of being done.
+                //{
+                //    if (!m_Dashing && !m_DashCoolingDown) // If we aren't dashing, and the dash has cooled down, we can reset the m_IsDelayedDashing.
+                //        m_IsDelayedDashing = false;
+                //}
+                //else
+                //{
                     Debug.Log("====================================delay dashed====================================");
-                    m_IsDelayedDashing = true;
+                    //m_IsDelayedDashing = true;
                     m_Dashing = true;
                     StartCoroutine(DelayedDash(GameManager.s_Instance.m_DashDelay));
-                }
+                //}
 
 
                 // This peice of code is now moved into the DelayedDash() function.

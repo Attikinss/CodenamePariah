@@ -483,7 +483,7 @@ public class HostController : InputController
     {
         if (!PauseMenu.m_GameIsPaused)
         {
-            if (value.performed && !m_Dashing && !m_DashCoolingDown && !m_IsDelayedDashing)
+            if (value.performed && !m_Dashing && m_CurrentDashCharges > 0 && !m_IsDelayedDashing)
             {
                 // The code below has been incorporated into the DelayedDash() function.
 
@@ -498,9 +498,9 @@ public class HostController : InputController
                 //}
                 //else 
                 //{
-                    Debug.Log("====================================delay dashed====================================");
-                    m_Dashing = true;
-                    StartCoroutine(DelayedDash(GameManager.s_Instance.m_DashDelay));
+                Debug.Log("====================================delay dashed====================================");
+                m_Dashing = true;
+                StartCoroutine(DelayedDash(GameManager.s_Instance.m_DashDelay));
                 //}
                 
 

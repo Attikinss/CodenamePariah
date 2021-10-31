@@ -609,6 +609,10 @@ public class HostController : InputController
             Rigidbody.useGravity = true;
 
             direction.y = Rigidbody.velocity.y;
+
+            // If we are dashing we want to set the downwards velocity to 0, so it feels like we have been given a push into the air.
+            if (m_Dashing)
+                direction.y = 0;
         }
         //else
         //{

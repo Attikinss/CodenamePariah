@@ -69,8 +69,6 @@ public class HostController : InputController
     [Tooltip("Mesh of soldier or scientist to hide when entering unit.")]
     public GameObject m_Mesh;
 
-    private bool m_IsDelayedDashing = false;
-
 	private void Awake()
 	{
         m_AccumulatedRecoil = new CameraRecoil();
@@ -485,7 +483,7 @@ public class HostController : InputController
     {
         if (!PauseMenu.m_GameIsPaused)
         {
-            if (value.performed && !m_Dashing && !m_DashCoolingDown)
+            if (value.performed && !m_Dashing && !m_DashCoolingDown && !m_IsDelayedDashing)
             {
                 // The code below has been incorporated into the DelayedDash() function.
 
@@ -493,17 +491,17 @@ public class HostController : InputController
                 //if (m_MovInfo.m_IsGrounded)
                 //    forwardDir = m_Orientation.forward;
 
-                if (m_IsDelayedDashing) // This means we already have a dash in the process of being done.
-                {
-                    if (!m_Dashing && !m_DashCoolingDown) // If we aren't dashing, and the dash has cooled down, we can reset the m_IsDelayedDashing.
-                        m_IsDelayedDashing = false;
-                }
-                else 
-                {
+                //if (m_IsDelayedDashing) // This means we already have a dash in the process of being done.
+                //{
+                //    if (!m_Dashing && !m_DashCoolingDown) // If we aren't dashing, and the dash has cooled down, we can reset the m_IsDelayedDashing.
+                //        m_IsDelayedDashing = false;
+                //}
+                //else 
+                //{
                     Debug.Log("====================================delay dashed====================================");
                     m_Dashing = true;
                     StartCoroutine(DelayedDash(GameManager.s_Instance.m_DashDelay));
-                }
+                //}
                 
 
                 

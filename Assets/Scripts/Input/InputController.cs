@@ -46,6 +46,10 @@ public abstract class InputController : MonoBehaviour
     [ReadOnly]
     protected bool m_DashCoolingDown = false;
 
+    [SerializeField]
+    [ReadOnly]
+    protected bool m_IsDelayedDashing = false;
+
     public abstract void Enable();
     public abstract void Disable();
 
@@ -78,8 +82,8 @@ public abstract class InputController : MonoBehaviour
         if (!m_DashCoolingDown)
         {
             // Play Pariah's arms dash animation.
-            if(!delayed) // Only play animation here if this is Pariah's dash, if it is the host's dash it will be delayed.
-                GameManager.s_Instance.m_Pariah.PlayArmAnim("OnDash");
+            //if(!delayed) // Only play animation here if this is Pariah's dash, if it is the host's dash it will be delayed.
+            //    GameManager.s_Instance.m_Pariah.PlayArmAnim("OnDash");
 
             m_DashCoolingDown = true;
             float currentTime = 0.0f;
@@ -104,6 +108,9 @@ public abstract class InputController : MonoBehaviour
 
         yield return new WaitForSeconds(m_DashCooldown);
         m_DashCoolingDown = false;
+
+        m_IsDelayedDashing = false;
+        
         
     }
 

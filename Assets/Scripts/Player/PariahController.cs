@@ -87,7 +87,6 @@ public class PariahController : InputController
 
     public Animator m_ArmsAnimator;
 
-    private bool m_IsDelayedDashing;
     private void Awake() => m_Rigidbody = GetComponent<Rigidbody>();
 
     private void Start()
@@ -534,7 +533,7 @@ public class PariahController : InputController
                 if (m_Arms.enabled == false) // If the arms are hidden, unhide them for the duration of the dash animation. This is so the hosts can use this animation.
                 {
                     m_Arms.enabled = true;
-                    StartCoroutine(HideArms(1f)); // 1.02f is around about the time it takes for the animation to complete.
+                    StartCoroutine(HideArms(0.30f)); // 0.30f is around about the time it takes for the animation to complete.
                  
                 }
                 m_ArmsAnimator.SetTrigger(triggerName);

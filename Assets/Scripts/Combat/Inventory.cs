@@ -52,12 +52,23 @@ public class Inventory : MonoBehaviour
 	{
         m_UIManager = UIManager.s_Instance;
         m_Controller = GetComponent<HostController>(); // This assumes the inventory is on the same object as the HostController.cs script.
-	}
 
 
-	/// <summary>Takes health away equal to the damage value.</summary>
-	/// <param name="damage"></param>
-	public void TakeDamage(int damage, bool fromAbility = false)
+        // =========== Weapon Skinned Mesh Renderer Initialisation =========== //
+        // Initialising the skinned mesh renderers here too incase they haven't been initalised yet.
+        for (int i = 0; i < m_Weapons.Count; i++)
+        {
+            if (!m_Weapons[i].m_InitialisedSkinnedMeshRenderers)
+                m_Weapons[i].InitSkinnedMeshes();
+        }
+        // This is a safety because weapons usually initalise this on Start() but most weapons start deactivated.
+        // =================================================================== //
+    }
+
+
+    /// <summary>Takes health away equal to the damage value.</summary>
+    /// <param name="damage"></param>
+    public void TakeDamage(int damage, bool fromAbility = false)
     {
         m_Health -= damage;
         if (m_Health <= 0)
@@ -170,6 +181,9 @@ public class Inventory : MonoBehaviour
                 SetWeapon(0);
 
             m_UIManager.UpdateWeaponUI(m_CurrentWeapon);
+
+            // Because we are hiding the skinned mesh renderers of all weapons on Start(), we have to unhide them when the player picks up a new weapon.
+            weaponComponent.ToggleWeapon(true);
 
             return true;
 

@@ -174,7 +174,7 @@ public struct ParticleEffects
 [System.Serializable]
 public class Animators
 {
-	[HideInInspector]
+	
 	public List<SkinnedMeshRenderer> m_SkinnedMeshes;
 
 	public List<Animator> m_GunAnimators;

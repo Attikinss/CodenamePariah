@@ -267,7 +267,6 @@ public class Weapon : MonoBehaviour
                 PlayFireSound();
                 
                 PlayAnimations(special);
-                m_Inventory.Owner.PlayAnimation("Shoot", true);
 
                 // Currently gets rid of bullet sprite before UI has fully updated //
                 //m_UIManager.DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);
@@ -364,6 +363,108 @@ public class Weapon : MonoBehaviour
                 }
                 //else if (TotalAmmoEmpty())
                 //    this.GetComponentInParent<UIManager>().DisableMagazine();
+            }
+        }
+    }
+
+    public void FireAt(GameObject target)
+    {
+        // TODO: Clean up this duped code
+
+        if (ReadyToFire())
+        {
+            // Getting the correct rounds in magazine. There are two, the normal one and the one for the left gun.
+            int RoundsInMag = m_RoundsInMagazine;
+
+            if (RoundsInMag > 0)
+            {
+                if (m_SemiAuto)
+                    m_WeaponActions.m_IsFiring = false;
+
+                PlayFireSound();
+                PlayAnimations();
+
+                m_RoundsInMagazine--;
+
+                if (m_Inventory.Owner == null || m_Inventory.Owner.Possessed)
+                {
+                    Vector3 randOffset = new Vector3(Random.Range(-0.75f, 0.75f), Random.Range(-0.75f, 0.75f), Random.Range(-0.75f, 0.75f));
+                    Vector3 direction = ((target.transform.position + randOffset)
+                        - m_Camera.transform.position).normalized;
+
+                    Ray ray = new Ray(m_Camera.transform.position, direction);
+                    WeaponConfiguration currentConfig = GetCurrentWeaponConfig();
+
+                    // =========== TESTING =========== //
+                    if (!currentConfig.m_DisableAllRecoil)
+                    {
+                        float ShootingDuration = Time.time - m_FireStartTime;
+
+                        CameraRecoil cameraRecoil = m_Controller.m_AccumulatedRecoil;
+
+                        cameraRecoil.accumulatedPatternRecoilX += currentConfig.m_VerticalRecoil.Evaluate(ShootingDuration);
+                        cameraRecoil.accumulatedPatternRecoilY += currentConfig.m_HorizontalRecoil.Evaluate(ShootingDuration);
+                    }
+                    // =============================== //
+
+                    AddVisualRecoil();
+
+                    // ========================= TEMPORARY SHOOT COLLISION ========================= //
+
+                    if (Physics.Raycast(ray, out RaycastHit hitInfo, 500))
+                    {
+                        if (hitInfo.transform.gameObject != null)
+                        {
+                            if (hitInfo.transform.TryGetComponent(out Inventory agentInventory))
+                            {
+                                float damageMod = m_Inventory.Owner.Possessed ? 1.0f : m_AIDamageModifier;
+                                agentInventory.TakeDamage((int)(m_BulletDamage * damageMod));
+
+                                GameManager.s_Instance.PlaceBulletSpray(hitInfo.point, hitInfo.transform, (transform.position - hitInfo.point).normalized);
+
+                                return;
+                            }
+
+                            PlayBulletEffect(false, true, hitInfo.point);
+                            GameManager.s_Instance?.PlaceDecal(hitInfo.transform, hitInfo.point, hitInfo.normal);
+
+                            // Adding a force to the hit object.
+                            if (hitInfo.rigidbody != null)
+                                hitInfo.rigidbody.AddForce(m_Camera.transform.forward * GetCurrentWeaponConfig().m_BulletForce, ForceMode.Impulse);
+                        }
+                    }
+                    else
+                    {
+                        // Shot did not hit gameobject.
+                        PlayBulletEffect(false, false, Vector3.zero);
+                    }
+                    // ============================================================================= //
+                }
+                else
+                {
+                    var bullet = BulletPooler.Instance?.GetNextAvailable();
+                    if (m_Inventory.Owner.Target != m_Inventory.Owner.PariahController.gameObject)
+                        bullet?.SetTarget(m_Inventory.Owner.Target, (int)(m_BulletDamage * m_AIDamageModifier));
+
+                    // Quick check since dual wield has no firing position currently.
+                    if (m_FiringPosition)
+                        bullet?.Fire(m_FiringPosition.position, m_Inventory.Owner.Target.transform.position, transform.forward);
+                }
+            }
+            else
+            {
+                // Do nothing / reload automatically
+                if (!ReserveAmmoEmpty() && !m_Animators.CheckWeaponInspect())
+                {
+                    CombatInfo combatInfo = m_Controller.m_CombatInfo;
+
+                    StartCoroutine(Reload());
+
+                    // To prevent recoil from affecting player while reloading, we must.
+                    combatInfo.m_ShootingDuration = 0;
+                }
+                else
+                    PlayEmptyClipSound();
             }
         }
     }
@@ -977,6 +1078,8 @@ public class Weapon : MonoBehaviour
             m_Animators.m_GunAnimators[0].SetTrigger("IsFiring");
             m_Animators.m_ArmsAnimators[0].SetTrigger("IsFiring");
         }
+
+        m_Inventory.Owner.PlayAnimation("Shoot", true);
     }
 
     private bool CanRecoilRecover()

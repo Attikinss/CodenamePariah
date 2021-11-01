@@ -15,6 +15,8 @@ namespace WhiteWillow
         // TODO: Add to sensory data class/struct
         [Min(0.0f)]
         public float m_ViewRange = 15.0f;
+        [Min(0.0f)]
+        public float m_FiringRange = 15.0f;
 
         [Tooltip("Defines what the agent can't see through.")]
         [SerializeField]
@@ -23,6 +25,7 @@ namespace WhiteWillow
         private BehaviourTree m_RuntimeTree;
         private NavMeshAgent m_NavAgent;
         public Query CurrentQuery;
+        public EnvironmentQuerySystem.EQSNode CurrentNode { get; set; }
         public Weapon m_Weapon;
         [Tooltip("The mesh that we apply the possession shader to.")]
         public GameObject m_Mesh;
@@ -88,10 +91,7 @@ namespace WhiteWillow
                 else
                 {
                     if (m_NavAgent.isStopped)
-                    {
                         m_NavAgent.isStopped = true;
-                        MoveToPosition();
-                    }
                 }
 
                 m_RuntimeTree?.Tick();
@@ -118,6 +118,9 @@ namespace WhiteWillow
 
         public void MoveToPosition()
         {
+            if (m_NavAgent.isStopped)
+                m_NavAgent.isStopped = false;
+
             PlayAnimation("Run");
 
             if (Vector3.Distance(m_NavAgent.destination, Destination)
@@ -174,6 +177,8 @@ namespace WhiteWillow
 
         public void Kill()
         {
+            
+
             if (Possessed)
             { 
                 Release();
@@ -187,8 +192,6 @@ namespace WhiteWillow
 
         public void LookAt(Vector3 position)
         {
-            Debug.Log("Look At");
-
             Vector3 bodyTargetDir = position - transform.position;
             Vector3 camTargetDir = m_HostController.Camera.transform.position;
             camTargetDir.y = bodyTargetDir.y;
@@ -213,13 +216,7 @@ namespace WhiteWillow
 
         public void ShootAt(GameObject target, bool forceMiss = false)
         {
-            m_HostController.GetCurrentWeapon()?.Fire();
-            
-            //if (TempPrefab)
-            //{
-            //    var bullet = Instantiate(TempPrefab, transform.position + transform.forward + Vector3.up, Quaternion.identity);
-            //    bullet.GetComponent<Rigidbody>().AddForce(((target.transform.position + Vector3.up * 0.7f) - transform.position).normalized * 60.0f, ForceMode.Impulse);
-            //}
+            m_HostController.GetCurrentWeapon()?.FireAt(target);
         }
 
         public void PlayAnimation(string name, bool forcePlay = false, float transitionSpeed = 0.25f)
@@ -257,12 +254,33 @@ namespace WhiteWillow
             if (Physics.Raycast(transform.position, (target.transform.position
                 - transform.position).normalized, out RaycastHit hitInfo, m_ViewRange, m_IgnoreMask))
             {
-                Debug.Log($"{hitInfo.transform.gameObject} - {target}");
+                //Debug.Log($"{hitInfo.transform.gameObject} - {target}");
                 if (hitInfo.transform.gameObject == target)
-                {
                     return true;
-                }
             }
+
+            return false;
+        }
+
+        public bool TargetVisible(GameObject target, out float distance)
+        {
+            if (target == null)
+            {
+                distance = 0.0f;
+                return false;
+            }
+
+            // Do a simple raycast to target
+            if (Physics.Raycast(transform.position, (target.transform.position
+                - transform.position).normalized, out RaycastHit hitInfo, m_ViewRange, m_IgnoreMask))
+            {
+                distance = hitInfo.distance;
+
+                if (hitInfo.transform.gameObject == target)
+                    return true;
+            }
+
+            distance = 0.0f;
 
             return false;
         }

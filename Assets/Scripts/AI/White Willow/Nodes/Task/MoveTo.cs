@@ -33,5 +33,12 @@ namespace WhiteWillow.Nodes
                 return NodeResult.Running;
             }
         }
+
+        public override NodeResult Abort()
+        {
+            Owner.Agent.Stop();
+
+            return base.Abort();
+        }
     }
 }

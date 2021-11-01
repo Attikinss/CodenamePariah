@@ -21,6 +21,9 @@ public class FMODAudioEvent : MonoBehaviour
 
     private FMOD.Studio.EventInstance m_EventInstance;
 
+    private bool m_HasManualPosition = false;
+    private Transform m_ManualTransform = null; // Manually attached transform. (To be used if you don't want to rely on what the event's gameobject's position is.)
+
     private void Awake()
     {
         m_EventInstance = FMODUnity.RuntimeManager.CreateInstance(EventID);
@@ -32,5 +35,33 @@ public class FMODAudioEvent : MonoBehaviour
 	{
         m_EventInstance.stop(mode);
 	}
-	private void Update() => m_EventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
+    private void Update()
+    {
+        if (!m_HasManualPosition)
+            m_EventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
+        else // If we do have m_HasManualPosition toggled, that means there is a reference to a transform we should be updating to.
+        {
+            m_EventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(m_ManualTransform));
+        }
+    }
+
+    /// <summary>
+    /// To be used when other classes need a reference to the instance.
+    /// </summary>
+    /// <returns>The attached FMOD event instance.</returns>
+    public ref FMOD.Studio.EventInstance GetEventInstance()
+    {
+        return ref m_EventInstance;
+    }
+
+    /// <summary>
+    /// Toggling manual position is so that we can have some sounds be attached to places other than where their
+    /// gameobject's transform is.
+    /// </summary>
+    /// <param name="toggle"></param>
+    public void ToggleManualPosition(bool toggle, Transform obj)
+    {
+        m_HasManualPosition = toggle;
+        m_ManualTransform = obj;
+    }
 }

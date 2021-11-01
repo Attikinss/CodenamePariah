@@ -388,9 +388,9 @@ public class Weapon : MonoBehaviour
 
                 if (m_Inventory.Owner == null || m_Inventory.Owner.Possessed)
                 {
-                    Vector3 randOffset = new Vector3(Random.Range(-0.75f, 0.75f), Random.Range(-0.75f, 0.75f), Random.Range(-0.75f, 0.75f));
-                    Vector3 direction = ((target.transform.position + randOffset)
-                        - m_Camera.transform.position).normalized;
+                    //Vector3 randOffset = new Vector3(Random.Range(-0.75f, 0.75f), Random.Range(-0.75f, 0.75f), Random.Range(-0.75f, 0.75f));
+                    Vector3 direction = ((target.transform.position /*+ randOffset*/)
+                        - m_Camera.transform.position);
 
                     Ray ray = new Ray(m_Camera.transform.position, direction);
                     WeaponConfiguration currentConfig = GetCurrentWeaponConfig();

@@ -84,6 +84,8 @@ public abstract class InputController : MonoBehaviour
     {                                                                                                     // differently.
         if (m_CurrentDashCharges > 0)
         {
+            GeneralSounds.s_Instance.PlayDashSound(transform);
+
             // Play Pariah's arms dash animation.
             //if(!delayed) // Only play animation here if this is Pariah's dash, if it is the host's dash it will be delayed.
             //    GameManager.s_Instance.m_Pariah.PlayArmAnim("OnDash");

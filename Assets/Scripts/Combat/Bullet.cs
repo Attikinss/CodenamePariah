@@ -26,16 +26,16 @@ public class Bullet : MonoBehaviour
 
     public void Fire(Vector3 origin, Vector3 destination, Vector3 forward, Transform owner)
     {
+        m_Owner = owner;
         transform.position = origin;
         transform.forward = (destination - origin).normalized;
         gameObject.SetActive(true);
         m_Rigidbody.AddForce((destination - origin).normalized * 60.0f, ForceMode.Impulse);
-        m_Owner = owner;
     }
 
-    private void OnTriggerEnter(Collider collision)
+    private void OnCollisionEnter(Collision collision)
     {
-        if (collision.transform != m_Owner && collision.gameObject.layer != 2) // Prevents collision with it's own agent and things on the ignore raycast layer.
+        if (collision.transform != m_Owner && collision.gameObject.layer != 2 && collision.gameObject.layer != 13) // Prevents collision with it's own agent and things on the ignore raycast layer.
         { 
             if (m_Target != null)
             {
@@ -48,6 +48,9 @@ public class Bullet : MonoBehaviour
             }
 
             gameObject.SetActive(false);
+
+            // Important, if we don't clear the velocity the bullets may stray the next time they are fired!
+            m_Rigidbody.velocity = Vector3.zero;
         }
     }
 }

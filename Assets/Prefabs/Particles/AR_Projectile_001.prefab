@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1847822840533807710}
   - component: {fileID: 3317765891853254139}
   - component: {fileID: 716043521483671857}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Mesh_Weapon_BulletBeam_001_Default
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: -1698164065949592661}
   - component: {fileID: -6437346103573690882}
   - component: {fileID: -3101839018213293594}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: AR_Projectile_001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,12 +126,12 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 112
-  m_CollisionDetection: 1
+  m_CollisionDetection: 2
 --- !u!114 &-6437346103573690882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -154,7 +154,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9069852631723621788}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.2326851, y: 0.23268509, z: 0.2326851}

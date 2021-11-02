@@ -21,6 +21,9 @@ public class GeneralSounds : MonoBehaviour
 	public FMODAudioEvent m_HostEnterAudioEvent1;
 	public FMODAudioEvent m_HostEnterAudioEvent2;
 
+	// Low health sound effect for Pariah. This is not the heartbeat. It's the voice line one.
+	public FMODAudioEvent m_LowHealthEvent;
+
 
 	public void Awake()
 	{
@@ -77,14 +80,21 @@ public class GeneralSounds : MonoBehaviour
 			instance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(playerTrans));
 			enterEvent.Trigger();
 		}
-
-
-
-
-		
 	}
 
-	
+	/// <summary>
+	/// Plays the low health voice line for Pariah.
+	/// </summary>
+	/// <param name="playerTrans"></param>
+	public void PlayLowHealthPariahSound(Transform playerTrans)
+	{
+		m_LowHealthEvent.ToggleManualPosition(true, playerTrans);
+		FMOD.Studio.EventInstance instance = m_LowHealthEvent.GetEventInstance();
+		instance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(playerTrans));
+		m_LowHealthEvent.Trigger();
+	}
+
+
 
 }
 

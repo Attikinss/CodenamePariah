@@ -260,7 +260,6 @@ public class PariahController : InputController
                 //}
                 //else
                 //{
-                    Debug.Log("====================================delay dashed====================================");
                     //m_IsDelayedDashing = true;
                     m_Dashing = true;
                     StartCoroutine(DelayedDash(GameManager.s_Instance.m_DashDelay));
@@ -388,6 +387,7 @@ public class PariahController : InputController
         if (m_Health <= m_LowHealthThreshold)
         {
             PlayLowHPSound();
+            GeneralSounds.s_Instance.PlayLowHealthPariahSound(transform); // This is the voice line sound effect.
         }
 
 
@@ -410,10 +410,13 @@ public class PariahController : InputController
             {                                                                                                                              // to only lose health
                 m_Health -= m_HealthDrainAmount;                                                                                           // after we have entered a
                                                                                                                                            // unit for the first time.
-                if (m_Health <= m_LowHealthThreshold)
+                if (m_Health <= m_LowHealthThreshold && !m_IsPlayingLowHP) // Only play the sound if we're not already playing it.
                 {
+                    m_IsPlayingLowHP = true;
                     PlayLowHPSound();
+                    GeneralSounds.s_Instance.PlayLowHealthPariahSound(transform); // This is the voice line sound effect.
                 }
+
 
 
                 if (m_Health <= 0)
@@ -475,9 +478,8 @@ public class PariahController : InputController
 
     private void PlayLowHPSound()
     {
-        if (m_AudioLowHPEvent && !m_IsPlayingLowHP)
+        if (m_AudioLowHPEvent)
         {
-            m_IsPlayingLowHP = true;
             m_AudioLowHPEvent.Trigger();
         }
        

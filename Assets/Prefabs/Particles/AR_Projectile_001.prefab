@@ -145,6 +145,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Target: {fileID: 0}
+  m_Owner: {fileID: 0}
 --- !u!65 &-3101839018213293594
 BoxCollider:
   m_ObjectHideFlags: 0

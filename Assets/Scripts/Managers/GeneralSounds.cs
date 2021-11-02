@@ -52,8 +52,9 @@ public class GeneralSounds : MonoBehaviour
 	/// Plays the entering host sound event. Because the sound doesn't need to play every time, you can pass in a number that represents that
 	/// probability of the sound occuring out of 100.
 	/// </summary>
-	/// <param name="playerTrans"></param>
-	public void PlayHostEnterSound(Transform playerTrans)
+	/// <param name="playerTrans">Transform you want the sound to be attached to.</param>
+	/// <param name="chanceOutOfHundred">The chance of playing the sound out of 100.</param>
+	public void PlayHostEnterSound(Transform playerTrans, int chanceOutOfHundred)
 	{
 		// Pick what enter sound to play.
 		int randomNum = Random.Range(0, 2); // 0-1
@@ -63,15 +64,24 @@ public class GeneralSounds : MonoBehaviour
 		else
 			enterEvent = m_HostEnterAudioEvent2;
 
+		// Now for the random chance of getting to actually play any sound.
+		int chance = Random.Range(1, 101); // 1-100
+		if (chance > 0 && chance <= chanceOutOfHundred) // If the randomised chance is between 1 and the chance out of one hundred that was passed in.
+		{
+			// Stop previous sounds if they are still playing.
+			m_HostEnterAudioEvent1.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
+			m_HostEnterAudioEvent2.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
 
-		// Stop previous sounds if they are still playing.
-		m_HostEnterAudioEvent1.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
-		m_HostEnterAudioEvent2.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
+			enterEvent.ToggleManualPosition(true, playerTrans);
+			FMOD.Studio.EventInstance instance = enterEvent.GetEventInstance();
+			instance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(playerTrans));
+			enterEvent.Trigger();
+		}
 
-		enterEvent.ToggleManualPosition(true, playerTrans);
-		FMOD.Studio.EventInstance instance = enterEvent.GetEventInstance();
-		instance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(playerTrans));
-		enterEvent.Trigger();
+
+
+
+		
 	}
 
 	

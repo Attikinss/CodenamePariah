@@ -225,7 +225,7 @@ public class HostController : InputController
         GameManager.s_Instance.OnEnterEnemy(m_type, GetCurrentWeapon().m_Animators, GetCurrentWeapon());
 
         // Play host enter sound effect.
-        GeneralSounds.s_Instance.PlayHostEnterSound(GameManager.s_Instance.m_Pariah.transform); // We want the sound to emit from Pariah, not the individual agent.
+        GeneralSounds.s_Instance.PlayHostEnterSound(GameManager.s_Instance.m_Pariah.transform, 25); // We want the sound to emit from Pariah, not the individual agent.
     }
 
     /// <summary>

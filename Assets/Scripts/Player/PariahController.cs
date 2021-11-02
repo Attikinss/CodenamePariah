@@ -97,9 +97,6 @@ public class PariahController : InputController
         m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
 
         StartCoroutine(DrainHealth(m_HealthDrainDelay));
-
-        FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
-        allBussess.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
     }
 
 	private void Update()

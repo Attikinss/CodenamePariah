@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering.HighDefinition;
 using System;
+using FMODUnity;
 
 /// <summary>
 /// This GameManager is a temporary class by Daniel. I'm using it now just as a place to store all the weapon shot decals.
@@ -85,9 +86,12 @@ public class GameManager : MonoBehaviour
             Debug.LogError("There are multiple GameManager components in the scene!");
             Destroy(this.gameObject);
         }
-	}
 
-	public void TogglePause(bool toggle)
+        FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
+        allBussess.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
+    }
+
+    public void TogglePause(bool toggle)
     { }
 
     // Start is called before the first frame update

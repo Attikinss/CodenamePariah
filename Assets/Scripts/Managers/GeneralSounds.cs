@@ -17,6 +17,10 @@ public class GeneralSounds : MonoBehaviour
 
 	public FMODAudioEvent m_DashAudioEvent;
 
+	// Because these sound effects aren't built into the same event, we have separate events which we have to call through code.
+	public FMODAudioEvent m_HostEnterAudioEvent1;
+	public FMODAudioEvent m_HostEnterAudioEvent2;
+
 
 	public void Awake()
 	{
@@ -42,8 +46,36 @@ public class GeneralSounds : MonoBehaviour
 		FMOD.Studio.EventInstance instance = m_DashAudioEvent.GetEventInstance();
 		instance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(playerTrans));
 		m_DashAudioEvent.Trigger();
-
 	}
+
+	/// <summary>
+	/// Plays the entering host sound event. Because the sound doesn't need to play every time, you can pass in a number that represents that
+	/// probability of the sound occuring out of 100.
+	/// </summary>
+	/// <param name="playerTrans"></param>
+	public void PlayHostEnterSound(Transform playerTrans)
+	{
+		// Pick what enter sound to play.
+		int randomNum = Random.Range(0, 2); // 0-1
+		FMODAudioEvent enterEvent;
+		if (randomNum == 0)
+			enterEvent = m_HostEnterAudioEvent1;
+		else
+			enterEvent = m_HostEnterAudioEvent2;
+
+
+		// Stop previous sounds if they are still playing.
+		m_HostEnterAudioEvent1.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
+		m_HostEnterAudioEvent2.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
+
+		enterEvent.ToggleManualPosition(true, playerTrans);
+		FMOD.Studio.EventInstance instance = enterEvent.GetEventInstance();
+		instance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(playerTrans));
+		enterEvent.Trigger();
+	}
+
+	
+
 }
 
 

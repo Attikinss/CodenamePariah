@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 9062213282124752596}
   - component: {fileID: 9062213282124752597}
   - component: {fileID: 9062213282124752598}
+  - component: {fileID: 1187078448}
+  - component: {fileID: 1187078452}
   m_Layer: 0
   m_Name: GeneralSoundsManager
   m_TagString: Untagged
@@ -59,3 +61,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_DashAudioEvent: {fileID: 9062213282124752597}
+  m_HostEnterAudioEvent1: {fileID: 1187078448}
+  m_HostEnterAudioEvent2: {fileID: 1187078452}
+--- !u!114 &1187078448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9062213282124752599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81dca6e7f82043a4fb85791a7d8e871d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 0
+  EventID: event:/Pariah SFX/Don't Struggle
+--- !u!114 &1187078452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9062213282124752599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81dca6e7f82043a4fb85791a7d8e871d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 0
+  EventID: event:/Pariah SFX/You Are Mine

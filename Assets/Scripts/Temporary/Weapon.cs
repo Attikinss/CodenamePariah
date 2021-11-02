@@ -110,6 +110,7 @@ public class Weapon : MonoBehaviour
     public FMODAudioEvent m_AudioEmptyClipEvent;
     public FMODAudioEvent m_AudioEquipEvent;
 
+
     // To be used when initalising the skinned mesh renderers of weapons.
     // The problem with initialising on Start() or Awake() is that many of the weapons in the game are deactivated by default and only
     // Awake() when the user swaps to them.
@@ -341,7 +342,7 @@ public class Weapon : MonoBehaviour
                         bullet?.SetTarget(m_Inventory.Owner.Target, (int)(m_BulletDamage * m_AIDamageModifier));
 
                     if(m_FiringPosition) // Quick check since dual wield has no firing position currently.
-                        bullet?.Fire(m_FiringPosition.position, m_Inventory.Owner.Target.transform.position, transform.forward);
+                        bullet?.Fire(m_FiringPosition.position, m_Inventory.Owner.Target.transform.position, transform.forward, m_Inventory.Owner.transform);
                 }
             }
             else
@@ -448,7 +449,9 @@ public class Weapon : MonoBehaviour
 
                     // Quick check since dual wield has no firing position currently.
                     if (m_FiringPosition)
-                        bullet?.Fire(m_FiringPosition.position, m_Inventory.Owner.Target.transform.position, transform.forward);
+                    {
+                        bullet?.Fire(m_FiringPosition.position, m_Inventory.Owner.Target.transform.position, transform.forward, m_Inventory.Owner.transform);
+                    }
                 }
             }
             else
@@ -1210,6 +1213,9 @@ public class Weapon : MonoBehaviour
                 Gizmos.DrawSphere(hit.point, 0.25f);
             }
         }
+
+        if(m_Inventory.Owner && m_Inventory.Owner.Target)
+            DrawAgentTarget(m_Inventory.Owner.Target.transform.position);
 	}
 
     /// <summary>
@@ -1270,5 +1276,17 @@ public class Weapon : MonoBehaviour
 
         // Now, presumably we have found all the required skinned mesh renderers.
 
+    }
+
+    /// <summary>
+    /// Used to debug and visually see where agents are attempting to shoot at.
+    /// </summary>
+    /// <param name="targetPos">Target of the agent.</param>
+    void DrawAgentTarget(Vector3 targetPos)
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(targetPos, 0.25f);
+        Gizmos.DrawSphere(m_FiringPosition.position, 0.25f);
+        Gizmos.DrawLine(targetPos, m_FiringPosition.position);
     }
 }

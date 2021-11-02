@@ -14,30 +14,38 @@ public class Bullet : MonoBehaviour
 
     private void Awake() => m_Rigidbody = GetComponent<Rigidbody>();
 
+    // The owner of the bullet is a reference to the last agent that shot it. It's
+    // used to prevent the bullet from colliding with its own agent.
+    public Transform m_Owner;
+
     public void SetTarget(GameObject target, int damage)
     {
         m_Target = target;
         m_Damage = damage;
     }
 
-    public void Fire(Vector3 origin, Vector3 destination, Vector3 forward)
+    public void Fire(Vector3 origin, Vector3 destination, Vector3 forward, Transform owner)
     {
         transform.position = origin;
-        transform.forward = forward;
+        transform.forward = (destination - origin).normalized;
         gameObject.SetActive(true);
         m_Rigidbody.AddForce((destination - origin).normalized * 60.0f, ForceMode.Impulse);
+        m_Owner = owner;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (m_Target != null)
-        {
-            if (collision.gameObject == m_Target)
-                m_Target.GetComponent<Inventory>()?.TakeDamage(m_Damage);
+        if (collision.transform != m_Owner) // Prevents collision with it's own agent.
+        { 
+            if (m_Target != null)
+            {
+                if (collision.gameObject == m_Target)
+                    m_Target.GetComponent<Inventory>()?.TakeDamage(m_Damage);
 
-            GameManager.s_Instance?.PlaceDecal(collision.transform, collision.GetContact(0).point, collision.GetContact(0).normal);
+                GameManager.s_Instance?.PlaceDecal(collision.transform, collision.GetContact(0).point, collision.GetContact(0).normal);
+            }
+
+            gameObject.SetActive(false);
         }
-
-        gameObject.SetActive(false);
     }
 }

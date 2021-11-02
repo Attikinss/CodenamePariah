@@ -57,7 +57,7 @@ MonoBehaviour:
     height: 82
   RunningChild: {fileID: 0}
   Children:
-  - {fileID: -4103930013878607888}
+  - {fileID: 0}
   - {fileID: 9104404088839564936}
   - {fileID: 640787671826220536}
 --- !u!114 &-4103930013878607888
@@ -107,7 +107,7 @@ MonoBehaviour:
   - {fileID: 6606588914338677638}
   - {fileID: -5741321198570766867}
   - {fileID: -4975319061077308685}
-  - {fileID: -4103930013878607888}
+  - {fileID: 0}
   - {fileID: 9104404088839564936}
   - {fileID: 640787671826220536}
 --- !u!114 &640787671826220536
@@ -197,5 +197,5 @@ MonoBehaviour:
   Position:
     BlackboardValue: 0
     Value: {x: 0, y: 0, z: 0}
-    Expand: 0
+    Name: 
     Selection: 0

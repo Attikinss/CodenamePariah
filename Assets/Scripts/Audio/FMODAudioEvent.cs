@@ -41,7 +41,8 @@ public class FMODAudioEvent : MonoBehaviour
             m_EventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
         else // If we do have m_HasManualPosition toggled, that means there is a reference to a transform we should be updating to.
         {
-            m_EventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(m_ManualTransform));
+            if(m_ManualTransform) // Only if it still exists can we use it's transform.
+                m_EventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(m_ManualTransform));
         }
     }
 

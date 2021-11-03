@@ -11,6 +11,7 @@ public class LifeEssenceHandler : MonoBehaviour
 {
     public PariahController m_Pariah;
 	public TextMeshProUGUI m_Text;
+	public Image m_HealthBar;
 
 	private void Start()
 	{
@@ -26,6 +27,7 @@ public class LifeEssenceHandler : MonoBehaviour
 	// Update is called once per frame
 	void Update()
     {
-        m_Text.text = "Life: " + m_Pariah.GetHealth();
+		m_Text.text = m_Pariah.GetHealth().ToString();//
+		m_HealthBar.fillAmount = (float)m_Pariah.GetHealth() / 100.0f;
     }
 }

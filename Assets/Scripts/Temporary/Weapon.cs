@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.VFX;
+using TMPro;
+//using UnityEngine.UI;
 
 public enum WEAPONTYPE
 {
@@ -110,6 +112,10 @@ public class Weapon : MonoBehaviour
     public FMODAudioEvent m_AudioEmptyClipEvent;
     public FMODAudioEvent m_AudioEquipEvent;
 
+    public GameObject m_CharIcon;
+    public GameObject m_CharName;
+    public GameObject m_WeaponIcon;
+    public TextMeshProUGUI m_WeaponAmmoText;
 
     // To be used when initalising the skinned mesh renderers of weapons.
     // The problem with initialising on Start() or Awake() is that many of the weapons in the game are deactivated by default and only

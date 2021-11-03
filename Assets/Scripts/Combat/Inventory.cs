@@ -73,6 +73,7 @@ public class Inventory : MonoBehaviour
         m_Health -= damage;
         if (m_Health <= 0)
         {
+            m_Health = 0;//
             if (TryGetComponent(out WhiteWillow.Agent agent))
             {
                 PariahController pariah = GameManager.s_Instance.m_Pariah;
@@ -84,6 +85,10 @@ public class Inventory : MonoBehaviour
                         pariah.m_Power++; // Incrementing this so the power bar charges up.
                         // Set power bar ui to match.
                         m_UIManager.SetDeathIncarnateBar((float)pariah.m_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
+                        if (pariah.m_Power >= m_Controller.m_DeathIncarnateAbility.requiredKills)
+                        {
+                            m_UIManager.ToggleReadyPrompt(false);
+                        }
                     }
                     else
                         Telemetry.TracePosition("Agent-Death", transform.position);
@@ -100,6 +105,10 @@ public class Inventory : MonoBehaviour
                         pariah.m_Power++; // Incrementing this so the power bar charges up.
                         // Set power bar ui to match.
                         m_UIManager.SetDeathIncarnateBar((float)pariah.m_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
+                        if (pariah.m_Power >= m_Controller.m_DeathIncarnateAbility.requiredKills)
+                        {
+                            m_UIManager.ToggleReadyPrompt(false);
+                        }
                     }
                 }
 
@@ -168,6 +177,10 @@ public class Inventory : MonoBehaviour
             weaponComponent.m_Inventory = this;
             weaponComponent.m_Controller = m_Controller;
             weaponComponent.SetCamera(m_Camera);
+            weaponComponent.m_CharIcon = m_UIManager.m_DualWieldCharIcon;
+            weaponComponent.m_CharName = m_UIManager.m_DualWieldCharName;
+            weaponComponent.m_WeaponIcon = m_UIManager.m_DualWieldPlate;
+            weaponComponent.m_WeaponAmmoText = m_UIManager.m_DualWieldRightWeaponAmmoText;
 
             weaponComponent.m_TransformInfo.m_OriginalLocalPosition = newWeapon.transform.localPosition;
             weaponComponent.m_TransformInfo.m_OriginalGlobalPosition = newWeapon.transform.position;
@@ -229,6 +242,7 @@ public class Inventory : MonoBehaviour
         }
         HideWeapon(wep); // Hiding the weapon we will remove. We wont destroy it, we'll just hide it.
         m_Weapons.RemoveAt(wep);
+        m_CurrentWeapon.m_WeaponAmmoText?.gameObject.SetActive(false);
         m_CurrentWeapon = null; // Resetting the current weapon reference.
 
         if (m_Weapons.Count > 0) // If we haven't removed every single weapon from the list.
@@ -260,7 +274,7 @@ public class Inventory : MonoBehaviour
 
         // Remove old weapon since we are upgrading it.
         RemoveWeapon(weapon);
-
+        
         // Add a new weapon according to the parameters.
         AddWeapon(newPrefab);
 

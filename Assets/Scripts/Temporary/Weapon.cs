@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.VFX;
+using TMPro;
+//using UnityEngine.UI;
 
 public enum WEAPONTYPE
 {
@@ -110,6 +112,18 @@ public class Weapon : MonoBehaviour
     public FMODAudioEvent m_AudioEmptyClipEvent;
     public FMODAudioEvent m_AudioEquipEvent;
 
+    public GameObject m_CharIcon;
+    public GameObject m_CharName;
+    public GameObject m_WeaponIcon;
+    public TextMeshProUGUI m_WeaponAmmoText;
+
+    // To be used when initalising the skinned mesh renderers of weapons.
+    // The problem with initialising on Start() or Awake() is that many of the weapons in the game are deactivated by default and only
+    // Awake() when the user swaps to them.
+    // But we still need to initialise the renderers even if the user hasn't held the weapon before.
+    [HideInInspector]
+    public bool m_InitialisedSkinnedMeshRenderers = false;
+
 	private void Awake()
 	{
         m_TransformInfo.m_OriginalLocalPosition = transform.localPosition;
@@ -142,10 +156,13 @@ public class Weapon : MonoBehaviour
 	{
         m_UIManager = UIManager.s_Instance;
 
-        InitSkinnedMeshes();
+        if(!m_InitialisedSkinnedMeshRenderers)
+            InitSkinnedMeshes();
 
         // Hide the skinned mesh renderers of the weapons and arms. We only want them to show if the player is in FPS mode.
-        ToggleWeapon(false);
+        // We hide all weapons that are on agents who aren't being controlled by the player.
+        if(!m_Inventory.Owner.Possessed)
+            ToggleWeapon(false);
 
 	}
 
@@ -331,7 +348,7 @@ public class Weapon : MonoBehaviour
                         bullet?.SetTarget(m_Inventory.Owner.Target, (int)(m_BulletDamage * m_AIDamageModifier));
 
                     if(m_FiringPosition) // Quick check since dual wield has no firing position currently.
-                        bullet?.Fire(m_FiringPosition.position, m_Inventory.Owner.Target.transform.position, transform.forward);
+                        bullet?.Fire(m_FiringPosition.position, m_Inventory.Owner.Target.transform.position, transform.forward, m_Inventory.Owner.transform);
                 }
             }
             else
@@ -378,9 +395,9 @@ public class Weapon : MonoBehaviour
 
                 if (m_Inventory.Owner == null || m_Inventory.Owner.Possessed)
                 {
-                    Vector3 randOffset = new Vector3(Random.Range(-0.75f, 0.75f), Random.Range(-0.75f, 0.75f), Random.Range(-0.75f, 0.75f));
-                    Vector3 direction = ((target.transform.position + randOffset)
-                        - m_Camera.transform.position).normalized;
+                    //Vector3 randOffset = new Vector3(Random.Range(-0.75f, 0.75f), Random.Range(-0.75f, 0.75f), Random.Range(-0.75f, 0.75f));
+                    Vector3 direction = ((target.transform.position /*+ randOffset*/)
+                        - m_Camera.transform.position);
 
                     Ray ray = new Ray(m_Camera.transform.position, direction);
                     WeaponConfiguration currentConfig = GetCurrentWeaponConfig();
@@ -438,7 +455,9 @@ public class Weapon : MonoBehaviour
 
                     // Quick check since dual wield has no firing position currently.
                     if (m_FiringPosition)
-                        bullet?.Fire(m_FiringPosition.position, m_Inventory.Owner.Target.transform.position, transform.forward);
+                    {
+                        bullet?.Fire(m_FiringPosition.position, m_Inventory.Owner.Target.transform.position, transform.forward, m_Inventory.Owner.transform);
+                    }
                 }
             }
             else
@@ -1200,6 +1219,9 @@ public class Weapon : MonoBehaviour
                 Gizmos.DrawSphere(hit.point, 0.25f);
             }
         }
+
+        if(m_Inventory.Owner && m_Inventory.Owner.Target)
+            DrawAgentTarget(m_Inventory.Owner.Target.transform.position);
 	}
 
     /// <summary>
@@ -1220,10 +1242,12 @@ public class Weapon : MonoBehaviour
     /// The reference helps us enable/disable these meshes when the player leaves and enters the host.
     /// This is temporary until I can work on the scientist/soldier prefabs.
     /// </summary>
-    private void InitSkinnedMeshes()
+    public void InitSkinnedMeshes()
     {
         // This whole function is relying on the first child of these animators be the skinned mesh renderer we're looking for.
         // Really bad but I can't change the soldier/scientist prefabs right now so this will have to do.
+
+        m_InitialisedSkinnedMeshRenderers = true;
 
         for (int i = 0; i < m_Animators.m_ArmsAnimators.Count; i++)
         {
@@ -1258,5 +1282,17 @@ public class Weapon : MonoBehaviour
 
         // Now, presumably we have found all the required skinned mesh renderers.
 
+    }
+
+    /// <summary>
+    /// Used to debug and visually see where agents are attempting to shoot at.
+    /// </summary>
+    /// <param name="targetPos">Target of the agent.</param>
+    void DrawAgentTarget(Vector3 targetPos)
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(targetPos, 0.25f);
+        Gizmos.DrawSphere(m_FiringPosition.position, 0.25f);
+        Gizmos.DrawLine(targetPos, m_FiringPosition.position);
     }
 }

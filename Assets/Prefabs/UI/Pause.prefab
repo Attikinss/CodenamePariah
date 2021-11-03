@@ -32,8 +32,8 @@ RectTransform:
   m_Father: {fileID: 1778405292}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.4, y: 0}
-  m_AnchorMax: {x: 0.4, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -374,7 +374,6 @@ GameObject:
   m_Component:
   - component: {fileID: 682000664}
   - component: {fileID: 682000666}
-  - component: {fileID: 682000665}
   m_Layer: 5
   m_Name: FOVSliderObject
   m_TagString: Untagged
@@ -455,7 +454,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 682000665}
+      - m_Target: {fileID: 1585972849}
         m_TargetAssemblyTypeName: OptionsMenu, Assembly-CSharp
         m_MethodName: FOVSliderValueChanged
         m_Mode: 1
@@ -467,27 +466,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
---- !u!114 &682000665
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 682000663}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f9b22ab7ca9d33448b7243bbd687305, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_InputField: {fileID: 1885245182}
-  m_Slider: {fileID: 682000666}
-  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
-  m_MouseInputField: {fileID: 8481638729773392118}
-  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
-  m_ControllerInputField: {fileID: 8481638729128731076}
-  m_FOVSlider: {fileID: 682000666}
-  m_FOVInputField: {fileID: 1885245182}
-  m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &771999481
 GameObject:
   m_ObjectHideFlags: 0
@@ -905,7 +883,6 @@ GameObject:
   - component: {fileID: 1885245186}
   - component: {fileID: 1885245185}
   - component: {fileID: 1885245182}
-  - component: {fileID: 1885245183}
   m_Layer: 5
   m_Name: FOVInputField
   m_TagString: Untagged
@@ -1051,7 +1028,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1885245183}
+      - m_Target: {fileID: 1585972849}
         m_TargetAssemblyTypeName: OptionsMenu, Assembly-CSharp
         m_MethodName: FOVInputValueChanged
         m_Mode: 1
@@ -1081,27 +1058,6 @@ MonoBehaviour:
   m_isRichTextEditingAllowed: 0
   m_LineLimit: 0
   m_InputValidator: {fileID: 0}
---- !u!114 &1885245183
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1885245181}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f9b22ab7ca9d33448b7243bbd687305, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_InputField: {fileID: 1885245182}
-  m_Slider: {fileID: 682000666}
-  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
-  m_MouseInputField: {fileID: 8481638729773392118}
-  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
-  m_ControllerInputField: {fileID: 8481638729128731076}
-  m_FOVSlider: {fileID: 682000666}
-  m_FOVInputField: {fileID: 1885245182}
-  m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &2002236004
 GameObject:
   m_ObjectHideFlags: 0
@@ -1137,10 +1093,10 @@ RectTransform:
   m_Father: {fileID: 8481638731046308500}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 940, y: -260}
-  m_SizeDelta: {x: 1880, y: 40}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2002236006
 MonoBehaviour:
@@ -1195,7 +1151,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.4, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1900,10 +1856,10 @@ RectTransform:
   m_Father: {fileID: 8481638729753994311}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 940, y: -689.5455}
-  m_SizeDelta: {x: 1880, y: 37.272728}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8481638729031540222
 MonoBehaviour:
@@ -1961,7 +1917,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -9.952637, y: 40.026672}
+  m_AnchoredPosition: {x: -9.952637, y: 40.02661}
   m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 1, y: 0}
 --- !u!222 &8481638729043463170
@@ -2187,7 +2143,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2409,10 +2365,10 @@ RectTransform:
   m_Father: {fileID: 8481638729753994311}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 940, y: -253.18184}
-  m_SizeDelta: {x: 1880, y: 37.272728}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8481638729077329019
 MonoBehaviour:
@@ -2444,7 +2400,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8481638729090264852}
   - component: {fileID: 8481638729090264859}
-  - component: {fileID: 8481638729090264858}
   m_Layer: 5
   m_Name: MouseSlider
   m_TagString: Untagged
@@ -2525,7 +2480,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8481638729090264858}
+      - m_Target: {fileID: 1585972849}
         m_TargetAssemblyTypeName: OptionsMenu, Assembly-CSharp
         m_MethodName: MouseSensitivitySliderChanged
         m_Mode: 1
@@ -2537,27 +2492,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
---- !u!114 &8481638729090264858
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8481638729090264853}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f9b22ab7ca9d33448b7243bbd687305, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_InputField: {fileID: 8481638729773392118}
-  m_Slider: {fileID: 8481638729090264859}
-  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
-  m_MouseInputField: {fileID: 8481638729773392118}
-  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
-  m_ControllerInputField: {fileID: 8481638729128731076}
-  m_FOVSlider: {fileID: 682000666}
-  m_FOVInputField: {fileID: 1885245182}
-  m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &8481638729104298118
 GameObject:
   m_ObjectHideFlags: 0
@@ -2726,10 +2660,10 @@ RectTransform:
   m_Father: {fileID: 8481638729709037927}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 949.4784, y: -170}
-  m_SizeDelta: {x: 1898.9568, y: 40}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 940, y: 0}
+  m_SizeDelta: {x: 1880, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8481638729108966723
 MonoBehaviour:
@@ -2763,7 +2697,6 @@ GameObject:
   - component: {fileID: 8481638729128731082}
   - component: {fileID: 8481638729128731083}
   - component: {fileID: 8481638729128731076}
-  - component: {fileID: 8481638729128731081}
   m_Layer: 5
   m_Name: ContSensInputField (TMP)
   m_TagString: Untagged
@@ -2909,7 +2842,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8481638729128731081}
+      - m_Target: {fileID: 1585972849}
         m_TargetAssemblyTypeName: OptionsMenu, Assembly-CSharp
         m_MethodName: ControllerSensitivityInputValueChanged
         m_Mode: 1
@@ -2939,27 +2872,6 @@ MonoBehaviour:
   m_isRichTextEditingAllowed: 0
   m_LineLimit: 0
   m_InputValidator: {fileID: 0}
---- !u!114 &8481638729128731081
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8481638729128731078}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f9b22ab7ca9d33448b7243bbd687305, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_InputField: {fileID: 8481638729128731076}
-  m_Slider: {fileID: 8481638729329750737}
-  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
-  m_MouseInputField: {fileID: 8481638729773392118}
-  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
-  m_ControllerInputField: {fileID: 8481638729128731076}
-  m_FOVSlider: {fileID: 682000666}
-  m_FOVInputField: {fileID: 1885245182}
-  m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &8481638729140426439
 GameObject:
   m_ObjectHideFlags: 0
@@ -3045,7 +2957,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.49995, y: 1}
+  m_AnchorMax: {x: 0.36842105, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3253,8 +3165,8 @@ RectTransform:
   m_Father: {fileID: 8481638730860041046}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3691,7 +3603,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8481638729276735297}
   - component: {fileID: 8481638729276735296}
-  - component: {fileID: 8481638729276735303}
   m_Layer: 5
   m_Name: MasterSlider
   m_TagString: Untagged
@@ -3772,9 +3683,9 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8481638730178674979}
+      - m_Target: {fileID: 1585972849}
         m_TargetAssemblyTypeName: OptionsMenu, Assembly-CSharp
-        m_MethodName: SliderValueChanged
+        m_MethodName: MasterVolumeSliderValueChanged
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3784,27 +3695,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
---- !u!114 &8481638729276735303
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8481638729276735298}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f9b22ab7ca9d33448b7243bbd687305, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_InputField: {fileID: 8481638730195082988}
-  m_Slider: {fileID: 8481638729276735296}
-  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
-  m_MouseInputField: {fileID: 8481638729773392118}
-  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
-  m_ControllerInputField: {fileID: 8481638729128731076}
-  m_FOVSlider: {fileID: 682000666}
-  m_FOVInputField: {fileID: 1885245182}
-  m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &8481638729284638114
 GameObject:
   m_ObjectHideFlags: 0
@@ -4315,7 +4205,6 @@ GameObject:
   - component: {fileID: 8481638729302415255}
   - component: {fileID: 8481638729302415248}
   - component: {fileID: 8481638729302415249}
-  - component: {fileID: 8481638729302415254}
   m_Layer: 5
   m_Name: MusicInputField (TMP)
   m_TagString: Untagged
@@ -4461,9 +4350,9 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8481638729302415254}
+      - m_Target: {fileID: 1585972849}
         m_TargetAssemblyTypeName: OptionsMenu, Assembly-CSharp
-        m_MethodName: VolumeInputValueChanged
+        m_MethodName: MusicVolumeInputValueChanged
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4491,27 +4380,6 @@ MonoBehaviour:
   m_isRichTextEditingAllowed: 0
   m_LineLimit: 0
   m_InputValidator: {fileID: 0}
---- !u!114 &8481638729302415254
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8481638729302415251}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f9b22ab7ca9d33448b7243bbd687305, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_InputField: {fileID: 8481638729302415249}
-  m_Slider: {fileID: 8481638730178675004}
-  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
-  m_MouseInputField: {fileID: 8481638729773392118}
-  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
-  m_ControllerInputField: {fileID: 8481638729128731076}
-  m_FOVSlider: {fileID: 682000666}
-  m_FOVInputField: {fileID: 1885245182}
-  m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &8481638729305886667
 GameObject:
   m_ObjectHideFlags: 0
@@ -4930,8 +4798,8 @@ RectTransform:
   m_Father: {fileID: 8481638730951061884}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.2857143, y: 0}
-  m_AnchorMax: {x: 0.2857143, y: 1}
+  m_AnchorMin: {x: 0.36842105, y: 0}
+  m_AnchorMax: {x: 0.36842105, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -4983,7 +4851,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8481638729329750738}
   - component: {fileID: 8481638729329750737}
-  - component: {fileID: 8481638729329750736}
   m_Layer: 5
   m_Name: ContSensSlider
   m_TagString: Untagged
@@ -5064,7 +4931,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8481638729329750736}
+      - m_Target: {fileID: 1585972849}
         m_TargetAssemblyTypeName: OptionsMenu, Assembly-CSharp
         m_MethodName: ControllerSensitivitySliderValueChanged
         m_Mode: 1
@@ -5076,27 +4943,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
---- !u!114 &8481638729329750736
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8481638729329750739}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f9b22ab7ca9d33448b7243bbd687305, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_InputField: {fileID: 8481638729128731076}
-  m_Slider: {fileID: 8481638729329750737}
-  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
-  m_MouseInputField: {fileID: 8481638729773392118}
-  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
-  m_ControllerInputField: {fileID: 8481638729128731076}
-  m_FOVSlider: {fileID: 682000666}
-  m_FOVInputField: {fileID: 1885245182}
-  m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &8481638729347006969
 GameObject:
   m_ObjectHideFlags: 0
@@ -5207,10 +5053,10 @@ RectTransform:
   m_Father: {fileID: 8481638730413492983}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 940, y: -80}
-  m_SizeDelta: {x: 1880, y: 40}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8481638729347969826
 MonoBehaviour:
@@ -6793,10 +6639,10 @@ RectTransform:
   m_Father: {fileID: 8481638729753994311}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 940, y: -602.27277}
-  m_SizeDelta: {x: 1880, y: 37.272728}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8481638729481963846
 MonoBehaviour:
@@ -7666,10 +7512,10 @@ RectTransform:
   m_Father: {fileID: 8481638730413492983}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 940, y: -170}
-  m_SizeDelta: {x: 1880, y: 40}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8481638729586017051
 MonoBehaviour:
@@ -9528,7 +9374,6 @@ GameObject:
   - component: {fileID: 8481638729773392116}
   - component: {fileID: 8481638729773392117}
   - component: {fileID: 8481638729773392118}
-  - component: {fileID: 8481638729773392123}
   m_Layer: 5
   m_Name: MouseSensInputField (TMP)
   m_TagString: Untagged
@@ -9674,9 +9519,9 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8481638729773392123}
+      - m_Target: {fileID: 1585972849}
         m_TargetAssemblyTypeName: OptionsMenu, Assembly-CSharp
-        m_MethodName: MouseSensitivityInputValueChanged
+        m_MethodName: MasterVolumeInputValueChanged
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9704,27 +9549,6 @@ MonoBehaviour:
   m_isRichTextEditingAllowed: 0
   m_LineLimit: 0
   m_InputValidator: {fileID: 0}
---- !u!114 &8481638729773392123
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8481638729773392112}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f9b22ab7ca9d33448b7243bbd687305, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_InputField: {fileID: 8481638729773392118}
-  m_Slider: {fileID: 8481638729090264859}
-  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
-  m_MouseInputField: {fileID: 8481638729773392118}
-  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
-  m_ControllerInputField: {fileID: 8481638729128731076}
-  m_FOVSlider: {fileID: 682000666}
-  m_FOVInputField: {fileID: 1885245182}
-  m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &8481638729774825606
 GameObject:
   m_ObjectHideFlags: 0
@@ -10472,6 +10296,7 @@ GameObject:
   - component: {fileID: 8481638729836502804}
   - component: {fileID: 8481638729836502810}
   - component: {fileID: 8481638729836502811}
+  - component: {fileID: 1585972849}
   m_Layer: 5
   m_Name: Pause
   m_TagString: Untagged
@@ -10528,7 +10353,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!114 &8481638729836502807
 MonoBehaviour:
@@ -10592,11 +10417,9 @@ MonoBehaviour:
   - {fileID: 8481638729379449185}
   m_OptionsMenuUI:
   - {fileID: 8481638730775026128}
-  - {fileID: 8481638730304602533}
   - {fileID: 8481638730409171892}
   - {fileID: 8481638730155033803}
   - {fileID: 8481638729753994304}
-  - {fileID: 8481638730413492976}
   - {fileID: 8481638731046308501}
   - {fileID: 8481638729709037923}
   - {fileID: 8481638730798963564}
@@ -10638,6 +10461,34 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1585972849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8481638729836502801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f9b22ab7ca9d33448b7243bbd687305, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MasterVolumeInputField: {fileID: 8481638730195082988}
+  m_MasterVolumeSlider: {fileID: 8481638729276735296}
+  m_DialogueVolumeInputField: {fileID: 8481638730502390269}
+  m_DialogueVolumeSlider: {fileID: 8481638730948384392}
+  m_SFXVolumeInputField: {fileID: 8481638730651673875}
+  m_SFXVolumeSlider: {fileID: 8481638730773664270}
+  m_MusicVolumeInputField: {fileID: 8481638729302415249}
+  m_MusicVolumeSlider: {fileID: 8481638730178675004}
+  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
+  m_MouseInputField: {fileID: 8481638729773392118}
+  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
+  m_ControllerInputField: {fileID: 8481638729128731076}
+  m_FOVSlider: {fileID: 682000666}
+  m_FOVInputField: {fileID: 1885245182}
+  m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
+  resolutionDropdown: {fileID: 8481638729902512418}
 --- !u!1 &8481638729840982787
 GameObject:
   m_ObjectHideFlags: 0
@@ -11060,10 +10911,10 @@ RectTransform:
   m_Father: {fileID: 8481638729753994311}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 940, y: -165.9091}
-  m_SizeDelta: {x: 1880, y: 37.272728}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8481638729852140729
 MonoBehaviour:
@@ -11511,7 +11362,19 @@ MonoBehaviour:
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1585972849}
+        m_TargetAssemblyTypeName: OptionsMenu, Assembly-CSharp
+        m_MethodName: SetResolution
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_AlphaFadeSpeed: 0.15
 --- !u!1 &8481638729906830118
 GameObject:
@@ -11680,10 +11543,10 @@ RectTransform:
   m_Father: {fileID: 8481638729753994311}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 940, y: -776.8182}
-  m_SizeDelta: {x: 1880, y: 37.272728}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8481638729913159260
 MonoBehaviour:
@@ -11908,7 +11771,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.2857143, y: 1}
+  m_AnchorMax: {x: 0.36842105, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -12293,10 +12156,10 @@ RectTransform:
   m_Father: {fileID: 8481638731046308500}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 940, y: 0}
-  m_SizeDelta: {x: 1880, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: -80}
+  m_SizeDelta: {x: 0, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8481638729981487838
 MonoBehaviour:
@@ -12387,10 +12250,10 @@ RectTransform:
   m_Father: {fileID: 8481638729753994311}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 940, y: -340.45456}
-  m_SizeDelta: {x: 1880, y: 37.272728}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8481638730032576729
 MonoBehaviour:
@@ -12841,7 +12704,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -13185,10 +13048,10 @@ RectTransform:
   m_Father: {fileID: 8481638729753994311}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 940, y: -78.63637}
-  m_SizeDelta: {x: 1880, y: 37.272728}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8481638730105201386
 MonoBehaviour:
@@ -13513,8 +13376,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 712.5, y: 500}
-  m_SizeDelta: {x: 475, y: 80.7387}
+  m_AnchoredPosition: {x: 633, y: 500}
+  m_SizeDelta: {x: 633, y: 80.7387}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8481638730155033807
 CanvasRenderer:
@@ -13867,7 +13730,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8481638730178675005}
   - component: {fileID: 8481638730178675004}
-  - component: {fileID: 8481638730178674979}
   m_Layer: 5
   m_Name: MusicSlider
   m_TagString: Untagged
@@ -13948,9 +13810,9 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8481638730178674979}
+      - m_Target: {fileID: 1585972849}
         m_TargetAssemblyTypeName: OptionsMenu, Assembly-CSharp
-        m_MethodName: SliderValueChanged
+        m_MethodName: MusicVolumeSliderValueChanged
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -13960,27 +13822,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
---- !u!114 &8481638730178674979
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8481638730178675006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f9b22ab7ca9d33448b7243bbd687305, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_InputField: {fileID: 8481638729302415249}
-  m_Slider: {fileID: 8481638730178675004}
-  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
-  m_MouseInputField: {fileID: 8481638729773392118}
-  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
-  m_ControllerInputField: {fileID: 8481638729128731076}
-  m_FOVSlider: {fileID: 682000666}
-  m_FOVInputField: {fileID: 1885245182}
-  m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &8481638730189127149
 GameObject:
   m_ObjectHideFlags: 0
@@ -14220,7 +14061,6 @@ GameObject:
   - component: {fileID: 8481638730195082898}
   - component: {fileID: 8481638730195082899}
   - component: {fileID: 8481638730195082988}
-  - component: {fileID: 8481638730195082897}
   m_Layer: 5
   m_Name: MasterInputField (TMP)
   m_TagString: Untagged
@@ -14366,9 +14206,9 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8481638730195082897}
+      - m_Target: {fileID: 1585972849}
         m_TargetAssemblyTypeName: OptionsMenu, Assembly-CSharp
-        m_MethodName: VolumeInputValueChanged
+        m_MethodName: MasterVolumeInputValueChanged
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -14396,27 +14236,6 @@ MonoBehaviour:
   m_isRichTextEditingAllowed: 0
   m_LineLimit: 0
   m_InputValidator: {fileID: 0}
---- !u!114 &8481638730195082897
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8481638730195082990}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f9b22ab7ca9d33448b7243bbd687305, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_InputField: {fileID: 8481638730195082988}
-  m_Slider: {fileID: 8481638729276735296}
-  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
-  m_MouseInputField: {fileID: 8481638729773392118}
-  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
-  m_ControllerInputField: {fileID: 8481638729128731076}
-  m_FOVSlider: {fileID: 682000666}
-  m_FOVInputField: {fileID: 1885245182}
-  m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &8481638730196737866
 GameObject:
   m_ObjectHideFlags: 0
@@ -14984,7 +14803,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 1
+          m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 8481638730409171892}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
@@ -15250,7 +15069,19 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1585972849}
+        m_TargetAssemblyTypeName: OptionsMenu, Assembly-CSharp
+        m_MethodName: SetFullScreen
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   m_IsOn: 1
 --- !u!1 &8481638730233842672
 GameObject:
@@ -15679,8 +15510,8 @@ RectTransform:
   m_Father: {fileID: 8481638730068339123}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -15754,8 +15585,8 @@ RectTransform:
   m_Father: {fileID: 8481638730324953278}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -15829,8 +15660,8 @@ RectTransform:
   m_Father: {fileID: 8481638729935610652}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.49995, y: 0}
-  m_AnchorMax: {x: 0.49995, y: 1}
+  m_AnchorMin: {x: 0.36842105, y: 0}
+  m_AnchorMax: {x: 0.36842105, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -16196,7 +16027,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 1
+          m_BoolArgument: 0
         m_CallState: 1
       - m_Target: {fileID: 8481638729709037923}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
@@ -16243,10 +16074,10 @@ RectTransform:
   m_Father: {fileID: 8481638731046308500}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 940, y: 0}
-  m_SizeDelta: {x: 1880, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: -170}
+  m_SizeDelta: {x: 0, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8481638730319811958
 MonoBehaviour:
@@ -16420,10 +16251,10 @@ RectTransform:
   m_Father: {fileID: 8481638729753994311}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 940, y: -864.0909}
-  m_SizeDelta: {x: 1880, y: 37.272728}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8481638730342351846
 MonoBehaviour:
@@ -16767,10 +16598,10 @@ RectTransform:
   m_Father: {fileID: 8481638729753994311}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 940, y: -951.3636}
-  m_SizeDelta: {x: 1880, y: 37.272728}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8481638730388075832
 MonoBehaviour:
@@ -16828,8 +16659,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 237.5, y: 500}
-  m_SizeDelta: {x: 475, y: 80}
+  m_AnchoredPosition: {x: 0, y: 500}
+  m_SizeDelta: {x: 633, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8481638730409171896
 CanvasRenderer:
@@ -17482,7 +17313,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -17558,10 +17389,10 @@ RectTransform:
   m_Father: {fileID: 8481638729709037927}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 949.4784, y: -350}
-  m_SizeDelta: {x: 1898.9568, y: 40}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 940, y: 0}
+  m_SizeDelta: {x: 1880, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8481638730464593543
 MonoBehaviour:
@@ -17701,10 +17532,10 @@ RectTransform:
   m_Father: {fileID: 8481638729753994311}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 940, y: -515.00006}
-  m_SizeDelta: {x: 1880, y: 37.272728}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8481638730487675670
 MonoBehaviour:
@@ -17760,10 +17591,10 @@ RectTransform:
   m_Father: {fileID: 8481638729709037927}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 949.4784, y: -260}
-  m_SizeDelta: {x: 1898.9568, y: 40}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 940, y: 0}
+  m_SizeDelta: {x: 1880, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8481638730494137730
 MonoBehaviour:
@@ -17931,7 +17762,6 @@ GameObject:
   - component: {fileID: 8481638730502390243}
   - component: {fileID: 8481638730502390268}
   - component: {fileID: 8481638730502390269}
-  - component: {fileID: 8481638730502390242}
   m_Layer: 5
   m_Name: DialogueInputField (TMP)
   m_TagString: Untagged
@@ -18077,9 +17907,9 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8481638730502390242}
+      - m_Target: {fileID: 1585972849}
         m_TargetAssemblyTypeName: OptionsMenu, Assembly-CSharp
-        m_MethodName: VolumeInputValueChanged
+        m_MethodName: DialogueVolumeInputValueChanged
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -18107,27 +17937,6 @@ MonoBehaviour:
   m_isRichTextEditingAllowed: 0
   m_LineLimit: 0
   m_InputValidator: {fileID: 0}
---- !u!114 &8481638730502390242
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8481638730502390271}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f9b22ab7ca9d33448b7243bbd687305, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_InputField: {fileID: 8481638730502390269}
-  m_Slider: {fileID: 8481638730948384392}
-  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
-  m_MouseInputField: {fileID: 8481638729773392118}
-  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
-  m_ControllerInputField: {fileID: 8481638729128731076}
-  m_FOVSlider: {fileID: 682000666}
-  m_FOVInputField: {fileID: 1885245182}
-  m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &8481638730528172806
 GameObject:
   m_ObjectHideFlags: 0
@@ -18162,10 +17971,10 @@ RectTransform:
   m_Father: {fileID: 8481638729709037927}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 949.4784, y: -80}
-  m_SizeDelta: {x: 1898.9568, y: 40}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 940, y: 0}
+  m_SizeDelta: {x: 1880, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8481638730528172804
 MonoBehaviour:
@@ -19258,7 +19067,6 @@ GameObject:
   - component: {fileID: 8481638730651673873}
   - component: {fileID: 8481638730651673874}
   - component: {fileID: 8481638730651673875}
-  - component: {fileID: 8481638730651673872}
   m_Layer: 5
   m_Name: SFXInputField (TMP)
   m_TagString: Untagged
@@ -19404,9 +19212,9 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8481638730651673872}
+      - m_Target: {fileID: 1585972849}
         m_TargetAssemblyTypeName: OptionsMenu, Assembly-CSharp
-        m_MethodName: VolumeInputValueChanged
+        m_MethodName: SFXVolumeInputValueChanged
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -19434,27 +19242,6 @@ MonoBehaviour:
   m_isRichTextEditingAllowed: 0
   m_LineLimit: 0
   m_InputValidator: {fileID: 0}
---- !u!114 &8481638730651673872
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8481638730651673965}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f9b22ab7ca9d33448b7243bbd687305, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_InputField: {fileID: 8481638730651673875}
-  m_Slider: {fileID: 8481638730773664270}
-  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
-  m_MouseInputField: {fileID: 8481638729773392118}
-  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
-  m_ControllerInputField: {fileID: 8481638729128731076}
-  m_FOVSlider: {fileID: 682000666}
-  m_FOVInputField: {fileID: 1885245182}
-  m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &8481638730671660529
 GameObject:
   m_ObjectHideFlags: 0
@@ -20500,7 +20287,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8481638730773664271}
   - component: {fileID: 8481638730773664270}
-  - component: {fileID: 8481638730773664269}
   m_Layer: 5
   m_Name: SFXSlider
   m_TagString: Untagged
@@ -20581,9 +20367,9 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8481638730178674979}
+      - m_Target: {fileID: 1585972849}
         m_TargetAssemblyTypeName: OptionsMenu, Assembly-CSharp
-        m_MethodName: SliderValueChanged
+        m_MethodName: SFXVolumeSliderValueChanged
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -20593,27 +20379,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
---- !u!114 &8481638730773664269
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8481638730773664264}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f9b22ab7ca9d33448b7243bbd687305, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_InputField: {fileID: 8481638730651673875}
-  m_Slider: {fileID: 8481638730773664270}
-  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
-  m_MouseInputField: {fileID: 8481638729773392118}
-  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
-  m_ControllerInputField: {fileID: 8481638729128731076}
-  m_FOVSlider: {fileID: 682000666}
-  m_FOVInputField: {fileID: 1885245182}
-  m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &8481638730775026128
 GameObject:
   m_ObjectHideFlags: 0
@@ -20650,8 +20415,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -712.5, y: 500}
-  m_SizeDelta: {x: 475, y: 80}
+  m_AnchoredPosition: {x: -633, y: 500}
+  m_SizeDelta: {x: 633, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8481638730775026132
 CanvasRenderer:
@@ -21403,8 +21168,8 @@ RectTransform:
   m_Father: {fileID: 8481638729622074627}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -22952,7 +22717,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8481638730948384393}
   - component: {fileID: 8481638730948384392}
-  - component: {fileID: 8481638730948384399}
   m_Layer: 5
   m_Name: DialogueSlider
   m_TagString: Untagged
@@ -23033,9 +22797,9 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8481638730178674979}
+      - m_Target: {fileID: 1585972849}
         m_TargetAssemblyTypeName: OptionsMenu, Assembly-CSharp
-        m_MethodName: SliderValueChanged
+        m_MethodName: DialogueVolumeSliderValueChanged
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -23045,27 +22809,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
---- !u!114 &8481638730948384399
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8481638730948384394}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f9b22ab7ca9d33448b7243bbd687305, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_InputField: {fileID: 8481638730502390269}
-  m_Slider: {fileID: 8481638730948384392}
-  m_MouseSensitivitySlider: {fileID: 8481638729090264859}
-  m_MouseInputField: {fileID: 8481638729773392118}
-  m_ControllerSensitivitySlider: {fileID: 8481638729329750737}
-  m_ControllerInputField: {fileID: 8481638729128731076}
-  m_FOVSlider: {fileID: 682000666}
-  m_FOVInputField: {fileID: 1885245182}
-  m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
 --- !u!1 &8481638730951061885
 GameObject:
   m_ObjectHideFlags: 0
@@ -23612,10 +23355,10 @@ RectTransform:
   m_Father: {fileID: 8481638729753994311}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 940, y: -427.7273}
-  m_SizeDelta: {x: 1880, y: 37.272728}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8481638731016639205
 MonoBehaviour:
@@ -24213,7 +23956,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}

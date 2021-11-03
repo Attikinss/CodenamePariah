@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering.HighDefinition;
 using System;
+using FMODUnity;
 
 /// <summary>
 /// This GameManager is a temporary class by Daniel. I'm using it now just as a place to store all the weapon shot decals.
@@ -66,7 +67,10 @@ public class GameManager : MonoBehaviour
     public static Vector3 s_CheckPointPos;
     public static GameObject s_CheckpointAgentPrefab; // It's important that this is the prefab because we will be instantiating it.
 
-
+    // This variable is used as the dash animation delay for soldiers, scientists and pariah so that the dash animation
+    // looks like it is pulling the player forwards, rather than playing instantly.
+    [Tooltip("Universal dash delay to match animation.")]
+    public float m_DashDelay = 1;
     private void Awake()
 	{
         m_Monobehaviour = this;
@@ -82,9 +86,12 @@ public class GameManager : MonoBehaviour
             Debug.LogError("There are multiple GameManager components in the scene!");
             Destroy(this.gameObject);
         }
-	}
 
-	public void TogglePause(bool toggle)
+        FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
+        allBussess.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
+    }
+
+    public void TogglePause(bool toggle)
     { }
 
     // Start is called before the first frame update

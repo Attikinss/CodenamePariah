@@ -27,7 +27,8 @@ public class Portal : MonoBehaviour
             if (agent.Possessed)
             {
                 Cursor.lockState = CursorLockMode.Locked;
-                SceneManager.LoadScene("MainMenu");
+                SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
+                //SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
             }
         }
     }

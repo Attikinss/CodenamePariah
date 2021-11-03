@@ -316,6 +316,7 @@ MonoBehaviour:
   m_Active: 0
   m_Dashing: 0
   m_DashCoolingDown: 0
+  m_IsDelayedDashing: 0
   m_type: 0
   m_StartingAgent: 0
   m_OnDestroyedDamage: 25
@@ -358,7 +359,6 @@ MonoBehaviour:
     m_ModifiedRight: {x: 0, y: 0, z: 0}
     m_ModifiedForward: {x: 0, y: 0, z: 0}
     m_MoveDirection: {x: 0, y: 0, z: 0}
-  m_DashDelay: 0.08
   m_DrainAbility:
     damage: 2
     restore: 2
@@ -1040,6 +1040,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5500129080964715735}
     m_Modifications:
+    - target: {fileID: -1431870692015168824, guid: db2a7dce86567b548977e248deeed374, type: 3}
+      propertyPath: EventID
+      value: event:/Firearms/AK Equip
+      objectReference: {fileID: 0}
     - target: {fileID: 1121666832464311195, guid: db2a7dce86567b548977e248deeed374, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -1079,6 +1083,10 @@ PrefabInstance:
     - target: {fileID: 6886623512333823982, guid: db2a7dce86567b548977e248deeed374, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 7052651437313384602, guid: db2a7dce86567b548977e248deeed374, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7052651437313384602, guid: db2a7dce86567b548977e248deeed374, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -1168,6 +1176,10 @@ PrefabInstance:
       propertyPath: m_FiringPosition
       value: 
       objectReference: {fileID: 838868357373847267}
+    - target: {fileID: 8557315745383636170, guid: db2a7dce86567b548977e248deeed374, type: 3}
+      propertyPath: m_AIDamageModifier
+      value: 0.25
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db2a7dce86567b548977e248deeed374, type: 3}
 --- !u!4 &2055328195747990214 stripped
@@ -1257,6 +1269,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Animation_Character_Soldier_001_IdleCombat
       objectReference: {fileID: 0}
+    - target: {fileID: 4560215485048933155, guid: b861ad0d423527f409951c13742f95ad, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 3c22f445363cd47408a6923a41f8093b, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b861ad0d423527f409951c13742f95ad, type: 3}
 --- !u!4 &8601016158396914574 stripped

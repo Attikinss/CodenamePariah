@@ -987,6 +987,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2917833147781361871}
     - target: {fileID: 2238759060784313516, guid: c09c029d69a612d48a5dfa6fdefbb62e, type: 3}
+      propertyPath: m_AIDamageModifier
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2238759060784313516, guid: c09c029d69a612d48a5dfa6fdefbb62e, type: 3}
       propertyPath: m_RoundsInMagazine
       value: 10
       objectReference: {fileID: 0}

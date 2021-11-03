@@ -1196,6 +1196,17 @@ public class Weapon : MonoBehaviour
             m_AudioEquipEvent.Trigger();
     }
 
+    /// <summary>
+    /// Used to stop all playing sounds. This is primarily to stop sounds from playing after the agent has been destroyed.
+    /// </summary>
+    public void StopSounds()
+    {
+        m_AudioEmptyClipEvent.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        m_AudioEquipEvent.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        m_AudioReloadEvent.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        m_AudioFireEvent.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
+    }
+
     public void PlayBulletEffect(bool isDualWield, bool hasHit, Vector3 direction)
     {
         m_Particles.PlayBulletEffect(isDualWield, hasHit, direction);

@@ -1,5 +1,51 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-9221710368268147727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Kill And Escape
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Kill And Escape
+  guid: f6e2cff5a88951449018f4e0825c2a1a
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-9043582533745864497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Don't Struggle
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Don't Struggle
+  guid: a10e64f22211a24dbbff044b5a391351
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-9031939228785694054
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15,16 +61,10 @@ MonoBehaviour:
   Path: Assets/Audio/FMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 637699134191985806
+  lastModified: 637713036673036907
   FileSizes:
-  - Name: 
-    Value: 1416
-  - Name: 
-    Value: 1416
-  - Name: 
-    Value: 1416
   - Name: Desktop
-    Value: 1416
+    Value: 1884
   Exists: 1
 --- !u!114 &-9003733366050351740
 MonoBehaviour:
@@ -49,6 +89,75 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 8250
+--- !u!114 &-8965245389334740156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Codename Pariah
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Codename Pariah
+  guid: 80f54bc7bd657d499d5c8d15e9259fc8
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-8934265805755297032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/You Are Mine
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/You Are Mine
+  guid: 553bcbe6c9c22d4ca7c7e367aabf7680
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-8784411081735299746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environment/Alarm
+  m_EditorClassIdentifier: 
+  Path: event:/Environment/Alarm
+  guid: 5c3e20579b90e74e8bbba3807b8a10bc
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 19500
 --- !u!114 &-8586381247250199102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,6 +174,29 @@ MonoBehaviour:
   guid: b7b877ee9e2d2843b9f1e2d2c0df86bd
   Banks:
   - {fileID: -7078147009611006735}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-8501721968689885119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Death Incarnate
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Death Incarnate
+  guid: e2fef828d0681546984a2d817ecba062
+  Banks:
+  - {fileID: 2628794813172664653}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -95,6 +227,29 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-8465888560162313166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Feed
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Feed
+  guid: 96007cb3e0a00f43afe348a722c7ad44
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-8321349979581408123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,6 +272,98 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
+  Length: 0
+--- !u!114 &-8287424460941788509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Kill And Escape
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Kill And Escape
+  guid: f6e2cff5a88951449018f4e0825c2a1a
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-8280871681871563553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Kill And Escape
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Kill And Escape
+  guid: f6e2cff5a88951449018f4e0825c2a1a
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-7967921593911350005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Dash
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Dash
+  guid: b683a6095e024c47840744e77fa75141
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-7920145552969964487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environment/Lockdown
+  m_EditorClassIdentifier: 
+  Path: event:/Environment/Lockdown
+  guid: 21c1b68036e4eb42b37b6d638a221675
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 50
   Length: 0
 --- !u!114 &-7907370174655305502
 MonoBehaviour:
@@ -141,6 +388,29 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 8.2
   Length: 0
+--- !u!114 &-7870132762384714093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environment/Alarm
+  m_EditorClassIdentifier: 
+  Path: event:/Environment/Alarm
+  guid: 5c3e20579b90e74e8bbba3807b8a10bc
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 19500
 --- !u!114 &-7865987439468627016
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,6 +427,29 @@ MonoBehaviour:
   guid: b7b877ee9e2d2843b9f1e2d2c0df86bd
   Banks:
   - {fileID: -4274408702794356451}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-7775646933301632748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/You Are Mine
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/You Are Mine
+  guid: 553bcbe6c9c22d4ca7c7e367aabf7680
+  Banks:
+  - {fileID: 2628794813172664653}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -187,6 +480,98 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 60500
+--- !u!114 &-7351900075462876514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Feed
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Feed
+  guid: 96007cb3e0a00f43afe348a722c7ad44
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-7347471546707887827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/Pistol Equip
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/Pistol Equip
+  guid: 6be373afd864354791967bb8f8824706
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-7308352597326583075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environment/Lockdown
+  m_EditorClassIdentifier: 
+  Path: event:/Environment/Lockdown
+  guid: 21c1b68036e4eb42b37b6d638a221675
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 50
+  Length: 0
+--- !u!114 &-7231053359413145686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/AK Equip
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/AK Equip
+  guid: 5a6ce5a95f72a048963cf5535963d598
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-7194089176168874997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -230,6 +615,75 @@ MonoBehaviour:
   - Name: Desktop
     Value: 868128
   Exists: 1
+--- !u!114 &-6982421552376935024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Codename Pariah
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Codename Pariah
+  guid: 80f54bc7bd657d499d5c8d15e9259fc8
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-6483107280263655499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Kill And Escape
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Kill And Escape
+  guid: f6e2cff5a88951449018f4e0825c2a1a
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-6479445784157348006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environment/Lockdown
+  m_EditorClassIdentifier: 
+  Path: event:/Environment/Lockdown
+  guid: 21c1b68036e4eb42b37b6d638a221675
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 50
+  Length: 0
 --- !u!114 &-6433608157438271582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -276,6 +730,75 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-6256767744905870457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environment/Alarm
+  m_EditorClassIdentifier: 
+  Path: event:/Environment/Alarm
+  guid: 5c3e20579b90e74e8bbba3807b8a10bc
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 19500
+--- !u!114 &-5831176679202926616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Kill And Escape
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Kill And Escape
+  guid: f6e2cff5a88951449018f4e0825c2a1a
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-5762166694702444885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/Pistol Equip
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/Pistol Equip
+  guid: 6be373afd864354791967bb8f8824706
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-5628462409967189910
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -292,6 +815,29 @@ MonoBehaviour:
   guid: f0073fcbe5c16940ae74a9c029ecec5b
   Banks:
   - {fileID: -7078147009611006735}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-5009616825638954738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Dash
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Dash
+  guid: b683a6095e024c47840744e77fa75141
+  Banks:
+  - {fileID: 2628794813172664653}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -322,6 +868,52 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-4965365424161073633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Codename Pariah
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Codename Pariah
+  guid: 80f54bc7bd657d499d5c8d15e9259fc8
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-4864169791457765836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Death Incarnate
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Death Incarnate
+  guid: e2fef828d0681546984a2d817ecba062
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-4822692692206257876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -342,6 +934,52 @@ MonoBehaviour:
   - Name: Desktop
     Value: 876832
   Exists: 1
+--- !u!114 &-4737105552569080116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Death Incarnate
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Death Incarnate
+  guid: e2fef828d0681546984a2d817ecba062
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-4620836741782107613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Dash
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Dash
+  guid: b683a6095e024c47840744e77fa75141
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-4520736879419315369
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -365,6 +1003,29 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-4509796285993468203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environment/Lockdown
+  m_EditorClassIdentifier: 
+  Path: event:/Environment/Lockdown
+  guid: 21c1b68036e4eb42b37b6d638a221675
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 50
+  Length: 0
 --- !u!114 &-4443755497042544398
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -387,6 +1048,52 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
+  Length: 0
+--- !u!114 &-4422036465393988616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environment/Alarm
+  m_EditorClassIdentifier: 
+  Path: event:/Environment/Alarm
+  guid: 5c3e20579b90e74e8bbba3807b8a10bc
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 19500
+--- !u!114 &-4295804630609678526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environment/Lockdown
+  m_EditorClassIdentifier: 
+  Path: event:/Environment/Lockdown
+  guid: 21c1b68036e4eb42b37b6d638a221675
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 50
   Length: 0
 --- !u!114 &-4274408702794356451
 MonoBehaviour:
@@ -431,6 +1138,75 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 8.2
   Length: 0
+--- !u!114 &-3947104651557767300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/Pistol Equip
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/Pistol Equip
+  guid: 6be373afd864354791967bb8f8824706
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-3910751402157120260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/You Are Mine
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/You Are Mine
+  guid: 553bcbe6c9c22d4ca7c7e367aabf7680
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-3802786333455128235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Dash
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Dash
+  guid: b683a6095e024c47840744e77fa75141
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-3765004934953834099
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -469,6 +1245,98 @@ MonoBehaviour:
   - Name: Desktop
     Value: 1412
   Exists: 1
+--- !u!114 &-3459527466209695745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/Pistol Equip
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/Pistol Equip
+  guid: 6be373afd864354791967bb8f8824706
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-3399890636899163577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/AK Equip
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/AK Equip
+  guid: 5a6ce5a95f72a048963cf5535963d598
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-3110765875172537214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Don't Struggle
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Don't Struggle
+  guid: a10e64f22211a24dbbff044b5a391351
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-3102680200385911241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environment/Lockdown
+  m_EditorClassIdentifier: 
+  Path: event:/Environment/Lockdown
+  guid: 21c1b68036e4eb42b37b6d638a221675
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 50
+  Length: 0
 --- !u!114 &-3016870329388726373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -485,6 +1353,121 @@ MonoBehaviour:
   guid: e83182871534e7478d24c7272ac9df77
   Banks:
   - {fileID: -4274408702794356451}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-2904834343015186941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Codename Pariah
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Codename Pariah
+  guid: 80f54bc7bd657d499d5c8d15e9259fc8
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-2844764340856920720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environment/Alarm
+  m_EditorClassIdentifier: 
+  Path: event:/Environment/Alarm
+  guid: 5c3e20579b90e74e8bbba3807b8a10bc
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 19500
+--- !u!114 &-2752996649553265440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Codename Pariah
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Codename Pariah
+  guid: 80f54bc7bd657d499d5c8d15e9259fc8
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-2739607859210522142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Kill And Escape
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Kill And Escape
+  guid: f6e2cff5a88951449018f4e0825c2a1a
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-2710907637967769013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Dash
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Dash
+  guid: b683a6095e024c47840744e77fa75141
+  Banks:
+  - {fileID: 2628794813172664653}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -529,6 +1512,75 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: event:/Pariah SFX/Wilhelm Scream
   guid: d0380bb792a46e428c6be9cad76e716f
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-2528361443021456135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Death Incarnate
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Death Incarnate
+  guid: e2fef828d0681546984a2d817ecba062
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-2231435358250217522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/You Are Mine
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/You Are Mine
+  guid: 553bcbe6c9c22d4ca7c7e367aabf7680
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-1997710780602965771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/You Are Mine
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/You Are Mine
+  guid: 553bcbe6c9c22d4ca7c7e367aabf7680
   Banks:
   - {fileID: 2628794813172664653}
   IsStream: 0
@@ -584,6 +1636,52 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-1273084170868004457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/You Are Mine
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/You Are Mine
+  guid: 553bcbe6c9c22d4ca7c7e367aabf7680
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-1246909440166144703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Don't Struggle
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Don't Struggle
+  guid: a10e64f22211a24dbbff044b5a391351
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-1207310992797798026
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -618,6 +1716,144 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: event:/Pariah SFX/Death Heartbeat
   guid: 8afa65d368218448af1047e284133e2a
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-983341381110379169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/Pistol Equip
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/Pistol Equip
+  guid: 6be373afd864354791967bb8f8824706
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-965019536028167250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Dash
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Dash
+  guid: b683a6095e024c47840744e77fa75141
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-872764329967349558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/Pistol Equip
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/Pistol Equip
+  guid: 6be373afd864354791967bb8f8824706
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-689830218234425244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Feed
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Feed
+  guid: 96007cb3e0a00f43afe348a722c7ad44
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-578073925563162914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environment/Lockdown
+  m_EditorClassIdentifier: 
+  Path: event:/Environment/Lockdown
+  guid: 21c1b68036e4eb42b37b6d638a221675
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 50
+  Length: 0
+--- !u!114 &-511702767948120146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/AK Equip
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/AK Equip
+  guid: 5a6ce5a95f72a048963cf5535963d598
   Banks:
   - {fileID: 2628794813172664653}
   IsStream: 0
@@ -696,6 +1932,52 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-312087308849967589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environment/Alarm
+  m_EditorClassIdentifier: 
+  Path: event:/Environment/Alarm
+  guid: 5c3e20579b90e74e8bbba3807b8a10bc
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 19500
+--- !u!114 &-283303758233896530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Don't Struggle
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Don't Struggle
+  guid: a10e64f22211a24dbbff044b5a391351
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-263696643104824514
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -712,6 +1994,52 @@ MonoBehaviour:
   guid: e83182871534e7478d24c7272ac9df77
   Banks:
   - {fileID: -7078147009611006735}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-261438829905740101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environment/Alarm
+  m_EditorClassIdentifier: 
+  Path: event:/Environment/Alarm
+  guid: 5c3e20579b90e74e8bbba3807b8a10bc
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 19500
+--- !u!114 &-208492523134285361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Death Incarnate
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Death Incarnate
+  guid: e2fef828d0681546984a2d817ecba062
+  Banks:
+  - {fileID: 2628794813172664653}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -736,7 +2064,6 @@ MonoBehaviour:
   - {fileID: 2628794813172664653}
   EditorEvents:
   - {fileID: 7700522873110491985}
-  - {fileID: -9003733366050351740}
   - {fileID: -7907370174655305502}
   - {fileID: 8511645704504445916}
   - {fileID: -1086870289437730575}
@@ -749,13 +2076,93 @@ MonoBehaviour:
   - {fileID: 4139936212866859565}
   - {fileID: -2581052955444034632}
   - {fileID: 5764723691525486919}
+  - {fileID: 8401662343089494359}
+  - {fileID: -1273084170868004457}
+  - {fileID: -7231053359413145686}
+  - {fileID: -312087308849967589}
+  - {fileID: -983341381110379169}
+  - {fileID: -2752996649553265440}
+  - {fileID: 7375194209424306061}
+  - {fileID: -9043582533745864497}
+  - {fileID: -7967921593911350005}
+  - {fileID: -8501721968689885119}
+  - {fileID: 3358270821849311672}
   EditorParameters: []
   MasterBanks:
   - {fileID: 2628794813172664653}
   StringsBanks:
   - {fileID: -9031939228785694054}
-  stringsBankWriteTime: 637699134191985806
+  stringsBankWriteTime: 637713036673036907
   cacheVersion: 8
+--- !u!114 &125634795784209512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Codename Pariah
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Codename Pariah
+  guid: 80f54bc7bd657d499d5c8d15e9259fc8
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &180603964878028225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Death Incarnate
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Death Incarnate
+  guid: e2fef828d0681546984a2d817ecba062
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &279741774371130281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/AK Equip
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/AK Equip
+  guid: 5a6ce5a95f72a048963cf5535963d598
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &471120482961179575
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -772,13 +2179,243 @@ MonoBehaviour:
   guid: 49a91868f5c93d429e3ca9f5657b8ef4
   Banks:
   - {fileID: 2628794813172664653}
-  IsStream: 1
+  IsStream: 0
   Is3D: 1
   IsOneShot: 0
   Parameters: []
   MinDistance: 1
   MaxDistance: 50
-  Length: 60500
+  Length: 8000
+--- !u!114 &537027858005489443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Death Incarnate
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Death Incarnate
+  guid: e2fef828d0681546984a2d817ecba062
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &812226259208895755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Feed
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Feed
+  guid: 96007cb3e0a00f43afe348a722c7ad44
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &1075149415158415818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Codename Pariah
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Codename Pariah
+  guid: 80f54bc7bd657d499d5c8d15e9259fc8
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &1086449705578331754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/AK Equip
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/AK Equip
+  guid: 5a6ce5a95f72a048963cf5535963d598
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &1505040495286935930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/Pistol Equip
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/Pistol Equip
+  guid: 6be373afd864354791967bb8f8824706
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &1553374981746236417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Don't Struggle
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Don't Struggle
+  guid: a10e64f22211a24dbbff044b5a391351
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &1638506947963596622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/You Are Mine
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/You Are Mine
+  guid: 553bcbe6c9c22d4ca7c7e367aabf7680
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &1780557839310092144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/Pistol Equip
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/Pistol Equip
+  guid: 6be373afd864354791967bb8f8824706
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &1867786316678742483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Feed
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Feed
+  guid: 96007cb3e0a00f43afe348a722c7ad44
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &1895023080298413267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Codename Pariah
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Codename Pariah
+  guid: 80f54bc7bd657d499d5c8d15e9259fc8
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &2085823984476209860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -802,6 +2439,75 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &2115087378640029357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/Pistol Equip
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/Pistol Equip
+  guid: 6be373afd864354791967bb8f8824706
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &2207893494456447558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Dash
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Dash
+  guid: b683a6095e024c47840744e77fa75141
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &2287608866694339284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Don't Struggle
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Don't Struggle
+  guid: a10e64f22211a24dbbff044b5a391351
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &2315921855083289795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -818,6 +2524,29 @@ MonoBehaviour:
   guid: 133e193173c87f41a76bdd02d52345ab
   Banks:
   - {fileID: -3765004934953834099}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &2384764084706900707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/You Are Mine
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/You Are Mine
+  guid: 553bcbe6c9c22d4ca7c7e367aabf7680
+  Banks:
+  - {fileID: 2628794813172664653}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -863,11 +2592,195 @@ MonoBehaviour:
   Path: Assets/Audio/FMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 637699134192045855
+  lastModified: 637713036673096748
   FileSizes:
   - Name: Desktop
-    Value: 876832
+    Value: 949344
   Exists: 1
+--- !u!114 &2911178942400033509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Don't Struggle
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Don't Struggle
+  guid: a10e64f22211a24dbbff044b5a391351
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &2963500226690471073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Feed
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Feed
+  guid: 96007cb3e0a00f43afe348a722c7ad44
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &3016783878166682305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Kill And Escape
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Kill And Escape
+  guid: f6e2cff5a88951449018f4e0825c2a1a
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &3067273521175733702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environment/Alarm
+  m_EditorClassIdentifier: 
+  Path: event:/Environment/Alarm
+  guid: 5c3e20579b90e74e8bbba3807b8a10bc
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 19500
+--- !u!114 &3108120940108023338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/Pistol Equip
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/Pistol Equip
+  guid: 6be373afd864354791967bb8f8824706
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &3185327519139989024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/AK Equip
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/AK Equip
+  guid: 5a6ce5a95f72a048963cf5535963d598
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &3198407413236085084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Don't Struggle
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Don't Struggle
+  guid: a10e64f22211a24dbbff044b5a391351
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &3358270821849311672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Kill And Escape
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Kill And Escape
+  guid: f6e2cff5a88951449018f4e0825c2a1a
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &3527472665500076993
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -914,6 +2827,29 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &3857246253019268513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environment/Lockdown
+  m_EditorClassIdentifier: 
+  Path: event:/Environment/Lockdown
+  guid: 21c1b68036e4eb42b37b6d638a221675
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 50
+  Length: 0
 --- !u!114 &3866169052533423134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -950,6 +2886,52 @@ MonoBehaviour:
   guid: b7dc6179d3919e4bb4307c075accad33
   Banks:
   - {fileID: -3765004934953834099}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &3998716758457716182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Kill And Escape
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Kill And Escape
+  guid: f6e2cff5a88951449018f4e0825c2a1a
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &4045079126076372034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Codename Pariah
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Codename Pariah
+  guid: 80f54bc7bd657d499d5c8d15e9259fc8
+  Banks:
+  - {fileID: 2628794813172664653}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -994,6 +2976,144 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: event:/Pariah SFX/Castle Thunder
   guid: 87abfc9386b0be45835aab2347ec9c41
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &4198099635499598203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Codename Pariah
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Codename Pariah
+  guid: 80f54bc7bd657d499d5c8d15e9259fc8
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &4251839285719577704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environment/Alarm
+  m_EditorClassIdentifier: 
+  Path: event:/Environment/Alarm
+  guid: 5c3e20579b90e74e8bbba3807b8a10bc
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 19500
+--- !u!114 &4390476594289129339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Dash
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Dash
+  guid: b683a6095e024c47840744e77fa75141
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &4426798430230158661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Kill And Escape
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Kill And Escape
+  guid: f6e2cff5a88951449018f4e0825c2a1a
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &4755128971535366363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environment/Lockdown
+  m_EditorClassIdentifier: 
+  Path: event:/Environment/Lockdown
+  guid: 21c1b68036e4eb42b37b6d638a221675
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 50
+  Length: 0
+--- !u!114 &4957269062889981216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/AK Equip
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/AK Equip
+  guid: 5a6ce5a95f72a048963cf5535963d598
   Banks:
   - {fileID: 2628794813172664653}
   IsStream: 0
@@ -1049,6 +3169,52 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 6000
+--- !u!114 &5198895983807037528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Dash
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Dash
+  guid: b683a6095e024c47840744e77fa75141
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &5700443905061520814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Death Incarnate
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Death Incarnate
+  guid: e2fef828d0681546984a2d817ecba062
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &5764723691525486919
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1115,6 +3281,98 @@ MonoBehaviour:
   - Name: Desktop
     Value: 1416
   Exists: 1
+--- !u!114 &6508114660762057217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Death Incarnate
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Death Incarnate
+  guid: e2fef828d0681546984a2d817ecba062
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &6609946275727730326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Don't Struggle
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Don't Struggle
+  guid: a10e64f22211a24dbbff044b5a391351
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &6811038037554022968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Feed
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Feed
+  guid: 96007cb3e0a00f43afe348a722c7ad44
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &6881805017136184575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/AK Equip
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/AK Equip
+  guid: 5a6ce5a95f72a048963cf5535963d598
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &6890634328029692328
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1137,6 +3395,29 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 6.6
+  Length: 0
+--- !u!114 &7048581584094788115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Death Incarnate
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Death Incarnate
+  guid: e2fef828d0681546984a2d817ecba062
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
   Length: 0
 --- !u!114 &7127701816471132555
 MonoBehaviour:
@@ -1207,6 +3488,98 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 8250
+--- !u!114 &7375194209424306061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Feed
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Feed
+  guid: 96007cb3e0a00f43afe348a722c7ad44
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &7381072250453847607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/You Are Mine
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/You Are Mine
+  guid: 553bcbe6c9c22d4ca7c7e367aabf7680
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &7575165155864506290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Dash
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Dash
+  guid: b683a6095e024c47840744e77fa75141
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &7586439186690168797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Feed
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Feed
+  guid: 96007cb3e0a00f43afe348a722c7ad44
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &7700522873110491985
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1322,6 +3695,29 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &7944271170943934647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/AK Equip
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/AK Equip
+  guid: 5a6ce5a95f72a048963cf5535963d598
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &7948703693576721449
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1391,6 +3787,29 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 6.6
   Length: 0
+--- !u!114 &8306250034809775621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Firearms/AK Equip
+  m_EditorClassIdentifier: 
+  Path: event:/Firearms/AK Equip
+  guid: 5a6ce5a95f72a048963cf5535963d598
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &8327293444565243796
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1436,6 +3855,52 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
+  Length: 0
+--- !u!114 &8352495909274562321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/You Are Mine
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/You Are Mine
+  guid: 553bcbe6c9c22d4ca7c7e367aabf7680
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &8401662343089494359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environment/Lockdown
+  m_EditorClassIdentifier: 
+  Path: event:/Environment/Lockdown
+  guid: 21c1b68036e4eb42b37b6d638a221675
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 50
   Length: 0
 --- !u!114 &8446436272648077492
 MonoBehaviour:
@@ -1506,6 +3971,29 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 6.6
   Length: 0
+--- !u!114 &8655142190730921044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Don't Struggle
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Don't Struggle
+  guid: a10e64f22211a24dbbff044b5a391351
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &8772723656449767988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1522,6 +4010,29 @@ MonoBehaviour:
   guid: d31a34a2db107d4cb837fffd4a826d77
   Banks:
   - {fileID: -4822692692206257876}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &8793907423613079645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Pariah SFX/Feed
+  m_EditorClassIdentifier: 
+  Path: event:/Pariah SFX/Feed
+  guid: 96007cb3e0a00f43afe348a722c7ad44
+  Banks:
+  - {fileID: 2628794813172664653}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -1552,3 +4063,26 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &9154530025748589975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Environment/Alarm
+  m_EditorClassIdentifier: 
+  Path: event:/Environment/Alarm
+  guid: 5c3e20579b90e74e8bbba3807b8a10bc
+  Banks:
+  - {fileID: 2628794813172664653}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 19500

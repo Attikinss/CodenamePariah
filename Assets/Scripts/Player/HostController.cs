@@ -540,6 +540,7 @@ public class HostController : InputController
         PariahController pariah = GameManager.s_Instance.m_Pariah;
         if (value.performed && !m_DeathIncarnateAbility.deathIncarnateUsed && pariah.m_Power >= m_DeathIncarnateAbility.requiredKills)
         {
+            GameManager.s_Instance.m_Pariah.PlayArmAnim("OnIncarnate", false);
             m_DeathIncarnateAbility.chargeRoutine = StartCoroutine(Ability3Charge());
             pariah.m_Power = 0; // Consume all power, reset back to 0.
             //m_UIManager.ToggleBar(true);
@@ -947,6 +948,8 @@ public class HostController : InputController
 			yield return null;
 		}
 
+
+        
 		Ability3(m_DeathIncarnateAbility.deathIncarnateRadius, m_DeathIncarnateAbility.deathIncarnateDamage);
 	}
 	IEnumerator Ability3Draw()

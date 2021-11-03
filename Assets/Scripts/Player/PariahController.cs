@@ -540,10 +540,12 @@ public class PariahController : InputController
     }
 
     /// <summary>
-    /// Pass in the name of the trigger and this will call .SetTrigger().
+    /// Pass in the name of the trigger and this will call .SetTrigger(). Optionally argument to allow hiding of arms
+    /// after animation is complete.
     /// </summary>
-    /// <param name="triggerName"></param>
-    public void PlayArmAnim(string triggerName)
+    /// <param name="triggerName">Name of animation trigger.</param>
+    /// <param name="m_HideArmsAfterwards">Bool to set if the arms hide or not after the animation is complete.</param>
+    public void PlayArmAnim(string triggerName, bool m_HideArmsAfterwards = true)
     {
         if (m_ArmsAnimator == null)
         {
@@ -551,14 +553,24 @@ public class PariahController : InputController
             return;
         }
         else // Otherwise, we could find the arms animator.
-        { 
+        {
             if (triggerName == "OnDash")
             {
                 if (m_Arms.enabled == false) // If the arms are hidden, unhide them for the duration of the dash animation. This is so the hosts can use this animation.
                 {
                     m_Arms.enabled = true;
                     StartCoroutine(HideArms(0.30f)); // 0.30f is around about the time it takes for the animation to complete.
-                 
+
+                }
+                m_ArmsAnimator.SetTrigger(triggerName);
+            }
+            else if (triggerName == "OnIncarnate")
+            {
+                if (m_Arms.enabled == false )
+                {
+                    m_Arms.enabled = true;
+                    if(m_HideArmsAfterwards)
+                        StartCoroutine(HideArms(3f));
                 }
                 m_ArmsAnimator.SetTrigger(triggerName);
             }

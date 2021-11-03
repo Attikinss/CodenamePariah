@@ -239,6 +239,10 @@ public class HostController : InputController
         // Setting the death incarnate bar must happenbefore we set GameManager.s_CurrentHost to null!
         PariahController pariah = GameManager.s_Instance.m_Pariah;
         m_UIManager.SetDeathIncarnateBar((float)pariah.m_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
+        if (pariah.m_Power >= m_DeathIncarnateAbility.requiredKills)
+        {
+            m_UIManager.ToggleReadyPrompt(false);
+        }
 
 
         Rigidbody.isKinematic = true;
@@ -543,6 +547,7 @@ public class HostController : InputController
             GameManager.s_Instance.m_Pariah.PlayArmAnim("OnIncarnate", false);
             m_DeathIncarnateAbility.chargeRoutine = StartCoroutine(Ability3Charge());
             pariah.m_Power = 0; // Consume all power, reset back to 0.
+            m_UIManager.ToggleReadyPrompt(true);
             //m_UIManager.ToggleBar(true);
         }
 

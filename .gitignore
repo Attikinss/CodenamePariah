@@ -96,3 +96,4 @@ fmod_editor.log
 
 # Specifically include things under FMOD/Build.
 !/Assets/Audio/FMOD/Build/*
+Assets/Plugins/FMOD/Cache/Editor/FMODStudioCache.asset

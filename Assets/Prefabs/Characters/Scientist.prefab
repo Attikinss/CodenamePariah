@@ -1006,6 +1006,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2238759060784313554, guid: c09c029d69a612d48a5dfa6fdefbb62e, type: 3}
+      propertyPath: m_GunAimSpeed
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 2238759060784313555, guid: c09c029d69a612d48a5dfa6fdefbb62e, type: 3}
       propertyPath: m_RootOrder
       value: 0

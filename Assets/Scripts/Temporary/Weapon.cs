@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.VFX;
+using TMPro;
+//using UnityEngine.UI;
 
 public enum WEAPONTYPE
 {
@@ -110,7 +112,12 @@ public class Weapon : MonoBehaviour
     public FMODAudioEvent m_AudioEmptyClipEvent;
     public FMODAudioEvent m_AudioEquipEvent;
 
-	private void Awake()
+    public GameObject m_CharIcon;
+    public GameObject m_CharName;
+    public GameObject m_WeaponIcon;
+    public TextMeshProUGUI m_WeaponAmmoText;
+
+    private void Awake()
 	{
         m_TransformInfo.m_OriginalLocalPosition = transform.localPosition;
         m_TransformInfo.m_OriginalGlobalPosition = transform.position;

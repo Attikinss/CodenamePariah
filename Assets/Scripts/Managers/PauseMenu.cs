@@ -57,7 +57,10 @@ public class PauseMenu : MonoBehaviour
 
     private void Awake()
     {
-        Cursor.lockState = CursorLockMode.None;
+        if (m_IsPauseMenu)
+            Cursor.lockState = CursorLockMode.Locked;
+        else
+            Cursor.lockState = CursorLockMode.None;
     }
 
     // Update is called once per frame

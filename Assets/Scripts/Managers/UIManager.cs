@@ -11,12 +11,16 @@ public class UIManager : MonoBehaviour
     private TextMeshProUGUI m_AmmoDisplay;
 
     [SerializeField]
+    [Tooltip("Numerical Ammo Reserve Count UI")]
+    private TextMeshProUGUI m_AmmoReserveDisplay;
+
+    [SerializeField]
     [Tooltip("Numerical Left Gun Ammo Count UI")]
     private TextMeshProUGUI m_AmmoDisplayLeft;
 
-    [SerializeField]
-    [Tooltip("On Screen Warning for Low Ammo and No Ammo")]
-    private TextMeshProUGUI m_AmmoWarning;
+    //[SerializeField]
+    //[Tooltip("On Screen Warning for Low Ammo and No Ammo")]
+    //private TextMeshProUGUI m_AmmoWarning;
 
     //[SerializeField]
     //[Tooltip("All the Magazine UI elements active on this character")]
@@ -61,20 +65,42 @@ public class UIManager : MonoBehaviour
 
 	[SerializeField]
 	[Tooltip("Health Sprite UI")]
-	private GameObject m_HealthSprite;
+	private GameObject m_HealthBar;
 
     [SerializeField]
     [Tooltip("Death Incarnate Bar UI")]
-    private Image m_DeathIncarnateBar;
+    private GameObject m_DeathIncarnateBar;
 
     private Image m_Bar;
     private TextMeshProUGUI m_DeathIncarnateBarText;
 
+    //[SerializeField]
+    //[Tooltip("Regeneration Text UI")]
+    //private TextMeshProUGUI m_RegenerationText;
+
     [SerializeField]
     [Tooltip("Regeneration Text UI")]
-    private TextMeshProUGUI m_RegenerationText;
+    private GameObject m_RegenerationText;
 
-	public void Awake()
+    [SerializeField]
+    [Tooltip("")]
+    private GameObject m_TimerImage;
+
+    public GameObject m_DualWieldPlate;
+
+    public GameObject m_DualWieldCharIcon;
+    public GameObject m_DualWieldCharName;
+    public TextMeshProUGUI m_DualWieldRightWeaponAmmoText;
+
+    [SerializeField]
+    [Tooltip("")]
+    private GameObject m_ReadyPrompt;
+
+    [SerializeField]
+    [Tooltip("")]
+    private GameObject m_ReadyPromptText;
+
+    public void Awake()
 	{
         if (!s_Instance)
         {
@@ -89,7 +115,7 @@ public class UIManager : MonoBehaviour
         if (m_DeathIncarnateBar)
         { 
             m_Bar = m_DeathIncarnateBar.transform.Find("Bar").GetComponent<Image>();
-            m_DeathIncarnateBarText = m_DeathIncarnateBar.transform.Find("Text").GetComponent<TextMeshProUGUI>();
+            //m_DeathIncarnateBarText = m_DeathIncarnateBar.transform.Find("Text").GetComponent<TextMeshProUGUI>();
         }
 
         // Hide bar on start.
@@ -362,20 +388,20 @@ public class UIManager : MonoBehaviour
         if (!weapon)
         {
             // There is no weapon to display, so hide the canvas.
-            HideCanvas();
+            HideCanvas(); //<- dual wield canvas missing after activating collectable.
         }
         else
         {
             if (!m_Canvas.gameObject.activeSelf)
                 UnhideCanvas(); // If it was hidden for some reason, unhide it.
-            if (!m_AmmoDisplay) return;
+            if (!weapon.m_WeaponAmmoText) return;//
 
             //if (weapon.TotalAmmoEmpty())
             //    DisableMagazine();
 
-            m_AmmoWarning?.SetText("");
-            if (weapon.TotalAmmoEmpty())
-                m_AmmoWarning?.SetText("No Ammo");
+            //m_AmmoWarning?.SetText("");
+            //if (weapon.TotalAmmoEmpty())
+                //m_AmmoWarning?.SetText("No Ammo");
 
             int currentRounds = weapon.GetRoundsInMagazine();
             int reserveRounds = weapon.GetReserve();
@@ -384,7 +410,8 @@ public class UIManager : MonoBehaviour
             string second = reserveRounds >= 10 ? reserveRounds.ToString() : $"0{reserveRounds}";
             
             //m_AmmoDisplay.SetText($"{first} / {second}");
-            m_AmmoDisplay.SetText(first + " / " + second);
+            weapon.m_WeaponAmmoText.SetText(first);
+            m_AmmoReserveDisplay.SetText(second);
 
             // ==================================================== For left gun in dual wield. ==================================================== //
             // Hiding if unneccessary.
@@ -411,7 +438,8 @@ public class UIManager : MonoBehaviour
         // destroyed along with everything attached
         if (m_Inv)
         { 
-            m_HealthSprite.SetActive(GetHealth() > 0);
+            m_HealthBar.SetActive(GetHealth() > 0);
+            m_HealthBar.GetComponent<Image>().fillAmount = (float)GetHealth() / 100.0f;
             m_HealthText?.SetText(GetHealth().ToString());
         }
     }
@@ -420,29 +448,56 @@ public class UIManager : MonoBehaviour
     {
         UpdateHealthUI();
         UpdateWeaponUI(currentWeapon);
+
+        currentWeapon.m_WeaponAmmoText?.gameObject.SetActive(true);
+        currentWeapon.m_WeaponIcon?.SetActive(true);//dual wield
+        currentWeapon.m_CharIcon?.SetActive(true);  
+        currentWeapon.m_CharName?.SetActive(true);  
     }
     private void ToggleDualWield(bool toggle)
     {
         if (!toggle)
+        {
             m_AmmoDisplayLeft.enabled = false;
+            m_DualWieldPlate.SetActive(false);
+        }
         else
+        {
+            //m_Inv.m_CurrentWeapon.m_WeaponIcon?.SetActive(false);
             m_AmmoDisplayLeft.enabled = true;
+            m_DualWieldPlate.SetActive(true);
+        }
     }
     public void ToggleBar(bool toggle)
     {
         if (!toggle)
         {
-            m_DeathIncarnateBar.enabled = false;
-            m_DeathIncarnateBarText.enabled = false;
+            m_DeathIncarnateBar.SetActive(false);//
+            //m_DeathIncarnateBarText.enabled = false;
             m_Bar.enabled = false;
         }
         else
         { 
-            m_DeathIncarnateBar.enabled = true;
-            m_DeathIncarnateBarText.enabled = true;
+            m_DeathIncarnateBar.SetActive(true);//
+            //m_DeathIncarnateBarText.enabled = true;
             m_Bar.enabled = true;
         }
     }
+
+    public void ToggleReadyPrompt(bool toggle)
+    {
+        if (!toggle)
+        {
+            m_ReadyPrompt.SetActive(false);
+            m_ReadyPromptText.SetActive(true);
+        }
+        else
+        {
+            m_ReadyPrompt.SetActive(true);
+            m_ReadyPromptText.SetActive(false);
+        }
+    }
+
     public void SetDeathIncarnateBar(float percentage)
     {
         m_Bar.fillAmount = percentage;
@@ -452,17 +507,25 @@ public class UIManager : MonoBehaviour
     {
         if (toggle)
         {
-            m_RegenerationText.enabled = true;
+            m_RegenerationText.SetActive(true);
         }
         else
         {
-            m_RegenerationText.enabled = false;
+            m_RegenerationText.SetActive(false);
         }
     }
-    public void UnhideCanvas() { m_Canvas.gameObject.SetActive(true); }
-    public void HideCanvas() { m_Canvas.gameObject.SetActive(false); }
-    public void HideHealth() { m_HealthSprite.SetActive(false); m_HealthText.gameObject.SetActive(false); }
-    public void UnhideHealth() { m_HealthSprite.SetActive(true); m_HealthText.gameObject.SetActive(true); }
+    public void UnhideCanvas() { m_Canvas.gameObject.SetActive(true);
+        m_TimerImage.SetActive(false);
+    }
+    public void HideCanvas() { m_Canvas.gameObject.SetActive(false);
+        m_Inv.m_CurrentWeapon?.m_WeaponAmmoText?.gameObject.SetActive(false);
+        m_Inv.m_CurrentWeapon?.m_WeaponIcon?.SetActive(false);
+        m_Inv.m_CurrentWeapon?.m_CharIcon?.SetActive(false);
+        m_Inv.m_CurrentWeapon?.m_CharName?.SetActive(false);
+        m_TimerImage.SetActive(true);
+    }
+    public void HideHealth() { m_HealthBar.SetActive(false); m_HealthText.gameObject.SetActive(false); }
+    public void UnhideHealth() { m_HealthBar.SetActive(true); m_HealthText.gameObject.SetActive(true); }
     public void SetInventory(Inventory inv) { m_Inv = inv; }
     public int GetHealth() { return m_Inv.GetHealth(); }
     

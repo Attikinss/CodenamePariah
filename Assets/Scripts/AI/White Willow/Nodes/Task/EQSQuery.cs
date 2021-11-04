@@ -92,12 +92,15 @@ public class EQSQuery : Task
                                         continue;
                                 }
 
-                                Owner.Agent.CurrentNode?.Release();
-                                Owner.Agent.CurrentNode = node;
-                                Owner.Agent.CurrentNode.Reserve(Owner.Agent);
-                                Owner.Agent.SetDestination(Owner.Agent.CurrentNode.Position);
+                                if (Owner.Agent.DestinationAttainable(node.Position))
+                                {
+                                    Owner.Agent.CurrentNode?.Release();
+                                    Owner.Agent.CurrentNode = node;
+                                    Owner.Agent.CurrentNode.Reserve(Owner.Agent);
+                                    Owner.Agent.SetDestination(Owner.Agent.CurrentNode.Position);
 
-                                return NodeResult.Success;
+                                    return NodeResult.Success;
+                                }
                             }
                         }
                     }

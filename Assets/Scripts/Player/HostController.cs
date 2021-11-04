@@ -199,7 +199,7 @@ public class HostController : InputController
         m_Camera.enabled = true;
         //UnhideHUD();
 
-        CustomDebugUI.s_Instance.SetController(this);
+        CustomDebugUI.s_Instance?.SetController(this);
 
         // When the player controls a unit we also have to enable the skinned mesh renderers of the arms and weapons for every weapon of that unit.
         for (int i = 0; i < m_Inventory.m_Weapons.Count; i++)
@@ -214,9 +214,9 @@ public class HostController : InputController
             m_Inventory.m_Weapons[i].SetWeaponLayerRecursively(12); // If we ever rearrange layer orders this will have to change!                      ===================== IMPORTANT =====================
         }
 
-        m_UIManager.UnhideCanvas();
-        m_UIManager.SetInventory(m_Inventory);
-        m_UIManager.UpdateAllUI(GetCurrentWeapon());
+        m_UIManager?.UnhideCanvas();
+        m_UIManager?.SetInventory(m_Inventory);
+        m_UIManager?.UpdateAllUI(GetCurrentWeapon());
 
 
         // Hide mesh when entering.
@@ -224,10 +224,10 @@ public class HostController : InputController
             m_Mesh.SetActive(false);
 
         // Letting the game manager we're entering a unit.
-        GameManager.s_Instance.OnEnterEnemy(m_type, GetCurrentWeapon().m_Animators, GetCurrentWeapon());
+        GameManager.s_Instance?.OnEnterEnemy(m_type, GetCurrentWeapon().m_Animators, GetCurrentWeapon());
 
         // Play host enter sound effect.
-        GeneralSounds.s_Instance.PlayHostEnterSound(GameManager.s_Instance.m_Pariah.transform, 25); // We want the sound to emit from Pariah, not the individual agent.
+        GeneralSounds.s_Instance?.PlayHostEnterSound(GameManager.s_Instance.m_Pariah.transform, 25); // We want the sound to emit from Pariah, not the individual agent.
     }
 
     /// <summary>
@@ -235,25 +235,13 @@ public class HostController : InputController
     /// </summary>
     public override void Disable()
     {
-
-        // Setting the death incarnate bar must happenbefore we set GameManager.s_CurrentHost to null!
-        PariahController pariah = GameManager.s_Instance.m_Pariah;
-        m_UIManager.SetDeathIncarnateBar((float)pariah.m_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
-        if (pariah.m_Power >= m_DeathIncarnateAbility.requiredKills)
-        {
-            m_UIManager.ToggleReadyPrompt(false);
-        }
-
-
         Rigidbody.isKinematic = true;
-        GameManager.s_CurrentHost = null;
-
         GetComponent<PlayerInput>().enabled = false;
         m_Active = false;
         m_Camera.enabled = false;
         //HideHUD();
 
-        CustomDebugUI.s_Instance.ClearController();
+        CustomDebugUI.s_Instance?.ClearController();
 
         // When the player leaves a unit, we have to hide the skinned mesh renderers of the guns and arms for every weapon on this unit.
         for (int i = 0; i < m_Inventory.m_Weapons.Count; i++)
@@ -265,19 +253,26 @@ public class HostController : InputController
 
         // Reverting the layer back to what it was.
         for (int i = 0; i < m_Inventory.m_Weapons.Count; i++)
-        {
-            m_Inventory.m_Weapons[i].SetWeaponLayerRecursively(10); // If we ever rearrange layer orders this will have to change!                      ===================== IMPORTANT =====================
-        }
+            m_Inventory.m_Weapons[i].SetWeaponLayerRecursively(10); // If we ever rearrange layer orders this will have to change!
 
-        m_UIManager.HideCanvas();
+        m_UIManager?.HideCanvas();
 
         // Unhide the mesh when leaving.
         if(m_Mesh)
             m_Mesh.SetActive(true);
 
-        GameManager.s_Instance.m_Pariah.ClearCurrentPossessed();
+        // Setting the death incarnate bar must happenbefore we set GameManager.s_CurrentHost to null!
+        PariahController pariah = GameManager.s_Instance?.m_Pariah;
+        if (!pariah)
+            return;
 
-       
+        pariah.ClearCurrentPossessed();
+
+        m_UIManager?.SetDeathIncarnateBar((float)pariah.m_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
+        if (pariah.m_Power >= m_DeathIncarnateAbility.requiredKills)
+            m_UIManager?.ToggleReadyPrompt(false);
+
+        GameManager.s_CurrentHost = null;
     }
 
     // ========================================================== Input Events ========================================================== //
@@ -342,6 +337,7 @@ public class HostController : InputController
 
     public override void OnPossess(InputAction.CallbackContext value)
     {
+        Debug.Log(value.performed);
         if (value.performed && !PauseMenu.m_GameIsPaused && !CustomConsole.m_Activated)
         {
             if (TryGetComponent(out WhiteWillow.Agent agent))
@@ -507,9 +503,9 @@ public class HostController : InputController
                 //}
                 //else 
                 //{
-                Debug.Log("====================================delay dashed====================================");
+                //Debug.Log("====================================delay dashed====================================");
                 m_Dashing = true;
-                StartCoroutine(DelayedDash(GameManager.s_Instance.m_DashDelay));
+                StartCoroutine(DelayedDash(m_DashDelay));
                 //}
                 
 
@@ -541,15 +537,16 @@ public class HostController : InputController
     // Experimental death incarnate ability thing
     public void OnAbility3(InputAction.CallbackContext value)
     {
-        PariahController pariah = GameManager.s_Instance.m_Pariah;
+        PariahController pariah = GameManager.s_Instance?.m_Pariah;
+        if (!pariah) return;
+
         if (value.performed && !m_DeathIncarnateAbility.deathIncarnateUsed && pariah.m_Power >= m_DeathIncarnateAbility.requiredKills)
         {
             m_DeathIncarnateAbility.chargeRoutine = StartCoroutine(Ability3Charge());
             pariah.m_Power = 0; // Consume all power, reset back to 0.
-            m_UIManager.ToggleReadyPrompt(true);
+            m_UIManager?.ToggleReadyPrompt(true);
             //m_UIManager.ToggleBar(true);
         }
-
         else if (value.canceled)
         {
             if (m_DeathIncarnateAbility.hasRoutineStarted)
@@ -563,7 +560,7 @@ public class HostController : InputController
     public void OnDebugToggle(InputAction.CallbackContext value)
     {
         if (value.performed)
-            CustomDebugUI.s_Instance.Toggle();
+            CustomDebugUI.s_Instance?.Toggle();
     }
 
     public void OnHUDToggle(InputAction.CallbackContext value)
@@ -929,7 +926,7 @@ public class HostController : InputController
 			time += Time.deltaTime;
 
             // Set power bar ui to match.
-            m_UIManager.SetDeathIncarnateBar(time / m_DeathIncarnateAbility.deathIncarnateRequiredHold);
+            m_UIManager?.SetDeathIncarnateBar(time / m_DeathIncarnateAbility.deathIncarnateRequiredHold);
 
 			yield return null;
 		}
@@ -1100,7 +1097,7 @@ public class HostController : InputController
     {
         m_IsDelayedDashing = true;
         // Play dash animation.
-        GameManager.s_Instance.m_Pariah.PlayArmAnim("OnDash");
+        GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnDash");
 
         float delayTime = 0.0f;
         // Adding a start delay before actual dash is performed.

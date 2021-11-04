@@ -95,12 +95,12 @@ public class BoxTriggerToggle : MonoBehaviour
             case ToggleType.TurnOn:
                 m_ToggleObject?.SetActive(true);
                 if(m_ShouldSaveData)
-                    GameManager.s_Instance.SendDoorData(true, m_ID);
+                    GameManager.s_Instance?.SendDoorData(true, m_ID);
                 break;
             case ToggleType.TurnOff:
                 m_ToggleObject?.SetActive(false);
                 if(m_ShouldSaveData)
-                    GameManager.s_Instance.SendDoorData(false, m_ID);
+                    GameManager.s_Instance?.SendDoorData(false, m_ID);
                 break;
             case ToggleType.Toggle:
                 m_ToggleObject?.SetActive(!m_ToggleObject.activeSelf);

@@ -321,7 +321,7 @@ public class Weapon : MonoBehaviour
                                 float damageMod = m_Inventory.Owner.Possessed ? 1.0f : m_AIDamageModifier;
                                 agentInventory.TakeDamage((int)(m_BulletDamage * damageMod));
                                 //Debug.Log("BAD");
-                                GameManager.s_Instance.PlaceBulletSpray(hitInfo.point, hitInfo.transform, (transform.position - hitInfo.point).normalized);
+                                GameManager.s_Instance?.PlaceBulletSpray(hitInfo.point, hitInfo.transform, (transform.position - hitInfo.point).normalized);
 
 
                                 return;
@@ -427,7 +427,7 @@ public class Weapon : MonoBehaviour
                                 float damageMod = m_Inventory.Owner.Possessed ? 1.0f : m_AIDamageModifier;
                                 agentInventory.TakeDamage((int)(m_BulletDamage * damageMod));
 
-                                GameManager.s_Instance.PlaceBulletSpray(hitInfo.point, hitInfo.transform, (transform.position - hitInfo.point).normalized);
+                                GameManager.s_Instance?.PlaceBulletSpray(hitInfo.point, hitInfo.transform, (transform.position - hitInfo.point).normalized);
 
                                 return;
                             }

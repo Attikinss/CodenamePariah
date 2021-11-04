@@ -63,10 +63,16 @@ namespace WhiteWillow
             m_HostController = GetComponent<HostController>();
 
             PariahController = FindObjectOfType<PariahController>();
-            m_RuntimeTree.Blackboard?.UpdateEntryValue<GameObject>("Target", PariahController?.gameObject);
+
+            if (PariahController)
+            {
+                GameObject target = PariahController.CurrentHost != null ?
+                    PariahController.CurrentHost.gameObject : PariahController.gameObject;
+
+                m_RuntimeTree.Blackboard?.UpdateEntryValue<GameObject>("Target", target);
+            }
 
             CacheOriginalMaterial();
-
         }
         private void Update()
         {
@@ -144,7 +150,8 @@ namespace WhiteWillow
             m_NavAgent.ResetPath();
             m_NavAgent.isStopped = true;
         }
-        
+
+        public bool DestinationAttainable(Vector3 position) => m_NavAgent.CalculatePath(position, new NavMeshPath());
         public bool MovingToPosition() => m_NavAgent.hasPath;
         public bool AtPosition() => Vector3.Distance(transform.position - Vector3.up, Destination) < 0.2f + m_NavAgent.stoppingDistance;
         public bool Stuck() => false;
@@ -177,8 +184,6 @@ namespace WhiteWillow
 
         public void Kill()
         {
-            
-
             if (Possessed)
             { 
                 Release();

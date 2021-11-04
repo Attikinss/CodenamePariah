@@ -319,9 +319,9 @@ public class Weapon : MonoBehaviour
                             if (hitInfo.transform.TryGetComponent(out Inventory agentInventory))
                             {
                                 float damageMod = m_Inventory.Owner.Possessed ? 1.0f : m_AIDamageModifier;
+                                GameManager.s_Instance.PlaceBulletSpray(hitInfo.point, hitInfo.transform, (transform.position - hitInfo.point).normalized);
                                 agentInventory.TakeDamage((int)(m_BulletDamage * damageMod));
                                 //Debug.Log("BAD");
-                                GameManager.s_Instance.PlaceBulletSpray(hitInfo.point, hitInfo.transform, (transform.position - hitInfo.point).normalized);
 
 
                                 return;
@@ -425,9 +425,9 @@ public class Weapon : MonoBehaviour
                             if (hitInfo.transform.TryGetComponent(out Inventory agentInventory))
                             {
                                 float damageMod = m_Inventory.Owner.Possessed ? 1.0f : m_AIDamageModifier;
+                                GameManager.s_Instance.PlaceBulletSpray(hitInfo.point, hitInfo.transform, (transform.position - hitInfo.point).normalized);
                                 agentInventory.TakeDamage((int)(m_BulletDamage * damageMod));
 
-                                GameManager.s_Instance.PlaceBulletSpray(hitInfo.point, hitInfo.transform, (transform.position - hitInfo.point).normalized);
 
                                 return;
                             }
@@ -1194,6 +1194,17 @@ public class Weapon : MonoBehaviour
     {
         if (m_AudioEquipEvent)
             m_AudioEquipEvent.Trigger();
+    }
+
+    /// <summary>
+    /// Used to stop all playing sounds. This is primarily to stop sounds from playing after the agent has been destroyed.
+    /// </summary>
+    public void StopSounds()
+    {
+        m_AudioEmptyClipEvent.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        m_AudioEquipEvent.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        m_AudioReloadEvent.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        m_AudioFireEvent.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
     }
 
     public void PlayBulletEffect(bool isDualWield, bool hasHit, Vector3 direction)

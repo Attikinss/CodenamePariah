@@ -57,10 +57,10 @@ sysinfo.txt
 !/[Aa}ssets/Editor Default Resources/FMOD/*
 
 # Ignore the Cache-file since it is updated locally either way
-#/[Aa]ssets/**/FMODStudioCache.asset
-#/[Aa]ssets/**/FMODStudioCache.asset.meta
-#/[Aa]ssets/Plugins/FMOD/Cache.meta
-#/[Aa]ssets/Plugins/FMOD/Cache/Editor.meta
+/[Aa]ssets/**/FMODStudioCache.asset
+/[Aa]ssets/**/FMODStudioCache.asset.meta
+/[Aa]ssets/Plugins/FMOD/Cache.meta
+/[Aa]ssets/Plugins/FMOD/Cache/Editor.meta
 
 #!/Assets/Audio/
 #!/Assets/Plugins/FMOD/**
@@ -96,3 +96,4 @@ fmod_editor.log
 
 # Specifically include things under FMOD/Build.
 !/Assets/Audio/FMOD/Build/*
+Assets/Plugins/FMOD/Cache/Editor/FMODStudioCache.asset

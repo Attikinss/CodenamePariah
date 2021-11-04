@@ -13,6 +13,8 @@ public class BloodSpray
     VisualEffect m_Particle;
     GameObject m_ParticleObj;
 
+   
+
     public BloodSpray(GameObject prefab)
     {
         m_ParticleObj = GameObject.Instantiate(prefab);
@@ -48,7 +50,10 @@ public class BloodSpray
     {
         m_AttachedObj = attach;
         m_ParticleObj.transform.LookAt(m_Particle.transform.position + m_AttachedObj.TransformVector(m_FacingDirection));
-        m_Pos = m_AttachedObj.InverseTransformPoint(hitPoint);
+        //m_Pos = m_AttachedObj.InverseTransformPoint(hitPoint);
+
+        m_ParticleObj.transform.position = m_AttachedObj.TransformPoint(m_Pos);
+
         m_FacingDirection = facing;
         //m_LocalMat = m_objAttached.worldToLocalMatrix;
         //m_hitPointWorld = hitPoint;

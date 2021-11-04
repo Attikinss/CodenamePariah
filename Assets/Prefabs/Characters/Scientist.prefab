@@ -64,7 +64,6 @@ GameObject:
   - component: {fileID: 5252449669079828066}
   - component: {fileID: 5252449669079828069}
   - component: {fileID: 7179454552038115072}
-  - component: {fileID: 514284808}
   m_Layer: 11
   m_Name: Scientist
   m_TagString: Untagged
@@ -735,20 +734,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Type: 0
   EventID: event:/Pariah SFX/Wilhelm Scream
---- !u!114 &514284808
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4480668722508770155}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81dca6e7f82043a4fb85791a7d8e871d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Type: 5
-  EventID: 
 --- !u!1 &4480668722962146637
 GameObject:
   m_ObjectHideFlags: 0
@@ -1333,6 +1318,11 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 698c386d04c6db34cbd75b42134f035d, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d0f0307eaf2445843ba27deae9ffd875, type: 3}
+--- !u!1 &6994296917060406650 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1127424298891489782, guid: d0f0307eaf2445843ba27deae9ffd875, type: 3}
+  m_PrefabInstance: {fileID: 7977512732241755276}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7583895665886993255 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d0f0307eaf2445843ba27deae9ffd875, type: 3}
@@ -1346,10 +1336,5 @@ GameObject:
 --- !u!4 &4341826751683884652 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5977567519522360032, guid: d0f0307eaf2445843ba27deae9ffd875, type: 3}
-  m_PrefabInstance: {fileID: 7977512732241755276}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &6994296917060406650 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1127424298891489782, guid: d0f0307eaf2445843ba27deae9ffd875, type: 3}
   m_PrefabInstance: {fileID: 7977512732241755276}
   m_PrefabAsset: {fileID: 0}

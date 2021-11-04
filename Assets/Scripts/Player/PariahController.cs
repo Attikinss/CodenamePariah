@@ -73,12 +73,14 @@ public class PariahController : InputController
     bool m_Dead = false;
 
     public int m_LowHealthThreshold = 40;
+    public int m_LowHealthVoiceLineThreshold = 20;
 
     [ReadOnly]
     public int m_Power = 0; // Power is used for the death incarnate ability. It is gained by destroying agents.
 
     public FMODAudioEvent m_AudioLowHPEvent;
-    private bool m_IsPlayingLowHP = false;
+    private bool m_IsPlayingLowHP = false;       // Heartbeat.
+    private bool m_IsPlayingExtremeLowHP = false; // Voice line.
 
     [HideInInspector]
     public Agent m_LookedAtAgent = null;
@@ -86,6 +88,18 @@ public class PariahController : InputController
     public SkinnedMeshRenderer m_Arms;
 
     public Animator m_ArmsAnimator;
+
+
+
+    // ==================== FMOD Audio Events ==================== //
+    // Okay, so before I had a bunch of different audio events for
+    // every sound Pariah would make. This led to the issue of
+    // having sounds overlap each other. To prevent this, I've
+    // added checks to see if the sounds are playing in the
+    // GeneralSounds script. 
+    // =========================================================== //
+
+
 
     private void Awake() => m_Rigidbody = GetComponent<Rigidbody>();
 
@@ -158,9 +172,15 @@ public class PariahController : InputController
 
             // Stop playing low hp sound.
             // We should stop playing the low health sound if we are playing it.
+            // This stops the hearbeat.
             if (m_IsPlayingLowHP && m_Health > m_LowHealthThreshold)
             {
                 StopLowHPSound();
+            }
+            // Now we also have to check if we have enough health to reset the voice line.
+            if (m_IsPlayingExtremeLowHP && m_Health > m_LowHealthVoiceLineThreshold)
+            {
+                m_IsPlayingExtremeLowHP = false;
             }
 
         }
@@ -381,12 +401,21 @@ public class PariahController : InputController
         if (m_Dead) return;
 
         m_Health = Mathf.Clamp(m_Health - amount, 0, m_MaxHealth);
-        if (m_Health <= m_LowHealthThreshold)
+
+        // Play heartbeat if our life essence is beyond the threshold.
+        if (m_Health <= m_LowHealthThreshold && !m_IsPlayingLowHP)
         {
+            m_IsPlayingLowHP = true;
             PlayLowHPSound();
-            GeneralSounds.s_Instance.PlayLowHealthPariahSound(transform); // This is the voice line sound effect.
+            //GeneralSounds.s_Instance.PlayLowHealthPariahSound(transform); // This is the voice line sound effect.
         }
 
+        // Play voice line if we are even lower health.
+        if (m_Health <= m_LowHealthVoiceLineThreshold && !m_IsPlayingExtremeLowHP)
+        {
+            m_IsPlayingExtremeLowHP = true;
+            GeneralSounds.s_Instance.PlayLowHealthPariahSound(transform);
+        }
 
         if (m_Health == 0)
         {
@@ -407,11 +436,19 @@ public class PariahController : InputController
             {                                                                                                                              // to only lose health
                 m_Health -= m_HealthDrainAmount;                                                                                           // after we have entered a
                                                                                                                                            // unit for the first time.
+
+                // Play heart beat when we reach low health threshold.
                 if (m_Health <= m_LowHealthThreshold && !m_IsPlayingLowHP) // Only play the sound if we're not already playing it.
                 {
                     m_IsPlayingLowHP = true;
                     PlayLowHPSound();
-                    GeneralSounds.s_Instance.PlayLowHealthPariahSound(transform); // This is the voice line sound effect.
+                    //GeneralSounds.s_Instance.PlayLowHealthPariahSound(transform); // This is the voice line sound effect.
+                }
+                // Play voice line if we are even lower health.
+                if (m_Health <= m_LowHealthVoiceLineThreshold && !m_IsPlayingExtremeLowHP)
+                {
+                    m_IsPlayingExtremeLowHP = true;
+                    GeneralSounds.s_Instance.PlayLowHealthPariahSound(transform);
                 }
 
 
@@ -515,10 +552,12 @@ public class PariahController : InputController
     }
 
     /// <summary>
-    /// Pass in the name of the trigger and this will call .SetTrigger().
+    /// Pass in the name of the trigger and this will call .SetTrigger(). Optionally argument to allow hiding of arms
+    /// after animation is complete.
     /// </summary>
-    /// <param name="triggerName"></param>
-    public void PlayArmAnim(string triggerName)
+    /// <param name="triggerName">Name of animation trigger.</param>
+    /// <param name="m_HideArmsAfterwards">Bool to set if the arms hide or not after the animation is complete.</param>
+    public void PlayArmAnim(string triggerName, bool m_HideArmsAfterwards = true)
     {
         if (m_ArmsAnimator == null)
         {
@@ -526,14 +565,24 @@ public class PariahController : InputController
             return;
         }
         else // Otherwise, we could find the arms animator.
-        { 
+        {
             if (triggerName == "OnDash")
             {
                 if (m_Arms.enabled == false) // If the arms are hidden, unhide them for the duration of the dash animation. This is so the hosts can use this animation.
                 {
                     m_Arms.enabled = true;
                     StartCoroutine(HideArms(0.30f)); // 0.30f is around about the time it takes for the animation to complete.
-                 
+
+                }
+                m_ArmsAnimator.SetTrigger(triggerName);
+            }
+            else if (triggerName == "OnIncarnate")
+            {
+                if (m_Arms.enabled == false )
+                {
+                    m_Arms.enabled = true;
+                    if(m_HideArmsAfterwards)
+                        StartCoroutine(HideArms(3f));
                 }
                 m_ArmsAnimator.SetTrigger(triggerName);
             }

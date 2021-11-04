@@ -43,7 +43,7 @@ public class Bullet : MonoBehaviour
         //gameObject.SetActive(true);
 
         // We aren't setting things to active/inactive anymore. Instead we hide the mesh, collider, ect. Also we need to clean the bullets dirty state after we shoot it.
-        m_Dirty = false;
+        //m_Dirty = false;
         Unhide();
         m_Rigidbody.AddForce((destination - origin).normalized * 60.0f, ForceMode.Impulse);
     }
@@ -67,7 +67,7 @@ public class Bullet : MonoBehaviour
             // We aren't setting the object to active/inactive anymore. We also have to set it's dirty state to true after it has been "Destroyed".
             // This is so the bullet pooler knows that it can use this specific bullet again.
             m_Rigidbody.velocity = Vector3.zero;
-            m_Dirty = true;
+            //m_Dirty = true;
             Hide();
             
 
@@ -79,15 +79,17 @@ public class Bullet : MonoBehaviour
     /// Because SetActive() is laggy in the editor, instead of setting the gameobject to false, we will hide the mesh, rigidbody and collider.
     /// This should virtuall be the same thing but more performant.
     /// </summary>
-    private void Hide()
+    public void Hide()
     {
+        m_Dirty = true;
         m_Collider.enabled = false;
         m_Rigidbody.isKinematic = true;
         m_Mesh.enabled = false;
     }
 
-    private void Unhide()
+    public void Unhide()
     {
+        m_Dirty = false;
         m_Collider.enabled = true;
         m_Rigidbody.isKinematic = false;
         m_Mesh.enabled = true;

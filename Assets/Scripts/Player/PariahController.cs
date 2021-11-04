@@ -89,6 +89,18 @@ public class PariahController : InputController
 
     public Animator m_ArmsAnimator;
 
+
+
+    // ==================== FMOD Audio Events ==================== //
+    // Okay, so before I had a bunch of different audio events for
+    // every sound Pariah would make. This led to the issue of
+    // having sounds overlap each other. To prevent this, I've
+    // added checks to see if the sounds are playing in the
+    // GeneralSounds script. 
+    // =========================================================== //
+
+
+
     private void Awake() => m_Rigidbody = GetComponent<Rigidbody>();
 
     private void Start()

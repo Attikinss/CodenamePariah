@@ -65,4 +65,19 @@ public class FMODAudioEvent : MonoBehaviour
         m_HasManualPosition = toggle;
         m_ManualTransform = obj;
     }
+
+    /// <summary>
+    /// Returns true if the sound instance is playing and false if it has stopped.
+    /// </summary>
+    /// <returns>A bool specifying whether or not the sound is playing.</returns>
+    public bool IsPlayingSound()
+    {
+        FMOD.Studio.PLAYBACK_STATE state;
+        m_EventInstance.getPlaybackState(out state);
+        if (state != FMOD.Studio.PLAYBACK_STATE.STOPPED)
+            return true; // We are playing the sound.
+
+
+        return false;
+    }
 }

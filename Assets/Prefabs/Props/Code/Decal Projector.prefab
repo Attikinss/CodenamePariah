@@ -43,14 +43,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f19d9143a39eb3b46bc4563e9889cfbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 933a1ba9e5121814783bfe1d36ba4272, type: 2}
+  m_Material: {fileID: 2100000, guid: 256231a349b05144e8c01c3a3b946f9a, type: 2}
   m_DrawDistance: 1000
   m_FadeScale: 0.9
   m_StartAngleFade: 180
   m_EndAngleFade: 180
   m_UVScale: {x: 1, y: 1}
   m_UVBias: {x: 0, y: 0}
-  m_AffectsTransparency: 0
+  m_AffectsTransparency: 1
   m_DecalLayerMask: 1
   m_Offset: {x: 0, y: 0, z: 0}
   m_Size: {x: 0.18922591, y: 0.18922603, z: 0.081096046}

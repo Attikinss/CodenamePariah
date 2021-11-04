@@ -680,9 +680,22 @@ public class Weapon : MonoBehaviour
 
         if (Time.time >= nextTime && !GetReloadState(dual))//(time.time or time.deltatime)
         {
+            if (m_Animators.CheckWeaponInspect()) // If we are inspecting our weapon, the first time we shoot should cancel the animation and the second time should
+            {                                     // allow us to shoot.
+                if (!m_Animators.IsCancellingEquip) // Will prevent us from starting the coroutine when it's already started.
+                    StartCoroutine(m_Animators.CancelWeaponInspect(0.4f));
+
+                return false; // Not ready to fire until weapon inspect has been cancelled.
+            }
+
+
             if (m_SemiAuto) // If the gun is semi auto, we have one other check to do.
             {
                 // I've commented out this code so that the pistol can shoot as fast as the player can click.
+                // Okay, nevermind apparently we need this animation cap.
+                // Actually, nevermind that nevermind. I've added an any state transition to the firing for the pistol which
+                // allows us to spam the animation without getting any desync.
+
 
                 // To prevent people from being able to spam semi automatic guns really fast, I'm going to prevent them from firing unless the animation is complete.
                 //if (!m_Animators.m_GunAnimators[0].GetCurrentAnimatorStateInfo(0).IsName("Idle")) // Only semi automatic weapons in the game are not dual wielded so we don't have to check the whole list of gun animators.
@@ -691,13 +704,7 @@ public class Weapon : MonoBehaviour
                 //}
                
             }
-            if (m_Animators.CheckWeaponInspect()) // If we are inspecting our weapon, the first time we shoot should cancel the animation and the second time should
-            {                                     // allow us to shoot.
-                if(!m_Animators.IsCancellingEquip) // Will prevent us from starting the coroutine when it's already started.
-                    StartCoroutine(m_Animators.CancelWeaponInspect(0.4f));
-
-                return false; // Not ready to fire until weapon inspect has been cancelled.
-            }
+            
 
             // Defines the firing rate as rounds per minute (hard coded 60s)
             if(dual)

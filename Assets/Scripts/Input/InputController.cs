@@ -29,6 +29,13 @@ public abstract class InputController : MonoBehaviour
     [SerializeField]
     protected float m_DashDistance = 5.0f;
 
+    // This variable is used as the dash animation delay for soldiers, scientists and pariah so that the dash animation
+    // looks like it is pulling the player forwards, rather than playing instantly.
+    [Tooltip("Universal dash delay to match animation.")]
+    [Min(0.0f)]
+    [SerializeField]
+    protected float m_DashDelay = 0.2f;
+
     [SerializeField]
     protected PlayerPreferences m_PlayerPrefs;
 
@@ -67,15 +74,18 @@ public abstract class InputController : MonoBehaviour
     {
         if (!PauseMenu.m_GameIsPaused)
         {
-            if (value.control.IsPressed())
-                GameManager.s_Instance.IsHoldingHeal = true;
-            else if (value.canceled)
-            { 
-                GameManager.s_Instance.IsHoldingHeal = false;
-                if (GameManager.s_Instance.m_HealingRoutineActive)
+            if (GameManager.s_Instance)
+            {
+                if (value.control.IsPressed())
+                    GameManager.s_Instance.IsHoldingHeal = true;
+                else if (value.canceled)
                 { 
-                    GameManager.s_Instance.m_HealingRoutineActive = false;
-                    GameManager.s_Instance.StopCoroutine(GameManager.s_Instance.m_HealingRoutine);
+                    GameManager.s_Instance.IsHoldingHeal = false;
+                    if (GameManager.s_Instance.m_HealingRoutineActive)
+                    { 
+                        GameManager.s_Instance.m_HealingRoutineActive = false;
+                        GameManager.s_Instance.StopCoroutine(GameManager.s_Instance.m_HealingRoutine);
+                    }
                 }
             }
         }
@@ -84,7 +94,7 @@ public abstract class InputController : MonoBehaviour
     {                                                                                                     // differently.
         if (m_CurrentDashCharges > 0)
         {
-            GeneralSounds.s_Instance.PlayDashSound(transform);
+            GeneralSounds.s_Instance?.PlayDashSound(transform);
 
             // Play Pariah's arms dash animation.
             //if(!delayed) // Only play animation here if this is Pariah's dash, if it is the host's dash it will be delayed.

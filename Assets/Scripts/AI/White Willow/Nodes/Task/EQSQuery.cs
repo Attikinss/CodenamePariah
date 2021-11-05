@@ -166,7 +166,10 @@ public class EQSQuery : Task
         // Ensure a request is available for submission
         if (m_EQSRequest == null)
         {
-            m_EQSRequest = new EnvironmentQuerySystem.QueryRequest(Owner.Agent.transform.position, Range);
+            Vector3 queryPosition = Vector3.Distance(Owner.Agent.transform.position, Target.Value.transform.position) > Range
+                ? Target.Value.transform.position : Owner.Agent.transform.position;
+
+            m_EQSRequest = new EnvironmentQuerySystem.QueryRequest(queryPosition, Range);
 
             if (m_EQSRequest.Nodes.Count() == 0)
                 return;

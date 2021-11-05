@@ -40,6 +40,10 @@ public class TargetInSight : Decorator
                 {
                     return Child.Tick();
                 }
+
+                Weapon agentWeapon = Owner.Agent.m_HostController.GetCurrentWeapon();
+                if (agentWeapon.PrimaryAmmoLow() && !agentWeapon.IsReloading())
+                    agentWeapon.ForceReload();
             }
         }
 

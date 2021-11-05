@@ -61,6 +61,13 @@ namespace WhiteWillow
         [Tooltip("Defines the position at which bullets spawn during firing.")]
         public Transform m_FiringPosition;
 
+        // Another thing we have to duplicate for agents specifically is the muzzle flash. For the player
+        // it is positioned on the FPS gun however we need to position it on the agents rig to make it 
+        // look right for the AI. The solution I have come up with is to just have another muzzle flash for the
+        // agents.
+        [Tooltip("Muzzle flash for the AI.")]
+        public VisualEffect m_AIMuzzleFlash;
+
         private void Awake()
 		{
             m_RuntimeTree = InputTree?.Clone(gameObject.name);

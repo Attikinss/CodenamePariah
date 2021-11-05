@@ -1076,23 +1076,31 @@ public class Weapon : MonoBehaviour
     private void PlayAnimations(bool special = false)
     {
         // Play effects.
-        if (special)
+
+        if (m_Inventory.Owner.Possessed) // If we're the ones in the agent.
         {
-            if (m_Particles.m_MuzzleFlashes.Count > 0)
+            if (special)
+            {
+                if (m_Particles.m_MuzzleFlashes.Count > 0)
                     m_Particles.m_MuzzleFlashes[1].Play();
-            if (m_Particles.m_BulletCasings.Count > 0)
+                if (m_Particles.m_BulletCasings.Count > 0)
                     m_Particles.m_BulletCasings[1].Play();
-            if (m_Animators.m_GunAnimators.Count > 0)
+                if (m_Animators.m_GunAnimators.Count > 0)
                     m_Animators.m_GunAnimators[1].SetTrigger("IsFiring");
-            if (m_Animators.m_ArmsAnimators.Count > 0)
+                if (m_Animators.m_ArmsAnimators.Count > 0)
                     m_Animators.m_ArmsAnimators[1].SetTrigger("IsFiring");
+            }
+            else
+            {
+                m_Particles.m_MuzzleFlashes[0].Play();
+                m_Particles.m_BulletCasings[0].Play();
+                m_Animators.m_GunAnimators[0].SetTrigger("IsFiring");
+                m_Animators.m_ArmsAnimators[0].SetTrigger("IsFiring");
+            }
         }
-        else
+        else // Otherwise, this is an AI agent.
         {
-            m_Particles.m_MuzzleFlashes[0].Play();
-            m_Particles.m_BulletCasings[0].Play();
-            m_Animators.m_GunAnimators[0].SetTrigger("IsFiring");
-            m_Animators.m_ArmsAnimators[0].SetTrigger("IsFiring");
+            m_Inventory.Owner.m_AIMuzzleFlash.Play(); // Play the AI's muzzle flash instead of the FPS one.
         }
 
         m_Inventory.Owner.PlayAnimation("Shoot", true);

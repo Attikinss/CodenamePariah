@@ -330,6 +330,7 @@ MonoBehaviour:
   m_DashDuration: 0.5
   m_DashCooldown: 1
   m_DashDistance: 12.5
+  m_DashDelay: 0.2
   m_PlayerPrefs: {fileID: 11400000, guid: 1ddd93a49e33f874ab21edc650e89546, type: 2}
   m_PlayerInput: {fileID: 5500129082491837181}
   m_Active: 0
@@ -389,8 +390,8 @@ MonoBehaviour:
     deathIncarnateDamage: 100
     deathIncarnateRadius: 20
     deathIncarnateCooldown: 5
-    deathIncarnateDelay: 0.25
-    deathIncarnateRequiredHold: 0.75
+    deathIncarnateDelay: 0
+    deathIncarnateRequiredHold: 0.4
     drawingDeathIncarnate: 0
     deathIncarnatePos: {x: 0, y: 0, z: 0}
     deathIncarnateUsed: 0

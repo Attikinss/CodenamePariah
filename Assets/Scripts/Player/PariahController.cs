@@ -6,6 +6,7 @@ using WhiteWillow;
 using UnityEngine.SceneManagement;
 //using FMOD;
 using FMODUnity;
+using UnityEngine.VFX;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PariahController : InputController
@@ -98,6 +99,8 @@ public class PariahController : InputController
     // added checks to see if the sounds are playing in the
     // GeneralSounds script. 
     // =========================================================== //
+
+    public VisualEffect m_IncarnateParticle;
 
 
 
@@ -582,7 +585,7 @@ public class PariahController : InputController
                 {
                     m_Arms.enabled = true;
                     if(m_HideArmsAfterwards)
-                        StartCoroutine(HideArms(3f));
+                        StartCoroutine(HideArms(6f));
                 }
                 m_ArmsAnimator.SetTrigger(triggerName);
             }

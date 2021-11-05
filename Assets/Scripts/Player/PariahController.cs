@@ -69,6 +69,8 @@ public class PariahController : InputController
     [SerializeField]
     private Agent m_CurrentPossessed;
 
+    public Agent CurrentHost { get => m_CurrentPossessed; }
+
     private Rigidbody m_Rigidbody;
 
     bool m_Dead = false;
@@ -282,7 +284,7 @@ public class PariahController : InputController
                 //{
                     //m_IsDelayedDashing = true;
                     m_Dashing = true;
-                    StartCoroutine(DelayedDash(GameManager.s_Instance.m_DashDelay));
+                    StartCoroutine(DelayedDash(m_DashDelay));
                 //}
 
 
@@ -435,13 +437,14 @@ public class PariahController : InputController
     {
         while (true)
         {
-            if (!m_Dead && m_Active && !m_Possessing && !PauseMenu.m_GameIsPaused && GameManager.s_Instance.m_Achievements.hasEnteredUnit) // This added on check is
-            {                                                                                                                              // to only lose health
-                m_Health -= m_HealthDrainAmount;                                                                                           // after we have entered a
-                                                                                                                                           // unit for the first time.
+            if (!m_Dead && m_Active && !m_Possessing && !PauseMenu.m_GameIsPaused)
+            {
+                // This added on check is to only lose health after we have entered a unit for the first time.
+                if (GameManager.s_Instance && GameManager.s_Instance.m_Achievements.hasEnteredUnit)
+                    m_Health -= m_HealthDrainAmount;
 
-                // Play heart beat when we reach low health threshold.
-                if (m_Health <= m_LowHealthThreshold && !m_IsPlayingLowHP) // Only play the sound if we're not already playing it.
+                // Only play the sound if we're not already playing it.
+                if (m_Health <= m_LowHealthThreshold && !m_IsPlayingLowHP)
                 {
                     m_IsPlayingLowHP = true;
                     PlayLowHPSound();
@@ -621,7 +624,7 @@ public class PariahController : InputController
     {
         m_IsDelayedDashing = true;
         // Play dash animation.
-        GameManager.s_Instance.m_Pariah.PlayArmAnim("OnDash");
+        GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnDash");
 
         float delayTime = 0.0f;
         // Adding a start delay before actual dash is performed.

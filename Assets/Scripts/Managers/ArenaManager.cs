@@ -57,7 +57,7 @@ public class ArenaManager : MonoBehaviour
             this.GetComponent<ArenaManager>().enabled = false;
             
             if(m_ShouldSaveData)
-                GameManager.s_Instance.SendDoorData(true, m_ID); // Telling the GameManager that this door has been opened.
+                GameManager.s_Instance?.SendDoorData(true, m_ID); // Telling the GameManager that this door has been opened.
         }
     }
 

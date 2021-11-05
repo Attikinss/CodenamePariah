@@ -929,9 +929,22 @@ public class Weapon : MonoBehaviour
         }
 
         else
-        { 
-            m_Animators.m_GunAnimators[0].SetTrigger("OnReload");
-            m_Animators.m_ArmsAnimators[0].SetTrigger("OnReload");
+        {
+            // If we are not holding a dual wield and our weapon is the assault rifle, there
+            // is a chance for the rare Pariah reload to happen. For testing I'll make it so
+            // rifles only reload with Pariah's reload for now.
+            if (m_TypeTag == WEAPONTYPE.RIFLE) 
+            {
+                m_Animators.m_GunAnimators[0].SetTrigger("OnPariahReload");
+                m_Animators.m_ArmsAnimators[0].SetTrigger("OnPariahReload");
+                GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnPariahReload", true);
+            }
+
+            else // We are reloading the pistol or one of the dual wield rifles.
+            { 
+                m_Animators.m_GunAnimators[0].SetTrigger("OnReload");
+                m_Animators.m_ArmsAnimators[0].SetTrigger("OnReload");
+            }
         }
          
             

@@ -597,11 +597,21 @@ public class PariahController : InputController
             }
             else if (triggerName == "OnIncarnate")
             {
-                if (m_Arms.enabled == false )
+                if (m_Arms.enabled == false)
                 {
                     m_Arms.enabled = true;
-                    if(m_HideArmsAfterwards)
+                    if (m_HideArmsAfterwards)
                         StartCoroutine(HideArms(6f));
+                }
+                m_ArmsAnimator.SetTrigger(triggerName);
+            }
+            else if (triggerName == "OnPariahReload")
+            {
+                if (m_Arms.enabled == false)
+                {
+                    m_Arms.enabled = true;
+                    if (m_HideArmsAfterwards)
+                        StartCoroutine(HideArms(1));
                 }
                 m_ArmsAnimator.SetTrigger(triggerName);
             }

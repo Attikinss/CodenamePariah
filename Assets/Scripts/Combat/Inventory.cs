@@ -198,6 +198,17 @@ public class Inventory : MonoBehaviour
             // Because we are hiding the skinned mesh renderers of all weapons on Start(), we have to unhide them when the player picks up a new weapon.
             weaponComponent.ToggleWeapon(true);
 
+            // Because we've just added a weapon to the player's inventory, we have to set the layer of the new weapon to the
+            // ignore depth layer.
+
+            // Just incase we do it for all weapons in their inventory again.
+            // When the player is controlling a unit, we set the weapons to be overlayed so they don't stick inside walls and stuff. It's reverted back in Disable().
+            for (int i = 0; i < m_Weapons.Count; i++)
+            {
+                m_Weapons[i].SetWeaponLayerRecursively(12); // If we ever rearrange layer orders this will have to change!                      ===================== IMPORTANT =====================
+            }
+
+
             return true;
 
         }

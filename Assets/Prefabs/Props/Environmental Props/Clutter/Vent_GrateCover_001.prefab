@@ -95,6 +95,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -18.238
       objectReference: {fileID: 0}
+    - target: {fileID: -5754084199372789682, guid: 1ba65dcb26401ef4e8c59813d3d7522a, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -8115742179464228591, guid: 39da5a73b047ca445b93da9d790fe140, type: 3}
     - target: {fileID: 919132149155446097, guid: 1ba65dcb26401ef4e8c59813d3d7522a, type: 3}
       propertyPath: m_Name
       value: Arena_001_Vent_GrateCover

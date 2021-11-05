@@ -17,6 +17,14 @@ public class GeneralSounds : MonoBehaviour
 
 	public FMODAudioEvent m_DashAudioEvent;
 
+
+
+	// ================= NOTE ================= //
+	// I'm in the process of removing these events.
+	// They're all being replaced with the single
+	// m_VoiceLineEvent in PariahController.cs
+	// ======================================== //
+
 	// Because these sound effects aren't built into the same event, we have separate events which we have to call through code.
 	public FMODAudioEvent m_HostEnterAudioEvent1;
 	public FMODAudioEvent m_HostEnterAudioEvent2;
@@ -24,7 +32,7 @@ public class GeneralSounds : MonoBehaviour
 	// Low health sound effect for Pariah. This is not the heartbeat. It's the voice line one.
 	public FMODAudioEvent m_LowHealthEvent;
 
-
+	// ======================================= //
 	public void Awake()
 	{
 		if (s_Instance == null)
@@ -59,6 +67,10 @@ public class GeneralSounds : MonoBehaviour
 	/// <param name="chanceOutOfHundred">The chance of playing the sound out of 100.</param>
 	public void PlayHostEnterSound(Transform playerTrans, int chanceOutOfHundred)
 	{
+		if (!CanPlayVoiceLine()) // If we are already playing a voice line, early out.
+			return;
+
+
 		// Pick what enter sound to play.
 		int randomNum = Random.Range(0, 2); // 0-1
 		FMODAudioEvent enterEvent;
@@ -88,13 +100,34 @@ public class GeneralSounds : MonoBehaviour
 	/// <param name="playerTrans"></param>
 	public void PlayLowHealthPariahSound(Transform playerTrans)
 	{
+		if (!CanPlayVoiceLine()) // If we are already playing a voice line, early out.
+			return;
+
 		m_LowHealthEvent.ToggleManualPosition(true, playerTrans);
 		FMOD.Studio.EventInstance instance = m_LowHealthEvent.GetEventInstance();
 		instance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(playerTrans));
 		m_LowHealthEvent.Trigger();
 	}
 
+	/// <summary>
+	/// Checks to see if we can play a Pariah voice line.
+	/// </summary>
+	/// <returns>Returns true if we can play a pariah voice line and false if we can't</returns>
+	private bool CanPlayVoiceLine()
+	{
+		bool success = true;
 
+		if (m_LowHealthEvent.IsPlayingSound())
+			success = false;
+		else if (m_HostEnterAudioEvent1.IsPlayingSound())
+			success = false;
+		else if (m_HostEnterAudioEvent2.IsPlayingSound())
+			success = false;
+
+		return success;
+	}
+
+	
 
 }
 

@@ -65,6 +65,9 @@ public class HostController : InputController
     public DrainAbility m_DrainAbility;
     public DeathIncarnateAbility m_DeathIncarnateAbility;
 
+    private bool m_HasDashedInAir = false;
+    private int m_DashesInAir = 0; // Counter to track how many dashes are performed in the air.
+
     // Mesh of the soldier or scientist.
     [Tooltip("Mesh of soldier or scientist to hide when entering unit.")]
     public GameObject m_Mesh;
@@ -123,6 +126,13 @@ public class HostController : InputController
         }
 
             m_MovInfo.m_IsGrounded = CheckGrounded();
+            if (m_MovInfo.m_IsGrounded && m_HasDashedInAir)
+            { 
+                m_HasDashedInAir = false; // Reset dashing in the air.
+                // Clearing counted dash uses in the air.
+                m_DashesInAir = 0;
+            }
+
             CalculateGroundNormal();
             if (m_MovInfo.m_IsGrounded)
                 m_MovInfo.m_HasDoubleJumped = false;
@@ -503,13 +513,33 @@ public class HostController : InputController
                 //}
                 //else 
                 //{
-                //Debug.Log("====================================delay dashed====================================");
-                m_Dashing = true;
-                StartCoroutine(DelayedDash(m_DashDelay));
-                //}
-                
 
-                
+                if (!m_HasDashedInAir) // This bool gets reset once the player has touched the ground again.
+                { 
+                    // We want to be able to track whether the player has dashed in the air. If they have, we only want to
+                    // allow them to dash again once they have landed.
+                    if (!m_MovInfo.m_IsGrounded) 
+                    {
+                        // We have dashed while in the air.
+                        // Increment counter.
+                        m_DashesInAir++;
+                        if (m_DashesInAir >= m_MaxDashCharges)
+                        { 
+                            m_HasDashedInAir = true; // If we have used all of our dash charges in the air, we tick this to true to prevent further use until
+                        }                            // we touch the ground.
+                    }
+
+
+                    //Debug.Log("====================================delay dashed====================================");
+                    m_Dashing = true;
+                    StartCoroutine(DelayedDash(m_DashDelay));
+                    //}
+                }
+
+
+
+
+
             }
         }
     }
@@ -542,6 +572,7 @@ public class HostController : InputController
 
         if (value.performed && !m_DeathIncarnateAbility.deathIncarnateUsed && pariah.m_Power >= m_DeathIncarnateAbility.requiredKills)
         {
+            GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnIncarnate", false);
             m_DeathIncarnateAbility.chargeRoutine = StartCoroutine(Ability3Charge());
             pariah.m_Power = 0; // Consume all power, reset back to 0.
             m_UIManager?.ToggleReadyPrompt(true);
@@ -949,6 +980,8 @@ public class HostController : InputController
 			yield return null;
 		}
 
+
+        
 		Ability3(m_DeathIncarnateAbility.deathIncarnateRadius, m_DeathIncarnateAbility.deathIncarnateDamage);
 	}
 	IEnumerator Ability3Draw()

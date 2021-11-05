@@ -71,7 +71,10 @@ public class Decal
         Vector3 localPos = m_objAttached.TransformPoint(m_hitPoint);
         localPos += m_objAttached.TransformVector(m_Dir) * 0.009f;
         //m_ProjectorObj.transform.LookAt(localPos + m_objAttached.TransformVector(m_Dir));
-        m_ProjectorObj.transform.eulerAngles = dir;
+
+
+        //m_ProjectorObj.transform.eulerAngles = dir;  Doesn't make decals face towards direction.
+        m_ProjectorObj.transform.forward = dir;        //This does though.
 
         m_ProjectorObj.transform.position = localPos;
     }

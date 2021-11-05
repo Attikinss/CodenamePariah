@@ -35,6 +35,9 @@ public class BulletPooler : MonoBehaviour
         for (int i = 0; i < m_MaxBulletCount; i++)
         {
             Bullet newBullet = Instantiate(m_BulletPrefab, transform).GetComponent<Bullet>();
+
+            newBullet.Hide(); // Hiding bullets when they spawn in so we don't see them.
+
             //newBullet.gameObject.SetActive(false); // Commented this out because we don't want to be setting bullets active/inactive.
             m_Pool.Add(newBullet);
         }

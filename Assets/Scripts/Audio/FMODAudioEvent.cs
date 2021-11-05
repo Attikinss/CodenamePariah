@@ -41,7 +41,8 @@ public class FMODAudioEvent : MonoBehaviour
             m_EventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
         else // If we do have m_HasManualPosition toggled, that means there is a reference to a transform we should be updating to.
         {
-            m_EventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(m_ManualTransform));
+            if(m_ManualTransform) // Only if it still exists can we use it's transform.
+                m_EventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(m_ManualTransform));
         }
     }
 
@@ -63,5 +64,20 @@ public class FMODAudioEvent : MonoBehaviour
     {
         m_HasManualPosition = toggle;
         m_ManualTransform = obj;
+    }
+
+    /// <summary>
+    /// Returns true if the sound instance is playing and false if it has stopped.
+    /// </summary>
+    /// <returns>A bool specifying whether or not the sound is playing.</returns>
+    public bool IsPlayingSound()
+    {
+        FMOD.Studio.PLAYBACK_STATE state;
+        m_EventInstance.getPlaybackState(out state);
+        if (state != FMOD.Studio.PLAYBACK_STATE.STOPPED)
+            return true; // We are playing the sound.
+
+
+        return false;
     }
 }

@@ -683,7 +683,7 @@ public class Weapon : MonoBehaviour
             if (m_Animators.CheckWeaponInspect()) // If we are inspecting our weapon, the first time we shoot should cancel the animation and the second time should
             {                                     // allow us to shoot.
                 if (!m_Animators.IsCancellingEquip) // Will prevent us from starting the coroutine when it's already started.
-                    StartCoroutine(m_Animators.CancelWeaponInspect(0.4f));
+                    StartCoroutine(m_Animators.CancelWeaponInspect(0.4f, m_AudioEquipEvent));
 
                 return false; // Not ready to fire until weapon inspect has been cancelled.
             }

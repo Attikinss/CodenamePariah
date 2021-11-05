@@ -213,7 +213,8 @@ public class Animators
 	/// This is used to allow the player to fire even if they are inspecting their weapon.
 	/// </summary>
 	/// <param name="t">Time until it is cancelled.</param>
-	public IEnumerator CancelWeaponInspect(float t)
+	/// <param name="equipEvent">Equip audio event to cancel.</param>
+	public IEnumerator CancelWeaponInspect(float t, FMODAudioEvent equipEvent)
 	{
 		if (!IsCancellingEquip) // Will only do this if we aren't already cancelling the animation.
 		{
@@ -221,6 +222,10 @@ public class Animators
 			float elapsedTime = 0;
 			m_GunAnimators[0].SetTrigger("CancelEquip");
 			m_ArmsAnimators[0].SetTrigger("CancelEquip");
+
+			// Stop equip sound when it gets cancelled.
+			equipEvent.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
+			
 
 			while (elapsedTime <= t)
 			{

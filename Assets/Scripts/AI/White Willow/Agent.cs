@@ -54,7 +54,14 @@ namespace WhiteWillow
         private MeshRenderer m_CurrentMatNoRenderer; // Because the soldiers don't have an animation yet, we have the temporary case of needing to
                                                      // use a normal MeshRenderer instead.
 
-		private void Awake()
+        // We have to move the firing position into the agent script instead of the Weapon script because
+        // when it's in the weapon script it has to be attached to the weapon itself. The firing position in the
+        // scene hirearchy is not a child of the weapon so in order to have an easier time with prefabs,
+        // I've decided to move the firing position here.
+        [Tooltip("Defines the position at which bullets spawn during firing.")]
+        public Transform m_FiringPosition;
+
+        private void Awake()
 		{
             m_RuntimeTree = InputTree?.Clone(gameObject.name);
             m_RuntimeTree?.SetAgent(this);

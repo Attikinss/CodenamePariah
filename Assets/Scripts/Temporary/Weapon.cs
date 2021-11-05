@@ -57,9 +57,9 @@ public class Weapon : MonoBehaviour
     [Tooltip("The percentage of a full magazine required before warning to reload.")]
     private float m_LowAmmoWarningPercentage = 0.3f;
 
-    [SerializeField]
-    [Tooltip("Defines the position at which bullets spawn during firing.")]
-    private Transform m_FiringPosition;
+    //[SerializeField]
+    //[Tooltip("Defines the position at which bullets spawn during firing.")]
+    //private Transform m_FiringPosition;
 
     /// <summary>An accumulative value used to determine when the next round should be fired.</summary>
     private float m_NextTimeToFire = 0f;
@@ -347,8 +347,8 @@ public class Weapon : MonoBehaviour
                     if (m_Inventory.Owner.Target != m_Inventory.Owner.PariahController.gameObject)
                         bullet?.SetTarget(m_Inventory.Owner.Target, (int)(m_BulletDamage * m_AIDamageModifier));
 
-                    if(m_FiringPosition) // Quick check since dual wield has no firing position currently.
-                        bullet?.Fire(m_FiringPosition.position, m_Inventory.Owner.Target.transform.position, transform.forward, m_Inventory.Owner.transform);
+                    if(m_Inventory.Owner.m_FiringPosition) // Quick check since dual wield has no firing position currently.
+                        bullet?.Fire(m_Inventory.Owner.m_FiringPosition.position, m_Inventory.Owner.Target.transform.position, transform.forward, m_Inventory.Owner.transform);
                 }
             }
             else
@@ -454,9 +454,9 @@ public class Weapon : MonoBehaviour
                         bullet?.SetTarget(m_Inventory.Owner.Target, (int)(m_BulletDamage * m_AIDamageModifier));
 
                     // Quick check since dual wield has no firing position currently.
-                    if (m_FiringPosition)
+                    if (m_Inventory.Owner.m_FiringPosition)
                     {
-                        bullet?.Fire(m_FiringPosition.position, m_Inventory.Owner.Target.transform.position, transform.forward, m_Inventory.Owner.transform);
+                        bullet?.Fire(m_Inventory.Owner.m_FiringPosition.position, m_Inventory.Owner.Target.transform.position, transform.forward, m_Inventory.Owner.transform);
                     }
                 }
             }
@@ -1311,7 +1311,7 @@ public class Weapon : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(targetPos, 0.25f);
-        Gizmos.DrawSphere(m_FiringPosition.position, 0.25f);
-        Gizmos.DrawLine(targetPos, m_FiringPosition.position);
+        Gizmos.DrawSphere(m_Inventory.Owner.m_FiringPosition.position, 0.25f);
+        Gizmos.DrawLine(targetPos, m_Inventory.Owner.m_FiringPosition.position);
     }
 }

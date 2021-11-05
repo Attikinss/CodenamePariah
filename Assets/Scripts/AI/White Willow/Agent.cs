@@ -26,7 +26,7 @@ namespace WhiteWillow
         private NavMeshAgent m_NavAgent;
         public Query CurrentQuery;
         public EnvironmentQuerySystem.EQSNode CurrentNode { get; set; }
-        public Weapon m_Weapon;
+        //public Weapon m_Weapon; Unused. For a reference to the weapon, see m_HostController.GetCurrentWeapon().
         [Tooltip("The mesh that we apply the possession shader to.")]
         public GameObject m_Mesh;
         public Material m_PossessionMaterial;
@@ -421,6 +421,39 @@ namespace WhiteWillow
             Vector3 left = Quaternion.LookRotation(direction) * Quaternion.Euler(0, 180 - 35.0f, 0) * new Vector3(0, 0, 1);
             Gizmos.DrawRay(origin + direction * length, right * 0.25f);
             Gizmos.DrawRay(origin + direction * length, left * 0.25f);
+        }
+
+        /// <summary>
+        /// This function is used when we instantiate a new agent when the player spawns
+        /// at a checkpoint. The new UI system requires references to UI elements which
+        /// are normally set by hand, however, since we are instantiating the new agent,
+        /// we must set those references via script.
+        /// </summary>
+        public void AttachUIReferences()
+        {
+            Weapon weapon = m_HostController.GetCurrentWeapon();
+
+            if (m_HostController.m_type == EnemyTypes.SCIENTIST)
+            {
+                // We are dealing with a scientist.
+                weapon.m_CharIcon = UIManager.s_Instance?.m_ScientistCharIcon;
+                weapon.m_CharName = UIManager.s_Instance?.m_ScientistCharName;
+                weapon.m_WeaponIcon = UIManager.s_Instance?.m_PistolWeaponIcon;
+                weapon.m_WeaponAmmoText = UIManager.s_Instance?.m_PistolWeaponAmmoText;
+            }
+            else if (m_HostController.m_type == EnemyTypes.SOLDIER)
+            {
+                // We are dealing with a soldier.
+                weapon.m_CharIcon = UIManager.s_Instance?.m_SoldierCharIcon;
+                weapon.m_CharName = UIManager.s_Instance?.m_SoldierCharName;
+                weapon.m_WeaponIcon = UIManager.s_Instance?.m_RifleWeaponIcon;
+                weapon.m_WeaponAmmoText = UIManager.s_Instance?.m_RifleWeaponAmmoText;
+            }
+            else
+            {
+                // lol this can't happen but I guess I should put an else here.
+                Debug.LogError("AttachUIReferences() could not find type of agent!");
+            }
         }
     }
 }

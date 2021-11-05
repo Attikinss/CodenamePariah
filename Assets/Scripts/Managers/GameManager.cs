@@ -338,9 +338,12 @@ public class GameManager : MonoBehaviour
             NavMeshAgent navAgent = newAgent.GetComponent<NavMeshAgent>();
             navAgent.enabled = false;
             newAgent.transform.position = s_CheckPointPos;
-            newAgent.name = "Test Agent";
+            newAgent.name = "Spawned_Agent";
             navAgent.enabled = true;
-            
+
+            // We have to set up its new UI elements via the UIManager.
+            newAgent.GetComponent<WhiteWillow.Agent>().AttachUIReferences();
+
 
             m_Pariah.ForceInstantPossess(newAgent.GetComponent<WhiteWillow.Agent>());
         }

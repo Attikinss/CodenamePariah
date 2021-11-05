@@ -981,7 +981,9 @@ public class HostController : InputController
 		}
 
 
-        
+        // Play ability 3 particle effect.
+        GameManager.s_Instance?.m_Pariah.m_IncarnateParticle.Play();
+
 		Ability3(m_DeathIncarnateAbility.deathIncarnateRadius, m_DeathIncarnateAbility.deathIncarnateDamage);
 	}
 	IEnumerator Ability3Draw()

@@ -19,7 +19,7 @@ public sealed class AbortTargetInSight : Decorator
         if (Child == null)
             return NodeResult.Failure;
 
-        if (Target.Value == null && Owner.Agent.TargetVisible(Target.Value, out float distance))
+        if (Target.Value != null && Owner.Agent.TargetVisible(Target.Value, out float distance))
         {
             if (distance < Owner.Agent.m_FiringRange)
             {

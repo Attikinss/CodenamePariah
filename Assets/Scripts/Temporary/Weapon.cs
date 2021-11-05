@@ -1023,7 +1023,6 @@ public class Weapon : MonoBehaviour
     {
         // Try to find a more elegant way to handle this
         // through exposed variables that Michael can play with.
-        Debug.Log("Ammo Current Count: " + m_RoundsInMagazine + " | Ammo Low Count" + (int)(m_MagazineSize * m_LowAmmoWarningPercentage));
         return m_RoundsInMagazine <= (int)(m_MagazineSize * m_LowAmmoWarningPercentage);
     }
 

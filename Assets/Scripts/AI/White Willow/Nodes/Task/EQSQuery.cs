@@ -92,6 +92,9 @@ public class EQSQuery : Task
                                         continue;
                                 }
 
+                                if (Owner.Agent.gameObject.name.Contains("Soldier"))
+                                    Debug.Log("Is Soldier");
+
                                 if (Owner.Agent.DestinationAttainable(node.Position))
                                 {
                                     Owner.Agent.CurrentNode?.Release();
@@ -166,8 +169,13 @@ public class EQSQuery : Task
         // Ensure a request is available for submission
         if (m_EQSRequest == null)
         {
-            Vector3 queryPosition = Vector3.Distance(Owner.Agent.transform.position, Target.Value.transform.position) > Range
-                ? Target.Value.transform.position : Owner.Agent.transform.position;
+            //Vector3 queryPosition = Vector3.Distance(Owner.Agent.transform.position, Target.Value.transform.position) > Range
+            //    ? Target.Value.transform.position : Owner.Agent.transform.position;
+            Vector3 queryPosition = Vector3.zero;
+            if (Vector3.Distance(Owner.Agent.transform.position, Target.Value.transform.position) > Range)
+                queryPosition = Target.Value.transform.position;
+            else
+                queryPosition = Owner.Agent.transform.position;
 
             m_EQSRequest = new EnvironmentQuerySystem.QueryRequest(queryPosition, Range);
 

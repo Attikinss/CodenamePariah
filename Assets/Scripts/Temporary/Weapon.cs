@@ -1209,7 +1209,8 @@ public class Weapon : MonoBehaviour
     public void StopSounds()
     {
         m_AudioEmptyClipEvent.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
-        m_AudioEquipEvent.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        if(m_AudioEquipEvent)
+            m_AudioEquipEvent.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
         m_AudioReloadEvent.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
         m_AudioFireEvent.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
     }

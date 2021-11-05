@@ -20,8 +20,13 @@ namespace WhiteWillow.Nodes
             {
                 if (Child != null)
                 {
-                    m_CachedTime = Time.time + m_CooldownTime;
-                    return Child.Tick();
+                    NodeResult result = Child.Tick();
+
+                    if (result != NodeResult.Running)
+                    {
+                        m_CachedTime = Time.time + m_CooldownTime;
+                        return result;
+                    }
                 }
             }
 

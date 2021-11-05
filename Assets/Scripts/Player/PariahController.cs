@@ -102,7 +102,12 @@ public class PariahController : InputController
     // GeneralSounds script. 
     // =========================================================== //
 
+    // Particle effect for incarnate ability.
     public VisualEffect m_IncarnateParticle;
+
+    // Smokey particle effects for Pariah's arms. We need a reference to them so we can disable them when we possess a unit.
+    public VisualEffect m_SmokyArmParticle1;
+    public VisualEffect m_SmokyArmParticle2;
 
 
 
@@ -549,9 +554,17 @@ public class PariahController : InputController
         if (m_Arms)
         {
             if (mode)
+            {
                 m_Arms.enabled = true;
+                m_SmokyArmParticle1.enabled = true;
+                m_SmokyArmParticle2.enabled = true;
+            }
             else
+            { 
                 m_Arms.enabled = false;
+                m_SmokyArmParticle1.enabled = false;
+                m_SmokyArmParticle2.enabled = false;
+            }
         }
         else
             Debug.LogWarning("Pariah's arms have not been set!");
@@ -654,4 +667,6 @@ public class PariahController : InputController
             StartCoroutine(Dash(m_Camera.transform.position + m_Camera.transform.forward * m_DashDistance, Vector3.zero, m_DashDuration, true));
         }
     }
+
+    
 }

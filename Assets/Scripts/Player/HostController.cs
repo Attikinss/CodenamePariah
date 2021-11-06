@@ -118,17 +118,17 @@ public class HostController : InputController
         {
             if (!m_Active) return;
 
-        if (GetCurrentWeaponConfig()) // If we have a weapon. We may not have any weapons so thats why we check this.
-        { 
-            if (GetCurrentWeaponConfig().m_AlwaysADS) // The reason why I do this is so I don't have to check for the m_AlwaysADS bool everywhere. This way I can still just check for m_IsAiming in all functions.
-                GetCurrentWeapon().m_WeaponActions.m_IsAiming = true;
-            if (GetCurrentWeaponConfig().m_AlwaysFiring) // Doing same here for the reason above.
-                GetCurrentWeapon().m_WeaponActions.m_IsFiring = true;
-        }
+            if (GetCurrentWeaponConfig()) // If we have a weapon. We may not have any weapons so thats why we check this.
+            {
+                if (GetCurrentWeaponConfig().m_AlwaysADS) // The reason why I do this is so I don't have to check for the m_AlwaysADS bool everywhere. This way I can still just check for m_IsAiming in all functions.
+                    GetCurrentWeapon().m_WeaponActions.m_IsAiming = true;
+                if (GetCurrentWeaponConfig().m_AlwaysFiring) // Doing same here for the reason above.
+                    GetCurrentWeapon().m_WeaponActions.m_IsFiring = true;
+            }
 
             m_MovInfo.m_IsGrounded = CheckGrounded();
             if (m_MovInfo.m_IsGrounded && m_HasDashedInAir)
-            { 
+            {
                 m_HasDashedInAir = false; // Reset dashing in the air.
                 // Clearing counted dash uses in the air.
                 m_DashesInAir = 0;
@@ -175,7 +175,16 @@ public class HostController : InputController
                 }
             }
 
-            
+
+        }
+        else
+        {
+            // To stop movement when paused.
+            if (PauseMenu.m_GameIsPaused)
+            {
+                m_MovInfo.m_CacheMovDirection = Vector3.zero;
+                Rigidbody.velocity = Vector3.zero;
+            }
         }
     }
     private void LateUpdate()

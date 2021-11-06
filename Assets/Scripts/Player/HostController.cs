@@ -346,7 +346,7 @@ public class HostController : InputController
 
     public override void OnSlide(InputAction.CallbackContext value)
     {
-        if (value.performed && m_MovInfo.m_IsGrounded && m_MovInfo.m_IsMoving && !m_Dashing)
+        if (value.performed && m_MovInfo.m_IsGrounded && m_MovInfo.m_IsMoving && !m_Dashing && !m_DrainAbility.isDraining)
         {
             //Debug.Log("OnSlide called.");
             m_MovInfo.m_SlideDir = value.performed ? m_Orientation.forward : m_MovInfo.m_SlideDir;

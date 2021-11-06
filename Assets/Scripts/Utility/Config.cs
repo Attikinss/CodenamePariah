@@ -33,6 +33,6 @@ public struct VideoConfig
 public struct GameplayConfig
 {
     [Header("Gameplay")]
-    public float MouseSensitivity;
-    public float ControllerSensitivity;
+    public int MouseSensitivity;
+    public int ControllerSensitivity;
 }

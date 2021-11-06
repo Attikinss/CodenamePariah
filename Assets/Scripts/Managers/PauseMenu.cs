@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -41,6 +42,9 @@ public class PauseMenu : MonoBehaviour
 
     [Tooltip("Animator for menu transitions.")]
     public Animator m_Transition;
+
+    [SerializeField]
+    private Image m_Panel;
 
     [SerializeField]
     [Tooltip("Time it takes for transition between scenes.")]
@@ -209,7 +213,7 @@ public class PauseMenu : MonoBehaviour
     /// <summary>Opens the quit menu.</summary>
     public void QuitMenu()
     {
-        for (int i = 1; i < m_PauseMenuUI.Length - 2; i++)
+        for (int i = 1; i < m_PauseMenuUI.Length - 1; i++)
         {
             m_PauseMenuUI[i].SetActive(false);
         }
@@ -234,6 +238,11 @@ public class PauseMenu : MonoBehaviour
         {
             m_OptionsMenuUI[i].SetActive(false);
         }
+        if (m_Panel)
+        {
+            m_Panel.enabled = false;
+        }
+
         m_OptionsOpen = false;
         //m_SettingsToBeApplied = false;
     }

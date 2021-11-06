@@ -57,13 +57,12 @@ public class Weapon : MonoBehaviour
     [Tooltip("The percentage of a full magazine required before warning to reload.")]
     private float m_LowAmmoWarningPercentage = 0.3f;
 
-    [SerializeField]
-    [Tooltip("Defines the position at which bullets spawn during firing.")]
-    private Transform m_FiringPosition;
+    //[SerializeField]
+    //[Tooltip("Defines the position at which bullets spawn during firing.")]
+    //private Transform m_FiringPosition;
 
     /// <summary>An accumulative value used to determine when the next round should be fired.</summary>
     private float m_NextTimeToFire = 0f;
-
 
     // Duplicate variables to handle the second gun for dual wield.
     private int m_RoundsInMagazineLeft;
@@ -117,7 +116,14 @@ public class Weapon : MonoBehaviour
     public GameObject m_WeaponIcon;
     public TextMeshProUGUI m_WeaponAmmoText;
 
-    private void Awake()
+    // To be used when initalising the skinned mesh renderers of weapons.
+    // The problem with initialising on Start() or Awake() is that many of the weapons in the game are deactivated by default and only
+    // Awake() when the user swaps to them.
+    // But we still need to initialise the renderers even if the user hasn't held the weapon before.
+    [HideInInspector]
+    public bool m_InitialisedSkinnedMeshRenderers = false;
+
+	private void Awake()
 	{
         m_TransformInfo.m_OriginalLocalPosition = transform.localPosition;
         m_TransformInfo.m_OriginalGlobalPosition = transform.position;
@@ -148,6 +154,15 @@ public class Weapon : MonoBehaviour
 	private void Start()
 	{
         m_UIManager = UIManager.s_Instance;
+
+        if(!m_InitialisedSkinnedMeshRenderers)
+            InitSkinnedMeshes();
+
+        // Hide the skinned mesh renderers of the weapons and arms. We only want them to show if the player is in FPS mode.
+        // We hide all weapons that are on agents who aren't being controlled by the player.
+        if(!m_Inventory.Owner.Possessed)
+            ToggleWeapon(false);
+
 	}
 
 	// Update is called once per frame
@@ -258,7 +273,6 @@ public class Weapon : MonoBehaviour
                 PlayFireSound();
                 
                 PlayAnimations(special);
-                m_Inventory.Owner.PlayAnimation("Shoot", true);
 
                 // Currently gets rid of bullet sprite before UI has fully updated //
                 //m_UIManager.DisableBulletSpriteInCurrentMag(m_RoundsInMagazine - 1);
@@ -306,7 +320,7 @@ public class Weapon : MonoBehaviour
                                 float damageMod = m_Inventory.Owner.Possessed ? 1.0f : m_AIDamageModifier;
                                 agentInventory.TakeDamage((int)(m_BulletDamage * damageMod));
                                 //Debug.Log("BAD");
-                                GameManager.s_Instance.PlaceBulletSpray(hitInfo.point, hitInfo.transform, (transform.position - hitInfo.point).normalized);
+                                GameManager.s_Instance?.PlaceBulletSpray(hitInfo.point, hitInfo.transform, (transform.position - hitInfo.point).normalized);
 
 
                                 return;
@@ -332,8 +346,8 @@ public class Weapon : MonoBehaviour
                     if (m_Inventory.Owner.Target != m_Inventory.Owner.PariahController.gameObject)
                         bullet?.SetTarget(m_Inventory.Owner.Target, (int)(m_BulletDamage * m_AIDamageModifier));
 
-                    if(m_FiringPosition) // Quick check since dual wield has no firing position currently.
-                        bullet?.Fire(m_FiringPosition.position, m_Inventory.Owner.Target.transform.position, transform.forward);
+                    if(m_Inventory.Owner.m_FiringPosition) // Quick check since dual wield has no firing position currently.
+                        bullet?.Fire(m_Inventory.Owner.m_FiringPosition.position, m_Inventory.Owner.Target.transform.position, transform.forward, m_Inventory.Owner.transform);
                 }
             }
             else
@@ -357,6 +371,115 @@ public class Weapon : MonoBehaviour
                 //    this.GetComponentInParent<UIManager>().DisableMagazine();
             }
         }
+    }
+
+    public void FireAt(GameObject target)
+    {
+        // TODO: Clean up this duped code
+
+        if (ReadyToFire())
+        {
+            // Getting the correct rounds in magazine. There are two, the normal one and the one for the left gun.
+            int RoundsInMag = m_RoundsInMagazine;
+
+            if (RoundsInMag > 0)
+            {
+                if (m_SemiAuto)
+                    m_WeaponActions.m_IsFiring = false;
+
+                PlayFireSound();
+                PlayAnimations();
+
+                m_RoundsInMagazine--;
+
+                if (m_Inventory.Owner == null || m_Inventory.Owner.Possessed)
+                {
+                    //Vector3 randOffset = new Vector3(Random.Range(-0.75f, 0.75f), Random.Range(-0.75f, 0.75f), Random.Range(-0.75f, 0.75f));
+                    Vector3 direction = ((target.transform.position /*+ randOffset*/)
+                        - m_Camera.transform.position);
+
+                    Ray ray = new Ray(m_Camera.transform.position, direction);
+                    WeaponConfiguration currentConfig = GetCurrentWeaponConfig();
+
+                    // =========== TESTING =========== //
+                    if (!currentConfig.m_DisableAllRecoil)
+                    {
+                        float ShootingDuration = Time.time - m_FireStartTime;
+
+                        CameraRecoil cameraRecoil = m_Controller.m_AccumulatedRecoil;
+
+                        cameraRecoil.accumulatedPatternRecoilX += currentConfig.m_VerticalRecoil.Evaluate(ShootingDuration);
+                        cameraRecoil.accumulatedPatternRecoilY += currentConfig.m_HorizontalRecoil.Evaluate(ShootingDuration);
+                    }
+                    // =============================== //
+
+                    AddVisualRecoil();
+
+                    // ========================= TEMPORARY SHOOT COLLISION ========================= //
+
+                    if (Physics.Raycast(ray, out RaycastHit hitInfo, 500))
+                    {
+                        if (hitInfo.transform.gameObject != null)
+                        {
+                            if (hitInfo.transform.TryGetComponent(out Inventory agentInventory))
+                            {
+                                float damageMod = m_Inventory.Owner.Possessed ? 1.0f : m_AIDamageModifier;
+                                agentInventory.TakeDamage((int)(m_BulletDamage * damageMod));
+
+                                GameManager.s_Instance?.PlaceBulletSpray(hitInfo.point, hitInfo.transform, (transform.position - hitInfo.point).normalized);
+
+                                return;
+                            }
+
+                            PlayBulletEffect(false, true, hitInfo.point);
+                            GameManager.s_Instance?.PlaceDecal(hitInfo.transform, hitInfo.point, hitInfo.normal);
+
+                            // Adding a force to the hit object.
+                            if (hitInfo.rigidbody != null)
+                                hitInfo.rigidbody.AddForce(m_Camera.transform.forward * GetCurrentWeaponConfig().m_BulletForce, ForceMode.Impulse);
+                        }
+                    }
+                    else
+                    {
+                        // Shot did not hit gameobject.
+                        PlayBulletEffect(false, false, Vector3.zero);
+                    }
+                    // ============================================================================= //
+                }
+                else
+                {
+                    var bullet = BulletPooler.Instance?.GetNextAvailable();
+                    if (m_Inventory.Owner.Target != m_Inventory.Owner.PariahController.gameObject)
+                        bullet?.SetTarget(m_Inventory.Owner.Target, (int)(m_BulletDamage * m_AIDamageModifier));
+
+                    // Quick check since dual wield has no firing position currently.
+                    if (m_Inventory.Owner.m_FiringPosition)
+                    {
+                        bullet?.Fire(m_Inventory.Owner.m_FiringPosition.position, m_Inventory.Owner.Target.transform.position, transform.forward, m_Inventory.Owner.transform);
+                    }
+                }
+            }
+            else
+            {
+                // Do nothing / reload automatically
+                if (!ReserveAmmoEmpty() && !m_Animators.CheckWeaponInspect())
+                {
+                    CombatInfo combatInfo = m_Controller.m_CombatInfo;
+
+                    StartCoroutine(Reload());
+
+                    // To prevent recoil from affecting player while reloading, we must.
+                    combatInfo.m_ShootingDuration = 0;
+                }
+                else
+                    PlayEmptyClipSound();
+            }
+        }
+    }
+
+    public void ForceReload()
+    {
+        StartCoroutine(Reload());
     }
 
     public void StartReload(bool dualWield)
@@ -561,14 +684,31 @@ public class Weapon : MonoBehaviour
 
         if (Time.time >= nextTime && !GetReloadState(dual))//(time.time or time.deltatime)
         {
+            if (m_Animators.CheckWeaponInspect()) // If we are inspecting our weapon, the first time we shoot should cancel the animation and the second time should
+            {                                     // allow us to shoot.
+                if (!m_Animators.IsCancellingEquip) // Will prevent us from starting the coroutine when it's already started.
+                    StartCoroutine(m_Animators.CancelWeaponInspect(0.4f, m_AudioEquipEvent));
+
+                return false; // Not ready to fire until weapon inspect has been cancelled.
+            }
+
+
             if (m_SemiAuto) // If the gun is semi auto, we have one other check to do.
             {
+                // I've commented out this code so that the pistol can shoot as fast as the player can click.
+                // Okay, nevermind apparently we need this animation cap.
+                // Actually, nevermind that nevermind. I've added an any state transition to the firing for the pistol which
+                // allows us to spam the animation without getting any desync.
+
+
                 // To prevent people from being able to spam semi automatic guns really fast, I'm going to prevent them from firing unless the animation is complete.
-                if (!m_Animators.m_GunAnimators[0].GetCurrentAnimatorStateInfo(0).IsName("Idle")) // Only semi automatic weapons in the game are not dual wielded so we don't have to check the whole list of gun animators.
-                {
-                    return false;
-                }
+                //if (!m_Animators.m_GunAnimators[0].GetCurrentAnimatorStateInfo(0).IsName("Idle")) // Only semi automatic weapons in the game are not dual wielded so we don't have to check the whole list of gun animators.
+                //{
+                //    return false;
+                //}
+               
             }
+            
 
             // Defines the firing rate as rounds per minute (hard coded 60s)
             if(dual)
@@ -584,104 +724,107 @@ public class Weapon : MonoBehaviour
     /// <summary>Reloads the weapon over time.</summary>
     public IEnumerator Reload(bool special = false)
     {
-        StartReloadAnimation(special);
-        PlayReloadSound();
-
-        if (special)
-            m_WeaponActions.m_IsReloadingLeft = true;
-        else
-            m_WeaponActions.m_IsReloading = true;
-
-        // Before waiting you could invoke an animator here
-        // to play a reload animation and an audio manager
-        // to play a sound to go with it.
-
-        // When triggering an animation it would also be pretty neat
-        // to modify its playback speed to match the reload time.
-
-        yield return new WaitForSeconds(m_ReloadTime);
-
-        // I don't want to strip your hard work with the modulo
-        // operations that you took the time to design so if you
-        // wish to use your method then please do that.
-        // The code below is just an example of how to simplify
-        // the process so that there's little brain power needed
-        // to remember what is happening behind the scenes.
-
-        // Get how many rounds are needed to top up
-        //int ammoRequired = m_MagazineSize - m_RoundsInMagazine;
-        int ammoRequired;
-        int reservePool;
-        if (special)
+        if (!IsReloading())
         {
-            ammoRequired = m_MagazineSize - m_RoundsInMagazineLeft;
-            //reservePool = m_ReserveAmmoLeft;
-            reservePool = m_ReserveAmmo;
-        }
-        else
-        { 
-            ammoRequired = m_MagazineSize - m_RoundsInMagazine;
-            reservePool = m_ReserveAmmo;
-        }
+            StartReloadAnimation(special);
+            PlayReloadSound();
 
-        
-
-        // Check the size of the reserve pool
-        if (reservePool <= ammoRequired)
-        {
-            // Update UI to only show one mag
-            //m_UIManager.ModuloEqualsZero(m_RoundsInMagazine + m_ReserveAmmo);
-
-            // Move all remaining ammo into magazine
             if (special)
-            {
-                //m_RoundsInMagazineLeft += m_ReserveAmmoLeft;
-                m_RoundsInMagazineLeft += m_ReserveAmmo;
-                //m_ReserveAmmoLeft = 0;
-                m_ReserveAmmo = 0;
-            }
-            else 
-            {
-                m_RoundsInMagazine += m_ReserveAmmo;
-                m_ReserveAmmo = 0;
-            }
-        }
-        else
-        {
-            if ((m_RoundsInMagazine + m_ReserveAmmo) % m_MagazineSize == 0)
-            {
-                // Total ammo equals an amount that when divided by magazine size, has no remainder therefore get rid of a mag UI element
-                //m_UIManager.ModuloEqualsZero(m_MagazineSize);
-            }
+                m_WeaponActions.m_IsReloadingLeft = true;
             else
-            {
-                // Removes bullet sprites total from 1 - 2 mags depending on the ammo missing from current magazine and how much ammo was already missing in the last magazine
-                //m_UIManager.RemoveAmmoFromLastAddToCurrent(m_MagazineSize);
-            }
+                m_WeaponActions.m_IsReloading = true;
 
-            // Move required amount from reserve to magazine
+            // Before waiting you could invoke an animator here
+            // to play a reload animation and an audio manager
+            // to play a sound to go with it.
+
+            // When triggering an animation it would also be pretty neat
+            // to modify its playback speed to match the reload time.
+
+            yield return new WaitForSeconds(m_ReloadTime);
+
+            // I don't want to strip your hard work with the modulo
+            // operations that you took the time to design so if you
+            // wish to use your method then please do that.
+            // The code below is just an example of how to simplify
+            // the process so that there's little brain power needed
+            // to remember what is happening behind the scenes.
+
+            // Get how many rounds are needed to top up
+            //int ammoRequired = m_MagazineSize - m_RoundsInMagazine;
+            int ammoRequired;
+            int reservePool;
             if (special)
             {
-                m_RoundsInMagazineLeft += ammoRequired;
-                //m_ReserveAmmoLeft -= ammoRequired;
-                m_ReserveAmmo -= ammoRequired;
+                ammoRequired = m_MagazineSize - m_RoundsInMagazineLeft;
+                //reservePool = m_ReserveAmmoLeft;
+                reservePool = m_ReserveAmmo;
             }
             else
             { 
-                m_RoundsInMagazine += ammoRequired;
-                m_ReserveAmmo -= ammoRequired;
+                ammoRequired = m_MagazineSize - m_RoundsInMagazine;
+                reservePool = m_ReserveAmmo;
             }
+
+        
+
+            // Check the size of the reserve pool
+            if (reservePool <= ammoRequired)
+            {
+                // Update UI to only show one mag
+                //m_UIManager.ModuloEqualsZero(m_RoundsInMagazine + m_ReserveAmmo);
+
+                // Move all remaining ammo into magazine
+                if (special)
+                {
+                    //m_RoundsInMagazineLeft += m_ReserveAmmoLeft;
+                    m_RoundsInMagazineLeft += m_ReserveAmmo;
+                    //m_ReserveAmmoLeft = 0;
+                    m_ReserveAmmo = 0;
+                }
+                else 
+                {
+                    m_RoundsInMagazine += m_ReserveAmmo;
+                    m_ReserveAmmo = 0;
+                }
+            }
+            else
+            {
+                if ((m_RoundsInMagazine + m_ReserveAmmo) % m_MagazineSize == 0)
+                {
+                    // Total ammo equals an amount that when divided by magazine size, has no remainder therefore get rid of a mag UI element
+                    //m_UIManager.ModuloEqualsZero(m_MagazineSize);
+                }
+                else
+                {
+                    // Removes bullet sprites total from 1 - 2 mags depending on the ammo missing from current magazine and how much ammo was already missing in the last magazine
+                    //m_UIManager.RemoveAmmoFromLastAddToCurrent(m_MagazineSize);
+                }
+
+                // Move required amount from reserve to magazine
+                if (special)
+                {
+                    m_RoundsInMagazineLeft += ammoRequired;
+                    //m_ReserveAmmoLeft -= ammoRequired;
+                    m_ReserveAmmo -= ammoRequired;
+                }
+                else
+                { 
+                    m_RoundsInMagazine += ammoRequired;
+                    m_ReserveAmmo -= ammoRequired;
+                }
+            }
+
+            SetFireTime(special); // Added so that if the player is holding down fire while reloading, they will begin firing at t=0. Without this the fire time is what is what when they
+                           // originally started firing.
+            if(m_Inventory.Owner.Possessed)
+                m_UIManager?.UpdateWeaponUI(this);
+
+            if (special)
+                m_WeaponActions.m_IsReloadingLeft = false;
+            else
+                m_WeaponActions.m_IsReloading = false;
         }
-
-        SetFireTime(special); // Added so that if the player is holding down fire while reloading, they will begin firing at t=0. Without this the fire time is what is what when they
-                       // originally started firing.
-        if(m_Inventory.Owner.Possessed)
-            m_UIManager?.UpdateWeaponUI(this);
-
-        if (special)
-            m_WeaponActions.m_IsReloadingLeft = false;
-        else
-            m_WeaponActions.m_IsReloading = false;
     }
 
     private void UpdateSway(float x, float y)
@@ -880,7 +1023,7 @@ public class Weapon : MonoBehaviour
     {
         // Try to find a more elegant way to handle this
         // through exposed variables that Michael can play with.
-        return m_RoundsInMagazine == (int)(m_MagazineSize * m_LowAmmoWarningPercentage);
+        return m_RoundsInMagazine <= (int)(m_MagazineSize * m_LowAmmoWarningPercentage);
     }
 
     /// <summary>Defines whether or not the weapon's magazine is low and there is no reserve ammo.</summary>
@@ -888,7 +1031,7 @@ public class Weapon : MonoBehaviour
     {
         // Try to find a more elegant way to handle this
         // through exposed variables that Michael can play with.
-        return m_RoundsInMagazine == (int)(m_MagazineSize * m_LowAmmoWarningPercentage) * 0.5f;
+        return m_RoundsInMagazine <= (int)(m_MagazineSize * m_LowAmmoWarningPercentage) * 0.5f;
     }
 
     /// <summary>Defines whether or not the weapon's magazine is empty and there is no reserve ammo.</summary>
@@ -896,13 +1039,13 @@ public class Weapon : MonoBehaviour
     {
         // Try to find a more elegant way to handle this
         // through exposed variables that Michael can play with.
-        return m_RoundsInMagazine + m_ReserveAmmo == 0;
+        return m_RoundsInMagazine + m_ReserveAmmo <= 0;
     }
 
     /// <summary>Defines whether or not the weapon's magazine is empty.</summary>
     public bool PrimaryAmmoEmpty()
     {
-        return m_RoundsInMagazine == 0;
+        return m_RoundsInMagazine <= 0;
     }
 
     /// <summary>Defines whether or not the weapon's reserve ammo pool is empty.</summary>
@@ -911,11 +1054,11 @@ public class Weapon : MonoBehaviour
         if (special) // If special is true, check the left gun reserve ammo.
         { 
             //return m_ReserveAmmoLeft == 0;
-            return m_ReserveAmmo == 0;
+            return m_ReserveAmmo <= 0;
 
         }
 
-        return m_ReserveAmmo == 0;
+        return m_ReserveAmmo <= 0;
     }
 
     public int GetRoundsInMagazine(bool special = false)
@@ -940,24 +1083,34 @@ public class Weapon : MonoBehaviour
     private void PlayAnimations(bool special = false)
     {
         // Play effects.
-        if (special)
+
+        if (m_Inventory.Owner.Possessed) // If we're the ones in the agent.
         {
-            if (m_Particles.m_MuzzleFlashes.Count > 0)
+            if (special)
+            {
+                if (m_Particles.m_MuzzleFlashes.Count > 0)
                     m_Particles.m_MuzzleFlashes[1].Play();
-            if (m_Particles.m_BulletCasings.Count > 0)
+                if (m_Particles.m_BulletCasings.Count > 0)
                     m_Particles.m_BulletCasings[1].Play();
-            if (m_Animators.m_GunAnimators.Count > 0)
+                if (m_Animators.m_GunAnimators.Count > 0)
                     m_Animators.m_GunAnimators[1].SetTrigger("IsFiring");
-            if (m_Animators.m_ArmsAnimators.Count > 0)
+                if (m_Animators.m_ArmsAnimators.Count > 0)
                     m_Animators.m_ArmsAnimators[1].SetTrigger("IsFiring");
+            }
+            else
+            {
+                m_Particles.m_MuzzleFlashes[0].Play();
+                m_Particles.m_BulletCasings[0].Play();
+                m_Animators.m_GunAnimators[0].SetTrigger("IsFiring");
+                m_Animators.m_ArmsAnimators[0].SetTrigger("IsFiring");
+            }
         }
-        else
+        else // Otherwise, this is an AI agent.
         {
-            m_Particles.m_MuzzleFlashes[0].Play();
-            m_Particles.m_BulletCasings[0].Play();
-            m_Animators.m_GunAnimators[0].SetTrigger("IsFiring");
-            m_Animators.m_ArmsAnimators[0].SetTrigger("IsFiring");
+            m_Inventory.Owner.m_AIMuzzleFlash.Play(); // Play the AI's muzzle flash instead of the FPS one.
         }
+
+        m_Inventory.Owner.PlayAnimation("Shoot", true);
     }
 
     private bool CanRecoilRecover()
@@ -1030,10 +1183,10 @@ public class Weapon : MonoBehaviour
     {
         if (dual)
         {
-            return GetFireState() && !GetReloadState(dual) && !m_Animators.CheckWeaponInspect(); // The normal fire mode is the left gun in a dual wield scenario, so we must check if the left gun is not reloading.
+            return GetFireState() && !GetReloadState(dual)/* && !m_Animators.CheckWeaponInspect()*/; // The normal fire mode is the left gun in a dual wield scenario, so we must check if the left gun is not reloading.
         }
         else
-            return (GetFireState() && !GetReloadState() && !m_Animators.CheckWeaponInspect());
+            return (GetFireState() && !GetReloadState()/* && !m_Animators.CheckWeaponInspect()*/);
     }
     public bool CanAim() { return (GetAimState() && !GetReloadState() && !m_Animators.m_WeaponInspectAnimation); }
     public void SetCamera(Camera camera) { m_Camera = camera; }
@@ -1065,6 +1218,18 @@ public class Weapon : MonoBehaviour
             m_AudioEquipEvent.Trigger();
     }
 
+    /// <summary>
+    /// Used to stop all playing sounds. This is primarily to stop sounds from playing after the agent has been destroyed.
+    /// </summary>
+    public void StopSounds()
+    {
+        m_AudioEmptyClipEvent.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        if(m_AudioEquipEvent)
+            m_AudioEquipEvent.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        m_AudioReloadEvent.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        m_AudioFireEvent.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
+    }
+
     public void PlayBulletEffect(bool isDualWield, bool hasHit, Vector3 direction)
     {
         m_Particles.PlayBulletEffect(isDualWield, hasHit, direction);
@@ -1089,5 +1254,79 @@ public class Weapon : MonoBehaviour
             }
         }
 
+        if(m_Inventory.Owner && m_Inventory.Owner.Target)
+            DrawAgentTarget(m_Inventory.Owner.Target.transform.position);
 	}
+
+    /// <summary>
+    /// Used to turn the FPS gun on and off.
+    /// </summary>
+    /// <param name="toggle">Set to true if you want to show the arms and false if you want to hide them.</param>
+    public void ToggleWeapon(bool toggle)
+    {
+        for (int i = 0; i < m_Animators.m_SkinnedMeshes.Count; i++)
+        {
+            // First we will hide all the arms.
+            m_Animators.m_SkinnedMeshes[i].enabled = toggle;
+        }
+    }
+
+    /// <summary>
+    /// Temporary function to grab all the arm and gun skinned mesh renderers so that we have a reference to them.
+    /// The reference helps us enable/disable these meshes when the player leaves and enters the host.
+    /// This is temporary until I can work on the scientist/soldier prefabs.
+    /// </summary>
+    public void InitSkinnedMeshes()
+    {
+        // This whole function is relying on the first child of these animators be the skinned mesh renderer we're looking for.
+        // Really bad but I can't change the soldier/scientist prefabs right now so this will have to do.
+
+        m_InitialisedSkinnedMeshRenderers = true;
+
+        for (int i = 0; i < m_Animators.m_ArmsAnimators.Count; i++)
+        {
+            // First we'll grab all the arms.
+            SkinnedMeshRenderer mesh = m_Animators.m_ArmsAnimators[i].transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
+            if (mesh == null) // If we couldn't find the skinned mesh renderer, log an error.
+            {
+                Debug.LogError("InitSkinnedMeshes could not find the skinned mesh renderer!");
+                return;
+            }
+            else // Otherwise, if we have found it, add it to the collection.
+            {
+                m_Animators.m_SkinnedMeshes.Add(mesh);
+            }
+        }
+
+        // Now we'll do the same for the guns.
+        for (int i = 0; i < m_Animators.m_GunAnimators.Count; i++)
+        {
+            SkinnedMeshRenderer mesh = m_Animators.m_GunAnimators[i].transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
+
+            if (mesh == null)
+            {
+                Debug.LogError("InitSkinnedMeshes could not find the skinned mesh renderer!");
+                return;
+            }
+            else // Otherwise, if we have found it, add it to the collection.
+            {
+                m_Animators.m_SkinnedMeshes.Add(mesh);
+            }
+        }
+
+        // Now, presumably we have found all the required skinned mesh renderers.
+
+    }
+
+    /// <summary>
+    /// Used to debug and visually see where agents are attempting to shoot at.
+    /// </summary>
+    /// <param name="targetPos">Target of the agent.</param>
+    void DrawAgentTarget(Vector3 targetPos)
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(targetPos, 0.25f);
+        Gizmos.DrawSphere(m_Inventory.Owner.m_FiringPosition.position, 0.25f);
+        Gizmos.DrawLine(targetPos, m_Inventory.Owner.m_FiringPosition.position);
+    }
 }

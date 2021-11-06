@@ -173,18 +173,14 @@ public class RegenerationZone : MonoBehaviour
 			time += Time.deltaTime;
 			if (time >= tickRate)
 			{
-				time = 0; // Reset time so it can count the next tick.
+				// Reset time so it can count the next tick.
+				time = 0;
 
-				if (agentInv)
-				{
-					// If they've passed in an agent inventory, lets heal them up.
-					agentInv.AddHealth(healingPerTick);
-				}
-				if (pariah)
-				{
-					// If they've passed in pariah's controller, lets heal up pariah.
-					pariah.AddHealth(healingPerTick);
-				}
+				// If they've passed in an agent inventory, lets heal them up.
+				agentInv?.AddHealth(healingPerTick);
+
+				// If they've passed in pariah's controller, lets heal up pariah.
+				pariah?.AddHealth(healingPerTick);
 			}
 
 			yield return null;

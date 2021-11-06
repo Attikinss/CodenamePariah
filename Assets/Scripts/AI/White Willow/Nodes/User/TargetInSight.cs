@@ -38,11 +38,14 @@ public class TargetInSight : Decorator
                 if (Owner.Agent.TargetVisible(Target.Value) || Owner.Agent.ShotgunRaycast(Target.Value, Target.Value.transform.position -
                     Owner.Agent.transform.position, m_RaycastSteps, m_RaycastsPerStep, m_RaycastSpacing))
                 {
-                    Debug.Log("Target in sight");
                     return Child.Tick();
                 }
             }
         }
+
+        Weapon agentWeapon = Owner.Agent.m_HostController.GetCurrentWeapon();
+        if (agentWeapon.PrimaryAmmoLow() && !agentWeapon.IsReloading())
+            agentWeapon.ForceReload();
 
         return NodeResult.Failure;
     }

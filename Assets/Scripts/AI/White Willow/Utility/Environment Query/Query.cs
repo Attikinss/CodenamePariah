@@ -18,10 +18,10 @@ public class Query
     //public List<QueryValue> Values { get; private set; }
     private bool m_DataInvalid = false;
 
-    public Query(string id)
+    public Query(string id, List<EnvironmentQuerySystem.EQSNode> values = null)
     {
         ID = id;
-        Values = new List<EnvironmentQuerySystem.EQSNode>();
+        Values = values;
     }
 
     public bool Invalid()

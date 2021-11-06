@@ -15,6 +15,8 @@ namespace WhiteWillow
         // TODO: Add to sensory data class/struct
         [Min(0.0f)]
         public float m_ViewRange = 15.0f;
+        [Min(0.0f)]
+        public float m_FiringRange = 15.0f;
 
         [Tooltip("Defines what the agent can't see through.")]
         [SerializeField]
@@ -23,6 +25,7 @@ namespace WhiteWillow
         private BehaviourTree m_RuntimeTree;
         private NavMeshAgent m_NavAgent;
         public Query CurrentQuery;
+        public EnvironmentQuerySystem.EQSNode CurrentNode { get; set; }
         public Weapon m_Weapon;
         [Tooltip("The mesh that we apply the possession shader to.")]
         public GameObject m_Mesh;
@@ -35,7 +38,8 @@ namespace WhiteWillow
 
         [HideInInspector]
         public PariahController PariahController;
-        private HostController m_HostController;
+        [HideInInspector]
+        public HostController m_HostController;
 
         public bool Possessed { get; private set; } = false;
         public bool EngagingTarget { get; private set; } = true;
@@ -43,12 +47,28 @@ namespace WhiteWillow
         public Vector3 Destination { get; private set; }
         public Vector3 FacingDirection { get; private set; }
 
+        // These references here are used to handle "selecting" the agent with the possession shader.
+        // We have to store it's original material and also have a reference to its mesh renderer so we can apply a new material.
         private Material m_OriginalMat;
         private SkinnedMeshRenderer m_CurrentMat;
         private MeshRenderer m_CurrentMatNoRenderer; // Because the soldiers don't have an animation yet, we have the temporary case of needing to
                                                      // use a normal MeshRenderer instead.
 
-		private void Awake()
+        // We have to move the firing position into the agent script instead of the Weapon script because
+        // when it's in the weapon script it has to be attached to the weapon itself. The firing position in the
+        // scene hirearchy is not a child of the weapon so in order to have an easier time with prefabs,
+        // I've decided to move the firing position here.
+        [Tooltip("Defines the position at which bullets spawn during firing.")]
+        public Transform m_FiringPosition;
+
+        // Another thing we have to duplicate for agents specifically is the muzzle flash. For the player
+        // it is positioned on the FPS gun however we need to position it on the agents rig to make it 
+        // look right for the AI. The solution I have come up with is to just have another muzzle flash for the
+        // agents.
+        [Tooltip("Muzzle flash for the AI.")]
+        public VisualEffect m_AIMuzzleFlash;
+
+        private void Awake()
 		{
             m_RuntimeTree = InputTree?.Clone(gameObject.name);
             m_RuntimeTree?.SetAgent(this);
@@ -57,10 +77,16 @@ namespace WhiteWillow
             m_HostController = GetComponent<HostController>();
 
             PariahController = FindObjectOfType<PariahController>();
-            m_RuntimeTree.Blackboard?.UpdateEntryValue<GameObject>("Target", PariahController?.gameObject);
+
+            if (PariahController)
+            {
+                GameObject target = PariahController.CurrentHost != null ?
+                    PariahController.CurrentHost.gameObject : PariahController.gameObject;
+
+                m_RuntimeTree.Blackboard?.UpdateEntryValue<GameObject>("Target", target);
+            }
 
             CacheOriginalMaterial();
-
         }
         private void Update()
         {
@@ -85,10 +111,7 @@ namespace WhiteWillow
                 else
                 {
                     if (m_NavAgent.isStopped)
-                    {
                         m_NavAgent.isStopped = true;
-                        MoveToPosition();
-                    }
                 }
 
                 m_RuntimeTree?.Tick();
@@ -115,6 +138,9 @@ namespace WhiteWillow
 
         public void MoveToPosition()
         {
+            if (m_NavAgent.isStopped)
+                m_NavAgent.isStopped = false;
+
             PlayAnimation("Run");
 
             if (Vector3.Distance(m_NavAgent.destination, Destination)
@@ -138,7 +164,14 @@ namespace WhiteWillow
             m_NavAgent.ResetPath();
             m_NavAgent.isStopped = true;
         }
-        
+
+        public bool DestinationAttainable(Vector3 position)
+        {
+            NavMeshPath path = new NavMeshPath();
+            m_NavAgent.CalculatePath(position, path);
+            return path.status == NavMeshPathStatus.PathComplete;
+        }
+
         public bool MovingToPosition() => m_NavAgent.hasPath;
         public bool AtPosition() => Vector3.Distance(transform.position - Vector3.up, Destination) < 0.2f + m_NavAgent.stoppingDistance;
         public bool Stuck() => false;
@@ -171,6 +204,8 @@ namespace WhiteWillow
 
         public void Kill()
         {
+            m_HostController.GetCurrentWeapon().StopSounds(); // Stops sounds like reload from playing after the agent has been destroyed.
+
             if (Possessed)
             { 
                 Release();
@@ -184,8 +219,6 @@ namespace WhiteWillow
 
         public void LookAt(Vector3 position)
         {
-            Debug.Log("Look At");
-
             Vector3 bodyTargetDir = position - transform.position;
             Vector3 camTargetDir = m_HostController.Camera.transform.position;
             camTargetDir.y = bodyTargetDir.y;
@@ -210,13 +243,7 @@ namespace WhiteWillow
 
         public void ShootAt(GameObject target, bool forceMiss = false)
         {
-            m_HostController.GetCurrentWeapon()?.Fire();
-            
-            //if (TempPrefab)
-            //{
-            //    var bullet = Instantiate(TempPrefab, transform.position + transform.forward + Vector3.up, Quaternion.identity);
-            //    bullet.GetComponent<Rigidbody>().AddForce(((target.transform.position + Vector3.up * 0.7f) - transform.position).normalized * 60.0f, ForceMode.Impulse);
-            //}
+            m_HostController.GetCurrentWeapon()?.FireAt(target);
         }
 
         public void PlayAnimation(string name, bool forcePlay = false, float transitionSpeed = 0.25f)
@@ -254,12 +281,33 @@ namespace WhiteWillow
             if (Physics.Raycast(transform.position, (target.transform.position
                 - transform.position).normalized, out RaycastHit hitInfo, m_ViewRange, m_IgnoreMask))
             {
-                Debug.Log($"{hitInfo.transform.gameObject} - {target}");
+                //Debug.Log($"{hitInfo.transform.gameObject} - {target}");
                 if (hitInfo.transform.gameObject == target)
-                {
                     return true;
-                }
             }
+
+            return false;
+        }
+
+        public bool TargetVisible(GameObject target, out float distance)
+        {
+            if (target == null)
+            {
+                distance = 0.0f;
+                return false;
+            }
+
+            // Do a simple raycast to target
+            if (Physics.Raycast(transform.position, (target.transform.position
+                - transform.position).normalized, out RaycastHit hitInfo, m_ViewRange, m_IgnoreMask))
+            {
+                distance = hitInfo.distance;
+
+                if (hitInfo.transform.gameObject == target)
+                    return true;
+            }
+
+            distance = 0.0f;
 
             return false;
         }

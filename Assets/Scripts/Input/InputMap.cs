@@ -306,6 +306,17 @@ public class @InputMap : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""0a8cfcae-37d1-426e-a990-7f6f2fbc1efc"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Possession"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""2ab8cc32-a24b-47f7-9384-d894f3b28e14"",
                     ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",

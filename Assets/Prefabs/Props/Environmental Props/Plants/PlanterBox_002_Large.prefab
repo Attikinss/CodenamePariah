@@ -111,6 +111,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Foliage_DracaenaTrifasciata
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2d80f5f7600d1f945a1dcfa75046fcf3, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d80f5f7600d1f945a1dcfa75046fcf3, type: 3}
 --- !u!4 &1140020719729532020 stripped
@@ -169,6 +173,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: e5b174a8049352240b2d44fec30bb763, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: ae39d505fd535194cab96c1b097869fc, type: 2}
     - target: {fileID: 919132149155446097, guid: e5b174a8049352240b2d44fec30bb763, type: 3}
       propertyPath: m_Name
       value: Puzzle_001_Details_PlanterBox_Long
@@ -242,6 +250,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 2d80f5f7600d1f945a1dcfa75046fcf3, type: 3}
       propertyPath: m_Name
       value: Foliage_DracaenaTrifasciata (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2d80f5f7600d1f945a1dcfa75046fcf3, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d80f5f7600d1f945a1dcfa75046fcf3, type: 3}
@@ -321,6 +333,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Foliage_DracaenaTrifasciata (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2d80f5f7600d1f945a1dcfa75046fcf3, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d80f5f7600d1f945a1dcfa75046fcf3, type: 3}
 --- !u!4 &3294565579952070379 stripped
@@ -386,6 +402,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 2d80f5f7600d1f945a1dcfa75046fcf3, type: 3}
       propertyPath: m_Name
       value: Foliage_DracaenaTrifasciata (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2d80f5f7600d1f945a1dcfa75046fcf3, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d80f5f7600d1f945a1dcfa75046fcf3, type: 3}
@@ -465,6 +485,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Foliage_DracaenaTrifasciata (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2d80f5f7600d1f945a1dcfa75046fcf3, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d80f5f7600d1f945a1dcfa75046fcf3, type: 3}
 --- !u!4 &4428847335011976890 stripped
@@ -543,6 +567,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Foliage_DracaenaTrifasciata (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2d80f5f7600d1f945a1dcfa75046fcf3, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d80f5f7600d1f945a1dcfa75046fcf3, type: 3}
 --- !u!4 &4930509502610435028 stripped
@@ -608,6 +636,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 2d80f5f7600d1f945a1dcfa75046fcf3, type: 3}
       propertyPath: m_Name
       value: Foliage_DracaenaTrifasciata (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2d80f5f7600d1f945a1dcfa75046fcf3, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d80f5f7600d1f945a1dcfa75046fcf3, type: 3}

@@ -31,7 +31,8 @@ namespace WhiteWillow.Nodes
 
         protected override void OnExit()
         {
-            RunningChild = null;
+            if (State != NodeResult.Running)
+                ClearRunningNode();
         }
 
         protected override NodeResult OnTick()

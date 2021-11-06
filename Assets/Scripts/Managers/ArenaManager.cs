@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class ArenaManager : MonoBehaviour
 {
+    [Tooltip("This determines whether or not the toggable object will be remembered between checkpoint loads.")]
+    public bool m_ShouldSaveData = true;
+
     [Tooltip("This ID should be unique to this instance.")]
     public int m_ID = 0;
 
@@ -27,8 +30,11 @@ public class ArenaManager : MonoBehaviour
 
 	private void Awake()
 	{
-        // On awake, we're gonna upload the doors to the GameManager so it has a reference to their state.
-        GameManager.AddToggable(m_ID, m_OpenDoor, m_ClosedDoor, false); // Telling the GameManager about this door.
+        if (m_ShouldSaveData)
+        { 
+            // On awake, we're gonna upload the doors to the GameManager so it has a reference to their state.
+            GameManager.AddToggable(m_ID, m_OpenDoor, m_ClosedDoor, false); // Telling the GameManager about this door.
+        }
 		
 	}
 	private void Start()
@@ -49,8 +55,9 @@ public class ArenaManager : MonoBehaviour
             if (m_ClosedDoor != null)
                 m_ClosedDoor.SetActive(false);
             this.GetComponent<ArenaManager>().enabled = false;
-
-            GameManager.s_Instance.SendDoorData(true, m_ID); // Telling the GameManager that this door has been opened.
+            
+            if(m_ShouldSaveData)
+                GameManager.s_Instance?.SendDoorData(true, m_ID); // Telling the GameManager that this door has been opened.
         }
     }
 

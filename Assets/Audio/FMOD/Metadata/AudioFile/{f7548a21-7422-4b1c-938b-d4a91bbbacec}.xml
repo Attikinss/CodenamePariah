@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="AudioFile" id="{f7548a21-7422-4b1c-938b-d4a91bbbacec}">
+		<property name="assetPath">
+			<value>Codename Pariah Low.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>3.2708163265306123</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{c506c6b6-b09d-408b-9b83-d4ca2175faed}</destination>
+		</relationship>
+	</object>
+</objects>

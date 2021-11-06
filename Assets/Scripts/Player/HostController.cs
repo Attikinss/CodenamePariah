@@ -60,10 +60,16 @@ public class HostController : InputController
     public MovementInfo m_MovInfo = new MovementInfo();
     public CombatInfo m_CombatInfo = new CombatInfo();
 
+    //[Tooltip("Delay that occurs at the start of a dash measured in seconds.")]
+    //public float m_DashDelay = 0.08f;
     public DrainAbility m_DrainAbility;
     public DeathIncarnateAbility m_DeathIncarnateAbility;
 
+    private bool m_HasDashedInAir = false;
+    private int m_DashesInAir = 0; // Counter to track how many dashes are performed in the air.
+
     // Mesh of the soldier or scientist.
+    [Tooltip("Mesh of soldier or scientist to hide when entering unit.")]
     public GameObject m_Mesh;
 
 	private void Awake()
@@ -74,6 +80,7 @@ public class HostController : InputController
 
         
         Rigidbody = GetComponent<Rigidbody>();
+        Rigidbody.isKinematic = true;
 
         Cursor.lockState = CursorLockMode.Locked;
 
@@ -119,6 +126,13 @@ public class HostController : InputController
         }
 
             m_MovInfo.m_IsGrounded = CheckGrounded();
+            if (m_MovInfo.m_IsGrounded && m_HasDashedInAir)
+            { 
+                m_HasDashedInAir = false; // Reset dashing in the air.
+                // Clearing counted dash uses in the air.
+                m_DashesInAir = 0;
+            }
+
             CalculateGroundNormal();
             if (m_MovInfo.m_IsGrounded)
                 m_MovInfo.m_HasDoubleJumped = false;
@@ -189,13 +203,20 @@ public class HostController : InputController
     {
         GameManager.s_CurrentHost = this;
 
+        Rigidbody.isKinematic = false;
         GetComponent<PlayerInput>().enabled = true;
         m_Active = true;
         m_Camera.enabled = true;
         //UnhideHUD();
 
-        CustomDebugUI.s_Instance.SetController(this);
+        CustomDebugUI.s_Instance?.SetController(this);
 
+        // When the player controls a unit we also have to enable the skinned mesh renderers of the arms and weapons for every weapon of that unit.
+        for (int i = 0; i < m_Inventory.m_Weapons.Count; i++)
+        { 
+            // Enabling every weapon this unit has.
+            m_Inventory.m_Weapons[i].ToggleWeapon(true);
+        }
 
         // When the player is controlling a unit, we set the weapons to be overlayed so they don't stick inside walls and stuff. It's reverted back in Disable().
         for (int i = 0; i < m_Inventory.m_Weapons.Count; i++)
@@ -203,9 +224,9 @@ public class HostController : InputController
             m_Inventory.m_Weapons[i].SetWeaponLayerRecursively(12); // If we ever rearrange layer orders this will have to change!                      ===================== IMPORTANT =====================
         }
 
-        m_UIManager.UnhideCanvas();
-        m_UIManager.SetInventory(m_Inventory);
-        m_UIManager.UpdateAllUI(GetCurrentWeapon());
+        m_UIManager?.UnhideCanvas();
+        m_UIManager?.SetInventory(m_Inventory);
+        m_UIManager?.UpdateAllUI(GetCurrentWeapon());
 
 
         // Hide mesh when entering.
@@ -213,7 +234,10 @@ public class HostController : InputController
             m_Mesh.SetActive(false);
 
         // Letting the game manager we're entering a unit.
-        GameManager.s_Instance.OnEnterEnemy(m_type, GetCurrentWeapon().m_Animators, GetCurrentWeapon());
+        GameManager.s_Instance?.OnEnterEnemy(m_type, GetCurrentWeapon().m_Animators, GetCurrentWeapon());
+
+        // Play host enter sound effect.
+        GeneralSounds.s_Instance?.PlayHostEnterSound(GameManager.s_Instance.m_Pariah.transform, 25); // We want the sound to emit from Pariah, not the individual agent.
     }
 
     /// <summary>
@@ -221,41 +245,44 @@ public class HostController : InputController
     /// </summary>
     public override void Disable()
     {
-
-        // Setting the death incarnate bar must happenbefore we set GameManager.s_CurrentHost to null!
-        PariahController pariah = GameManager.s_Instance.m_Pariah;
-        m_UIManager.SetDeathIncarnateBar((float)pariah.m_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
-        if (pariah.m_Power >= m_DeathIncarnateAbility.requiredKills)
-        {
-            m_UIManager.ToggleReadyPrompt(false);
-        }
-
-
-
-        GameManager.s_CurrentHost = null;
-
+        Rigidbody.isKinematic = true;
         GetComponent<PlayerInput>().enabled = false;
         m_Active = false;
         m_Camera.enabled = false;
         //HideHUD();
 
-        CustomDebugUI.s_Instance.ClearController();
+        CustomDebugUI.s_Instance?.ClearController();
+
+        // When the player leaves a unit, we have to hide the skinned mesh renderers of the guns and arms for every weapon on this unit.
+        for (int i = 0; i < m_Inventory.m_Weapons.Count; i++)
+        {
+            // Enabling every weapon this unit has.
+            m_Inventory.m_Weapons[i].ToggleWeapon(false);
+        }
+
 
         // Reverting the layer back to what it was.
         for (int i = 0; i < m_Inventory.m_Weapons.Count; i++)
-        {
-            m_Inventory.m_Weapons[i].SetWeaponLayerRecursively(10); // If we ever rearrange layer orders this will have to change!                      ===================== IMPORTANT =====================
-        }
+            m_Inventory.m_Weapons[i].SetWeaponLayerRecursively(10); // If we ever rearrange layer orders this will have to change!
 
-        m_UIManager.HideCanvas();
+        m_UIManager?.HideCanvas();
 
         // Unhide the mesh when leaving.
         if(m_Mesh)
             m_Mesh.SetActive(true);
 
-        GameManager.s_Instance.m_Pariah.ClearCurrentPossessed();
+        // Setting the death incarnate bar must happenbefore we set GameManager.s_CurrentHost to null!
+        PariahController pariah = GameManager.s_Instance?.m_Pariah;
+        if (!pariah)
+            return;
 
-       
+        pariah.ClearCurrentPossessed();
+
+        m_UIManager?.SetDeathIncarnateBar((float)pariah.m_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
+        if (pariah.m_Power >= m_DeathIncarnateAbility.requiredKills)
+            m_UIManager?.ToggleReadyPrompt(false);
+
+        GameManager.s_CurrentHost = null;
     }
 
     // ========================================================== Input Events ========================================================== //
@@ -320,6 +347,7 @@ public class HostController : InputController
 
     public override void OnPossess(InputAction.CallbackContext value)
     {
+        Debug.Log(value.performed);
         if (value.performed && !PauseMenu.m_GameIsPaused && !CustomConsole.m_Activated)
         {
             if (TryGetComponent(out WhiteWillow.Agent agent))
@@ -470,16 +498,48 @@ public class HostController : InputController
     {
         if (!PauseMenu.m_GameIsPaused)
         {
-            if (value.performed && !m_Dashing && !m_DashCoolingDown)
+            if (value.performed && !m_Dashing && m_CurrentDashCharges > 0 && !m_IsDelayedDashing)
             {
-                Vector3 forwardDir = m_Camera.transform.forward;
-                if (m_MovInfo.m_IsGrounded)
-                    forwardDir = m_Orientation.forward;
+                // The code below has been incorporated into the DelayedDash() function.
 
-                if (Physics.Raycast(m_Orientation.position, forwardDir, out RaycastHit hitInfo, m_DashDistance))
-                    StartCoroutine(Dash(hitInfo.point, -forwardDir * 0.5f, m_DashDuration));
-                else
-                    StartCoroutine(Dash(transform.position + forwardDir * m_DashDistance, Vector3.zero, m_DashDuration));
+                //Vector3 forwardDir = m_Camera.transform.forward;
+                //if (m_MovInfo.m_IsGrounded)
+                //    forwardDir = m_Orientation.forward;
+
+                //if (m_IsDelayedDashing) // This means we already have a dash in the process of being done.
+                //{
+                //    if (!m_Dashing && !m_DashCoolingDown) // If we aren't dashing, and the dash has cooled down, we can reset the m_IsDelayedDashing.
+                //        m_IsDelayedDashing = false;
+                //}
+                //else 
+                //{
+
+                if (!m_HasDashedInAir) // This bool gets reset once the player has touched the ground again.
+                { 
+                    // We want to be able to track whether the player has dashed in the air. If they have, we only want to
+                    // allow them to dash again once they have landed.
+                    if (!m_MovInfo.m_IsGrounded) 
+                    {
+                        // We have dashed while in the air.
+                        // Increment counter.
+                        m_DashesInAir++;
+                        if (m_DashesInAir >= m_MaxDashCharges)
+                        { 
+                            m_HasDashedInAir = true; // If we have used all of our dash charges in the air, we tick this to true to prevent further use until
+                        }                            // we touch the ground.
+                    }
+
+
+                    //Debug.Log("====================================delay dashed====================================");
+                    m_Dashing = true;
+                    StartCoroutine(DelayedDash(m_DashDelay));
+                    //}
+                }
+
+
+
+
+
             }
         }
     }
@@ -507,15 +567,17 @@ public class HostController : InputController
     // Experimental death incarnate ability thing
     public void OnAbility3(InputAction.CallbackContext value)
     {
-        PariahController pariah = GameManager.s_Instance.m_Pariah;
+        PariahController pariah = GameManager.s_Instance?.m_Pariah;
+        if (!pariah) return;
+
         if (value.performed && !m_DeathIncarnateAbility.deathIncarnateUsed && pariah.m_Power >= m_DeathIncarnateAbility.requiredKills)
         {
+            GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnIncarnate", false);
             m_DeathIncarnateAbility.chargeRoutine = StartCoroutine(Ability3Charge());
             pariah.m_Power = 0; // Consume all power, reset back to 0.
-            m_UIManager.ToggleReadyPrompt(true);
+            m_UIManager?.ToggleReadyPrompt(true);
             //m_UIManager.ToggleBar(true);
         }
-
         else if (value.canceled)
         {
             if (m_DeathIncarnateAbility.hasRoutineStarted)
@@ -529,7 +591,7 @@ public class HostController : InputController
     public void OnDebugToggle(InputAction.CallbackContext value)
     {
         if (value.performed)
-            CustomDebugUI.s_Instance.Toggle();
+            CustomDebugUI.s_Instance?.Toggle();
     }
 
     public void OnHUDToggle(InputAction.CallbackContext value)
@@ -585,6 +647,10 @@ public class HostController : InputController
             Rigidbody.useGravity = true;
 
             direction.y = Rigidbody.velocity.y;
+
+            // If we are dashing we want to set the downwards velocity to 0, so it feels like we have been given a push into the air.
+            if (m_Dashing)
+                direction.y = 0;
         }
         //else
         //{
@@ -641,7 +707,8 @@ public class HostController : InputController
 
         if (m_MovInfo.m_GroundNormal != Vector3.zero)
         {
-            xMov = m_MovInfo.m_ModifiedRight * x;
+            //xMov = m_MovInfo.m_ModifiedRight * x;
+            xMov = m_Orientation.transform.right * x;
             //zMov = m_MovInfo.m_ModifiedForward * z;
             zMov = m_Orientation.transform.forward * z;
         }
@@ -718,7 +785,12 @@ public class HostController : InputController
 
         m_Inventory.SetWeapon(index);
 
+        // Just incase the renderer is disabled, we enable it.
+        GetCurrentWeapon().ToggleWeapon(true);
+
         m_UIManager?.UpdateWeaponUI(m_Inventory.m_CurrentWeapon);
+
+        
     }
 
     //private Vector3 WeaponBob()
@@ -885,7 +957,7 @@ public class HostController : InputController
 			time += Time.deltaTime;
 
             // Set power bar ui to match.
-            m_UIManager.SetDeathIncarnateBar(time / m_DeathIncarnateAbility.deathIncarnateRequiredHold);
+            m_UIManager?.SetDeathIncarnateBar(time / m_DeathIncarnateAbility.deathIncarnateRequiredHold);
 
 			yield return null;
 		}
@@ -907,6 +979,10 @@ public class HostController : InputController
 			time += Time.deltaTime;
 			yield return null;
 		}
+
+
+        // Play ability 3 particle effect.
+        GameManager.s_Instance?.m_Pariah.m_IncarnateParticle.Play();
 
 		Ability3(m_DeathIncarnateAbility.deathIncarnateRadius, m_DeathIncarnateAbility.deathIncarnateDamage);
 	}
@@ -1048,4 +1124,43 @@ public class HostController : InputController
     }
 
     public int GetOnDestroyDamage() { return m_OnDestroyedDamage; }
+
+    public float GetXRotation() { return m_XRotation; }
+
+
+    IEnumerator DelayedDash(float t)
+    {
+        m_IsDelayedDashing = true;
+        // Play dash animation.
+        GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnDash");
+
+        float delayTime = 0.0f;
+        // Adding a start delay before actual dash is performed.
+        while (delayTime <= t)
+        {
+            delayTime += Time.deltaTime;
+            yield return null;
+        }
+
+
+        // Getting the correct forward vector. If we are in the air, we want to be able to move in any direction, however, when we are grounded, we want to
+        // ignore the camera being able to look up and down (rotation on the x axis).
+        Vector3 forwardDir = m_Camera.transform.forward;
+        if (m_MovInfo.m_IsGrounded)
+            forwardDir = m_Orientation.forward;
+
+        // When we get to this point, the delay has been done and we can continue with the rest of the dash.
+        if (Physics.Raycast(m_Orientation.position, forwardDir, out RaycastHit hitInfo, m_DashDistance))
+        {
+            //StartCoroutine(Dash(hitInfo.point, -forwardDir * 0.5f, m_DashDuration));
+            StartCoroutine(Dash(hitInfo.point, -forwardDir * 0.5f, m_DashDuration, true));
+        }
+        else
+        {
+            //StartCoroutine(Dash(transform.position + forwardDir * m_DashDistance, Vector3.zero, m_DashDuration));
+            StartCoroutine(Dash(transform.position + forwardDir * m_DashDistance, Vector3.zero, m_DashDuration, true));
+        }
+
+        
+    }
 }

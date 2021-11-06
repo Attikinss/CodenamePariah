@@ -29,7 +29,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &3984784700751003618
 Transform:
@@ -111,9 +111,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 5449e051b6385554db8fba06ca0bdcda, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 3d136bbebd01f0e4d880e2f26ebb7302, type: 2}
     - target: {fileID: 919132149155446097, guid: 5449e051b6385554db8fba06ca0bdcda, type: 3}
       propertyPath: m_Name
       value: Prop_SidePlate_001
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5449e051b6385554db8fba06ca0bdcda, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5449e051b6385554db8fba06ca0bdcda, type: 3}
@@ -178,9 +186,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 792ba9705acf65848a7ea17e3476dbd5, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 33619649321d28f4ababdc483a1c0890, type: 2}
     - target: {fileID: 919132149155446097, guid: 792ba9705acf65848a7ea17e3476dbd5, type: 3}
       propertyPath: m_Name
       value: Prop_Server_001
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 792ba9705acf65848a7ea17e3476dbd5, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 792ba9705acf65848a7ea17e3476dbd5, type: 3}

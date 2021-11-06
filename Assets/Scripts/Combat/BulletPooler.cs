@@ -35,15 +35,18 @@ public class BulletPooler : MonoBehaviour
         for (int i = 0; i < m_MaxBulletCount; i++)
         {
             Bullet newBullet = Instantiate(m_BulletPrefab, transform).GetComponent<Bullet>();
-            newBullet.gameObject.SetActive(false);
+
+            newBullet.Hide(); // Hiding bullets when they spawn in so we don't see them.
+
+            //newBullet.gameObject.SetActive(false); // Commented this out because we don't want to be setting bullets active/inactive.
             m_Pool.Add(newBullet);
         }
     }
 
     public Bullet GetNextAvailable()
     {
-        Bullet bullet = m_Pool.FirstOrDefault(b => !b.gameObject.activeSelf);
-
+        Bullet bullet = m_Pool.FirstOrDefault(/*b => b.gameObject.activeSelf*/ b => b.m_Dirty); // Because I've changed bullets to always being active, we have to grab the first
+                                                                                                // dirty bullet instead of the first inactive bullet.
         if (bullet == null)
             Debug.LogWarning("No bullets are available! Increase the bullet pool size.");
 

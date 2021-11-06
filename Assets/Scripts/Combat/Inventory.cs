@@ -52,12 +52,23 @@ public class Inventory : MonoBehaviour
 	{
         m_UIManager = UIManager.s_Instance;
         m_Controller = GetComponent<HostController>(); // This assumes the inventory is on the same object as the HostController.cs script.
-	}
 
 
-	/// <summary>Takes health away equal to the damage value.</summary>
-	/// <param name="damage"></param>
-	public void TakeDamage(int damage, bool fromAbility = false)
+        // =========== Weapon Skinned Mesh Renderer Initialisation =========== //
+        // Initialising the skinned mesh renderers here too incase they haven't been initalised yet.
+        for (int i = 0; i < m_Weapons.Count; i++)
+        {
+            if (!m_Weapons[i].m_InitialisedSkinnedMeshRenderers)
+                m_Weapons[i].InitSkinnedMeshes();
+        }
+        // This is a safety because weapons usually initalise this on Start() but most weapons start deactivated.
+        // =================================================================== //
+    }
+
+
+    /// <summary>Takes health away equal to the damage value.</summary>
+    /// <param name="damage"></param>
+    public void TakeDamage(int damage, bool fromAbility = false)
     {
         m_Health -= damage;
         if (m_Health <= 0)
@@ -65,7 +76,7 @@ public class Inventory : MonoBehaviour
             m_Health = 0;//
             if (TryGetComponent(out WhiteWillow.Agent agent))
             {
-                PariahController pariah = GameManager.s_Instance.m_Pariah;
+                PariahController pariah = GameManager.s_Instance?.m_Pariah;
                 if (agent.Possessed)
                 {
                     if (fromAbility)
@@ -73,11 +84,9 @@ public class Inventory : MonoBehaviour
                         Telemetry.TracePosition("Agent-PlayerKill", transform.position);
                         pariah.m_Power++; // Incrementing this so the power bar charges up.
                         // Set power bar ui to match.
-                        m_UIManager.SetDeathIncarnateBar((float)pariah.m_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
+                        m_UIManager?.SetDeathIncarnateBar((float)pariah.m_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
                         if (pariah.m_Power >= m_Controller.m_DeathIncarnateAbility.requiredKills)
-                        {
-                            m_UIManager.ToggleReadyPrompt(false);
-                        }
+                            m_UIManager?.ToggleReadyPrompt(false);
                     }
                     else
                         Telemetry.TracePosition("Agent-Death", transform.position);
@@ -93,11 +102,9 @@ public class Inventory : MonoBehaviour
                         
                         pariah.m_Power++; // Incrementing this so the power bar charges up.
                         // Set power bar ui to match.
-                        m_UIManager.SetDeathIncarnateBar((float)pariah.m_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
+                        m_UIManager?.SetDeathIncarnateBar((float)pariah.m_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
                         if (pariah.m_Power >= m_Controller.m_DeathIncarnateAbility.requiredKills)
-                        {
-                            m_UIManager.ToggleReadyPrompt(false);
-                        }
+                            m_UIManager?.ToggleReadyPrompt(false);
                     }
                 }
 
@@ -107,7 +114,7 @@ public class Inventory : MonoBehaviour
             }
         }
 
-        m_UIManager.UpdateHealthUI();
+        m_UIManager?.UpdateHealthUI();
     }
 
     public void AddHealth(int amount)
@@ -115,7 +122,7 @@ public class Inventory : MonoBehaviour
         // TODO: Replace hard coded max health
         m_Health = (int)Mathf.Clamp(m_Health + amount, 0, 100);
 
-        m_UIManager.UpdateHealthUI();
+        m_UIManager?.UpdateHealthUI();
     }
 
     public int GetHealth() { return m_Health; }
@@ -166,10 +173,14 @@ public class Inventory : MonoBehaviour
             weaponComponent.m_Inventory = this;
             weaponComponent.m_Controller = m_Controller;
             weaponComponent.SetCamera(m_Camera);
-            weaponComponent.m_CharIcon = m_UIManager.m_DualWieldCharIcon;
-            weaponComponent.m_CharName = m_UIManager.m_DualWieldCharName;
-            weaponComponent.m_WeaponIcon = m_UIManager.m_DualWieldPlate;
-            weaponComponent.m_WeaponAmmoText = m_UIManager.m_DualWieldRightWeaponAmmoText;
+
+            if (m_UIManager)
+            {
+                weaponComponent.m_CharIcon = m_UIManager.m_DualWieldCharIcon;
+                weaponComponent.m_CharName = m_UIManager.m_DualWieldCharName;
+                weaponComponent.m_WeaponIcon = m_UIManager.m_DualWieldPlate;
+                weaponComponent.m_WeaponAmmoText = m_UIManager.m_DualWieldRightWeaponAmmoText;
+            }
 
             weaponComponent.m_TransformInfo.m_OriginalLocalPosition = newWeapon.transform.localPosition;
             weaponComponent.m_TransformInfo.m_OriginalGlobalPosition = newWeapon.transform.position;
@@ -181,6 +192,22 @@ public class Inventory : MonoBehaviour
 
             if (m_Weapons.Count == 1) // If we just added the only weapon we have, set current weapon to this weapon and update UI.
                 SetWeapon(0);
+
+            m_UIManager?.UpdateWeaponUI(m_CurrentWeapon);
+
+            // Because we are hiding the skinned mesh renderers of all weapons on Start(), we have to unhide them when the player picks up a new weapon.
+            weaponComponent.ToggleWeapon(true);
+
+            // Because we've just added a weapon to the player's inventory, we have to set the layer of the new weapon to the
+            // ignore depth layer.
+
+            // Just incase we do it for all weapons in their inventory again.
+            // When the player is controlling a unit, we set the weapons to be overlayed so they don't stick inside walls and stuff. It's reverted back in Disable().
+            for (int i = 0; i < m_Weapons.Count; i++)
+            {
+                m_Weapons[i].SetWeaponLayerRecursively(12); // If we ever rearrange layer orders this will have to change!                      ===================== IMPORTANT =====================
+            }
+
 
             return true;
 
@@ -235,7 +262,7 @@ public class Inventory : MonoBehaviour
             UnhideWeapon(m_CurrentWeaponNum); // If we have moved weapons, we should unhide the newly equipped weapon. Sometimes this will be redundant.
         }
 
-        m_UIManager.UpdateWeaponUI(m_CurrentWeapon);
+        m_UIManager?.UpdateWeaponUI(m_CurrentWeapon);
     }
     public bool UpgradeWeapon(int weapon, GameObject newPrefab, WEAPONTYPE requiredPrequisiteWep)
     {
@@ -264,6 +291,8 @@ public class Inventory : MonoBehaviour
 
         // Since the new weapon is on the end of the list, we'll swap to the last element to make it seem like they are still holding on to the same gun.
         SetWeapon(m_Weapons.Count - 1);
+
+        m_UIManager?.UpdateWeaponUI(m_CurrentWeapon);
 
         return true;
     }

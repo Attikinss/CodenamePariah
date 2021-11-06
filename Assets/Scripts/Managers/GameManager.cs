@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering.HighDefinition;
 using System;
+using FMODUnity;
 
 /// <summary>
 /// This GameManager is a temporary class by Daniel. I'm using it now just as a place to store all the weapon shot decals.
@@ -66,7 +67,6 @@ public class GameManager : MonoBehaviour
     public static Vector3 s_CheckPointPos;
     public static GameObject s_CheckpointAgentPrefab; // It's important that this is the prefab because we will be instantiating it.
 
-
     private void Awake()
 	{
         m_Monobehaviour = this;
@@ -82,9 +82,12 @@ public class GameManager : MonoBehaviour
             Debug.LogError("There are multiple GameManager components in the scene!");
             Destroy(this.gameObject);
         }
-	}
 
-	public void TogglePause(bool toggle)
+        FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
+        allBussess.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
+    }
+
+    public void TogglePause(bool toggle)
     { }
 
     // Start is called before the first frame update
@@ -202,10 +205,9 @@ public class GameManager : MonoBehaviour
         if (s_StartedAgent == null)
         {
             s_StartedAgent = startingAgent;
-            GameManager instance = GameManager.s_Instance;
             // We can do it because there have been no other agents set to be started in.
             if(s_HighestCheckPointLevel == 0) // We'll only ever start in an agent if we are starting a fresh world. If we've hit a check point we wont do this.
-                instance.m_Pariah.ForceInstantPossess(s_StartedAgent);
+                GameManager.s_Instance?.m_Pariah.ForceInstantPossess(s_StartedAgent);
         }
         else
         {

@@ -11,8 +11,6 @@ public class EQSSceneNode : MonoBehaviour
 	{
         EQSNode.GenerateID();
         EQSNode.Position = transform.position;
-
-        EQSSceneNodeTracker.AddNode(this);
     }
     private void OnDrawGizmos()
     {
@@ -31,4 +29,7 @@ public class EQSSceneNode : MonoBehaviour
         Gizmos.color = EQSNode.Taken ? EQSNode.TakenColour : EQSNode.VacantColour;
         Gizmos.DrawSphere(transform.position, EQSNode.Size);
     }
+
+    private void OnEnable() => EQSSceneNodeTracker.AddNode(this);
+    private void OnDisable() => EQSSceneNodeTracker.RemoveNode(this);
 }

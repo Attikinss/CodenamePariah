@@ -130,6 +130,10 @@ namespace WhiteWillow.Nodes
         /// <summary>Executes post-operation code once the node returns an exit state.</summary>
         protected abstract void OnExit();
 
-        public virtual void Abort() => m_Aborted = true;
+        public virtual NodeResult Abort()
+        {
+            m_Aborted = true;
+            return NodeResult.Aborted;
+        }
     }
 }

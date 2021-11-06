@@ -4,6 +4,9 @@ using UnityEngine.InputSystem;
 using Tweening;
 using WhiteWillow;
 using UnityEngine.SceneManagement;
+//using FMOD;
+using FMODUnity;
+using UnityEngine.VFX;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PariahController : InputController
@@ -66,20 +69,47 @@ public class PariahController : InputController
     [SerializeField]
     private Agent m_CurrentPossessed;
 
+    public Agent CurrentHost { get => m_CurrentPossessed; }
+
     private Rigidbody m_Rigidbody;
 
     bool m_Dead = false;
 
     public int m_LowHealthThreshold = 40;
+    public int m_LowHealthVoiceLineThreshold = 20;
 
     [ReadOnly]
     public int m_Power = 0; // Power is used for the death incarnate ability. It is gained by destroying agents.
 
     public FMODAudioEvent m_AudioLowHPEvent;
-    private bool m_IsPlayingLowHP = false;
+    private bool m_IsPlayingLowHP = false;       // Heartbeat.
+    private bool m_IsPlayingExtremeLowHP = false; // Voice line.
 
     [HideInInspector]
     public Agent m_LookedAtAgent = null;
+
+    public SkinnedMeshRenderer m_Arms;
+
+    public Animator m_ArmsAnimator;
+
+
+
+    // ==================== FMOD Audio Events ==================== //
+    // Okay, so before I had a bunch of different audio events for
+    // every sound Pariah would make. This led to the issue of
+    // having sounds overlap each other. To prevent this, I've
+    // added checks to see if the sounds are playing in the
+    // GeneralSounds script. 
+    // =========================================================== //
+
+    // Particle effect for incarnate ability.
+    public VisualEffect m_IncarnateParticle;
+
+    // Smokey particle effects for Pariah's arms. We need a reference to them so we can disable them when we possess a unit.
+    public VisualEffect m_SmokyArmParticle1;
+    public VisualEffect m_SmokyArmParticle2;
+
+
 
     private void Awake() => m_Rigidbody = GetComponent<Rigidbody>();
 
@@ -141,31 +171,26 @@ public class PariahController : InputController
         }
 	}
 
+    
+
 	private void FixedUpdate()
     {
         if (!PauseMenu.m_GameIsPaused)
         {
             if (m_Active)
                 Move();
-            else
-            {
-                if (m_CurrentPossessed != null)
-                {
-                    transform.position = m_CurrentPossessed.transform.position + Vector3.up * 0.75f;
-                    m_Rotation.x = m_CurrentPossessed.Orientation.eulerAngles.y;
-                    m_Rotation.y = m_CurrentPossessed.Orientation.eulerAngles.x;
-
-                    // Changed those localEulerAngles to just normal eulerAngles because the parent prefab of m_Orientation may be rotated.
-                    // This is the case now because the parent of m_Orientation is where the soldier/scientist mesh is.
-                }
-            }
-
 
             // Stop playing low hp sound.
             // We should stop playing the low health sound if we are playing it.
+            // This stops the hearbeat.
             if (m_IsPlayingLowHP && m_Health > m_LowHealthThreshold)
             {
                 StopLowHPSound();
+            }
+            // Now we also have to check if we have enough health to reset the voice line.
+            if (m_IsPlayingExtremeLowHP && m_Health > m_LowHealthVoiceLineThreshold)
+            {
+                m_IsPlayingExtremeLowHP = false;
             }
 
         }
@@ -180,7 +205,30 @@ public class PariahController : InputController
                 Look();
             else
             {
+                // I moved this position and rotation update function from FixedUpdate() into this LateUpdate().
+                // I had to move it because I wanted Pariah's arms to match the direction and position of the agent that way we can play an animation from here
+                // when the user is in the agent and it will be correctly positioned.
+                // The reason why its LateUpdate is because the Look() code for the HostController is in LateUpdate() and so to match the HostController's 
+                // camera movement we had to put this in here.
+                if(m_CurrentPossessed != null)
+                {
+                    transform.position = m_CurrentPossessed.transform.position + Vector3.up * 0.75f;
 
+                    // Changed those localEulerAngles to just normal eulerAngles because the parent prefab of m_Orientation may be rotated.
+                    // This is the case now because the parent of m_Orientation is where the soldier/scientist mesh is.
+                    m_Rotation.x = m_CurrentPossessed.Orientation.eulerAngles.y;
+                    m_Rotation.y = m_CurrentPossessed.Orientation.eulerAngles.x;
+
+                    // Updating the rotation because now we have the animations that will sometimes play from Pariah even when the user is in an agent.
+                    // We need the arms to be rotated the correct way.
+
+                    // Old transform update.
+                    //transform.rotation = Quaternion.Euler(-m_Rotation.y, m_Rotation.x, 0.0f);
+
+                    // New transform update. // We want to make Pariah face the same direction in the X rotation as the player when they're in controlling the agent.
+                    transform.rotation = Quaternion.Euler(m_CurrentPossessed.m_HostController.Camera.transform.rotation.eulerAngles.x, m_Rotation.x, 0);
+                    m_Rotation.y = -m_CurrentPossessed.m_HostController.GetXRotation();
+                }
             }
         }
     }
@@ -191,6 +239,8 @@ public class PariahController : InputController
         GetComponent<Collider>().enabled = true;
         m_Active = true;
         m_Camera.enabled = true;
+
+        ToggleArms(true);
     }
 
     public override void Disable()
@@ -198,6 +248,8 @@ public class PariahController : InputController
         GetComponent<PlayerInput>().enabled = false;
         m_Active = false;
         m_Camera.enabled = false;
+
+        ToggleArms(false);
     }
 
     public override void OnLook(InputAction.CallbackContext value)
@@ -222,12 +274,31 @@ public class PariahController : InputController
     {
         if (!PauseMenu.m_GameIsPaused)
         {
-            if (value.performed && !m_Dashing && !m_DashCoolingDown && !m_Possessing)
+            if (value.performed && !m_Dashing && !m_Possessing && m_CurrentDashCharges > 0)
             {
-                if (Physics.Raycast(m_Camera.transform.position, m_Camera.transform.forward, out RaycastHit hitInfo, m_DashDistance))
-                    StartCoroutine(Dash(hitInfo.point, -m_Camera.transform.forward * 0.5f, m_DashDuration));
-                else
-                    StartCoroutine(Dash(m_Camera.transform.position + m_Camera.transform.forward * m_DashDistance, Vector3.zero, m_DashDuration));
+
+                // This is an additional "layer" of dash code to have a delay before the actual dash begins.
+                // This snipper of code is copied from the HostController, there are more detailed comments located there too.
+
+                //if (m_IsDelayedDashing) // This means we already have a dash in the process of being done.
+                //{
+                //    if (!m_Dashing && !m_DashCoolingDown) // If we aren't dashing, and the dash has cooled down, we can reset the m_IsDelayedDashing.
+                //        m_IsDelayedDashing = false;
+                //}
+                //else
+                //{
+                    //m_IsDelayedDashing = true;
+                    m_Dashing = true;
+                    StartCoroutine(DelayedDash(m_DashDelay));
+                //}
+
+
+                // This peice of code is now moved into the DelayedDash() function.
+                 
+                //if (Physics.Raycast(m_Camera.transform.position, m_Camera.transform.forward, out RaycastHit hitInfo, m_DashDistance))
+                //    StartCoroutine(Dash(hitInfo.point, -m_Camera.transform.forward * 0.5f, m_DashDuration));
+                //else
+                //    StartCoroutine(Dash(m_Camera.transform.position + m_Camera.transform.forward * m_DashDistance, Vector3.zero, m_DashDuration));
             }
         }
     }
@@ -259,7 +330,10 @@ public class PariahController : InputController
                 if (Physics.Raycast(m_Camera.transform.position, m_Camera.transform.forward, out RaycastHit hitInfo, m_DashDistance))
                 {
                     if (hitInfo.transform.TryGetComponent(out Agent agent))
+                    { 
                         StartCoroutine(Possess(agent));
+                        PlayArmAnim("OnDash");
+                    }
                 }
             }
         }
@@ -271,7 +345,7 @@ public class PariahController : InputController
 
         m_MoveVelocity += (moveDirection - m_MoveVelocity) * m_Acceleration;
 
-        if (!m_Dashing && !m_Possessing)
+        if (/*!m_Dashing && */!m_Possessing) // Commented out m_Dashing here to allow Pariah to move while dashing.
             m_Rigidbody.velocity = m_MoveVelocity;
 
         Telemetry.TracePosition("Pariah-Movement", transform.position, 0.05f, 150);
@@ -337,17 +411,29 @@ public class PariahController : InputController
         if (m_Dead) return;
 
         m_Health = Mathf.Clamp(m_Health - amount, 0, m_MaxHealth);
-        if (m_Health <= m_LowHealthThreshold)
+
+        // Play heartbeat if our life essence is beyond the threshold.
+        if (m_Health <= m_LowHealthThreshold && !m_IsPlayingLowHP)
         {
+            m_IsPlayingLowHP = true;
             PlayLowHPSound();
+            //GeneralSounds.s_Instance.PlayLowHealthPariahSound(transform); // This is the voice line sound effect.
         }
 
+        // Play voice line if we are even lower health.
+        if (m_Health <= m_LowHealthVoiceLineThreshold && !m_IsPlayingExtremeLowHP)
+        {
+            m_IsPlayingExtremeLowHP = true;
+            GeneralSounds.s_Instance.PlayLowHealthPariahSound(transform);
+        }
 
         if (m_Health == 0)
         {
             // TODO: Kill pariah
             // Temporary: Reloads the current scene
             m_Dead = true;
+            FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
+            allBussess.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
             StartCoroutine(ReloadLevel());
         }
     }
@@ -358,18 +444,32 @@ public class PariahController : InputController
         {
             if (!m_Dead && m_Active && !m_Possessing && !PauseMenu.m_GameIsPaused)
             {
-                m_Health -= m_HealthDrainAmount;
+                // This added on check is to only lose health after we have entered a unit for the first time.
+                if (GameManager.s_Instance && GameManager.s_Instance.m_Achievements.hasEnteredUnit)
+                    m_Health -= m_HealthDrainAmount;
 
-                if (m_Health <= m_LowHealthThreshold)
+                // Only play the sound if we're not already playing it.
+                if (m_Health <= m_LowHealthThreshold && !m_IsPlayingLowHP)
                 {
+                    m_IsPlayingLowHP = true;
                     PlayLowHPSound();
+                    //GeneralSounds.s_Instance.PlayLowHealthPariahSound(transform); // This is the voice line sound effect.
                 }
+                // Play voice line if we are even lower health.
+                if (m_Health <= m_LowHealthVoiceLineThreshold && !m_IsPlayingExtremeLowHP)
+                {
+                    m_IsPlayingExtremeLowHP = true;
+                    GeneralSounds.s_Instance.PlayLowHealthPariahSound(transform);
+                }
+
 
 
                 if (m_Health <= 0)
                 {
                     m_Health = 0;
                     m_Dead = true;
+                    FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
+                    allBussess.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
                     StartCoroutine(ReloadLevel());
                 }
 
@@ -423,11 +523,11 @@ public class PariahController : InputController
 
     private void PlayLowHPSound()
     {
-        if (m_AudioLowHPEvent && !m_IsPlayingLowHP)
+        if (m_AudioLowHPEvent)
         {
-            m_IsPlayingLowHP = true;
             m_AudioLowHPEvent.Trigger();
         }
+       
     }
 
     private void StopLowHPSound()
@@ -437,6 +537,7 @@ public class PariahController : InputController
             m_IsPlayingLowHP = false;
             m_AudioLowHPEvent.StopSound(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         }
+        
     }
 
 
@@ -444,4 +545,128 @@ public class PariahController : InputController
     /// Made this function so I wouldn't have to make m_CurrentPossessed a public variable. I needed to be able to clear this back to null.
     /// </summary>
     public void ClearCurrentPossessed() { m_CurrentPossessed = null; }
+
+    /// <summary>
+    /// Used to hide and unhide Pariah's arms.
+    /// </summary>
+    private void ToggleArms(bool mode)
+    {
+        if (m_Arms)
+        {
+            if (mode)
+            {
+                m_Arms.enabled = true;
+                m_SmokyArmParticle1.enabled = true;
+                m_SmokyArmParticle2.enabled = true;
+            }
+            else
+            { 
+                m_Arms.enabled = false;
+                m_SmokyArmParticle1.enabled = false;
+                m_SmokyArmParticle2.enabled = false;
+            }
+        }
+        else
+            Debug.LogWarning("Pariah's arms have not been set!");
+    }
+
+    /// <summary>
+    /// Pass in the name of the trigger and this will call .SetTrigger(). Optionally argument to allow hiding of arms
+    /// after animation is complete.
+    /// </summary>
+    /// <param name="triggerName">Name of animation trigger.</param>
+    /// <param name="m_HideArmsAfterwards">Bool to set if the arms hide or not after the animation is complete.</param>
+    public void PlayArmAnim(string triggerName, bool m_HideArmsAfterwards = true)
+    {
+        if (m_ArmsAnimator == null)
+        {
+            Debug.LogWarning("Tried to play Pariah arm animation but PariahController is missing a reference to the arms animation controller.");
+            return;
+        }
+        else // Otherwise, we could find the arms animator.
+        {
+            if (triggerName == "OnDash")
+            {
+                if (m_Arms.enabled == false) // If the arms are hidden, unhide them for the duration of the dash animation. This is so the hosts can use this animation.
+                {
+                    m_Arms.enabled = true;
+                    StartCoroutine(HideArms(0.30f)); // 0.30f is around about the time it takes for the animation to complete.
+
+                }
+                m_ArmsAnimator.SetTrigger(triggerName);
+            }
+            else if (triggerName == "OnIncarnate")
+            {
+                if (m_Arms.enabled == false )
+                {
+                    m_Arms.enabled = true;
+                    if(m_HideArmsAfterwards)
+                        StartCoroutine(HideArms(6f));
+                }
+                m_ArmsAnimator.SetTrigger(triggerName);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Will hide Pariah's arms in time amount of seconds.
+    /// </summary>
+    /// <param name="time">Elapsed time required before hiding Pariah's arms.</param>
+    /// <returns></returns>
+    IEnumerator HideArms(float time)
+    {
+        float elapsedTime = 0;
+
+        while (elapsedTime <= time)
+        {
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        m_Arms.enabled = false; // Hide Pariah's arms after this counter has completed.
+    }
+
+    /// <summary>
+    /// DelayedDash() acts as a wrapper around the old dash code to cause a delay coroutine to start before the actual dash can begin.
+    /// This is used because we want the dash to perform a few milliseconds after the animations plays, to make it look like Pariah is pulling the
+    /// unit forward.
+    /// </summary>
+    /// <param name="t">Amount of delay.</param>
+    /// <returns></returns>
+    IEnumerator DelayedDash(float t)
+    {
+        m_IsDelayedDashing = true;
+        // Play dash animation.
+        GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnDash");
+
+        float delayTime = 0.0f;
+        // Adding a start delay before actual dash is performed.
+        while (delayTime <= t)
+        {
+            delayTime += Time.deltaTime;
+            yield return null;
+        }
+
+
+        // Getting the correct forward vector. If we are in the air, we want to be able to move in any direction, however, when we are grounded, we want to
+        // ignore the camera being able to look up and down (rotation on the x axis).
+        Vector3 forwardDir = m_Camera.transform.forward;
+        //if (m_MovInfo.m_IsGrounded) This was copied from the HostController, but seeing as Pariah can't be grounded, I'll ignore this.
+        //    forwardDir = m_Orientation.forward;
+
+
+
+        // When we get to this point, we just continue with the ordinary dash.
+
+        if (Physics.Raycast(m_Camera.transform.position, m_Camera.transform.forward, out RaycastHit hitInfo, m_DashDistance))
+        {
+            StartCoroutine(Dash(hitInfo.point, -m_Camera.transform.forward * 0.5f, m_DashDuration, true));
+        }
+        else
+        { 
+            StartCoroutine(Dash(m_Camera.transform.position + m_Camera.transform.forward * m_DashDistance, Vector3.zero, m_DashDuration, true));
+        }
+    }
+
+    
 }

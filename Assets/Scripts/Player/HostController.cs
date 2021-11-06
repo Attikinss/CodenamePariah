@@ -342,11 +342,13 @@ public class HostController : InputController
 
                     m_MovInfo.m_CacheMovDirection = direction;
                     Rigidbody.velocity = direction;
+                    
                 }
                 else if (!m_MovInfo.m_IsGrounded && !m_MovInfo.m_HasDoubleJumped)
                 {
                     m_MovInfo.m_CacheMovDirection = direction;
                     Rigidbody.velocity = direction;
+                    
 
                     // Have to tick m_HasDoubleJumped to false;
                     m_MovInfo.m_HasDoubleJumped = true;
@@ -569,6 +571,9 @@ public class HostController : InputController
                     //Debug.Log("====================================delay dashed====================================");
                     m_Dashing = true;
                     StartCoroutine(DelayedDash(m_DashDelay));
+
+                    m_MovInfo.m_HasJumped = true;
+
                     //}
                 }
 
@@ -683,31 +688,53 @@ public class HostController : InputController
         {
             Rigidbody.useGravity = true;
 
-            direction.y = Rigidbody.velocity.y;
+            if(!m_Dashing) // Important to only do this if we're not dashing. This is because it causes the dash to flick upwards.
+                direction.y = Rigidbody.velocity.y;
 
             // If we are dashing we want to set the downwards velocity to 0, so it feels like we have been given a push into the air.
-            if (m_Dashing)
-                direction.y = 0;
+            //if (m_Dashing)            // Removed this because dash is no longer position based.
+            //    direction.y = 0;
         }
         //else
         //{
         //    Rigidbody.useGravity = false;
         //}
-        if (m_MovInfo.m_GroundNormal != Vector3.zero && !m_MovInfo.m_IsGrounded && !m_MovInfo.m_HasJumped)
+
+
+        float velocityDownwards = Vector3.Dot(Rigidbody.velocity, Vector3.down); // Finding the amount of our velocity that is going downwards and projecting
+                                                                                 // it to our velocity. This allows us to apply the downwards force only if
+                                                                                 // we are freefalling or on a slop less than 0.75.
+        if (velocityDownwards <= 0.75f || m_Dashing)
         { 
-            Vector3 velocityTowardsSurface = Vector3.Dot(Rigidbody.velocity, m_MovInfo.m_GroundNormal) * m_MovInfo.m_GroundNormal;
-            direction -= velocityTowardsSurface;
+            if ((m_MovInfo.m_GroundNormal != Vector3.zero && !m_MovInfo.m_IsGrounded && !m_MovInfo.m_HasJumped))
+            { 
+                Vector3 velocityTowardsSurface = Vector3.Dot(Rigidbody.velocity, m_MovInfo.m_GroundNormal) * m_MovInfo.m_GroundNormal;
+                direction -= velocityTowardsSurface;
+                Debug.Log("Pushing towards surface.");
+            }
         }
-        m_MovInfo.m_CacheMovDirection = direction;
+
+
+        
 
         // Ensure the slide will never make the player move vertically.
+        // It's important to set this because we set m_CacheMovDirection to direction. Setting it before
+        // will make slides stick to the ground and slopes/stairs.
         m_MovInfo.m_CacheSlideMove.y = 0;
+
+        m_MovInfo.m_CacheMovDirection = direction;
+
+
+        // This allows us to apply the dash direction if we are dashing and the normal movement direction
+        // if we aren't.
+        if(m_MovInfo.m_DashDir != Vector3.zero)
+            Rigidbody.velocity = m_MovInfo.m_DashDir;
+        else
+            Rigidbody.velocity = m_MovInfo.m_CacheMovDirection + m_MovInfo.m_CacheSlideMove;
 
 
         // Making sure angular velocity isn't a problem.
-        Rigidbody.velocity = m_MovInfo.m_CacheMovDirection + m_MovInfo.m_CacheSlideMove;
         //Rigidbody.angularVelocity = Vector3.zero;
-
 
         // ============================ MODIFIED FALLING ============================ //
         if (Rigidbody.velocity.y < 0)
@@ -727,6 +754,7 @@ public class HostController : InputController
         
 
         Vector3 requiredChange = desiredVel - currentVel;
+
         m_MovInfo.m_CacheMovDirection += requiredChange * (m_MovInfo.m_IsGrounded ? m_GroundAcceleration : m_AirAcceleration);
 
         Telemetry.TracePosition("Host-Movement", transform.position, 0.05f, 150);
@@ -794,9 +822,9 @@ public class HostController : InputController
     {
         RaycastHit hit;
         Ray ray = new Ray(transform.position, Vector3.down);
-        if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckDistance * 1.04f))
-        {
-            m_MovInfo.m_GroundNormal = hit.normal;
+        if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckDistance/* * 1.04f*/ * 2)) // This can be longer now as we added another check before we
+        {                                                                                                 // force the player downwards which is based on their current
+            m_MovInfo.m_GroundNormal = hit.normal;                                                        // y velocity (how steep a slope is or if they are falling.)
         }
         else
         {
@@ -1194,12 +1222,17 @@ public class HostController : InputController
         if (Physics.Raycast(m_Orientation.position, forwardDir, out RaycastHit hitInfo, m_DashDistance))
         {
             //StartCoroutine(Dash(hitInfo.point, -forwardDir * 0.5f, m_DashDuration));
-            StartCoroutine(Dash(hitInfo.point, -forwardDir * 0.5f, m_DashDuration, true));
+
+            // I'm using the forwardDir here in an unconventional way. For specifics check out the function.
+            // But in short, I'm using it to store the way we are facing currently and then the function sets
+            // our m_DashDir to it when the dash is performed.
+
+            StartCoroutine(Dash(forwardDir, -forwardDir * 0.5f, m_DashDuration, true, true));
         }
         else
         {
             //StartCoroutine(Dash(transform.position + forwardDir * m_DashDistance, Vector3.zero, m_DashDuration));
-            StartCoroutine(Dash(transform.position + forwardDir * m_DashDistance, Vector3.zero, m_DashDuration, true));
+            StartCoroutine(Dash(forwardDir, Vector3.zero, m_DashDuration, true, true));
         }
 
         

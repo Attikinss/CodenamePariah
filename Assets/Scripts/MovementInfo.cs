@@ -18,6 +18,8 @@ public class MovementInfo
 	public float m_CurrentMoveSpeed = 0;
 	[ReadOnly]
 	public bool m_IsMoving = false;
+	[ReadOnly]
+	public Vector3 m_DashDir;
 	
 	// Jump
 	[ReadOnly]

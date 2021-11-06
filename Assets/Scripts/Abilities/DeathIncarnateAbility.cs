@@ -42,6 +42,10 @@ public struct DeathIncarnateAbility
     [HideInInspector]
     public Coroutine chargeRoutine;
     public bool hasRoutineStarted;
+
+
+    public bool IsActive; // Tracks whether the ability is being performed. This is so we can prevent other abilities from
+                                  // happening while this one is happening.
 }
 
 // damage - 100;

@@ -525,7 +525,7 @@ public class HostController : InputController
     {
         if (!PauseMenu.m_GameIsPaused)
         {
-            if (value.performed && !m_Dashing && m_CurrentDashCharges > 0 && !m_IsDelayedDashing && !m_MovInfo.m_IsSliding && !m_DrainAbility.isDraining)
+            if (value.performed && !m_Dashing && m_CurrentDashCharges > 0 && !m_IsDelayedDashing && !m_MovInfo.m_IsSliding && !m_DrainAbility.isDraining && !m_DeathIncarnateAbility.IsActive)
             {
                 // The code below has been incorporated into the DelayedDash() function.
 
@@ -599,6 +599,7 @@ public class HostController : InputController
 
         if (value.performed && !m_DeathIncarnateAbility.deathIncarnateUsed && pariah.m_Power >= m_DeathIncarnateAbility.requiredKills)
         {
+            
             GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnIncarnate", false);
             m_DeathIncarnateAbility.chargeRoutine = StartCoroutine(Ability3Charge());
             pariah.m_Power = 0; // Consume all power, reset back to 0.
@@ -977,7 +978,9 @@ public class HostController : InputController
     }
 	IEnumerator Ability3Charge()
 	{
-		float time = 0.0f;
+        m_DeathIncarnateAbility.IsActive = true;
+
+        float time = 0.0f;
 
 		while (time < m_DeathIncarnateAbility.deathIncarnateRequiredHold)
 		{
@@ -1011,6 +1014,7 @@ public class HostController : InputController
         // Play ability 3 particle effect.
         GameManager.s_Instance?.m_Pariah.m_IncarnateParticle.Play();
 
+        m_DeathIncarnateAbility.IsActive = false;
 		Ability3(m_DeathIncarnateAbility.deathIncarnateRadius, m_DeathIncarnateAbility.deathIncarnateDamage);
 	}
 	IEnumerator Ability3Draw()

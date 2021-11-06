@@ -51,7 +51,13 @@ public class ArenaManager : MonoBehaviour
             //Temporary code - will need animations.
             PlayDoorOpenSound();
             if (m_OpenDoor != null)
+            {
                 m_OpenDoor.SetActive(true);
+
+                //delay collider being activated on portal object so that sequence can be watched.
+                if (m_OpenDoor.GetComponent<Portal>())
+                StartCoroutine(DelayCollider());
+            }
             if (m_ClosedDoor != null)
                 m_ClosedDoor.SetActive(false);
             this.GetComponent<ArenaManager>().enabled = false;
@@ -78,6 +84,11 @@ public class ArenaManager : MonoBehaviour
             return false;
     }
 
+    private IEnumerator DelayCollider()
+    {
+        yield return new WaitForSeconds(8.0f);
+        m_OpenDoor.GetComponent<MeshCollider>().enabled = true;
+    }
 
     // SendDoorData() has been moved into GameManager.cs.
 

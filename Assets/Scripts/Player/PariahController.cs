@@ -482,27 +482,6 @@ public class PariahController : InputController
         }
     }
 
-    // ****** Highly temporary ******
-    private IEnumerator ReloadLevel()
-    {
-        GameManager.s_IsNotFirstLoad = true; // Telling the game manager that it's not the games first load.
-        yield return null;
-
-        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
-        asyncOperation.allowSceneActivation = false;
-
-        while (!asyncOperation.isDone)
-        {
-            Debug.Log($"Progress: {asyncOperation.progress * 100}%");
-            if (asyncOperation.progress >= 0.9f)
-                asyncOperation.allowSceneActivation = true;
-
-            yield return null;
-        }
-
-        
-    }
-
     /// <summary>
     /// GetHealth() gets around the private health.
     /// Sorry for adding code into this script. It's just that health was private and I needed to access it from a UI script.

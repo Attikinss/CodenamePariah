@@ -251,7 +251,7 @@ public class GameManager : MonoBehaviour
         //WStartCoroutine(controller.RunWeaponInspect(5));
     }
 
-    public static void AddToggable(int arenaID, GameObject openObj, GameObject closeObj, bool isOpen)
+    public static void AddToggable(string arenaID, GameObject openObj, GameObject closeObj, bool isOpen)
     {
         // To prevent the same monobehaviour ArenaManager's from sending the GameManager their doors on the following reloads of the game, we check
         // the ID of the requested created door with the doors we already have. If they match, it means we already know about that door and don't need it.
@@ -290,7 +290,7 @@ public class GameManager : MonoBehaviour
     /// Gets a door with a matching arena ID.
     /// </summary>
     /// <param name="arenaID"></param>
-    public static ToggableObject GetDoor(int arenaID)
+    public static ToggableObject GetDoor(string arenaID)
     {
         for (int i = 0; i < s_AllToggables.Count; i++)
         {
@@ -358,7 +358,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Sends updated door information to the GameManager so it has memory of the state of the door when it reloads at a checkpoint.
     /// </summary>
-    public void SendDoorData(bool isOpen, int doorID)
+    public void SendDoorData(bool isOpen, string doorID)
     {
         ToggableObject ourDoor = GameManager.GetDoor(doorID);
         ourDoor.m_IsOpen = isOpen;

@@ -8,7 +8,8 @@ public class ArenaManager : MonoBehaviour
     public bool m_ShouldSaveData = true;
 
     [Tooltip("This ID should be unique to this instance.")]
-    public int m_ID = 0;
+    [UniqueIdentifier]
+    public string m_ID;
 
     [Tooltip("Agents in the room.")]
     public GameObject[] m_ArenaAgents;

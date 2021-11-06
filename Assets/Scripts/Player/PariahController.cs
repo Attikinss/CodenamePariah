@@ -434,7 +434,8 @@ public class PariahController : InputController
             m_Dead = true;
             FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
             allBussess.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
-            StartCoroutine(ReloadLevel());
+            PauseMenu.m_GameOver = true;
+            //StartCoroutine(ReloadLevel());
         }
     }
 
@@ -470,7 +471,8 @@ public class PariahController : InputController
                     m_Dead = true;
                     FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
                     allBussess.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
-                    StartCoroutine(ReloadLevel());
+                    PauseMenu.m_GameOver = true;
+                    //StartCoroutine(ReloadLevel());
                 }
 
                 yield return new WaitForSeconds(delay);

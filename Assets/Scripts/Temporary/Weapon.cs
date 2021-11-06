@@ -724,8 +724,8 @@ public class Weapon : MonoBehaviour
     /// <summary>Reloads the weapon over time.</summary>
     public IEnumerator Reload(bool special = false)
     {
-        if (!IsReloading())
-        {
+        //if (!IsReloading())
+        //{
             StartReloadAnimation(special);
             PlayReloadSound();
 
@@ -824,7 +824,7 @@ public class Weapon : MonoBehaviour
                 m_WeaponActions.m_IsReloadingLeft = false;
             else
                 m_WeaponActions.m_IsReloading = false;
-        }
+        //}
     }
 
     private void UpdateSway(float x, float y)

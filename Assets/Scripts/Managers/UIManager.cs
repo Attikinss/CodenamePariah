@@ -465,6 +465,7 @@ public class UIManager : MonoBehaviour
         {
             //m_Inv.m_CurrentWeapon.m_WeaponIcon?.SetActive(false);
             m_AmmoDisplayLeft.enabled = true;
+            m_DualWieldRightWeaponAmmoText.gameObject.SetActive(true);
             m_DualWieldPlate.SetActive(true);
         }
     }

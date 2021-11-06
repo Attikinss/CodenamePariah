@@ -724,7 +724,7 @@ public class Weapon : MonoBehaviour
     /// <summary>Reloads the weapon over time.</summary>
     public IEnumerator Reload(bool special = false)
     {
-        if (!IsReloading())
+        if (!GetReloadState(special))
         {
             StartReloadAnimation(special);
             PlayReloadSound();
@@ -1189,6 +1189,7 @@ public class Weapon : MonoBehaviour
     }
     public void ResetReload() { m_WeaponActions.m_IsReloading = false; }
     public bool IsReloading() { return m_WeaponActions.m_IsReloading; }
+    public bool IsReloadingLeft() { return m_WeaponActions.m_IsReloadingLeft; }
     public bool GetAimState() { return m_WeaponActions.m_IsAiming; }
     public void ResetAim() { m_WeaponActions.m_IsAiming = false; }
     public bool GetRecoilTestState() { return m_RecoilTesting.m_IsRecoilTesting; }

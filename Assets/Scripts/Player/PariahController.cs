@@ -110,6 +110,8 @@ public class PariahController : InputController
     public VisualEffect m_SmokyArmParticle2;
 
 
+    // Hiding arms coroutine.
+    private Coroutine m_HideArmsCoroutine;
 
     private void Awake() => m_Rigidbody = GetComponent<Rigidbody>();
 
@@ -575,8 +577,9 @@ public class PariahController : InputController
     /// after animation is complete.
     /// </summary>
     /// <param name="triggerName">Name of animation trigger.</param>
-    /// <param name="m_HideArmsAfterwards">Bool to set if the arms hide or not after the animation is complete.</param>
-    public void PlayArmAnim(string triggerName, bool m_HideArmsAfterwards = true)
+    /// <param name="hideArms">Bool to set if the arms hide or not after the animation is complete.</param>
+    /// <param name="boolState">boolState is just used for the IsDraining bool.</param>
+    public void PlayArmAnim(string triggerName, bool hideArms = true, bool boolState = false)
     {
         if (m_ArmsAnimator == null)
         {
@@ -585,35 +588,61 @@ public class PariahController : InputController
         }
         else // Otherwise, we could find the arms animator.
         {
+            // We have requested to play an animation. If there are any coroutines
+            // in the process of hiding Pariah's arms, cancel them.
+            if (m_HideArmsCoroutine != null)
+            {
+                Debug.Log("Stopping hide arms coroutine.");
+                StopHideArmsCoroutine();
+            }
+
+            // ------------------------------------------------- ANIMATION PROCESSING ------------------------------------------------- //
+
             if (triggerName == "OnDash")
             {
-                if (m_Arms.enabled == false) // If the arms are hidden, unhide them for the duration of the dash animation. This is so the hosts can use this animation.
-                {
+                //if (m_Arms.enabled == false) // If the arms are hidden, unhide them for the duration of the dash animation. This is so the hosts can use this animation.
+                //{
                     m_Arms.enabled = true;
-                    StartCoroutine(HideArms(0.30f)); // 0.30f is around about the time it takes for the animation to complete.
-
-                }
+                    if (m_HideArmsCoroutine == null)
+                        m_HideArmsCoroutine = StartCoroutine(HideArms(0.30f)); // 0.30f is around about the time it takes for the animation to complete.
+                //}
                 m_ArmsAnimator.SetTrigger(triggerName);
             }
             else if (triggerName == "OnIncarnate")
             {
-                if (m_Arms.enabled == false)
-                {
+                //if (m_Arms.enabled == false)
+                //{
                     m_Arms.enabled = true;
-                    if (m_HideArmsAfterwards)
-                        StartCoroutine(HideArms(6f));
-                }
+                    if (hideArms)
+                        if(m_HideArmsCoroutine == null)
+                            m_HideArmsCoroutine = StartCoroutine(HideArms(6f));
+                //}
                 m_ArmsAnimator.SetTrigger(triggerName);
             }
             else if (triggerName == "OnPariahReload")
             {
-                if (m_Arms.enabled == false)
-                {
+                //if (m_Arms.enabled == false)
+                //{
                     m_Arms.enabled = true;
-                    if (m_HideArmsAfterwards)
-                        StartCoroutine(HideArms(1));
-                }
+                    if (hideArms)
+                        if(m_HideArmsCoroutine == null)
+                            m_HideArmsCoroutine = StartCoroutine(HideArms(1));
+                //}
                 m_ArmsAnimator.SetTrigger(triggerName);
+            }
+            else if (triggerName == "IsDraining") // IsDraining isn't a trigger and should probably have it's own function                                        
+            {                                     // but it's getting late in development so I'm just gonna do it like this anyway.
+                //if (m_Arms.enabled == false)
+                //{
+                    m_Arms.enabled = true;
+                    if (hideArms) // This would never be used for draining animation since it can go as long as the player holds the button down.
+                    {
+                        if(m_HideArmsCoroutine == null)
+                            m_HideArmsCoroutine = StartCoroutine(HideArms(1)); // Instead we will manually hide the arms when they stop pressing the button.
+                    }
+                //}
+                m_ArmsAnimator.SetBool(triggerName, boolState);
+               
             }
         }
     }
@@ -623,7 +652,7 @@ public class PariahController : InputController
     /// </summary>
     /// <param name="time">Elapsed time required before hiding Pariah's arms.</param>
     /// <returns></returns>
-    IEnumerator HideArms(float time)
+    public IEnumerator HideArms(float time)
     {
         float elapsedTime = 0;
 
@@ -634,7 +663,30 @@ public class PariahController : InputController
         }
 
         m_Arms.enabled = false; // Hide Pariah's arms after this counter has completed.
+        m_HideArmsCoroutine = null; // Setting it to null so it's ready for the next coroutine.
     }
+
+    /// <summary>
+    /// Hides/Unhides Pariah's arms instantly.
+    /// </summary>
+    public void ForceHideArms(bool toggle)
+    {
+        m_Arms.enabled = toggle;
+    }
+
+    /// <summary>
+    /// To be used if the user leaves their agent while a hide arms coroutine is still in process. This will
+    /// stop the coroutine and set it to null.
+    /// </summary>
+    public void StopHideArmsCoroutine()
+    {
+        if (m_HideArmsCoroutine != null)
+        { 
+            StopCoroutine(m_HideArmsCoroutine);
+            m_HideArmsCoroutine = null;
+        }
+    }
+
 
     /// <summary>
     /// DelayedDash() acts as a wrapper around the old dash code to cause a delay coroutine to start before the actual dash can begin.

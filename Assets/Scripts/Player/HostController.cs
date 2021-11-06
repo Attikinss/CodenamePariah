@@ -501,7 +501,7 @@ public class HostController : InputController
         {
             if (m_DrainAbility.isDraining) // We only want to cancel the drain if we are draining currently.
             { 
-                GameManager.s_Instance?.m_Pariah.PlayArmAnim("IsDraining", false, false); // Will set animation to true/false depending
+                GameManager.s_Instance?.m_Pariah.PlayArmAnim("IsDraining", true, false); // Will set animation to true/false depending
                 m_DrainAbility.isDraining = false;
             }
                                                                                                           // on the state of m_DrainAbility.isDraining.

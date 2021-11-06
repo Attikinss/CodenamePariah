@@ -43,6 +43,10 @@ public class TargetInSight : Decorator
             }
         }
 
+        Weapon agentWeapon = Owner.Agent.m_HostController.GetCurrentWeapon();
+        if (agentWeapon.PrimaryAmmoLow() && !agentWeapon.IsReloading())
+            agentWeapon.ForceReload();
+
         return NodeResult.Failure;
     }
 }

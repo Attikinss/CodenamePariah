@@ -64,7 +64,6 @@ public class Weapon : MonoBehaviour
     /// <summary>An accumulative value used to determine when the next round should be fired.</summary>
     private float m_NextTimeToFire = 0f;
 
-
     // Duplicate variables to handle the second gun for dual wield.
     private int m_RoundsInMagazineLeft;
     //private int m_ReserveAmmoLeft;
@@ -478,6 +477,11 @@ public class Weapon : MonoBehaviour
         }
     }
 
+    public void ForceReload()
+    {
+        StartCoroutine(Reload());
+    }
+
     public void StartReload(bool dualWield)
     {
         if (!PrimaryAmmoFull(dualWield) && !ReserveAmmoEmpty() && !GetReloadState(dualWield) && !m_Animators.CheckWeaponInspect())
@@ -720,104 +724,107 @@ public class Weapon : MonoBehaviour
     /// <summary>Reloads the weapon over time.</summary>
     public IEnumerator Reload(bool special = false)
     {
-        StartReloadAnimation(special);
-        PlayReloadSound();
-
-        if (special)
-            m_WeaponActions.m_IsReloadingLeft = true;
-        else
-            m_WeaponActions.m_IsReloading = true;
-
-        // Before waiting you could invoke an animator here
-        // to play a reload animation and an audio manager
-        // to play a sound to go with it.
-
-        // When triggering an animation it would also be pretty neat
-        // to modify its playback speed to match the reload time.
-
-        yield return new WaitForSeconds(m_ReloadTime);
-
-        // I don't want to strip your hard work with the modulo
-        // operations that you took the time to design so if you
-        // wish to use your method then please do that.
-        // The code below is just an example of how to simplify
-        // the process so that there's little brain power needed
-        // to remember what is happening behind the scenes.
-
-        // Get how many rounds are needed to top up
-        //int ammoRequired = m_MagazineSize - m_RoundsInMagazine;
-        int ammoRequired;
-        int reservePool;
-        if (special)
+        if (!IsReloading())
         {
-            ammoRequired = m_MagazineSize - m_RoundsInMagazineLeft;
-            //reservePool = m_ReserveAmmoLeft;
-            reservePool = m_ReserveAmmo;
-        }
-        else
-        { 
-            ammoRequired = m_MagazineSize - m_RoundsInMagazine;
-            reservePool = m_ReserveAmmo;
-        }
+            StartReloadAnimation(special);
+            PlayReloadSound();
 
-        
-
-        // Check the size of the reserve pool
-        if (reservePool <= ammoRequired)
-        {
-            // Update UI to only show one mag
-            //m_UIManager.ModuloEqualsZero(m_RoundsInMagazine + m_ReserveAmmo);
-
-            // Move all remaining ammo into magazine
             if (special)
-            {
-                //m_RoundsInMagazineLeft += m_ReserveAmmoLeft;
-                m_RoundsInMagazineLeft += m_ReserveAmmo;
-                //m_ReserveAmmoLeft = 0;
-                m_ReserveAmmo = 0;
-            }
-            else 
-            {
-                m_RoundsInMagazine += m_ReserveAmmo;
-                m_ReserveAmmo = 0;
-            }
-        }
-        else
-        {
-            if ((m_RoundsInMagazine + m_ReserveAmmo) % m_MagazineSize == 0)
-            {
-                // Total ammo equals an amount that when divided by magazine size, has no remainder therefore get rid of a mag UI element
-                //m_UIManager.ModuloEqualsZero(m_MagazineSize);
-            }
+                m_WeaponActions.m_IsReloadingLeft = true;
             else
-            {
-                // Removes bullet sprites total from 1 - 2 mags depending on the ammo missing from current magazine and how much ammo was already missing in the last magazine
-                //m_UIManager.RemoveAmmoFromLastAddToCurrent(m_MagazineSize);
-            }
+                m_WeaponActions.m_IsReloading = true;
 
-            // Move required amount from reserve to magazine
+            // Before waiting you could invoke an animator here
+            // to play a reload animation and an audio manager
+            // to play a sound to go with it.
+
+            // When triggering an animation it would also be pretty neat
+            // to modify its playback speed to match the reload time.
+
+            yield return new WaitForSeconds(m_ReloadTime);
+
+            // I don't want to strip your hard work with the modulo
+            // operations that you took the time to design so if you
+            // wish to use your method then please do that.
+            // The code below is just an example of how to simplify
+            // the process so that there's little brain power needed
+            // to remember what is happening behind the scenes.
+
+            // Get how many rounds are needed to top up
+            //int ammoRequired = m_MagazineSize - m_RoundsInMagazine;
+            int ammoRequired;
+            int reservePool;
             if (special)
             {
-                m_RoundsInMagazineLeft += ammoRequired;
-                //m_ReserveAmmoLeft -= ammoRequired;
-                m_ReserveAmmo -= ammoRequired;
+                ammoRequired = m_MagazineSize - m_RoundsInMagazineLeft;
+                //reservePool = m_ReserveAmmoLeft;
+                reservePool = m_ReserveAmmo;
             }
             else
             { 
-                m_RoundsInMagazine += ammoRequired;
-                m_ReserveAmmo -= ammoRequired;
+                ammoRequired = m_MagazineSize - m_RoundsInMagazine;
+                reservePool = m_ReserveAmmo;
             }
+
+        
+
+            // Check the size of the reserve pool
+            if (reservePool <= ammoRequired)
+            {
+                // Update UI to only show one mag
+                //m_UIManager.ModuloEqualsZero(m_RoundsInMagazine + m_ReserveAmmo);
+
+                // Move all remaining ammo into magazine
+                if (special)
+                {
+                    //m_RoundsInMagazineLeft += m_ReserveAmmoLeft;
+                    m_RoundsInMagazineLeft += m_ReserveAmmo;
+                    //m_ReserveAmmoLeft = 0;
+                    m_ReserveAmmo = 0;
+                }
+                else 
+                {
+                    m_RoundsInMagazine += m_ReserveAmmo;
+                    m_ReserveAmmo = 0;
+                }
+            }
+            else
+            {
+                if ((m_RoundsInMagazine + m_ReserveAmmo) % m_MagazineSize == 0)
+                {
+                    // Total ammo equals an amount that when divided by magazine size, has no remainder therefore get rid of a mag UI element
+                    //m_UIManager.ModuloEqualsZero(m_MagazineSize);
+                }
+                else
+                {
+                    // Removes bullet sprites total from 1 - 2 mags depending on the ammo missing from current magazine and how much ammo was already missing in the last magazine
+                    //m_UIManager.RemoveAmmoFromLastAddToCurrent(m_MagazineSize);
+                }
+
+                // Move required amount from reserve to magazine
+                if (special)
+                {
+                    m_RoundsInMagazineLeft += ammoRequired;
+                    //m_ReserveAmmoLeft -= ammoRequired;
+                    m_ReserveAmmo -= ammoRequired;
+                }
+                else
+                { 
+                    m_RoundsInMagazine += ammoRequired;
+                    m_ReserveAmmo -= ammoRequired;
+                }
+            }
+
+            SetFireTime(special); // Added so that if the player is holding down fire while reloading, they will begin firing at t=0. Without this the fire time is what is what when they
+                           // originally started firing.
+            if(m_Inventory.Owner.Possessed)
+                m_UIManager?.UpdateWeaponUI(this);
+
+            if (special)
+                m_WeaponActions.m_IsReloadingLeft = false;
+            else
+                m_WeaponActions.m_IsReloading = false;
         }
-
-        SetFireTime(special); // Added so that if the player is holding down fire while reloading, they will begin firing at t=0. Without this the fire time is what is what when they
-                       // originally started firing.
-        if(m_Inventory.Owner.Possessed)
-            m_UIManager?.UpdateWeaponUI(this);
-
-        if (special)
-            m_WeaponActions.m_IsReloadingLeft = false;
-        else
-            m_WeaponActions.m_IsReloading = false;
     }
 
     private void UpdateSway(float x, float y)
@@ -1029,7 +1036,7 @@ public class Weapon : MonoBehaviour
     {
         // Try to find a more elegant way to handle this
         // through exposed variables that Michael can play with.
-        return m_RoundsInMagazine == (int)(m_MagazineSize * m_LowAmmoWarningPercentage);
+        return m_RoundsInMagazine <= (int)(m_MagazineSize * m_LowAmmoWarningPercentage);
     }
 
     /// <summary>Defines whether or not the weapon's magazine is low and there is no reserve ammo.</summary>
@@ -1037,7 +1044,7 @@ public class Weapon : MonoBehaviour
     {
         // Try to find a more elegant way to handle this
         // through exposed variables that Michael can play with.
-        return m_RoundsInMagazine == (int)(m_MagazineSize * m_LowAmmoWarningPercentage) * 0.5f;
+        return m_RoundsInMagazine <= (int)(m_MagazineSize * m_LowAmmoWarningPercentage) * 0.5f;
     }
 
     /// <summary>Defines whether or not the weapon's magazine is empty and there is no reserve ammo.</summary>
@@ -1045,13 +1052,13 @@ public class Weapon : MonoBehaviour
     {
         // Try to find a more elegant way to handle this
         // through exposed variables that Michael can play with.
-        return m_RoundsInMagazine + m_ReserveAmmo == 0;
+        return m_RoundsInMagazine + m_ReserveAmmo <= 0;
     }
 
     /// <summary>Defines whether or not the weapon's magazine is empty.</summary>
     public bool PrimaryAmmoEmpty()
     {
-        return m_RoundsInMagazine == 0;
+        return m_RoundsInMagazine <= 0;
     }
 
     /// <summary>Defines whether or not the weapon's reserve ammo pool is empty.</summary>
@@ -1060,11 +1067,11 @@ public class Weapon : MonoBehaviour
         if (special) // If special is true, check the left gun reserve ammo.
         { 
             //return m_ReserveAmmoLeft == 0;
-            return m_ReserveAmmo == 0;
+            return m_ReserveAmmo <= 0;
 
         }
 
-        return m_ReserveAmmo == 0;
+        return m_ReserveAmmo <= 0;
     }
 
     public int GetRoundsInMagazine(bool special = false)

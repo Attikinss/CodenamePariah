@@ -165,7 +165,13 @@ namespace WhiteWillow
             m_NavAgent.isStopped = true;
         }
 
-        public bool DestinationAttainable(Vector3 position) => m_NavAgent.CalculatePath(position, new NavMeshPath());
+        public bool DestinationAttainable(Vector3 position)
+        {
+            NavMeshPath path = new NavMeshPath();
+            m_NavAgent.CalculatePath(position, path);
+            return path.status == NavMeshPathStatus.PathComplete;
+        }
+
         public bool MovingToPosition() => m_NavAgent.hasPath;
         public bool AtPosition() => Vector3.Distance(transform.position - Vector3.up, Destination) < 0.2f + m_NavAgent.stoppingDistance;
         public bool Stuck() => false;

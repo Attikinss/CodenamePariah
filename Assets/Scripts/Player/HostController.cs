@@ -72,6 +72,7 @@ public class HostController : InputController
     [Tooltip("Mesh of soldier or scientist to hide when entering unit.")]
     public GameObject m_Mesh;
 
+    //private Coroutine m_HideArmsCoroutine; // A reference to the coroutine responsible for hiding Pariah's arms. // Moved to PariahController.cs.
 	private void Awake()
 	{
         m_AccumulatedRecoil = new CameraRecoil();
@@ -173,6 +174,8 @@ public class HostController : InputController
                     }
                 }
             }
+
+            
         }
     }
     private void LateUpdate()
@@ -283,6 +286,21 @@ public class HostController : InputController
             m_UIManager?.ToggleReadyPrompt(false);
 
         GameManager.s_CurrentHost = null;
+
+        // There are some bugs that can occure due to the HostDrain animation hiding Pariah's arms when the button is cancelled.
+        // If the user hops out of an agent while draining the host, the arms will be hidden for Pariah in ghost form. To prevent this,
+        // in this Disable() function that gets called right before we hop out of the host, we will force unhide Pariah's arms so we
+        // can be sure they will appear for Pariah.
+        GameManager.s_Instance?.m_Pariah.ForceHideArms(false); // Unhides arms.
+
+        // // Also, we must ensure that any existing, already active coroutines are informed that we should stop hiding Pariah's arms.
+        // if(m_HideArmsCoroutine != null)           // Stopping the coroutine has been moved to the PariahController.cs.
+        //     StopCoroutine(m_HideArmsCoroutine);
+
+        GameManager.s_Instance?.m_Pariah.StopHideArmsCoroutine();
+        m_DrainAbility.isDraining = false; // Make sure they stop draining when we leave the agent.
+        GameManager.s_Instance?.m_Pariah.StopAnimation("IsDraining");
+
     }
 
     // ========================================================== Input Events ========================================================== //
@@ -330,7 +348,7 @@ public class HostController : InputController
 
     public override void OnSlide(InputAction.CallbackContext value)
     {
-        if (value.performed && m_MovInfo.m_IsGrounded && m_MovInfo.m_IsMoving)
+        if (value.performed && m_MovInfo.m_IsGrounded && m_MovInfo.m_IsMoving && !m_Dashing && !m_DrainAbility.isDraining)
         {
             //Debug.Log("OnSlide called.");
             m_MovInfo.m_SlideDir = value.performed ? m_Orientation.forward : m_MovInfo.m_SlideDir;
@@ -472,13 +490,22 @@ public class HostController : InputController
     public void OnAbility2(InputAction.CallbackContext value)
     {
         // Do ability 2 stuff.
-        if (value.performed)
+        if (value.performed && !m_Dashing && !m_MovInfo.m_IsSliding)
         {
             m_DrainAbility.isDraining = true;
+            GameManager.s_Instance?.m_Pariah.PlayArmAnim("IsDraining", false, m_DrainAbility.isDraining); // Will set animation to true/false depending
+                                                                                                          // on the state of m_DrainAbility.isDraining.
+
         }
         else if (value.canceled)
         {
-            m_DrainAbility.isDraining = false;
+            if (m_DrainAbility.isDraining) // We only want to cancel the drain if we are draining currently.
+            { 
+                GameManager.s_Instance?.m_Pariah.PlayArmAnim("IsDraining", true, false); // Will set animation to true/false depending
+                m_DrainAbility.isDraining = false;
+            }
+                                                                                                          // on the state of m_DrainAbility.isDraining.
+            //m_HideArmsCoroutine = StartCoroutine(GameManager.s_Instance?.m_Pariah.HideArms(1));
         }
     }
 
@@ -498,7 +525,7 @@ public class HostController : InputController
     {
         if (!PauseMenu.m_GameIsPaused)
         {
-            if (value.performed && !m_Dashing && m_CurrentDashCharges > 0 && !m_IsDelayedDashing)
+            if (value.performed && !m_Dashing && m_CurrentDashCharges > 0 && !m_IsDelayedDashing && !m_MovInfo.m_IsSliding && !m_DrainAbility.isDraining && !m_DeathIncarnateAbility.IsActive)
             {
                 // The code below has been incorporated into the DelayedDash() function.
 
@@ -572,6 +599,7 @@ public class HostController : InputController
 
         if (value.performed && !m_DeathIncarnateAbility.deathIncarnateUsed && pariah.m_Power >= m_DeathIncarnateAbility.requiredKills)
         {
+            
             GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnIncarnate", false);
             m_DeathIncarnateAbility.chargeRoutine = StartCoroutine(Ability3Charge());
             pariah.m_Power = 0; // Consume all power, reset back to 0.
@@ -950,7 +978,9 @@ public class HostController : InputController
     }
 	IEnumerator Ability3Charge()
 	{
-		float time = 0.0f;
+        m_DeathIncarnateAbility.IsActive = true;
+
+        float time = 0.0f;
 
 		while (time < m_DeathIncarnateAbility.deathIncarnateRequiredHold)
 		{
@@ -984,6 +1014,7 @@ public class HostController : InputController
         // Play ability 3 particle effect.
         GameManager.s_Instance?.m_Pariah.m_IncarnateParticle.Play();
 
+        m_DeathIncarnateAbility.IsActive = false;
 		Ability3(m_DeathIncarnateAbility.deathIncarnateRadius, m_DeathIncarnateAbility.deathIncarnateDamage);
 	}
 	IEnumerator Ability3Draw()
@@ -1132,11 +1163,12 @@ public class HostController : InputController
     {
         m_IsDelayedDashing = true;
         // Play dash animation.
-        GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnDash");
-
-        float delayTime = 0.0f;
-        // Adding a start delay before actual dash is performed.
-        while (delayTime <= t)
+        GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnDash", true, false, true);          // ======================== NOTE ======================== //
+                                                                                            // We must force this animation to play by setting the forceTransition
+                                                                                            // bool to true so that the animators transitions don't slow anything down.
+        float delayTime = 0.0f;                                                             // There was an issue before where the transition would take a few milliseconds
+        // Adding a start delay before actual dash is performed.                            // causing the dash to be cut short when dashing straight away after draining.
+        while (delayTime <= t)                                                              // ====================================================== //
         {
             delayTime += Time.deltaTime;
             yield return null;

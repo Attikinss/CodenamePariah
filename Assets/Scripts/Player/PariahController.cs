@@ -214,7 +214,7 @@ public class PariahController : InputController
                 // camera movement we had to put this in here.
                 if(m_CurrentPossessed != null)
                 {
-                    transform.position = m_CurrentPossessed.transform.position + Vector3.up * 0.75f;
+                    transform.position = m_CurrentPossessed.transform.position + Vector3.up * 0.5f; // Used to be multiplied by 0.75.
 
                     // Changed those localEulerAngles to just normal eulerAngles because the parent prefab of m_Orientation may be rotated.
                     // This is the case now because the parent of m_Orientation is where the soldier/scientist mesh is.
@@ -488,18 +488,22 @@ public class PariahController : InputController
         GameManager.s_IsNotFirstLoad = true; // Telling the game manager that it's not the games first load.
         yield return null;
 
-        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
-        asyncOperation.allowSceneActivation = false;
+        //AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+        //asyncOperation.allowSceneActivation = false;
 
-        while (!asyncOperation.isDone)
-        {
-            Debug.Log($"Progress: {asyncOperation.progress * 100}%");
-            if (asyncOperation.progress >= 0.9f)
-                asyncOperation.allowSceneActivation = true;
+        //while (!asyncOperation.isDone)
+        //{
+        //    Debug.Log($"Progress: {asyncOperation.progress * 100}%");
+        //    if (asyncOperation.progress >= 0.9f)
+        //    { 
+        //        asyncOperation.allowSceneActivation = true;
+        //        Cursor.lockState = CursorLockMode.Locked;
+        //    }
 
-            yield return null;
-        }
+        //    yield return null;
+        //}
 
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
         
     }
 
@@ -603,8 +607,11 @@ public class PariahController : InputController
                 //if (m_Arms.enabled == false) // If the arms are hidden, unhide them for the duration of the dash animation. This is so the hosts can use this animation.
                 //{
                     m_Arms.enabled = true;
+                if (hideArms)
+                { 
                     if (m_HideArmsCoroutine == null)
                         m_HideArmsCoroutine = StartCoroutine(HideArms(0.30f)); // 0.30f is around about the time it takes for the animation to complete.
+                }
                 //}
 
                 if (forceTransition)
@@ -719,7 +726,7 @@ public class PariahController : InputController
     {
         m_IsDelayedDashing = true;
         // Play dash animation.
-        GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnDash");
+        GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnDash", false, false);
 
         float delayTime = 0.0f;
         // Adding a start delay before actual dash is performed.

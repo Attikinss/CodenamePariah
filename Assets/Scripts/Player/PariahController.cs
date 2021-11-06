@@ -579,7 +579,7 @@ public class PariahController : InputController
     /// <param name="triggerName">Name of animation trigger.</param>
     /// <param name="hideArms">Bool to set if the arms hide or not after the animation is complete.</param>
     /// <param name="boolState">boolState is just used for the IsDraining bool.</param>
-    public void PlayArmAnim(string triggerName, bool hideArms = true, bool boolState = false)
+    public void PlayArmAnim(string triggerName, bool hideArms = true, bool boolState = false, bool forceTransition = false)
     {
         if (m_ArmsAnimator == null)
         {
@@ -606,7 +606,11 @@ public class PariahController : InputController
                     if (m_HideArmsCoroutine == null)
                         m_HideArmsCoroutine = StartCoroutine(HideArms(0.30f)); // 0.30f is around about the time it takes for the animation to complete.
                 //}
-                m_ArmsAnimator.SetTrigger(triggerName);
+
+                if (forceTransition)
+                    m_ArmsAnimator.Play("Dash");
+                else
+                    m_ArmsAnimator.SetTrigger(triggerName);
             }
             else if (triggerName == "OnIncarnate")
             {
@@ -644,6 +648,22 @@ public class PariahController : InputController
                 m_ArmsAnimator.SetBool(triggerName, boolState);
                
             }
+        }
+    }
+
+    /// <summary>
+    /// Used to forcefully stop an animation bool.
+    /// </summary>
+    /// <param name="name">Name of the bool you want to set to false.</param>
+    public void StopAnimation(string name)
+    {
+        if (m_ArmsAnimator)
+        {
+            m_ArmsAnimator.SetBool(name, false);
+        }
+        else
+        {
+            Debug.LogWarning("PariahController tried to stop an animation but m_ArmsAnimator has not been set!");
         }
     }
 

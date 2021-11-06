@@ -287,7 +287,6 @@ public class HostController : InputController
 
         GameManager.s_CurrentHost = null;
 
-
         // There are some bugs that can occure due to the HostDrain animation hiding Pariah's arms when the button is cancelled.
         // If the user hops out of an agent while draining the host, the arms will be hidden for Pariah in ghost form. To prevent this,
         // in this Disable() function that gets called right before we hop out of the host, we will force unhide Pariah's arms so we
@@ -299,6 +298,9 @@ public class HostController : InputController
         //     StopCoroutine(m_HideArmsCoroutine);
 
         GameManager.s_Instance?.m_Pariah.StopHideArmsCoroutine();
+        m_DrainAbility.isDraining = false; // Make sure they stop draining when we leave the agent.
+        GameManager.s_Instance?.m_Pariah.StopAnimation("IsDraining");
+
     }
 
     // ========================================================== Input Events ========================================================== //
@@ -499,8 +501,8 @@ public class HostController : InputController
         {
             if (m_DrainAbility.isDraining) // We only want to cancel the drain if we are draining currently.
             { 
+                GameManager.s_Instance?.m_Pariah.PlayArmAnim("IsDraining", false, false); // Will set animation to true/false depending
                 m_DrainAbility.isDraining = false;
-                GameManager.s_Instance?.m_Pariah.PlayArmAnim("IsDraining", true, m_DrainAbility.isDraining); // Will set animation to true/false depending
             }
                                                                                                           // on the state of m_DrainAbility.isDraining.
             //m_HideArmsCoroutine = StartCoroutine(GameManager.s_Instance?.m_Pariah.HideArms(1));
@@ -1157,11 +1159,12 @@ public class HostController : InputController
     {
         m_IsDelayedDashing = true;
         // Play dash animation.
-        GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnDash");
-
-        float delayTime = 0.0f;
-        // Adding a start delay before actual dash is performed.
-        while (delayTime <= t)
+        GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnDash", true, false, true);          // ======================== NOTE ======================== //
+                                                                                            // We must force this animation to play by setting the forceTransition
+                                                                                            // bool to true so that the animators transitions don't slow anything down.
+        float delayTime = 0.0f;                                                             // There was an issue before where the transition would take a few milliseconds
+        // Adding a start delay before actual dash is performed.                            // causing the dash to be cut short when dashing straight away after draining.
+        while (delayTime <= t)                                                              // ====================================================== //
         {
             delayTime += Time.deltaTime;
             yield return null;

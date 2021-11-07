@@ -282,6 +282,18 @@ public class HostController : InputController
         m_Camera.enabled = false;
         //HideHUD();
 
+
+        // ============= Resetting dash movement ============= //
+        // This is required as it fixes an issue that occurs
+        // when the user dashes with an agent, but then leaves
+        // before the dash has started/completed. The bug causes
+        // the player to go flying really fast in the direction
+        // of the dash the next time they enter that host.
+        m_MovInfo.m_DashDir = Vector3.zero;
+        // =================================================== //
+
+
+
         CustomDebugUI.s_Instance?.ClearController();
 
         // When the player leaves a unit, we have to hide the skinned mesh renderers of the guns and arms for every weapon on this unit.

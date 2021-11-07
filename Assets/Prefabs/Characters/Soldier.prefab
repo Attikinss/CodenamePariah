@@ -1359,7 +1359,7 @@ PrefabInstance:
       objectReference: {fileID: 838868357373847267}
     - target: {fileID: 8557315745383636170, guid: db2a7dce86567b548977e248deeed374, type: 3}
       propertyPath: m_AIDamageModifier
-      value: 0.125
+      value: 0.15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db2a7dce86567b548977e248deeed374, type: 3}

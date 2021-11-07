@@ -136,7 +136,8 @@ public abstract class InputController : MonoBehaviour
                         }
                         else
                         {
-                            GameManager.s_CurrentHost.m_MovInfo.m_CacheMovDirection = Vector3.zero; // clear old movement.
+                            //GameManager.s_CurrentHost.m_MovInfo.m_CacheMovDirection = Vector3.zero; // clear old movement.
+                            GameManager.s_CurrentHost.m_MovInfo.m_CacheMovDirection = destination * 50; // clear old movement.
                             GameManager.s_CurrentHost.m_MovInfo.m_DashDir = destination * 50;
                         }
 

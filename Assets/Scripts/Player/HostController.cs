@@ -72,6 +72,11 @@ public class HostController : InputController
     [Tooltip("Mesh of soldier or scientist to hide when entering unit.")]
     public GameObject m_Mesh;
 
+
+    // This was put together really quickly.
+    [Header("On Damage Camerashake")]
+    public Vector3 m_OnHitCameraShakeRotation;
+
     //private Coroutine m_HideArmsCoroutine; // A reference to the coroutine responsible for hiding Pariah's arms. // Moved to PariahController.cs.
 	private void Awake()
 	{
@@ -376,7 +381,7 @@ public class HostController : InputController
 
     public override void OnPossess(InputAction.CallbackContext value)
     {
-        Debug.Log(value.performed);
+        //Debug.Log(value.performed);
         if (value.performed && !PauseMenu.m_GameIsPaused && !CustomConsole.m_Activated)
         {
             if (TryGetComponent(out WhiteWillow.Agent agent))
@@ -710,7 +715,7 @@ public class HostController : InputController
             { 
                 Vector3 velocityTowardsSurface = Vector3.Dot(Rigidbody.velocity, m_MovInfo.m_GroundNormal) * m_MovInfo.m_GroundNormal;
                 direction -= velocityTowardsSurface;
-                Debug.Log("Pushing towards surface.");
+                //Debug.Log("Pushing towards surface.");
             }
         }
 

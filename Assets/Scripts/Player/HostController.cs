@@ -218,6 +218,18 @@ public class HostController : InputController
     /// </summary>
     public override void Enable()
     {
+        // Currently there is a bug where the possession shader remains after the player has jumped into an agent.
+        // To try and prevent this I'm going to check if Pariah still has an agent selected and if they do, deselect
+        // them here.
+        PariahController pariah = GameManager.s_Instance?.m_Pariah;
+        if (pariah && pariah?.m_LookedAtAgent)
+        {
+            pariah.m_LookedAtAgent.DeselectAgent();
+            pariah.m_LookedAtAgent = null;
+        }
+
+
+
         GameManager.s_CurrentHost = this;
 
         Rigidbody.isKinematic = false;

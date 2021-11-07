@@ -115,7 +115,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 112
-  m_CollisionDetection: 3
+  m_CollisionDetection: 2
 --- !u!114 &4480668722508770150
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,7 +131,7 @@ MonoBehaviour:
   m_Camera: {fileID: 4480668722962146634}
   m_MovementSpeed: 650
   m_LookSensitivity: 40
-  m_DashDuration: 0.5
+  m_DashDuration: 0.25
   m_DashCooldown: 1
   m_DashDistance: 12.5
   m_DashDelay: 0.2
@@ -143,7 +143,7 @@ MonoBehaviour:
   m_IsDelayedDashing: 0
   m_type: 1
   m_StartingAgent: 0
-  m_OnDestroyedDamage: 25
+  m_OnDestroyedDamage: 15
   m_VerticalLock: 75
   m_JumpHeight: 2
   m_SecondJumpHeight: 2.5
@@ -170,6 +170,7 @@ MonoBehaviour:
     m_CacheMovDirection: {x: 0, y: 0, z: 0}
     m_CurrentMoveSpeed: 0
     m_IsMoving: 0
+    m_DashDir: {x: 0, y: 0, z: 0}
     m_HasDoubleJumped: 0
     m_HasJumped: 0
     m_JumpCounter: 0
@@ -200,6 +201,7 @@ MonoBehaviour:
     deathIncarnatePos: {x: 0, y: 0, z: 0}
     deathIncarnateUsed: 0
     hasRoutineStarted: 0
+    IsActive: 0
   m_Mesh: {fileID: 7094497905823826397}
 --- !u!114 &4480668722508770147
 MonoBehaviour:
@@ -691,7 +693,6 @@ MonoBehaviour:
   m_IgnoreMask:
     serializedVersion: 2
     m_Bits: 3891
-  m_Weapon: {fileID: 0}
   m_Mesh: {fileID: 6994296917060406650}
   m_PossessionMaterial: {fileID: 2100000, guid: 830099173e63fe849b967b38832db2a1, type: 2}
   m_PossessionHeart: {fileID: 5667974238611007916}
@@ -1103,7 +1104,7 @@ PrefabInstance:
       objectReference: {fileID: 2917833147781361871}
     - target: {fileID: 2238759060784313516, guid: c09c029d69a612d48a5dfa6fdefbb62e, type: 3}
       propertyPath: m_AIDamageModifier
-      value: 0.25
+      value: 0.125
       objectReference: {fileID: 0}
     - target: {fileID: 2238759060784313516, guid: c09c029d69a612d48a5dfa6fdefbb62e, type: 3}
       propertyPath: m_RoundsInMagazine

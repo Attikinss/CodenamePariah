@@ -244,6 +244,21 @@ public class PariahController : InputController
 
     public override void Enable()
     {
+
+        // Stop all hide arms coroutines after we leave a host.
+        // We shouldn't need to do this since in the HostController Disable()
+        // we stop the hide arms coroutine but I guess it's good to do it
+        // just incase.
+        if (m_HideArmsCoroutine != null)
+        {
+            StopCoroutine(m_HideArmsCoroutine);
+        }
+
+        // Making Pariah's arms transition to idle when we leave a host. This is to stop animations
+        // that the host used from continuing to play.
+        m_ArmsAnimator.CrossFade("Idle", 0.1f, -1, 0);
+
+
         GetComponent<PlayerInput>().enabled = true;
         GetComponent<Collider>().enabled = true;
         m_Active = true;
@@ -266,6 +281,9 @@ public class PariahController : InputController
 
             m_GracePeriodCoroutine = StartCoroutine(StartGracePeriod(m_GracePeriod));
         }
+
+        
+
     }
 
     public override void Disable()

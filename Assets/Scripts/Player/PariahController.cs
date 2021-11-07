@@ -682,7 +682,7 @@ public class PariahController : InputController
                     if (hideArms) // This would never be used for draining animation since it can go as long as the player holds the button down.
                     {
                         if(m_HideArmsCoroutine == null)
-                            m_HideArmsCoroutine = StartCoroutine(HideArms(1)); // Instead we will manually hide the arms when they stop pressing the button.
+                            m_HideArmsCoroutine = StartCoroutine(HideArms(0.6f)); // Instead we will manually hide the arms when they stop pressing the button.
                     }
                 //}
                 m_ArmsAnimator.SetBool(triggerName, boolState);

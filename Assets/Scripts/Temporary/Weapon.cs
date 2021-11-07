@@ -1368,4 +1368,19 @@ public class Weapon : MonoBehaviour
         Gizmos.DrawSphere(m_Inventory.Owner.m_FiringPosition.position, 0.25f);
         Gizmos.DrawLine(targetPos, m_Inventory.Owner.m_FiringPosition.position);
     }
+
+    public void AddDamageCameraShake()
+    {
+        WeaponConfiguration weaponConfig = GetCurrentWeaponConfig();
+
+        CameraRecoil cameraRecoil = m_Controller.m_AccumulatedRecoil;
+
+        Vector3 camVisRecoil = Vector3.zero;
+        camVisRecoil.x = -weaponConfig.RecoilRotationAiming.x * 2;
+        camVisRecoil.y = Random.Range(-weaponConfig.RecoilRotationAiming.y * 2, weaponConfig.RecoilRotationAiming.y * 2);
+        camVisRecoil.z = Random.Range(-weaponConfig.RecoilRotationAiming.z * 2, weaponConfig.RecoilRotationAiming.z * 2);
+
+        //cameraRecoil.accumulatedVisualRecoil += new Vector3(-weaponConfig.RecoilRotationAiming.x, Random.Range(-weaponConfig.RecoilRotationAiming.y, weaponConfig.RecoilRotationAiming.y), Random.Range(-weaponConfig.RecoilRotationAiming.z, weaponConfig.RecoilRotationAiming.z));
+        cameraRecoil.accumulatedVisualRecoil += camVisRecoil;
+    }
 }

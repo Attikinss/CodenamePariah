@@ -55,7 +55,15 @@ public class Bullet : MonoBehaviour
             if (m_Target != null)
             {
                 if (collision.gameObject == m_Target)
-                    m_Target.GetComponent<Inventory>()?.TakeDamage(m_Damage);
+                {
+                    Inventory agentInv;
+                    m_Target.TryGetComponent<Inventory>(out agentInv);
+                    agentInv?.TakeDamage(m_Damage);
+                    if (agentInv.Owner.Possessed)
+                    {
+                        agentInv.m_CurrentWeapon.AddDamageCameraShake();
+                    }
+                }
 
 
                 // Can't get contact points when using triggers. That's okay because enemies don't need bullet hit markers.

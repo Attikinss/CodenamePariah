@@ -122,6 +122,10 @@ public class PauseMenu : MonoBehaviour
         //Time.timeScale = 1f;// time scale affects scene animations.
         m_GameIsPaused = false;
         Cursor.lockState = CursorLockMode.Locked;
+
+        // For some reason, when the scene reloads, the mouse is visible again even though we are locking it.
+        // To prevent this I've forcefully set the Cursor.visible value.
+        Cursor.visible = false;
     }
 
     /// <summary>Starts the game.</summary>
@@ -208,6 +212,10 @@ public class PauseMenu : MonoBehaviour
         m_GameIsPaused = true;
         //disable a bunch of things requiring input - currently a bullet gets fired on first click inside pause menu.
         //can probably do "if(... && !m_GameIsPaused) in other scripts.
+
+        // For some reason, when the scene reloads, the mouse is visible again even though we are locking it.
+        // To prevent this I've forcefully set the Cursor.visible value.
+        Cursor.visible = true;
     }
 
     /// <summary>Opens the quit menu.</summary>

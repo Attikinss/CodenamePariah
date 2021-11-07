@@ -436,7 +436,8 @@ public class PariahController : InputController
             m_Dead = true;
             FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
             allBussess.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
-            StartCoroutine(ReloadLevel());
+            PauseMenu.m_GameOver = true;
+            //StartCoroutine(ReloadLevel());
         }
     }
 
@@ -472,7 +473,8 @@ public class PariahController : InputController
                     m_Dead = true;
                     FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
                     allBussess.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
-                    StartCoroutine(ReloadLevel());
+                    PauseMenu.m_GameOver = true;
+                    //StartCoroutine(ReloadLevel());
                 }
 
                 yield return new WaitForSeconds(delay);
@@ -480,31 +482,6 @@ public class PariahController : InputController
 
             yield return null;
         }
-    }
-
-    // ****** Highly temporary ******
-    private IEnumerator ReloadLevel()
-    {
-        GameManager.s_IsNotFirstLoad = true; // Telling the game manager that it's not the games first load.
-        yield return null;
-
-        //AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
-        //asyncOperation.allowSceneActivation = false;
-
-        //while (!asyncOperation.isDone)
-        //{
-        //    Debug.Log($"Progress: {asyncOperation.progress * 100}%");
-        //    if (asyncOperation.progress >= 0.9f)
-        //    { 
-        //        asyncOperation.allowSceneActivation = true;
-        //        Cursor.lockState = CursorLockMode.Locked;
-        //    }
-
-        //    yield return null;
-        //}
-
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
-        
     }
 
     /// <summary>

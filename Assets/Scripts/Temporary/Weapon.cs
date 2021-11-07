@@ -308,13 +308,14 @@ public class Weapon : MonoBehaviour
                     AddVisualRecoil();
 
                     // ========================= TEMPORARY SHOOT COLLISION ========================= //
-
                     if (Physics.Raycast(ray, out RaycastHit hitInfo, 500))
                     {
                         if (hitInfo.transform.gameObject != null)
                         {
+                            // Only play the bullet shot effect if we are standing atleast a certain amount away from the collider.
+                            if(Vector3.Distance(m_Inventory.Owner.transform.position, hitInfo.point) > 2)
+                                PlayBulletEffect(special, true, hitInfo.point);
 
-                            PlayBulletEffect(special, true, hitInfo.point);
                             if (hitInfo.transform.TryGetComponent(out Inventory agentInventory))
                             {
                                 float damageMod = m_Inventory.Owner.Possessed ? 1.0f : m_AIDamageModifier;
@@ -336,7 +337,16 @@ public class Weapon : MonoBehaviour
                     else
                     {
                         // Shot did not hit gameobject.
-                        PlayBulletEffect(special, false, Vector3.zero);
+                        Plane plane = new Plane(-m_Camera.transform.forward, 1000); // This is creating a plane for us to aim the
+                                                                                    // bullet effect towards if we are in an open area without any colliders.
+                        float planeEnter;
+                        if (plane.Raycast(ray, out planeEnter))
+                        {
+                            Debug.Log("Raycast used plane instead.");
+                            PlayBulletEffect(special, true, ray.GetPoint(planeEnter));
+                        }
+
+                        //PlayBulletEffect(special, false, Vector3.zero);
                     }
                     // ============================================================================= //
                 }

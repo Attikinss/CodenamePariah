@@ -303,6 +303,13 @@ public class PariahController : InputController
             m_IsGracePeriodCoroutineActive = false;
             m_GracePeriodCoroutine = null;
         }
+
+        // We make sure that when we enter the host, we straight away set our arms animation to Idle.
+        // This should already happen with Unity's animator transition tool but I find that if you try
+        // host drain a millisecond after controlling an agent, you see that the arms are still transitioning
+        // from the possession dash animation. This is a fix to that bug so you can straight away start
+        // using animations as the host.
+        m_ArmsAnimator.Play("Idle");
     }
 
     public override void OnLook(InputAction.CallbackContext value)

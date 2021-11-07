@@ -210,6 +210,8 @@ public class HostController : InputController
             Slide();
             Move(m_MovInfo.MovementInput);
         }
+        else
+            Rigidbody.useGravity = false; // Turn off gravity so we don't float down.
 	}
 
     

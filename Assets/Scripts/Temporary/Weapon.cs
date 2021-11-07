@@ -847,7 +847,22 @@ public class Weapon : MonoBehaviour
         {
             Vector3 gunOriginalPos = GetCurrentWeaponOriginalPos();
 
-            Vector3 bobStuff = WeaponBob();
+            Vector3 bobStuff = Vector3.zero;
+            if (m_Inventory.Owner.m_HostController.m_MovInfo.m_IsGrounded)
+                bobStuff = WeaponBob();
+            // Attempting to have minecraft hand like movement when falling. For now though, I'll leave it as I don't have much time left.
+
+            //else
+            //{
+            //    if (m_Inventory.Owner.m_HostController.Rigidbody.velocity.y < 0) // This means we are falling.
+            //    { 
+            //        //bobStuff = -m_Inventory.Owner.m_HostController.Rigidbody.velocity;
+            //        //bobStuff.x = Mathf.Clamp(bobStuff.x, -0.05f, 0.05f);
+            //        bobStuff.y = Mathf.Clamp(-m_Inventory.Owner.m_HostController.Rigidbody.velocity.y, -0.05f, 0.05f);
+            //        Debug.Log("We are falling.");
+            //    }
+            //}
+            
 
             Vector3 finalPosition = Vector3.zero;
             finalPosition.x = Mathf.Clamp(-x * 0.02f, -weaponConfig.m_WeaponSwayClampX, weaponConfig.m_WeaponSwayClampX) + bobStuff.x;

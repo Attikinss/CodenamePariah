@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace WhiteWillow.Nodes
 {
-    [Category("Tasks")]
+    [Category("Task")]
     public sealed class MoveTo : Task
     {
         public override string IconPath { get; } = "Icons/MoveTo";

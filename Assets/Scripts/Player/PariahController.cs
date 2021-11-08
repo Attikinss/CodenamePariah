@@ -6,6 +6,7 @@ using WhiteWillow;
 using UnityEngine.SceneManagement;
 //using FMOD;
 using FMODUnity;
+using System;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PariahController : InputController
@@ -54,7 +55,7 @@ public class PariahController : InputController
 
     [ReadOnly]
     [SerializeField]
-    private Vector2 m_AccumulatedLook;
+    private float m_AccumulatedMove;
 
     [ReadOnly]
     [SerializeField]
@@ -62,7 +63,14 @@ public class PariahController : InputController
 
     [ReadOnly]
     [SerializeField]
+    private float m_CameraFOV;
+
+    [ReadOnly]
+    [SerializeField]
     private bool m_Possessing = false;
+
+    private bool m_Transitioning = false;
+    public bool Transitioning { get => m_Transitioning; }
 
     [ReadOnly]
     [SerializeField]
@@ -111,6 +119,7 @@ public class PariahController : InputController
         var euler = transform.rotation.eulerAngles;
         m_Rotation = new Vector2(euler.y, euler.x);
         m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
+        m_CameraFOV = m_Camera.fieldOfView;
 
         StartCoroutine(DrainHealth(m_HealthDrainDelay));
     }
@@ -190,7 +199,7 @@ public class PariahController : InputController
 
     private void LateUpdate()
     {
-        m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
+        //m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
         if (!PauseMenu.m_GameIsPaused)
         {
             if (m_Active)
@@ -231,6 +240,9 @@ public class PariahController : InputController
         GetComponent<Collider>().enabled = true;
         m_Active = true;
         m_Camera.enabled = true;
+
+        m_Transitioning = true;
+        StartCoroutine(DelayExecuteFunc(1.5f, () => { m_Transitioning = false; }));
 
         ToggleArms(true);
     }
@@ -330,6 +342,7 @@ public class PariahController : InputController
             }
         }
     }
+
     private void Move()
     {
         Vector3 moveDirection = (transform.right * m_MovementInput.x + transform.up * m_MovementInput.y + transform.forward * m_MovementInput.z)
@@ -345,25 +358,26 @@ public class PariahController : InputController
 
     private void Look()
     {
-        CameraTilt();
-
         m_Rotation += m_LookInput * m_PlayerPrefs.GameplayConfig.MouseSensitivity * Time.deltaTime;
         m_Rotation.y = Mathf.Clamp(m_Rotation.y, -90.0f, 90.0f);
         transform.rotation = Quaternion.Euler(-m_Rotation.y, m_Rotation.x, 0.0f);
+
+        CameraTilt();
     }
 
     private void CameraTilt()
     {
-        float half = m_LookInput.x / 2;
-        float mouseDelta = half + m_LookInput.x / 2.0f;
-
-        m_Camera.transform.localRotation = Quaternion.Euler(transform.localRotation.x, transform.localRotation.y, m_CameraTilt);
+        m_CameraTilt = Mathf.Clamp(m_LookInput.x * m_PlayerPrefs.GameplayConfig.MouseSensitivity / 2.0f, -30.0f, 30.0f);
+        var targetRot = Quaternion.Euler(transform.localRotation.x, transform.localRotation.y, -m_CameraTilt);
+        m_Camera.transform.localRotation = Quaternion.Lerp(m_Camera.transform.localRotation, targetRot, 2.5f * Time.deltaTime);
     }
 
     private IEnumerator Possess(Agent target)
     {
         // Early out
         if (target == null) yield return null;
+
+        m_Transitioning = true;
 
         float currentTime = 0.0f;
         Vector3 targetEyes = target.transform.position + Vector3.up * 0.75f;
@@ -388,7 +402,7 @@ public class PariahController : InputController
 
         target.Possess();
         m_CurrentPossessed = target;
-        m_Possessing = false;
+        StartCoroutine(DelayExecuteFunc(1.5f, () => { m_Transitioning = false; }));
     }
 
     //TODO: Move all functions below into a more suitable location
@@ -454,8 +468,6 @@ public class PariahController : InputController
                     GeneralSounds.s_Instance.PlayLowHealthPariahSound(transform);
                 }
 
-
-
                 if (m_Health <= 0)
                 {
                     m_Health = 0;
@@ -489,8 +501,6 @@ public class PariahController : InputController
 
             yield return null;
         }
-
-        
     }
 
     /// <summary>
@@ -650,5 +660,12 @@ public class PariahController : InputController
         { 
             StartCoroutine(Dash(m_Camera.transform.position + m_Camera.transform.forward * m_DashDistance, Vector3.zero, m_DashDuration, true));
         }
+    }
+
+    private IEnumerator DelayExecuteFunc(float delaySeconds, Action func)
+    {
+        yield return new WaitForSeconds(delaySeconds);
+
+        func();
     }
 }

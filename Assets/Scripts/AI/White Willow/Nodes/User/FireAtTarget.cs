@@ -2,7 +2,7 @@ using UnityEngine;
 using WhiteWillow;
 using WhiteWillow.Nodes;
 
-[Category("Tasks", "User")]
+[Category("Task", "User")]
 public class FireAtTarget : Task
 {
     public NodeMember<GameObject> Target;
@@ -55,9 +55,8 @@ public class FireAtTarget : Task
                 if (Owner.Agent.TargetWithinViewRange(Target.Value, EngagementDistance.Value))
                 {
                     // Shoot volley
-                    if (m_CurrentShootTime >= m_ShootDelay)
+                    if (m_CurrentShootTime >= m_ShootDelay && Owner.Agent.ShootAt(Target.Value, m_CurrentShots == 0))
                     {
-                        Owner.Agent.ShootAt(Target.Value, m_CurrentShots == 0);
                         m_CurrentShots++;
                         m_CurrentShootTime = 0.0f;
                     }

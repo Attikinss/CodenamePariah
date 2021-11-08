@@ -2,7 +2,7 @@
 
 namespace WhiteWillow.Nodes
 {
-    [Category("Tasks")]
+    [Category("Task")]
     public class BreakPoint : Task
     {
         protected override void OnEnter()

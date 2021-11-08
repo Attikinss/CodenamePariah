@@ -26,7 +26,7 @@ namespace WhiteWillow
         private NavMeshAgent m_NavAgent;
         public Query CurrentQuery;
         public EnvironmentQuerySystem.EQSNode CurrentNode { get; set; }
-        public Weapon m_Weapon;
+        public Weapon Weapon { get => m_HostController.m_Inventory.m_CurrentWeapon; }
         [Tooltip("The mesh that we apply the possession shader to.")]
         public GameObject m_Mesh;
         public Material m_PossessionMaterial;
@@ -42,6 +42,7 @@ namespace WhiteWillow
         public HostController m_HostController;
 
         public bool Possessed { get; private set; } = false;
+        public bool PossessedPreviously { get; private set; }
         public bool EngagingTarget { get; private set; } = true;
         public Transform Orientation { get => m_HostController.m_Orientation; }
         public Vector3 Destination { get; private set; }
@@ -165,6 +166,7 @@ namespace WhiteWillow
         public void Possess()
         {
             Possessed = true;
+            PossessedPreviously = true;
             m_NavAgent.ResetPath();
             m_NavAgent.enabled = false;
 
@@ -227,9 +229,13 @@ namespace WhiteWillow
             transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.deltaTime * m_NavAgent.angularSpeed * 0.1f);
         }
 
-        public void ShootAt(GameObject target, bool forceMiss = false)
+        public bool ShootAt(GameObject target, bool forceMiss = false)
         {
+            if (PariahController.Transitioning)
+                return false;
+
             m_HostController.GetCurrentWeapon()?.FireAt(target);
+            return true;
         }
 
         public void PlayAnimation(string name, bool forcePlay = false, float transitionSpeed = 0.25f)

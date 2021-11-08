@@ -745,68 +745,71 @@ public class Weapon : MonoBehaviour
 
             // Get how many rounds are needed to top up
             //int ammoRequired = m_MagazineSize - m_RoundsInMagazine;
-            int ammoRequired;
-            int reservePool;
-            if (special)
+            if (m_Inventory.Owner.PossessedPreviously)
             {
-                ammoRequired = m_MagazineSize - m_RoundsInMagazineLeft;
-                //reservePool = m_ReserveAmmoLeft;
-                reservePool = m_ReserveAmmo;
-            }
-            else
-            { 
-                ammoRequired = m_MagazineSize - m_RoundsInMagazine;
-                reservePool = m_ReserveAmmo;
-            }
-
-        
-
-            // Check the size of the reserve pool
-            if (reservePool <= ammoRequired)
-            {
-                // Update UI to only show one mag
-                //m_UIManager.ModuloEqualsZero(m_RoundsInMagazine + m_ReserveAmmo);
-
-                // Move all remaining ammo into magazine
+                int ammoRequired;
+                int reservePool;
                 if (special)
                 {
-                    //m_RoundsInMagazineLeft += m_ReserveAmmoLeft;
-                    m_RoundsInMagazineLeft += m_ReserveAmmo;
-                    //m_ReserveAmmoLeft = 0;
-                    m_ReserveAmmo = 0;
-                }
-                else 
-                {
-                    m_RoundsInMagazine += m_ReserveAmmo;
-                    m_ReserveAmmo = 0;
-                }
-            }
-            else
-            {
-                if ((m_RoundsInMagazine + m_ReserveAmmo) % m_MagazineSize == 0)
-                {
-                    // Total ammo equals an amount that when divided by magazine size, has no remainder therefore get rid of a mag UI element
-                    //m_UIManager.ModuloEqualsZero(m_MagazineSize);
+                    ammoRequired = m_MagazineSize - m_RoundsInMagazineLeft;
+                    //reservePool = m_ReserveAmmoLeft;
+                    reservePool = m_ReserveAmmo;
                 }
                 else
                 {
-                    // Removes bullet sprites total from 1 - 2 mags depending on the ammo missing from current magazine and how much ammo was already missing in the last magazine
-                    //m_UIManager.RemoveAmmoFromLastAddToCurrent(m_MagazineSize);
+                    ammoRequired = m_MagazineSize - m_RoundsInMagazine;
+                    reservePool = m_ReserveAmmo;
                 }
 
-                // Move required amount from reserve to magazine
-                if (special)
+                // Check the size of the reserve pool
+                if (reservePool <= ammoRequired)
                 {
-                    m_RoundsInMagazineLeft += ammoRequired;
-                    //m_ReserveAmmoLeft -= ammoRequired;
-                    m_ReserveAmmo -= ammoRequired;
+                    // Update UI to only show one mag
+                    //m_UIManager.ModuloEqualsZero(m_RoundsInMagazine + m_ReserveAmmo);
+
+                    // Move all remaining ammo into magazine
+                    if (special)
+                    {
+                        //m_RoundsInMagazineLeft += m_ReserveAmmoLeft;
+                        m_RoundsInMagazineLeft += m_ReserveAmmo;
+                        //m_ReserveAmmoLeft = 0;
+                        m_ReserveAmmo = 0;
+                    }
+                    else
+                    {
+                        m_RoundsInMagazine += m_ReserveAmmo;
+                        m_ReserveAmmo = 0;
+                    }
                 }
                 else
-                { 
-                    m_RoundsInMagazine += ammoRequired;
-                    m_ReserveAmmo -= ammoRequired;
+                {
+                    if ((m_RoundsInMagazine + m_ReserveAmmo) % m_MagazineSize == 0)
+                    {
+                        // Total ammo equals an amount that when divided by magazine size, has no remainder therefore get rid of a mag UI element
+                        //m_UIManager.ModuloEqualsZero(m_MagazineSize);
+                    }
+                    else
+                    {
+                        // Removes bullet sprites total from 1 - 2 mags depending on the ammo missing from current magazine and how much ammo was already missing in the last magazine
+                        //m_UIManager.RemoveAmmoFromLastAddToCurrent(m_MagazineSize);
+                    }
+
+                    // Move required amount from reserve to magazine
+                    if (special)
+                    {
+                        m_RoundsInMagazineLeft += ammoRequired;
+                        //m_ReserveAmmoLeft -= ammoRequired;
+                        m_ReserveAmmo -= ammoRequired;
+                    }
+                    else
+                    {
+                        m_RoundsInMagazine += ammoRequired;
+                        m_ReserveAmmo -= ammoRequired;
+                    }
                 }
             }
+            else
+                m_RoundsInMagazine = m_MagazineSize;
 
             SetFireTime(special); // Added so that if the player is holding down fire while reloading, they will begin firing at t=0. Without this the fire time is what is what when they
                            // originally started firing.

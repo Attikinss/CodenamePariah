@@ -259,9 +259,10 @@ public class HostController : InputController
         m_UIManager?.SetInventory(m_Inventory);
         m_UIManager?.UpdateAllUI(GetCurrentWeapon());
 
+        m_UIManager?.SetDeathIncarnateBar((float)GameManager.s_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
 
         // Hide mesh when entering.
-        if(m_Mesh)
+        if (m_Mesh)
             m_Mesh.SetActive(false);
 
         // Letting the game manager we're entering a unit.
@@ -321,8 +322,8 @@ public class HostController : InputController
 
         pariah.ClearCurrentPossessed();
 
-        m_UIManager?.SetDeathIncarnateBar((float)pariah.m_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
-        if (pariah.m_Power >= m_DeathIncarnateAbility.requiredKills)
+        m_UIManager?.SetDeathIncarnateBar((float)GameManager.s_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
+        if (GameManager.s_Power >= m_DeathIncarnateAbility.requiredKills)
             m_UIManager?.ToggleReadyPrompt(false);
 
         GameManager.s_CurrentHost = null;
@@ -642,12 +643,12 @@ public class HostController : InputController
         PariahController pariah = GameManager.s_Instance?.m_Pariah;
         if (!pariah) return;
 
-        if (value.performed && !m_DeathIncarnateAbility.deathIncarnateUsed && pariah.m_Power >= m_DeathIncarnateAbility.requiredKills)
+        if (value.performed && !m_DeathIncarnateAbility.deathIncarnateUsed && GameManager.s_Power >= m_DeathIncarnateAbility.requiredKills)
         {
             
             GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnIncarnate", false);
             m_DeathIncarnateAbility.chargeRoutine = StartCoroutine(Ability3Charge());
-            pariah.m_Power = 0; // Consume all power, reset back to 0.
+            GameManager.s_Power = 0; // Consume all power, reset back to 0.
             m_UIManager?.ToggleReadyPrompt(true);
             //m_UIManager.ToggleBar(true);
         }

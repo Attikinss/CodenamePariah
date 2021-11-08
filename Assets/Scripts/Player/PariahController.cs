@@ -78,8 +78,10 @@ public class PariahController : InputController
     public int m_LowHealthThreshold = 40;
     public int m_LowHealthVoiceLineThreshold = 20;
 
-    [ReadOnly]
-    public int m_Power = 0; // Power is used for the death incarnate ability. It is gained by destroying agents.
+    // m_Power has been moved to GameManager as a static variable so that it remains when the scene reloads.
+
+    //[ReadOnly]
+    //public int m_Power = 0; // Power is used for the death incarnate ability. It is gained by destroying agents.
 
     public FMODAudioEvent m_AudioLowHPEvent;
     private bool m_IsPlayingLowHP = false;       // Heartbeat.

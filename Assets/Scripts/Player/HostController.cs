@@ -259,9 +259,10 @@ public class HostController : InputController
         m_UIManager?.SetInventory(m_Inventory);
         m_UIManager?.UpdateAllUI(GetCurrentWeapon());
 
+        m_UIManager?.SetDeathIncarnateBar((float)GameManager.s_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
 
         // Hide mesh when entering.
-        if(m_Mesh)
+        if (m_Mesh)
             m_Mesh.SetActive(false);
 
         // Letting the game manager we're entering a unit.
@@ -321,8 +322,8 @@ public class HostController : InputController
 
         pariah.ClearCurrentPossessed();
 
-        m_UIManager?.SetDeathIncarnateBar((float)pariah.m_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
-        if (pariah.m_Power >= m_DeathIncarnateAbility.requiredKills)
+        m_UIManager?.SetDeathIncarnateBar((float)GameManager.s_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
+        if (GameManager.s_Power >= m_DeathIncarnateAbility.requiredKills)
             m_UIManager?.ToggleReadyPrompt(false);
 
         GameManager.s_CurrentHost = null;
@@ -408,7 +409,7 @@ public class HostController : InputController
     public override void OnPossess(InputAction.CallbackContext value)
     {
         //Debug.Log(value.performed);
-        if (value.performed && !PauseMenu.m_GameIsPaused && !CustomConsole.m_Activated)
+        if (value.performed && !PauseMenu.m_GameIsPaused && !CustomConsole.m_Activated && m_DeathIncarnateAbility.chargeRoutine == null)
         {
             if (TryGetComponent(out WhiteWillow.Agent agent))
                 agent.Release();
@@ -642,13 +643,19 @@ public class HostController : InputController
         PariahController pariah = GameManager.s_Instance?.m_Pariah;
         if (!pariah) return;
 
-        if (value.performed && !m_DeathIncarnateAbility.deathIncarnateUsed && pariah.m_Power >= m_DeathIncarnateAbility.requiredKills)
+        if (value.performed && !m_DeathIncarnateAbility.deathIncarnateUsed && GameManager.s_Power >= m_DeathIncarnateAbility.requiredKills)
         {
             
-            GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnIncarnate", false);
+            GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnIncarnate", false, false, true); // Forcing animation transition.
             m_DeathIncarnateAbility.chargeRoutine = StartCoroutine(Ability3Charge());
-            pariah.m_Power = 0; // Consume all power, reset back to 0.
+            GameManager.s_Power = 0; // Consume all power, reset back to 0.
             m_UIManager?.ToggleReadyPrompt(true);
+
+
+            // If we are draining, cancel it. This is to prevent draining the host while the animation has changed.
+            GameManager.s_Instance?.m_Pariah.PlayArmAnim("IsDraining", true, false); // Will set animation to true/false depending
+            m_DrainAbility.isDraining = false;
+
             //m_UIManager.ToggleBar(true);
         }
         else if (value.canceled)

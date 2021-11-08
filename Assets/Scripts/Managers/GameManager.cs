@@ -67,6 +67,11 @@ public class GameManager : MonoBehaviour
     public static Vector3 s_CheckPointPos;
     public static GameObject s_CheckpointAgentPrefab; // It's important that this is the prefab because we will be instantiating it.
 
+    // Storing the power for the incarnate ability here as a static variable so that it remains
+    // after the scene reloads.
+    public static int s_Power = 0;
+
+
     private void Awake()
 	{
         m_Monobehaviour = this;

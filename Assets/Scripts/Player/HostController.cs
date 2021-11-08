@@ -646,7 +646,7 @@ public class HostController : InputController
         if (value.performed && !m_DeathIncarnateAbility.deathIncarnateUsed && GameManager.s_Power >= m_DeathIncarnateAbility.requiredKills)
         {
             
-            GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnIncarnate", false);
+            GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnIncarnate", false, false, true); // Forcing animation transition.
             m_DeathIncarnateAbility.chargeRoutine = StartCoroutine(Ability3Charge());
             GameManager.s_Power = 0; // Consume all power, reset back to 0.
             m_UIManager?.ToggleReadyPrompt(true);

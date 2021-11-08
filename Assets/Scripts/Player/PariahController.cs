@@ -688,7 +688,10 @@ public class PariahController : InputController
                         if(m_HideArmsCoroutine == null)
                             m_HideArmsCoroutine = StartCoroutine(HideArms(6f));
                 //}
-                m_ArmsAnimator.SetTrigger(triggerName);
+                if (forceTransition)
+                    m_ArmsAnimator.CrossFade("Incarnate", 0.1f, -1);
+                else
+                    m_ArmsAnimator.SetTrigger(triggerName);
             }
             else if (triggerName == "OnPariahReload")
             {

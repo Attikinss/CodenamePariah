@@ -80,6 +80,9 @@ public class HostController : InputController
     [Header("On Drain Camerashake")]
     public Vector3 m_OnDrainCameraShakeRotation;
 
+    [Header("Special Dash Grounded")]
+    public float m_DashGroundCheckDistance = 1.5f;
+
     //private Coroutine m_HideArmsCoroutine; // A reference to the coroutine responsible for hiding Pariah's arms. // Moved to PariahController.cs.
 	private void Awake()
 	{
@@ -134,8 +137,10 @@ public class HostController : InputController
                     GetCurrentWeapon().m_WeaponActions.m_IsFiring = true;
             }
 
-            m_MovInfo.m_IsGrounded = CheckGrounded();
-            if (m_MovInfo.m_IsGrounded && m_HasDashedInAir)
+            m_MovInfo.m_IsGrounded = CheckGrounded(m_GroundCheckDistance);
+            m_MovInfo.m_IsDashGrounded = CheckGrounded(m_DashGroundCheckDistance);
+
+            if (m_MovInfo.m_IsDashGrounded && m_HasDashedInAir)
             {
                 m_HasDashedInAir = false; // Reset dashing in the air.
                 // Clearing counted dash uses in the air.
@@ -837,11 +842,11 @@ public class HostController : InputController
         return m_MovInfo.m_MoveDirection;
     }
 
-    private bool CheckGrounded()
+    private bool CheckGrounded(float checkDistance)
     {
         RaycastHit hit;
         Ray ray = new Ray(transform.position, Vector3.down);
-        if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckDistance))
+        if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, checkDistance))
         {
             //Debug.Log(hit.transform.name);
             //m_GroundNormal = hit.normal;          Moved to its own function.

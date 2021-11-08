@@ -203,6 +203,7 @@ MonoBehaviour:
     hasRoutineStarted: 0
     IsActive: 0
   m_Mesh: {fileID: 7094497905823826397}
+  m_OnHitCameraShakeRotation: {x: 0.15, y: 0.15, z: 0.15}
 --- !u!114 &4480668722508770147
 MonoBehaviour:
   m_ObjectHideFlags: 0

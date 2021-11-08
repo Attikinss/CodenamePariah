@@ -77,6 +77,9 @@ public class HostController : InputController
     [Header("On Damage Camerashake")]
     public Vector3 m_OnHitCameraShakeRotation;
 
+    [Header("On Drain Camerashake")]
+    public Vector3 m_OnDrainCameraShakeRotation;
+
     //private Coroutine m_HideArmsCoroutine; // A reference to the coroutine responsible for hiding Pariah's arms. // Moved to PariahController.cs.
 	private void Awake()
 	{
@@ -176,6 +179,9 @@ public class HostController : InputController
 
                         m_DrainAbility.drainCounter = 0.0f;
                         m_Inventory.TakeDamage(m_DrainAbility.damage, true);
+
+                        // Adding extra camera shake while draining.
+                        ExtraCameraShake(m_OnDrainCameraShakeRotation);
                     }
                 }
             }
@@ -1274,5 +1280,23 @@ public class HostController : InputController
         }
 
         
+    }
+
+    /// <summary>
+    /// Use to add extra camera shake to to the camera. Pass in the Vector3 that contains
+    /// the camera shake rotations.
+    /// </summary>
+    /// <param name="cameraShakeRotation">Rotation for the camera shake.</param>
+    public void ExtraCameraShake(Vector3 cameraShakeRotation)
+    {
+        CameraRecoil cameraRecoil = m_AccumulatedRecoil;
+
+        Vector3 camVisRecoil = Vector3.zero;
+        camVisRecoil.x = -cameraShakeRotation.x;
+        camVisRecoil.y = Random.Range(-cameraShakeRotation.y, -cameraShakeRotation.y);
+        camVisRecoil.z = Random.Range(-cameraShakeRotation.z, -cameraShakeRotation.z);
+
+        //cameraRecoil.accumulatedVisualRecoil += new Vector3(-weaponConfig.RecoilRotationAiming.x, Random.Range(-weaponConfig.RecoilRotationAiming.y, weaponConfig.RecoilRotationAiming.y), Random.Range(-weaponConfig.RecoilRotationAiming.z, weaponConfig.RecoilRotationAiming.z));
+        cameraRecoil.accumulatedVisualRecoil += camVisRecoil;
     }
 }

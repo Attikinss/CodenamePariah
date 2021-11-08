@@ -1369,6 +1369,10 @@ public class Weapon : MonoBehaviour
         Gizmos.DrawLine(targetPos, m_Inventory.Owner.m_FiringPosition.position);
     }
 
+    /// <summary>
+    /// Don't know why I put this in the Weapon script. There's a better function, AddExtraCameraShake(Vector3) in
+    /// the HostController.
+    /// </summary>
     public void AddDamageCameraShake()
     {
         WeaponConfiguration weaponConfig = GetCurrentWeaponConfig();

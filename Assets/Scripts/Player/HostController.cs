@@ -409,7 +409,7 @@ public class HostController : InputController
     public override void OnPossess(InputAction.CallbackContext value)
     {
         //Debug.Log(value.performed);
-        if (value.performed && !PauseMenu.m_GameIsPaused && !CustomConsole.m_Activated)
+        if (value.performed && !PauseMenu.m_GameIsPaused && !CustomConsole.m_Activated && m_DeathIncarnateAbility.chargeRoutine == null)
         {
             if (TryGetComponent(out WhiteWillow.Agent agent))
                 agent.Release();

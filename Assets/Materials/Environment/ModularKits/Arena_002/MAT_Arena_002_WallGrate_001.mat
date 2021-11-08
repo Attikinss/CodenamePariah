@@ -132,7 +132,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _AORemapMax: 1
-    - _AORemapMin: 0
+    - _AORemapMin: 0.98652923
     - _ATDistance: 1
     - _AddPrecomputedVelocity: 0
     - _AlbedoAffectEmissive: 0
@@ -188,7 +188,7 @@ Material:
     - _MaterialID: 1
     - _Metallic: 0
     - _MetallicRemapMax: 1
-    - _MetallicRemapMin: 0
+    - _MetallicRemapMin: 1
     - _NormalMapSpace: 1
     - _NormalScale: 1
     - _OpaqueCullMode: 2

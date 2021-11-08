@@ -650,6 +650,12 @@ public class HostController : InputController
             m_DeathIncarnateAbility.chargeRoutine = StartCoroutine(Ability3Charge());
             GameManager.s_Power = 0; // Consume all power, reset back to 0.
             m_UIManager?.ToggleReadyPrompt(true);
+
+
+            // If we are draining, cancel it. This is to prevent draining the host while the animation has changed.
+            GameManager.s_Instance?.m_Pariah.PlayArmAnim("IsDraining", true, false); // Will set animation to true/false depending
+            m_DrainAbility.isDraining = false;
+
             //m_UIManager.ToggleBar(true);
         }
         else if (value.canceled)

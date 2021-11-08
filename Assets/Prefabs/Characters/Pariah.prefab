@@ -79,7 +79,6 @@ MonoBehaviour:
   m_CurrentPossessed: {fileID: 0}
   m_LowHealthThreshold: 40
   m_LowHealthVoiceLineThreshold: 20
-  m_Power: 0
   m_AudioLowHPEvent: {fileID: 145288806}
   m_LookedAtAgent: {fileID: 0}
   m_Arms: {fileID: 8271582055200175944}
@@ -87,6 +86,7 @@ MonoBehaviour:
   m_IncarnateParticle: {fileID: 7875177642226688791}
   m_SmokyArmParticle1: {fileID: 9169708310665934512}
   m_SmokyArmParticle2: {fileID: 1988681329}
+  m_GracePeriod: 0.5
 --- !u!114 &5488115989255903691
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -245,6 +245,7 @@ public class PauseMenu : MonoBehaviour
         //m_GameOver = false;
         m_GameIsPaused = true;
         Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true; // Making sure the cursor is visible.
         for (int i = 0; i < m_GameOverMenuUI.Length; i++)
         {
             m_GameOverMenuUI[i].SetActive(true);

@@ -113,6 +113,13 @@ public class PariahController : InputController
     // Hiding arms coroutine.
     private Coroutine m_HideArmsCoroutine;
 
+    [Tooltip("Time required before drain begins when outside of a host.")]
+    public float m_GracePeriod = 0;
+    private bool m_GracePeriodActive = false;
+
+    Coroutine m_GracePeriodCoroutine;
+    private bool m_IsGracePeriodCoroutineActive = false;
+
     private void Awake() => m_Rigidbody = GetComponent<Rigidbody>();
 
     private void Start()
@@ -237,12 +244,46 @@ public class PariahController : InputController
 
     public override void Enable()
     {
+
+        // Stop all hide arms coroutines after we leave a host.
+        // We shouldn't need to do this since in the HostController Disable()
+        // we stop the hide arms coroutine but I guess it's good to do it
+        // just incase.
+        if (m_HideArmsCoroutine != null)
+        {
+            StopCoroutine(m_HideArmsCoroutine);
+        }
+
+        // Making Pariah's arms transition to idle when we leave a host. This is to stop animations
+        // that the host used from continuing to play.
+        m_ArmsAnimator.CrossFade("Idle", 0.1f, -1, 0);
+
+
         GetComponent<PlayerInput>().enabled = true;
         GetComponent<Collider>().enabled = true;
         m_Active = true;
         m_Camera.enabled = true;
 
         ToggleArms(true);
+
+        // The grace period is the time we have after leaving an agent before our life essence starts depleting.
+        if (!m_IsGracePeriodCoroutineActive)
+        {
+            m_GracePeriodCoroutine = StartCoroutine(StartGracePeriod(m_GracePeriod)); // Start the grace period.
+        }
+        else
+        {
+            // If there is an already active grace period, we should turn it off and start a new one.
+            // But first we must stop the old one and set all corresponding values to match.
+            StopCoroutine(m_GracePeriodCoroutine);
+            m_IsGracePeriodCoroutineActive = false;
+            m_GracePeriodCoroutine = null;
+
+            m_GracePeriodCoroutine = StartCoroutine(StartGracePeriod(m_GracePeriod));
+        }
+
+        
+
     }
 
     public override void Disable()
@@ -252,6 +293,23 @@ public class PariahController : InputController
         m_Camera.enabled = false;
 
         ToggleArms(false);
+
+        // If we are entering a host, we should disable any grace period coroutine we still
+        // have if it's active.
+        if (m_GracePeriodCoroutine != null && m_IsGracePeriodCoroutineActive) // If the coroutine is not null.
+        {
+            // Stopping the coroutine and setting all corresponding values.
+            StopCoroutine(m_GracePeriodCoroutine);
+            m_IsGracePeriodCoroutineActive = false;
+            m_GracePeriodCoroutine = null;
+        }
+
+        // We make sure that when we enter the host, we straight away set our arms animation to Idle.
+        // This should already happen with Unity's animator transition tool but I find that if you try
+        // host drain a millisecond after controlling an agent, you see that the arms are still transitioning
+        // from the possession dash animation. This is a fix to that bug so you can straight away start
+        // using animations as the host.
+        m_ArmsAnimator.Play("Idle");
     }
 
     public override void OnLook(InputAction.CallbackContext value)
@@ -445,7 +503,7 @@ public class PariahController : InputController
     {
         while (true)
         {
-            if (!m_Dead && m_Active && !m_Possessing && !PauseMenu.m_GameIsPaused)
+            if (!m_Dead && m_Active && !m_Possessing && !PauseMenu.m_GameIsPaused && !m_GracePeriodActive)
             {
                 // This added on check is to only lose health after we have entered a unit for the first time.
                 if (GameManager.s_Instance && GameManager.s_Instance.m_Achievements.hasEnteredUnit)
@@ -626,7 +684,7 @@ public class PariahController : InputController
                     if (hideArms) // This would never be used for draining animation since it can go as long as the player holds the button down.
                     {
                         if(m_HideArmsCoroutine == null)
-                            m_HideArmsCoroutine = StartCoroutine(HideArms(1)); // Instead we will manually hide the arms when they stop pressing the button.
+                            m_HideArmsCoroutine = StartCoroutine(HideArms(0.6f)); // Instead we will manually hide the arms when they stop pressing the button.
                     }
                 //}
                 m_ArmsAnimator.SetBool(triggerName, boolState);
@@ -732,6 +790,27 @@ public class PariahController : InputController
         { 
             StartCoroutine(Dash(m_Camera.transform.position + m_Camera.transform.forward * m_DashDistance, Vector3.zero, m_DashDuration, true));
         }
+    }
+
+    /// <summary>
+    /// This function is to be used when Pariah just leaves an agent. You start the grace period with this function
+    /// and the passed in value "t" will determine how long until the bool m_GracePeriodActive is set to false.
+    /// </summary>
+    /// <param name="t">Time required before grace period is set to false.</param>
+    /// <returns></returns>
+    IEnumerator StartGracePeriod(float t)
+    {
+        m_IsGracePeriodCoroutineActive = true;
+        m_GracePeriodActive = true;
+        float elapsed = 0;
+        while (elapsed <= t)
+        {
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        m_GracePeriodActive = false;
+        m_GracePeriodCoroutine = null;
+        m_IsGracePeriodCoroutineActive = false;
     }
 
     

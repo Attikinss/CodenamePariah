@@ -72,6 +72,11 @@ public class HostController : InputController
     [Tooltip("Mesh of soldier or scientist to hide when entering unit.")]
     public GameObject m_Mesh;
 
+
+    // This was put together really quickly.
+    [Header("On Damage Camerashake")]
+    public Vector3 m_OnHitCameraShakeRotation;
+
     //private Coroutine m_HideArmsCoroutine; // A reference to the coroutine responsible for hiding Pariah's arms. // Moved to PariahController.cs.
 	private void Awake()
 	{
@@ -205,6 +210,8 @@ public class HostController : InputController
             Slide();
             Move(m_MovInfo.MovementInput);
         }
+        else
+            Rigidbody.useGravity = false; // Turn off gravity so we don't float down.
 	}
 
     
@@ -213,6 +220,18 @@ public class HostController : InputController
     /// </summary>
     public override void Enable()
     {
+        // Currently there is a bug where the possession shader remains after the player has jumped into an agent.
+        // To try and prevent this I'm going to check if Pariah still has an agent selected and if they do, deselect
+        // them here.
+        PariahController pariah = GameManager.s_Instance?.m_Pariah;
+        if (pariah && pariah?.m_LookedAtAgent)
+        {
+            pariah.m_LookedAtAgent.DeselectAgent();
+            pariah.m_LookedAtAgent = null;
+        }
+
+
+
         GameManager.s_CurrentHost = this;
 
         Rigidbody.isKinematic = false;
@@ -262,6 +281,18 @@ public class HostController : InputController
         m_Active = false;
         m_Camera.enabled = false;
         //HideHUD();
+
+
+        // ============= Resetting dash movement ============= //
+        // This is required as it fixes an issue that occurs
+        // when the user dashes with an agent, but then leaves
+        // before the dash has started/completed. The bug causes
+        // the player to go flying really fast in the direction
+        // of the dash the next time they enter that host.
+        m_MovInfo.m_DashDir = Vector3.zero;
+        // =================================================== //
+
+
 
         CustomDebugUI.s_Instance?.ClearController();
 
@@ -376,7 +407,7 @@ public class HostController : InputController
 
     public override void OnPossess(InputAction.CallbackContext value)
     {
-        Debug.Log(value.performed);
+        //Debug.Log(value.performed);
         if (value.performed && !PauseMenu.m_GameIsPaused && !CustomConsole.m_Activated)
         {
             if (TryGetComponent(out WhiteWillow.Agent agent))
@@ -710,7 +741,7 @@ public class HostController : InputController
             { 
                 Vector3 velocityTowardsSurface = Vector3.Dot(Rigidbody.velocity, m_MovInfo.m_GroundNormal) * m_MovInfo.m_GroundNormal;
                 direction -= velocityTowardsSurface;
-                Debug.Log("Pushing towards surface.");
+                //Debug.Log("Pushing towards surface.");
             }
         }
 

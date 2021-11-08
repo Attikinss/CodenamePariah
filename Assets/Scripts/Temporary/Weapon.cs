@@ -847,7 +847,22 @@ public class Weapon : MonoBehaviour
         {
             Vector3 gunOriginalPos = GetCurrentWeaponOriginalPos();
 
-            Vector3 bobStuff = WeaponBob();
+            Vector3 bobStuff = Vector3.zero;
+            if (m_Inventory.Owner.m_HostController.m_MovInfo.m_IsGrounded)
+                bobStuff = WeaponBob();
+            // Attempting to have minecraft hand like movement when falling. For now though, I'll leave it as I don't have much time left.
+
+            //else
+            //{
+            //    if (m_Inventory.Owner.m_HostController.Rigidbody.velocity.y < 0) // This means we are falling.
+            //    { 
+            //        //bobStuff = -m_Inventory.Owner.m_HostController.Rigidbody.velocity;
+            //        //bobStuff.x = Mathf.Clamp(bobStuff.x, -0.05f, 0.05f);
+            //        bobStuff.y = Mathf.Clamp(-m_Inventory.Owner.m_HostController.Rigidbody.velocity.y, -0.05f, 0.05f);
+            //        Debug.Log("We are falling.");
+            //    }
+            //}
+            
 
             Vector3 finalPosition = Vector3.zero;
             finalPosition.x = Mathf.Clamp(-x * 0.02f, -weaponConfig.m_WeaponSwayClampX, weaponConfig.m_WeaponSwayClampX) + bobStuff.x;
@@ -1352,5 +1367,21 @@ public class Weapon : MonoBehaviour
         Gizmos.DrawSphere(targetPos, 0.25f);
         Gizmos.DrawSphere(m_Inventory.Owner.m_FiringPosition.position, 0.25f);
         Gizmos.DrawLine(targetPos, m_Inventory.Owner.m_FiringPosition.position);
+    }
+
+    public void AddDamageCameraShake()
+    {
+        WeaponConfiguration weaponConfig = GetCurrentWeaponConfig();
+        Vector3 cameraRot = m_Inventory.Owner.m_HostController.m_OnHitCameraShakeRotation;
+
+        CameraRecoil cameraRecoil = m_Controller.m_AccumulatedRecoil;
+
+        Vector3 camVisRecoil = Vector3.zero;
+        camVisRecoil.x = -cameraRot.x;
+        camVisRecoil.y = Random.Range(-cameraRot.y, -cameraRot.y);
+        camVisRecoil.z = Random.Range(-cameraRot.z, -cameraRot.z);
+
+        //cameraRecoil.accumulatedVisualRecoil += new Vector3(-weaponConfig.RecoilRotationAiming.x, Random.Range(-weaponConfig.RecoilRotationAiming.y, weaponConfig.RecoilRotationAiming.y), Random.Range(-weaponConfig.RecoilRotationAiming.z, weaponConfig.RecoilRotationAiming.z));
+        cameraRecoil.accumulatedVisualRecoil += camVisRecoil;
     }
 }

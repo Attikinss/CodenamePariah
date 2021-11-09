@@ -44,7 +44,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7447243248668323415}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: -60}
 --- !u!108 &6483060042516627560
 Light:
@@ -261,7 +261,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7447243248668323415}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 60}
 --- !u!108 &6483060042670794616
 Light:
@@ -475,6 +475,7 @@ Transform:
   m_LocalPosition: {x: 33.033, y: -5.912, z: 85.444}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 7155367674804636512}
   - {fileID: 6805728210120582702}
   - {fileID: 6805728210224248656}
   - {fileID: 6805728209846769312}
@@ -493,7 +494,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8085374196427176401, guid: 7e38fb25127b90e489fb0ef3302e82a7, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8085374196427176401, guid: 7e38fb25127b90e489fb0ef3302e82a7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -567,7 +568,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: c7fbcfedb43310a4dbf4adc37385182c, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c7fbcfedb43310a4dbf4adc37385182c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -609,6 +610,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: c7fbcfedb43310a4dbf4adc37385182c, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 08f4d7c043646f440b399d5f137dd0c4, type: 2}
     - target: {fileID: 919132149155446097, guid: c7fbcfedb43310a4dbf4adc37385182c, type: 3}
       propertyPath: m_Name
       value: Arena_001_SpecimenTank_Small (27)
@@ -633,7 +638,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 8ffc3ec1f2db32b4e84719c59549ad8b, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8ffc3ec1f2db32b4e84719c59549ad8b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -708,7 +713,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 438d863f2b5fa9742b6f66e16cc71c17, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 438d863f2b5fa9742b6f66e16cc71c17, type: 3}
       propertyPath: m_LocalPosition.x
@@ -768,4 +773,70 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 438d863f2b5fa9742b6f66e16cc71c17, type: 3}
   m_PrefabInstance: {fileID: 6483060043921551691}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &7261563468010384523
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 7447243248668323415}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: fbcd16862065bee43bb4913273b9a662, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fbcd16862065bee43bb4913273b9a662, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.005
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fbcd16862065bee43bb4913273b9a662, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.077
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fbcd16862065bee43bb4913273b9a662, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.107
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fbcd16862065bee43bb4913273b9a662, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fbcd16862065bee43bb4913273b9a662, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fbcd16862065bee43bb4913273b9a662, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fbcd16862065bee43bb4913273b9a662, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fbcd16862065bee43bb4913273b9a662, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fbcd16862065bee43bb4913273b9a662, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fbcd16862065bee43bb4913273b9a662, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: fbcd16862065bee43bb4913273b9a662, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e06b96ce3958849418f719612bcb14c0, type: 2}
+    - target: {fileID: 919132149155446097, guid: fbcd16862065bee43bb4913273b9a662, type: 3}
+      propertyPath: m_Name
+      value: Arena_001_SpecimenTank_Small_Glass
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: fbcd16862065bee43bb4913273b9a662, type: 3}
+--- !u!4 &7155367674804636512 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fbcd16862065bee43bb4913273b9a662, type: 3}
+  m_PrefabInstance: {fileID: 7261563468010384523}
   m_PrefabAsset: {fileID: 0}

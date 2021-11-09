@@ -22,7 +22,6 @@ public class CustomAudioSource : MonoBehaviour
             m_AudioEvent.Trigger();
         else
             Debug.LogWarning("A CustomAudioSource component is missing a reference to it's FMODAudioEvent.");
-               
     }
 
     // Update is called once per frame

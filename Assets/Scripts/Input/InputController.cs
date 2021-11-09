@@ -223,5 +223,10 @@ public abstract class InputController : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// This is so I can access the m_PlayerPref's from the Weapon script.
+    /// </summary>
+    /// <returns>The player preferences object.</returns>
+    public PlayerPreferences GetPrefs() { return m_PlayerPrefs; }
     
 }

@@ -73,6 +73,11 @@ public class GameManager : MonoBehaviour
 
     public CustomAudioSource m_Music;
 
+    // Reference to the current camera, whether is be an agent's camera of Pariah's camera.
+    // This is used so we can adjust the FOV from the static OptionsMenu class.
+    [HideInInspector]
+    public Camera m_CurrentCamera;
+
     private void Awake()
 	{
         m_Monobehaviour = this;

@@ -25,6 +25,7 @@ public class WeaponConfiguration : MonoBehaviour
     public float m_GunAimHeight = 0.5f;
     public float m_GunAimSpeed = 0.25f;
     public float m_GunAimSwayStrength = 1;
+    public float m_FOVZoom = 10;
 
     [Header("Hipfire")]
     public float m_GunSwayStrength = 1;

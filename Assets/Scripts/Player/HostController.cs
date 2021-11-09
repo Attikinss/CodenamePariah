@@ -124,7 +124,7 @@ public class HostController : InputController
     }
 	private void Update()
     {
-        m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
+        //m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
         if (!PauseMenu.m_GameIsPaused && !CustomConsole.m_Activated)
         {
             if (!m_Active) return;
@@ -231,6 +231,11 @@ public class HostController : InputController
     /// </summary>
     public override void Enable()
     {
+
+        // Setting FOV.
+        m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;
+        GameManager.s_Instance.m_CurrentCamera = m_Camera;
+
         // Currently there is a bug where the possession shader remains after the player has jumped into an agent.
         // To try and prevent this I'm going to check if Pariah still has an agent selected and if they do, deselect
         // them here.
@@ -288,6 +293,9 @@ public class HostController : InputController
     /// </summary>
     public override void Disable()
     {
+        GameManager.s_Instance.m_CurrentCamera = null;
+
+
         Rigidbody.isKinematic = true;
         GetComponent<PlayerInput>().enabled = false;
         m_Active = false;

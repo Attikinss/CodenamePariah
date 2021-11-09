@@ -875,12 +875,14 @@ public class Weapon : MonoBehaviour
             gunTransform.localRotation = Quaternion.Slerp(gunTransform.localRotation, zAxis * xAxis, weaponConfig.m_WeaponSwayRotateSpeed);
 
             float currentFOV = m_Camera.fieldOfView;
-            float desiredFOV = 60;
+            float desiredFOV = 0;
+            if (GameManager.s_Instance && GameManager.s_Instance.m_CurrentCamera) // Making sure GameManager has a ref to the current camera so we can use it.
+                desiredFOV = (Mathf.Atan(Mathf.Tan((float)(m_Inventory.Owner.m_HostController.GetPrefs().VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / GameManager.s_Instance.m_CurrentCamera.aspect) * 2) * Mathf.Rad2Deg;
 
             if (!m_DualWield)
             { 
                 float requiredChange = desiredFOV - currentFOV;
-                m_Camera.fieldOfView += requiredChange * 0.45f;
+                m_Camera.fieldOfView += requiredChange * /*0.45f*/ 24 * Time.deltaTime;
             }
 
         }
@@ -889,12 +891,14 @@ public class Weapon : MonoBehaviour
             // Had to put the sway code with the Aim() function since it was easier to just add the neccessary values to the calculations over there rather than try and split up the equations.
 
             float currentFOV = m_Camera.fieldOfView;
-            float desiredFOV = 40;
+            float desiredFOV = 0;
+            if(GameManager.s_Instance && GameManager.s_Instance.m_CurrentCamera) // Making sure GameManager has a ref to the current camera so we can use it.
+                desiredFOV = (Mathf.Atan(Mathf.Tan((float)(m_Inventory.Owner.m_HostController.GetPrefs().VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / GameManager.s_Instance.m_CurrentCamera.aspect) * 2) * Mathf.Rad2Deg - (Mathf.Atan(Mathf.Tan((float)(m_Config.m_FOVZoom * Mathf.Deg2Rad) * 0.5f) / GameManager.s_Instance.m_CurrentCamera.aspect) * 2) * Mathf.Rad2Deg;
 
             float requiredChange = desiredFOV - currentFOV;
 
             if(!GetReloadState() && !m_DualWield) // Wont zoom in if we are reloading or if we are using a dual wielded weapon.
-                m_Camera.fieldOfView += requiredChange * 0.45f * Time.deltaTime;
+                m_Camera.fieldOfView += requiredChange * /*0.45f*/ 24 * Time.deltaTime;
 
 
 

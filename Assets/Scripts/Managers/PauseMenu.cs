@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using FMODUnity;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -147,6 +148,10 @@ public class PauseMenu : MonoBehaviour
         // For some reason, when the scene reloads, the mouse is visible again even though we are locking it.
         // To prevent this I've forcefully set the Cursor.visible value.
         Cursor.visible = false;
+
+        // Resuming all sounds.
+        FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
+        allBussess.setPaused(false);
     }
 
     /// <summary>Starts the game.</summary>
@@ -238,6 +243,11 @@ public class PauseMenu : MonoBehaviour
         // For some reason, when the scene reloads, the mouse is visible again even though we are locking it.
         // To prevent this I've forcefully set the Cursor.visible value.
         Cursor.visible = true;
+
+
+        // Pauses all game sounds.
+        FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
+        allBussess.setPaused(true);
     }
 
     public void GameOverMenu()

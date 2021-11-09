@@ -260,6 +260,9 @@ public class PauseMenu : MonoBehaviour
         {
             m_GameOverMenuUI[i].SetActive(true);
         }
+
+        // Stopping all sounds.
+        FMODAudioEvent.StopAllSounds();
     }
 
     /// <summary>Opens the quit menu.</summary>

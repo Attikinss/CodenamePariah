@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using FMODUnity;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -147,6 +148,16 @@ public class PauseMenu : MonoBehaviour
         // For some reason, when the scene reloads, the mouse is visible again even though we are locking it.
         // To prevent this I've forcefully set the Cursor.visible value.
         Cursor.visible = false;
+
+        // Resuming all sounds.
+        FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
+        allBussess.setPaused(false);
+
+        // Resuming all players animations.
+        if(GameManager.s_CurrentHost)
+            GameManager.s_CurrentHost.ToggleAllAnimations(true);
+        if(GameManager.s_Instance && GameManager.s_Instance.m_Pariah)
+            GameManager.s_Instance.m_Pariah.ToggleAllAnimations(true);
     }
 
     /// <summary>Starts the game.</summary>
@@ -238,6 +249,17 @@ public class PauseMenu : MonoBehaviour
         // For some reason, when the scene reloads, the mouse is visible again even though we are locking it.
         // To prevent this I've forcefully set the Cursor.visible value.
         Cursor.visible = true;
+
+
+        // Pauses all game sounds.
+        FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
+        allBussess.setPaused(true);
+
+        // Freezing player animations on pause.
+        if(GameManager.s_CurrentHost)
+            GameManager.s_CurrentHost.ToggleAllAnimations(false);
+        if(GameManager.s_Instance && GameManager.s_Instance.m_Pariah)
+            GameManager.s_Instance.m_Pariah.ToggleAllAnimations(false);
     }
 
     public void GameOverMenu()
@@ -245,10 +267,14 @@ public class PauseMenu : MonoBehaviour
         //m_GameOver = false;
         m_GameIsPaused = true;
         Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true; // Making sure the cursor is visible.
         for (int i = 0; i < m_GameOverMenuUI.Length; i++)
         {
             m_GameOverMenuUI[i].SetActive(true);
         }
+
+        // Stopping all sounds.
+        FMODAudioEvent.StopAllSounds();
     }
 
     /// <summary>Opens the quit menu.</summary>
@@ -325,15 +351,16 @@ public class PauseMenu : MonoBehaviour
         m_IsQuitting = false;
     }
 
-    public void ReloadSceneCheckpoint()
-    {
-        m_GameOver = false;
-        m_GameIsPaused = false;
-        StartCoroutine(ReloadLevel());
+    public void ReloadSceneCheckpoint()                                         // ============================ NOTE ============================ //
+    {                                                                           // I have found ReloadSceneCheckpoint() and ReloadScene() are getting
+        m_GameOver = false;                                                     // called the other way around. Reloading the level calls
+        m_GameIsPaused = false;                                                 // ReloadSceneCheckpoint() and reloading to the last checkpoint
+        StartCoroutine(ReloadLevel());                                          // calls ReloadScene().
     }
 
     public void ReloadScene()
     {
+        GameManager.s_Power = 0;
         GameManager.ResetCheckpoint();
         m_GameOver = false;
         m_GameIsPaused = false;
@@ -354,12 +381,15 @@ public class PauseMenu : MonoBehaviour
         {
             Debug.Log($"Progress: {asyncOperation.progress * 100}%");
             if (asyncOperation.progress >= 0.9f)
+            { 
                 asyncOperation.allowSceneActivation = true;
+                // Unpausing all music.
+                FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
+                allBussess.setPaused(false);
+            }
 
             yield return null;
         }
-
-
     }
 
     ///// <summary>Upon settings being changed, sets settings to be applied to true. NEED TO FIX.</summary>

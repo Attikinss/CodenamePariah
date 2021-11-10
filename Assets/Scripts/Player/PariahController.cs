@@ -209,7 +209,7 @@ public class PariahController : InputController
 
     private void LateUpdate()
     {
-        m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
+        //m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
         if (!PauseMenu.m_GameIsPaused)
         {
             if (m_Active)
@@ -247,6 +247,10 @@ public class PariahController : InputController
     public override void Enable()
     {
 
+        GameManager.s_Instance.m_CurrentCamera = m_Camera;
+        m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;
+
+
         // Stop all hide arms coroutines after we leave a host.
         // We shouldn't need to do this since in the HostController Disable()
         // we stop the hide arms coroutine but I guess it's good to do it
@@ -283,13 +287,12 @@ public class PariahController : InputController
 
             m_GracePeriodCoroutine = StartCoroutine(StartGracePeriod(m_GracePeriod));
         }
-
-        
-
     }
 
     public override void Disable()
     {
+        GameManager.s_Instance.m_CurrentCamera = null;
+
         GetComponent<PlayerInput>().enabled = false;
         m_Active = false;
         m_Camera.enabled = false;
@@ -818,5 +821,22 @@ public class PariahController : InputController
         m_IsGracePeriodCoroutineActive = false;
     }
 
+    /// <summary>
+    /// Toggles Pariah's arms animations.
+    /// </summary>
+    /// <param name="toggle">If true, Pariah's animator speed will be set to 1, if false it will be set to 0.</param>
+    public void ToggleAllAnimations(bool toggle)
+    {
+        int toggleNum;
+        if (toggle)
+            toggleNum = 1;
+        else
+            toggleNum = 0;
+
+        m_ArmsAnimator.speed = toggleNum;
+
+        m_SmokyArmParticle1.pause = !toggle;
+        m_SmokyArmParticle2.pause = !toggle;
+    }
     
 }

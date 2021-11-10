@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using FMODUnity;
 public class FMODAudioEvent : MonoBehaviour
 {
     public enum EventType
@@ -79,5 +79,14 @@ public class FMODAudioEvent : MonoBehaviour
 
 
         return false;
+    }
+
+    /// <summary>
+    /// Use to stop all the sounds in the game.
+    /// </summary>
+    public static void StopAllSounds()
+    {
+        FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
+        allBussess.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
     }
 }

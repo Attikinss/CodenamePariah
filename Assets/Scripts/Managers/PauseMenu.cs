@@ -194,7 +194,7 @@ public class PauseMenu : MonoBehaviour
         //    asyncOperation.allowSceneActivation = true;
         //}
 
-        SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1, LoadSceneMode.Single);
 
         //SceneManager.LoadScene("Level_001", LoadSceneMode.Single);
         //SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
@@ -215,6 +215,16 @@ public class PauseMenu : MonoBehaviour
         yield return new WaitForSeconds(m_TransitionTime);
 
         SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
+        //SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
+    }
+
+    IEnumerator LoadCredits()
+    {
+        m_Transition.SetTrigger("Start");
+
+        yield return new WaitForSeconds(m_TransitionTime);
+
+        SceneManager.LoadScene("Credits", LoadSceneMode.Single);
         //SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
     }
 
@@ -391,6 +401,11 @@ public class PauseMenu : MonoBehaviour
     //    m_InsideDialogueBox = false;
     //    Debug.Log("Discarded changes.");
     //}
+
+    public void Credits()
+    {
+        StartCoroutine(LoadCredits());
+    }
 
     /// <summary>Exits the game to desktop.</summary>
     public void Exit()

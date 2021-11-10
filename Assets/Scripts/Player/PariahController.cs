@@ -348,7 +348,7 @@ public class PariahController : InputController
         if (/*!m_Dashing && */!m_Possessing) // Commented out m_Dashing here to allow Pariah to move while dashing.
             m_Rigidbody.velocity = m_MoveVelocity;
 
-        Telemetry.TracePosition("Pariah-Movement", transform.position, 0.05f, 150);
+        //Telemetry.TracePosition("Pariah-Movement", transform.position, 0.05f, 150);
     }
 
     private void Look()

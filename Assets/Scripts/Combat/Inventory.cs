@@ -81,7 +81,7 @@ public class Inventory : MonoBehaviour
                 {
                     if (fromAbility)
                     { 
-                        Telemetry.TracePosition("Agent-PlayerKill", transform.position);
+                        //Telemetry.TracePosition("Agent-PlayerKill", transform.position);
                         pariah.m_Power++; // Incrementing this so the power bar charges up.
                         // Set power bar ui to match.
                         m_UIManager?.SetDeathIncarnateBar((float)pariah.m_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
@@ -89,13 +89,13 @@ public class Inventory : MonoBehaviour
                             m_UIManager?.ToggleReadyPrompt(false);
                     }
                     else
-                        Telemetry.TracePosition("Agent-Death", transform.position);
+                        //Telemetry.TracePosition("Agent-Death", transform.position);
 
                     UIManager.s_Instance.HideCanvas();
                 }
                 else
                 { 
-                    Telemetry.TracePosition("Agent-PlayerKill", transform.position);
+                    //Telemetry.TracePosition("Agent-PlayerKill", transform.position);
 
                     if (GameManager.s_CurrentHost)
                     {

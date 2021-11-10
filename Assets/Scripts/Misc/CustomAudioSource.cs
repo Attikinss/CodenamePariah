@@ -19,7 +19,7 @@ public class CustomAudioSource : MonoBehaviour
 	/// </summary>
     public void Start()
     {
-        m_AudioEvent.GetEventInstance().setVolume(m_VolumeScale);
+        //m_AudioEvent.GetEventInstance().setVolume(m_VolumeScale);
 
         if (m_AudioEvent)
             m_AudioEvent.Trigger();

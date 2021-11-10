@@ -10,6 +10,7 @@ public class CustomAudioSource : MonoBehaviour
 {
     public FMODAudioEvent m_AudioEvent;
     public bool m_PlayOnStart = true;
+    public float m_VolumeScale = 1;
 
     // Start is called before the first frame update
     /// <summary>
@@ -18,6 +19,8 @@ public class CustomAudioSource : MonoBehaviour
 	/// </summary>
     public void Start()
     {
+        m_AudioEvent.GetEventInstance().setVolume(m_VolumeScale);
+
         if (m_AudioEvent)
             m_AudioEvent.Trigger();
         else

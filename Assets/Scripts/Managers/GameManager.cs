@@ -391,6 +391,9 @@ public class GameManager : MonoBehaviour
     {
         FMOD.Studio.EventInstance instance = m_Music.m_AudioEvent.GetEventInstance();
         instance.setParameterByName(paramName, value);
+
+        // Have to reduce volume because the transitioned piece currently is just way to loud.
+        instance.setVolume(0.3f);
     }
 
     /// <summary>
@@ -399,6 +402,7 @@ public class GameManager : MonoBehaviour
     public void RestartMusic()
     {
         FMOD.Studio.EventInstance instance = m_Music.m_AudioEvent.GetEventInstance();
+        
 
         float value = 0;
         instance.getParameterByName("NumberOfEnemies", out value);
@@ -407,6 +411,7 @@ public class GameManager : MonoBehaviour
             TransitionMusic("NumberOfEnemies", 0);
             m_Music.m_AudioEvent.StopSound(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             m_Music.m_AudioEvent.Trigger();
+            instance.setVolume(m_Music.m_VolumeScale);
         }
     }
 

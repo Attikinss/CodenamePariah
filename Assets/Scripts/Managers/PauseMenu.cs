@@ -152,6 +152,12 @@ public class PauseMenu : MonoBehaviour
         // Resuming all sounds.
         FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
         allBussess.setPaused(false);
+
+        // Resuming all players animations.
+        if(GameManager.s_CurrentHost)
+            GameManager.s_CurrentHost.ToggleAllAnimations(true);
+        if(GameManager.s_Instance && GameManager.s_Instance.m_Pariah)
+            GameManager.s_Instance.m_Pariah.ToggleAllAnimations(true);
     }
 
     /// <summary>Starts the game.</summary>
@@ -248,6 +254,12 @@ public class PauseMenu : MonoBehaviour
         // Pauses all game sounds.
         FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
         allBussess.setPaused(true);
+
+        // Freezing player animations on pause.
+        if(GameManager.s_CurrentHost)
+            GameManager.s_CurrentHost.ToggleAllAnimations(false);
+        if(GameManager.s_Instance && GameManager.s_Instance.m_Pariah)
+            GameManager.s_Instance.m_Pariah.ToggleAllAnimations(false);
     }
 
     public void GameOverMenu()

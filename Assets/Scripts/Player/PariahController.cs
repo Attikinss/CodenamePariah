@@ -824,5 +824,22 @@ public class PariahController : InputController
         m_IsGracePeriodCoroutineActive = false;
     }
 
+    /// <summary>
+    /// Toggles Pariah's arms animations.
+    /// </summary>
+    /// <param name="toggle">If true, Pariah's animator speed will be set to 1, if false it will be set to 0.</param>
+    public void ToggleAllAnimations(bool toggle)
+    {
+        int toggleNum;
+        if (toggle)
+            toggleNum = 1;
+        else
+            toggleNum = 0;
+
+        m_ArmsAnimator.speed = toggleNum;
+
+        m_SmokyArmParticle1.pause = !toggle;
+        m_SmokyArmParticle2.pause = !toggle;
+    }
     
 }

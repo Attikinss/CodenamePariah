@@ -1312,4 +1312,28 @@ public class HostController : InputController
         //cameraRecoil.accumulatedVisualRecoil += new Vector3(-weaponConfig.RecoilRotationAiming.x, Random.Range(-weaponConfig.RecoilRotationAiming.y, weaponConfig.RecoilRotationAiming.y), Random.Range(-weaponConfig.RecoilRotationAiming.z, weaponConfig.RecoilRotationAiming.z));
         cameraRecoil.accumulatedVisualRecoil += camVisRecoil;
     }
+
+    /// <summary>
+    /// Freeze all animations for the HostController. Things like the FPS weapons and arms.
+    /// </summary>
+    /// <param name="toggle">If true, all animators speeds will be set to 1, if false all speeds will be set to 0.</param>
+    public void ToggleAllAnimations(bool toggle)
+    {
+        Weapon currentWep = GetCurrentWeapon();
+
+        int toggleNum;
+        if (toggle)
+            toggleNum = 1;
+        else
+            toggleNum = 0;
+
+        for (int i = 0; i < currentWep.m_Animators.m_ArmsAnimators.Count; i++)
+        {
+            currentWep.m_Animators.m_ArmsAnimators[i].speed = toggleNum;
+        }
+        for (int i = 0; i < currentWep.m_Animators.m_GunAnimators.Count; i++)
+        {
+            currentWep.m_Animators.m_GunAnimators[i].speed = toggleNum;
+        }
+    }
 }

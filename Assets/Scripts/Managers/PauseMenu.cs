@@ -380,12 +380,15 @@ public class PauseMenu : MonoBehaviour
         {
             Debug.Log($"Progress: {asyncOperation.progress * 100}%");
             if (asyncOperation.progress >= 0.9f)
+            { 
                 asyncOperation.allowSceneActivation = true;
+                // Unpausing all music.
+                FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
+                allBussess.setPaused(false);
+            }
 
             yield return null;
         }
-
-
     }
 
     ///// <summary>Upon settings being changed, sets settings to be applied to true. NEED TO FIX.</summary>

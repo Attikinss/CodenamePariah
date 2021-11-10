@@ -47,7 +47,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AudioEvent: {fileID: 1437337091}
   m_PlayOnStart: 1
-  m_Spatial: 1
 --- !u!114 &1437337091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,7 +125,8 @@ MonoBehaviour:
   m_ProjectorObject: {fileID: 6972698995603717086, guid: a88e013833894524088ff46286a6642c, type: 3}
   m_BloodSprayPrefab: {fileID: 4413599561210883134, guid: ac08a10c355326c45b0fc5c0f759dcd2, type: 3}
   m_MaxBloodSprays: 10
-  m_Music: {fileID: 0}
+  m_Music: {fileID: 1437337092}
+  m_CurrentCamera: {fileID: 0}
 --- !u!114 &1786184680927193028
 MonoBehaviour:
   m_ObjectHideFlags: 0

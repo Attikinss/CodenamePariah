@@ -223,8 +223,8 @@ namespace WhiteWillow
 
         public void Kill()
         {
-            //if (!Alive)
-            //    return;
+            if (!Alive)
+                return;
 
             m_HostController.GetCurrentWeapon().StopSounds(); // Stops sounds like reload from playing after the agent has been destroyed.
 

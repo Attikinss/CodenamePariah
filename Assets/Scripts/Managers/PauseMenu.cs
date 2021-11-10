@@ -351,15 +351,16 @@ public class PauseMenu : MonoBehaviour
         m_IsQuitting = false;
     }
 
-    public void ReloadSceneCheckpoint()
-    {
-        m_GameOver = false;
-        m_GameIsPaused = false;
-        StartCoroutine(ReloadLevel());
+    public void ReloadSceneCheckpoint()                                         // ============================ NOTE ============================ //
+    {                                                                           // I have found ReloadSceneCheckpoint() and ReloadScene() are getting
+        m_GameOver = false;                                                     // called the other way around. Reloading the level calls
+        m_GameIsPaused = false;                                                 // ReloadSceneCheckpoint() and reloading to the last checkpoint
+        StartCoroutine(ReloadLevel());                                          // calls ReloadScene().
     }
 
     public void ReloadScene()
     {
+        GameManager.s_Power = 0;
         GameManager.ResetCheckpoint();
         m_GameOver = false;
         m_GameIsPaused = false;

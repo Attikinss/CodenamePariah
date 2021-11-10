@@ -14,7 +14,7 @@ public class MusicTrigger : MonoBehaviour
 				GameManager.s_Instance.RestartMusic();
 			}
 		}
-		else if (other.gameObject == GameManager.s_Instance.m_Pariah)
+		if (other.gameObject == GameManager.s_Instance.m_Pariah.gameObject)
 		{
 			// Do the thing.
 			GameManager.s_Instance.RestartMusic();

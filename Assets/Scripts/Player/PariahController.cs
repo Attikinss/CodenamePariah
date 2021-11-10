@@ -288,7 +288,8 @@ public class PariahController : InputController
             m_GracePeriodCoroutine = StartCoroutine(StartGracePeriod(m_GracePeriod));
         }
 
-        
+        // Setting the power bar when we first load back into the game. Needed to update the UI if loading back at a checkpoint.
+        UIManager.s_Instance?.SetDeathIncarnateBar((float)GameManager.s_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
 
     }
 

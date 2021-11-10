@@ -141,9 +141,6 @@ public class PariahController : InputController
 
         if (m_CurrentPossessed == null) // Only do this if we are not in a unit.
         {
-            // Adjusting FOV to the settings. Otherwise it only gets applied when we call the Enable for Pariah.
-            m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;
-
             RaycastHit lookHit;
             if (Physics.Raycast(m_Camera.transform.position, m_Camera.transform.forward, out lookHit, m_DashDistance))
             {

@@ -253,6 +253,7 @@ public class Inventory : MonoBehaviour
         }
         HideWeapon(wep); // Hiding the weapon we will remove. We wont destroy it, we'll just hide it.
         m_Weapons.RemoveAt(wep);
+        m_CurrentWeapon.m_WeaponIcon?.gameObject.SetActive(false);
         m_CurrentWeapon.m_WeaponAmmoText?.gameObject.SetActive(false);
         m_CurrentWeapon = null; // Resetting the current weapon reference.
 

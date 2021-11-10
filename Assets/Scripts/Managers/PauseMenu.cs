@@ -58,6 +58,9 @@ public class PauseMenu : MonoBehaviour
 
     AsyncOperation asyncOperation;
 
+    [SerializeField]
+    private OptionsMenuButton m_GameplayButton;
+
     private void Start()
     {
         Debug.Log("Loaded");
@@ -277,6 +280,7 @@ public class PauseMenu : MonoBehaviour
         }
 
         m_OptionsOpen = false;
+        m_GameplayButton.HighlightButton();
         //m_SettingsToBeApplied = false;
     }
     

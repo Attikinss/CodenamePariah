@@ -738,7 +738,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 0
-  EventID: event:/Pariah SFX/Wilhelm Scream
+  EventID: event:/Environment/Enemy Screams
 --- !u!1 &4480668722962146637
 GameObject:
   m_ObjectHideFlags: 0

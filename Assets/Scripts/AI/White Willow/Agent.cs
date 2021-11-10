@@ -55,7 +55,21 @@ namespace WhiteWillow
         private MeshRenderer m_CurrentMatNoRenderer; // Because the soldiers don't have an animation yet, we have the temporary case of needing to
                                                      // use a normal MeshRenderer instead.
 
-		private void Awake()
+        // We have to move the firing position into the agent script instead of the Weapon script because
+        // when it's in the weapon script it has to be attached to the weapon itself. The firing position in the
+        // scene hirearchy is not a child of the weapon so in order to have an easier time with prefabs,
+        // I've decided to move the firing position here.
+        [Tooltip("Defines the position at which bullets spawn during firing.")]
+        public Transform m_FiringPosition;
+
+        // Another thing we have to duplicate for agents specifically is the muzzle flash. For the player
+        // it is positioned on the FPS gun however we need to position it on the agents rig to make it 
+        // look right for the AI. The solution I have come up with is to just have another muzzle flash for the
+        // agents.
+        [Tooltip("Muzzle flash for the AI.")]
+        public VisualEffect m_AIMuzzleFlash;
+
+        private void Awake()
 		{
             m_RuntimeTree = InputTree?.Clone(gameObject.name);
             m_RuntimeTree?.SetAgent(this);
@@ -419,6 +433,39 @@ namespace WhiteWillow
             Vector3 left = Quaternion.LookRotation(direction) * Quaternion.Euler(0, 180 - 35.0f, 0) * new Vector3(0, 0, 1);
             Gizmos.DrawRay(origin + direction * length, right * 0.25f);
             Gizmos.DrawRay(origin + direction * length, left * 0.25f);
+        }
+
+        /// <summary>
+        /// This function is used when we instantiate a new agent when the player spawns
+        /// at a checkpoint. The new UI system requires references to UI elements which
+        /// are normally set by hand, however, since we are instantiating the new agent,
+        /// we must set those references via script.
+        /// </summary>
+        public void AttachUIReferences()
+        {
+            Weapon weapon = m_HostController.GetCurrentWeapon();
+
+            if (m_HostController.m_type == EnemyTypes.SCIENTIST)
+            {
+                // We are dealing with a scientist.
+                weapon.m_CharIcon = UIManager.s_Instance?.m_ScientistCharIcon;
+                weapon.m_CharName = UIManager.s_Instance?.m_ScientistCharName;
+                weapon.m_WeaponIcon = UIManager.s_Instance?.m_PistolWeaponIcon;
+                weapon.m_WeaponAmmoText = UIManager.s_Instance?.m_PistolWeaponAmmoText;
+            }
+            else if (m_HostController.m_type == EnemyTypes.SOLDIER)
+            {
+                // We are dealing with a soldier.
+                weapon.m_CharIcon = UIManager.s_Instance?.m_SoldierCharIcon;
+                weapon.m_CharName = UIManager.s_Instance?.m_SoldierCharName;
+                weapon.m_WeaponIcon = UIManager.s_Instance?.m_RifleWeaponIcon;
+                weapon.m_WeaponAmmoText = UIManager.s_Instance?.m_RifleWeaponAmmoText;
+            }
+            else
+            {
+                // lol this can't happen but I guess I should put an else here.
+                Debug.LogError("AttachUIReferences() could not find type of agent!");
+            }
         }
     }
 }

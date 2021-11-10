@@ -22,7 +22,8 @@ public class BoxTriggerToggle : MonoBehaviour
     public bool m_ShouldSaveData = true;
 
     [Tooltip("This ID should be unique to this instance.")]
-    public int m_ID = 0;
+    [UniqueIdentifier]
+    public string m_ID;
 
     [SerializeField]
     [Tooltip("The entities that can activate this script.")]
@@ -84,11 +85,11 @@ public class BoxTriggerToggle : MonoBehaviour
             }
         }
     }
-    
-    /// <summary>
-    /// Changes the state of a gameobject depending on ToggleType.
-    /// </summary>
-    private void Trigger()
+
+	/// <summary>
+	/// Changes the state of a gameobject depending on ToggleType.
+	/// </summary>
+	private void Trigger()
     {
         switch (m_ToggleType)
         {

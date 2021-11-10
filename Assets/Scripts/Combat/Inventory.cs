@@ -82,10 +82,11 @@ public class Inventory : MonoBehaviour
                     if (fromAbility)
                     { 
                         Telemetry.TracePosition("Agent-PlayerKill", transform.position);
-                        pariah.m_Power++; // Incrementing this so the power bar charges up.
+                        //pariah.m_Power++; // Incrementing this so the power bar charges up.
+                        GameManager.s_Power++;
                         // Set power bar ui to match.
-                        m_UIManager?.SetDeathIncarnateBar((float)pariah.m_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
-                        if (pariah.m_Power >= m_Controller.m_DeathIncarnateAbility.requiredKills)
+                        m_UIManager?.SetDeathIncarnateBar((float)GameManager.s_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
+                        if (GameManager.s_Power >= m_Controller.m_DeathIncarnateAbility.requiredKills)
                             m_UIManager?.ToggleReadyPrompt(false);
                     }
                     else
@@ -100,10 +101,10 @@ public class Inventory : MonoBehaviour
                     if (GameManager.s_CurrentHost)
                     {
                         
-                        pariah.m_Power++; // Incrementing this so the power bar charges up.
+                        GameManager.s_Power++; // Incrementing this so the power bar charges up.
                         // Set power bar ui to match.
-                        m_UIManager?.SetDeathIncarnateBar((float)pariah.m_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
-                        if (pariah.m_Power >= m_Controller.m_DeathIncarnateAbility.requiredKills)
+                        m_UIManager?.SetDeathIncarnateBar((float)GameManager.s_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
+                        if (GameManager.s_Power >= m_Controller.m_DeathIncarnateAbility.requiredKills)
                             m_UIManager?.ToggleReadyPrompt(false);
                     }
                 }

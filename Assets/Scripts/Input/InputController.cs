@@ -90,7 +90,7 @@ public abstract class InputController : MonoBehaviour
             }
         }
     }
-    protected IEnumerator Dash(Vector3 destination, Vector3 offset, float duration, bool delayed = false) // Extra bool is so I can call the animation for the host
+    protected IEnumerator Dash(Vector3 destination, Vector3 offset, float duration, bool delayed = false, bool isHost = false) // Extra bool is so I can call the animation for the host
     {                                                                                                     // differently.
         if (m_CurrentDashCharges > 0)
         {
@@ -116,10 +116,44 @@ public abstract class InputController : MonoBehaviour
 
                 // TODO: Replace with rigidbody movement to address
                 // the halting that occurs at the end of a dash
-                transform.position = Vector3.Lerp(transform.position, destination + offset, Tween.EaseInOut5(currentTime / duration));
+                if (!isHost) // If we don't have a rigidbody just do it the old position moving way.
+                    transform.position = Vector3.Lerp(transform.position, destination + offset, Tween.EaseInOut5(currentTime / duration));
+
+                // I know this new section of code completely changes how dash works, but we needed to have the host's dash based on
+                // the rigidbody and this seemed like a quick and good way of doing things at the time.
+                else
+                {
+                    // Otherwise use the rigidbody to move.
+                    if (GameManager.s_CurrentHost)
+                    {
+                        // Here I'm using the destination as a value to store the forward vector of the player. This is so it takes the forward vector
+                        // at the initial time of the dash instead of constantly getting the actual transform which would allow the player to change
+                        // direction mid-dash.
+                        if (GameManager.s_CurrentHost.m_MovInfo.m_IsGrounded)
+                        {
+                            GameManager.s_CurrentHost.m_MovInfo.m_DashDir = destination * 50;
+                            
+                        }
+                        else
+                        {
+                            //GameManager.s_CurrentHost.m_MovInfo.m_CacheMovDirection = Vector3.zero; // clear old movement.
+                            GameManager.s_CurrentHost.m_MovInfo.m_CacheMovDirection = destination * 50; // clear old movement.
+                            GameManager.s_CurrentHost.m_MovInfo.m_DashDir = destination * 50;
+                        }
+
+                    }
+                }
 
                 currentTime += Time.deltaTime;
                 yield return null;
+            }
+
+            if (isHost)
+            {
+                if (GameManager.s_CurrentHost)
+                { 
+                    GameManager.s_CurrentHost.m_MovInfo.m_DashDir = Vector3.zero; // Resetting it back to zero after the dash is complete.
+                }
             }
         }
 

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3404897938050741049}
   - component: {fileID: 3404897938050741050}
   - component: {fileID: 3404897938050741051}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: DualWieldUpgrade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Action: 1
   m_ItemPrefab: {fileID: 4112493245389595605, guid: f73b75574fad6894ba36d47f828aab6d, type: 3}
+  m_RequiredTarget: 0
   m_RotationSpeed: 60
   m_BobHeight: 0.125
   m_BobSpeed: 2

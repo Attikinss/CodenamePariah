@@ -100,6 +100,32 @@ public class UIManager : MonoBehaviour
     [Tooltip("")]
     private GameObject m_ReadyPromptText;
 
+
+
+    // ============== References to new UI elements. ============== //
+    // This is to stop the error which occurs when the player
+    // spawns at a checkpoint. The error is that the newly spawned
+    // agent doesn't have the correct UI references set. I believe the
+    // cause of the error is that the references have been set on the
+    // prefab, but the references aren't children of the prefab so
+    // when we instantiate a new copy, those references are lost.
+    // The solution is to place references to those items here and
+    // by script, attach them to the neccessary agent.
+
+    public GameObject m_ScientistCharIcon;
+    public GameObject m_SoldierCharIcon;
+    public GameObject m_ScientistCharName;
+    public GameObject m_SoldierCharName;
+
+    public GameObject m_PistolWeaponIcon;
+    public GameObject m_RifleWeaponIcon;
+    public GameObject m_DualWeaponIcon;
+
+    public TextMeshProUGUI m_PistolWeaponAmmoText;
+    public TextMeshProUGUI m_RifleWeaponAmmoText;
+
+    // ============================================================ //
+
     public void Awake()
 	{
         if (!s_Instance)
@@ -465,6 +491,7 @@ public class UIManager : MonoBehaviour
         {
             //m_Inv.m_CurrentWeapon.m_WeaponIcon?.SetActive(false);
             m_AmmoDisplayLeft.enabled = true;
+            m_DualWieldRightWeaponAmmoText.gameObject.SetActive(true);
             m_DualWieldPlate.SetActive(true);
         }
     }

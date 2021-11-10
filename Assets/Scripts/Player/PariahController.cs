@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 //using FMOD;
 using FMODUnity;
 using System;
+using UnityEngine.VFX;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PariahController : InputController
@@ -85,8 +86,10 @@ public class PariahController : InputController
     public int m_LowHealthThreshold = 40;
     public int m_LowHealthVoiceLineThreshold = 20;
 
-    [ReadOnly]
-    public int m_Power = 0; // Power is used for the death incarnate ability. It is gained by destroying agents.
+    // m_Power has been moved to GameManager as a static variable so that it remains when the scene reloads.
+
+    //[ReadOnly]
+    //public int m_Power = 0; // Power is used for the death incarnate ability. It is gained by destroying agents.
 
     public FMODAudioEvent m_AudioLowHPEvent;
     private bool m_IsPlayingLowHP = false;       // Heartbeat.
@@ -109,7 +112,23 @@ public class PariahController : InputController
     // GeneralSounds script. 
     // =========================================================== //
 
+    // Particle effect for incarnate ability.
+    public VisualEffect m_IncarnateParticle;
 
+    // Smokey particle effects for Pariah's arms. We need a reference to them so we can disable them when we possess a unit.
+    public VisualEffect m_SmokyArmParticle1;
+    public VisualEffect m_SmokyArmParticle2;
+
+
+    // Hiding arms coroutine.
+    private Coroutine m_HideArmsCoroutine;
+
+    [Tooltip("Time required before drain begins when outside of a host.")]
+    public float m_GracePeriod = 0;
+    private bool m_GracePeriodActive = false;
+
+    Coroutine m_GracePeriodCoroutine;
+    private bool m_IsGracePeriodCoroutineActive = false;
 
     private void Awake() => m_Rigidbody = GetComponent<Rigidbody>();
 
@@ -212,7 +231,7 @@ public class PariahController : InputController
                 // camera movement we had to put this in here.
                 if(m_CurrentPossessed != null)
                 {
-                    transform.position = m_CurrentPossessed.transform.position + Vector3.up * 0.75f;
+                    transform.position = m_CurrentPossessed.transform.position + Vector3.up * 0.5f; // Used to be multiplied by 0.75.
 
                     // Changed those localEulerAngles to just normal eulerAngles because the parent prefab of m_Orientation may be rotated.
                     // This is the case now because the parent of m_Orientation is where the soldier/scientist mesh is.
@@ -235,6 +254,21 @@ public class PariahController : InputController
 
     public override void Enable()
     {
+
+        // Stop all hide arms coroutines after we leave a host.
+        // We shouldn't need to do this since in the HostController Disable()
+        // we stop the hide arms coroutine but I guess it's good to do it
+        // just incase.
+        if (m_HideArmsCoroutine != null)
+        {
+            StopCoroutine(m_HideArmsCoroutine);
+        }
+
+        // Making Pariah's arms transition to idle when we leave a host. This is to stop animations
+        // that the host used from continuing to play.
+        m_ArmsAnimator.CrossFade("Idle", 0.1f, -1, 0);
+
+
         GetComponent<PlayerInput>().enabled = true;
         GetComponent<Collider>().enabled = true;
         m_Active = true;
@@ -244,6 +278,25 @@ public class PariahController : InputController
         StartCoroutine(DelayExecuteFunc(1.5f, () => { m_Transitioning = false; }));
 
         ToggleArms(true);
+
+        // The grace period is the time we have after leaving an agent before our life essence starts depleting.
+        if (!m_IsGracePeriodCoroutineActive)
+        {
+            m_GracePeriodCoroutine = StartCoroutine(StartGracePeriod(m_GracePeriod)); // Start the grace period.
+        }
+        else
+        {
+            // If there is an already active grace period, we should turn it off and start a new one.
+            // But first we must stop the old one and set all corresponding values to match.
+            StopCoroutine(m_GracePeriodCoroutine);
+            m_IsGracePeriodCoroutineActive = false;
+            m_GracePeriodCoroutine = null;
+
+            m_GracePeriodCoroutine = StartCoroutine(StartGracePeriod(m_GracePeriod));
+        }
+
+        
+
     }
 
     public override void Disable()
@@ -253,6 +306,23 @@ public class PariahController : InputController
         m_Camera.enabled = false;
 
         ToggleArms(false);
+
+        // If we are entering a host, we should disable any grace period coroutine we still
+        // have if it's active.
+        if (m_GracePeriodCoroutine != null && m_IsGracePeriodCoroutineActive) // If the coroutine is not null.
+        {
+            // Stopping the coroutine and setting all corresponding values.
+            StopCoroutine(m_GracePeriodCoroutine);
+            m_IsGracePeriodCoroutineActive = false;
+            m_GracePeriodCoroutine = null;
+        }
+
+        // We make sure that when we enter the host, we straight away set our arms animation to Idle.
+        // This should already happen with Unity's animator transition tool but I find that if you try
+        // host drain a millisecond after controlling an agent, you see that the arms are still transitioning
+        // from the possession dash animation. This is a fix to that bug so you can straight away start
+        // using animations as the host.
+        m_ArmsAnimator.Play("Idle");
     }
 
     public override void OnLook(InputAction.CallbackContext value)
@@ -447,7 +517,8 @@ public class PariahController : InputController
             m_Dead = true;
             FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
             allBussess.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
-            StartCoroutine(ReloadLevel());
+            PauseMenu.m_GameOver = true;
+            //StartCoroutine(ReloadLevel());
         }
     }
 
@@ -455,7 +526,7 @@ public class PariahController : InputController
     {
         while (true)
         {
-            if (!m_Dead && m_Active && !m_Possessing && !PauseMenu.m_GameIsPaused)
+            if (!m_Dead && m_Active && !m_Possessing && !PauseMenu.m_GameIsPaused && !m_GracePeriodActive)
             {
                 // This added on check is to only lose health after we have entered a unit for the first time.
                 if (GameManager.s_Instance && GameManager.s_Instance.m_Achievements.hasEnteredUnit)
@@ -481,30 +552,12 @@ public class PariahController : InputController
                     m_Dead = true;
                     FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
                     allBussess.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
-                    StartCoroutine(ReloadLevel());
+                    PauseMenu.m_GameOver = true;
+                    //StartCoroutine(ReloadLevel());
                 }
 
                 yield return new WaitForSeconds(delay);
             }
-
-            yield return null;
-        }
-    }
-
-    // ****** Highly temporary ******
-    private IEnumerator ReloadLevel()
-    {
-        GameManager.s_IsNotFirstLoad = true; // Telling the game manager that it's not the games first load.
-        yield return null;
-
-        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
-        asyncOperation.allowSceneActivation = false;
-
-        while (!asyncOperation.isDone)
-        {
-            Debug.Log($"Progress: {asyncOperation.progress * 100}%");
-            if (asyncOperation.progress >= 0.9f)
-                asyncOperation.allowSceneActivation = true;
 
             yield return null;
         }
@@ -563,9 +616,17 @@ public class PariahController : InputController
         if (m_Arms)
         {
             if (mode)
+            {
                 m_Arms.enabled = true;
+                m_SmokyArmParticle1.enabled = true;
+                m_SmokyArmParticle2.enabled = true;
+            }
             else
+            { 
                 m_Arms.enabled = false;
+                m_SmokyArmParticle1.enabled = false;
+                m_SmokyArmParticle2.enabled = false;
+            }
         }
         else
             Debug.LogWarning("Pariah's arms have not been set!");
@@ -576,8 +637,9 @@ public class PariahController : InputController
     /// after animation is complete.
     /// </summary>
     /// <param name="triggerName">Name of animation trigger.</param>
-    /// <param name="m_HideArmsAfterwards">Bool to set if the arms hide or not after the animation is complete.</param>
-    public void PlayArmAnim(string triggerName, bool m_HideArmsAfterwards = true)
+    /// <param name="hideArms">Bool to set if the arms hide or not after the animation is complete.</param>
+    /// <param name="boolState">boolState is just used for the IsDraining bool.</param>
+    public void PlayArmAnim(string triggerName, bool hideArms = true, bool boolState = false, bool forceTransition = false)
     {
         if (m_ArmsAnimator == null)
         {
@@ -586,26 +648,88 @@ public class PariahController : InputController
         }
         else // Otherwise, we could find the arms animator.
         {
+            // We have requested to play an animation. If there are any coroutines
+            // in the process of hiding Pariah's arms, cancel them.
+            if (m_HideArmsCoroutine != null)
+            {
+                Debug.Log("Stopping hide arms coroutine.");
+                StopHideArmsCoroutine();
+            }
+
+            // ------------------------------------------------- ANIMATION PROCESSING ------------------------------------------------- //
+
             if (triggerName == "OnDash")
             {
-                if (m_Arms.enabled == false) // If the arms are hidden, unhide them for the duration of the dash animation. This is so the hosts can use this animation.
-                {
+                //if (m_Arms.enabled == false) // If the arms are hidden, unhide them for the duration of the dash animation. This is so the hosts can use this animation.
+                //{
                     m_Arms.enabled = true;
-                    StartCoroutine(HideArms(0.30f)); // 0.30f is around about the time it takes for the animation to complete.
-
+                if (hideArms)
+                { 
+                    if (m_HideArmsCoroutine == null)
+                        m_HideArmsCoroutine = StartCoroutine(HideArms(0.30f)); // 0.30f is around about the time it takes for the animation to complete.
                 }
-                m_ArmsAnimator.SetTrigger(triggerName);
+                //}
+
+                if (forceTransition)
+                    m_ArmsAnimator.Play("Dash");
+                else
+                    m_ArmsAnimator.SetTrigger(triggerName);
             }
             else if (triggerName == "OnIncarnate")
             {
-                if (m_Arms.enabled == false )
-                {
+                //if (m_Arms.enabled == false)
+                //{
                     m_Arms.enabled = true;
-                    if(m_HideArmsAfterwards)
-                        StartCoroutine(HideArms(3f));
-                }
+                    if (hideArms)
+                        if(m_HideArmsCoroutine == null)
+                            m_HideArmsCoroutine = StartCoroutine(HideArms(6f));
+                //}
+                if (forceTransition)
+                    m_ArmsAnimator.CrossFade("Incarnate", 0.1f, -1);
+                else
+                    m_ArmsAnimator.SetTrigger(triggerName);
+            }
+            else if (triggerName == "OnPariahReload")
+            {
+                //if (m_Arms.enabled == false)
+                //{
+                    m_Arms.enabled = true;
+                    if (hideArms)
+                        if(m_HideArmsCoroutine == null)
+                            m_HideArmsCoroutine = StartCoroutine(HideArms(1));
+                //}
                 m_ArmsAnimator.SetTrigger(triggerName);
             }
+            else if (triggerName == "IsDraining") // IsDraining isn't a trigger and should probably have it's own function                                        
+            {                                     // but it's getting late in development so I'm just gonna do it like this anyway.
+                //if (m_Arms.enabled == false)
+                //{
+                    m_Arms.enabled = true;
+                    if (hideArms) // This would never be used for draining animation since it can go as long as the player holds the button down.
+                    {
+                        if(m_HideArmsCoroutine == null)
+                            m_HideArmsCoroutine = StartCoroutine(HideArms(0.6f)); // Instead we will manually hide the arms when they stop pressing the button.
+                    }
+                //}
+                m_ArmsAnimator.SetBool(triggerName, boolState);
+               
+            }
+        }
+    }
+
+    /// <summary>
+    /// Used to forcefully stop an animation bool.
+    /// </summary>
+    /// <param name="name">Name of the bool you want to set to false.</param>
+    public void StopAnimation(string name)
+    {
+        if (m_ArmsAnimator)
+        {
+            m_ArmsAnimator.SetBool(name, false);
+        }
+        else
+        {
+            Debug.LogWarning("PariahController tried to stop an animation but m_ArmsAnimator has not been set!");
         }
     }
 
@@ -614,7 +738,7 @@ public class PariahController : InputController
     /// </summary>
     /// <param name="time">Elapsed time required before hiding Pariah's arms.</param>
     /// <returns></returns>
-    IEnumerator HideArms(float time)
+    public IEnumerator HideArms(float time)
     {
         float elapsedTime = 0;
 
@@ -625,7 +749,30 @@ public class PariahController : InputController
         }
 
         m_Arms.enabled = false; // Hide Pariah's arms after this counter has completed.
+        m_HideArmsCoroutine = null; // Setting it to null so it's ready for the next coroutine.
     }
+
+    /// <summary>
+    /// Hides/Unhides Pariah's arms instantly.
+    /// </summary>
+    public void ForceHideArms(bool toggle)
+    {
+        m_Arms.enabled = toggle;
+    }
+
+    /// <summary>
+    /// To be used if the user leaves their agent while a hide arms coroutine is still in process. This will
+    /// stop the coroutine and set it to null.
+    /// </summary>
+    public void StopHideArmsCoroutine()
+    {
+        if (m_HideArmsCoroutine != null)
+        { 
+            StopCoroutine(m_HideArmsCoroutine);
+            m_HideArmsCoroutine = null;
+        }
+    }
+
 
     /// <summary>
     /// DelayedDash() acts as a wrapper around the old dash code to cause a delay coroutine to start before the actual dash can begin.
@@ -638,7 +785,7 @@ public class PariahController : InputController
     {
         m_IsDelayedDashing = true;
         // Play dash animation.
-        GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnDash");
+        GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnDash", false, false);
 
         float delayTime = 0.0f;
         // Adding a start delay before actual dash is performed.
@@ -667,6 +814,27 @@ public class PariahController : InputController
         { 
             StartCoroutine(Dash(m_Camera.transform.position + m_Camera.transform.forward * m_DashDistance, Vector3.zero, m_DashDuration, true));
         }
+    }
+
+    /// <summary>
+    /// This function is to be used when Pariah just leaves an agent. You start the grace period with this function
+    /// and the passed in value "t" will determine how long until the bool m_GracePeriodActive is set to false.
+    /// </summary>
+    /// <param name="t">Time required before grace period is set to false.</param>
+    /// <returns></returns>
+    IEnumerator StartGracePeriod(float t)
+    {
+        m_IsGracePeriodCoroutineActive = true;
+        m_GracePeriodActive = true;
+        float elapsed = 0;
+        while (elapsed <= t)
+        {
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        m_GracePeriodActive = false;
+        m_GracePeriodCoroutine = null;
+        m_IsGracePeriodCoroutineActive = false;
     }
 
     private IEnumerator DelayExecuteFunc(float delaySeconds, Action func)

@@ -43,8 +43,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.48828554, y: 1.3484192, z: 1.0151138}
-  m_Center: {x: -0.050611764, y: 0.6498995, z: 0.04108429}
+  m_Size: {x: 0.48828554, y: 1.3484192, z: 0.99139404}
+  m_Center: {x: -0.050611764, y: 0.6498995, z: 0.24769592}
 --- !u!1001 &3678192279725343250
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -96,6 +96,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 8985641e14a364448afccb8fb31050a6, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 015722199cff6ac45aa2ccab281c8810, type: 2}
     - target: {fileID: 919132149155446097, guid: 8985641e14a364448afccb8fb31050a6, type: 3}
       propertyPath: m_Name
       value: Puzzle_001_Details_TrashCan_Long

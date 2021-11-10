@@ -67,11 +67,11 @@ public class OptionsMenu : MonoBehaviour
 
     [SerializeField]
     [ReadOnly]
-    private static float m_MouseSensitivity;
+    private static int m_MouseSensitivity;
 
     [SerializeField]
     [ReadOnly]
-    private static float m_ControllerSensitivity;
+    private static int m_ControllerSensitivity;
 
     [SerializeField]
     [ReadOnly]
@@ -102,11 +102,11 @@ public class OptionsMenu : MonoBehaviour
         //THIS IS PROBABLY VERY BAD
         m_MouseSensitivity = m_PlayerPrefs.GameplayConfig.MouseSensitivity;
         m_MouseSensitivitySlider.value = m_MouseSensitivity;
-        m_MouseInputField.text = m_MouseSensitivity.ToString("F2");
+        m_MouseInputField.text = m_MouseSensitivity.ToString();
 
         m_ControllerSensitivity = m_PlayerPrefs.GameplayConfig.ControllerSensitivity;
         m_ControllerSensitivitySlider.value = m_ControllerSensitivity;
-        m_ControllerInputField.text = m_ControllerSensitivity.ToString("F2");
+        m_ControllerInputField.text = m_ControllerSensitivity.ToString();
 
         m_FieldOfView = m_PlayerPrefs.VideoConfig.FieldOfView;
         m_FOVSlider.value = m_FieldOfView;
@@ -135,7 +135,7 @@ public class OptionsMenu : MonoBehaviour
         int currentResolutionIndex = 0;
         for (int i = 0; i < resolutions.Length; i++)
         {
-            string option = resolutions[i].width + " x " + resolutions[i].height + " (" + resolutions[i].refreshRate + ")";//TEST THIS ON OTHER MONITORS
+            string option = resolutions[i].width + " X " + resolutions[i].height;//TEST THIS ON OTHER MONITORS
             options.Add(option);
 
             if (resolutions[i].width == Screen.currentResolution.width &&
@@ -212,8 +212,8 @@ public class OptionsMenu : MonoBehaviour
     public void ControllerSensitivitySliderValueChanged()
     {
         if (m_ControllerInputField)
-            m_ControllerInputField.text = m_ControllerSensitivitySlider.value.ToString("F2");
-        m_ControllerSensitivity = m_ControllerSensitivitySlider.value;
+            m_ControllerInputField.text = m_ControllerSensitivitySlider.value.ToString();
+        m_ControllerSensitivity = (int)m_ControllerSensitivitySlider.value;
         m_PlayerPrefs.GameplayConfig.ControllerSensitivity = m_ControllerSensitivity;
     }
 
@@ -221,8 +221,8 @@ public class OptionsMenu : MonoBehaviour
     public void MouseSensitivitySliderChanged()
     {
         if (m_MouseInputField)
-            m_MouseInputField.text = m_MouseSensitivitySlider.value.ToString("F2");
-        m_MouseSensitivity = m_MouseSensitivitySlider.value;
+            m_MouseInputField.text = m_MouseSensitivitySlider.value.ToString();
+        m_MouseSensitivity = (int)m_MouseSensitivitySlider.value;
         m_PlayerPrefs.GameplayConfig.MouseSensitivity = m_MouseSensitivity;
     }
 
@@ -232,7 +232,7 @@ public class OptionsMenu : MonoBehaviour
         if (m_MasterVolumeInputField.text.Length > 0 && m_MasterVolumeInputField.text[0] == '-')
         {
             m_MasterVolumeInputField.text = "0";
-            return;
+            //return;
         }
         if (m_MasterVolumeInputField.text.Length == 0)
         {
@@ -254,7 +254,7 @@ public class OptionsMenu : MonoBehaviour
         if (m_DialogueVolumeInputField.text.Length > 0 && m_DialogueVolumeInputField.text[0] == '-')
         {
             m_DialogueVolumeInputField.text = "0";
-            return;
+            //return;
         }
         if (m_DialogueVolumeInputField.text.Length == 0)
         {
@@ -276,7 +276,7 @@ public class OptionsMenu : MonoBehaviour
         if (m_SFXVolumeInputField.text.Length > 0 && m_SFXVolumeInputField.text[0] == '-')
         {
             m_SFXVolumeInputField.text = "0";
-            return;
+            //return;
         }
         if (m_SFXVolumeInputField.text.Length == 0)
         {
@@ -298,7 +298,7 @@ public class OptionsMenu : MonoBehaviour
         if (m_MusicVolumeInputField.text.Length > 0 && m_MusicVolumeInputField.text[0] == '-')
         {
             m_MusicVolumeInputField.text = "0";
-            return;
+            //return;
         }
         if (m_MusicVolumeInputField.text.Length == 0)
         {
@@ -319,7 +319,7 @@ public class OptionsMenu : MonoBehaviour
         if (m_FOVInputField.text.Length > 0 && m_FOVInputField.text[0] == '-')
         {
             m_FOVInputField.text = "70";
-            return;
+            //return;
         }
         if (m_FOVInputField.text.Length == 0)
         {
@@ -340,16 +340,16 @@ public class OptionsMenu : MonoBehaviour
     {
         if (m_ControllerInputField.text.Length > 0 && m_ControllerInputField.text[0] == '-')
         {
-            m_ControllerInputField.text = "5.00";
-            return;
+            m_ControllerInputField.text = "5";
+            //return;
         }
         if (m_ControllerInputField.text.Length == 0)
         {
-            m_ControllerInputField.text = "5.00";
+            m_ControllerInputField.text = "5";
         }
 
-        float value = float.Parse(m_ControllerInputField.text);
-        value = Mathf.Clamp(float.Parse(m_ControllerInputField.text), 5.00f, 100.00f);
+        int value = int.Parse(m_ControllerInputField.text);
+        value = Mathf.Clamp(int.Parse(m_ControllerInputField.text), 5, 100);
         m_ControllerInputField.text = value.ToString();
         if (m_ControllerSensitivitySlider)
             m_ControllerSensitivitySlider.value = value;
@@ -362,17 +362,17 @@ public class OptionsMenu : MonoBehaviour
     {
         if (m_MouseInputField.text.Length > 0 && m_MouseInputField.text[0] == '-')
         {
-            m_MouseInputField.text = "5.00";
-            return;
+            m_MouseInputField.text = "5";
+            //return;
         }
         if (m_MouseInputField.text.Length == 0)
         {
-            m_MouseInputField.text = "5.00";
+            m_MouseInputField.text = "5";
         }
 
-        float value = float.Parse(m_MouseInputField.text);
-        value = Mathf.Clamp(float.Parse(m_MouseInputField.text), 5.00f, 100.00f);
-        m_MouseInputField.text = value.ToString("F2");
+        int value = int.Parse(m_MouseInputField.text);
+        value = Mathf.Clamp(int.Parse(m_MouseInputField.text), 5, 100);
+        m_MouseInputField.text = value.ToString();
         if (m_MouseSensitivitySlider)
             m_MouseSensitivitySlider.value = value;
         m_MouseSensitivity = value;

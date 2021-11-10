@@ -57,9 +57,9 @@ public class Weapon : MonoBehaviour
     [Tooltip("The percentage of a full magazine required before warning to reload.")]
     private float m_LowAmmoWarningPercentage = 0.3f;
 
-    [SerializeField]
-    [Tooltip("Defines the position at which bullets spawn during firing.")]
-    private Transform m_FiringPosition;
+    //[SerializeField]
+    //[Tooltip("Defines the position at which bullets spawn during firing.")]
+    //private Transform m_FiringPosition;
 
     /// <summary>An accumulative value used to determine when the next round should be fired.</summary>
     private float m_NextTimeToFire = 0f;
@@ -308,13 +308,14 @@ public class Weapon : MonoBehaviour
                     AddVisualRecoil();
 
                     // ========================= TEMPORARY SHOOT COLLISION ========================= //
-
                     if (Physics.Raycast(ray, out RaycastHit hitInfo, 500))
                     {
                         if (hitInfo.transform.gameObject != null)
                         {
+                            // Only play the bullet shot effect if we are standing atleast a certain amount away from the collider.
+                            if(Vector3.Distance(m_Inventory.Owner.transform.position, hitInfo.point) > 2)
+                                PlayBulletEffect(special, true, hitInfo.point);
 
-                            PlayBulletEffect(special, true, hitInfo.point);
                             if (hitInfo.transform.TryGetComponent(out Inventory agentInventory))
                             {
                                 float damageMod = m_Inventory.Owner.Possessed ? 1.0f : m_AIDamageModifier;
@@ -336,7 +337,16 @@ public class Weapon : MonoBehaviour
                     else
                     {
                         // Shot did not hit gameobject.
-                        PlayBulletEffect(special, false, Vector3.zero);
+                        Plane plane = new Plane(-m_Camera.transform.forward, 1000); // This is creating a plane for us to aim the
+                                                                                    // bullet effect towards if we are in an open area without any colliders.
+                        float planeEnter;
+                        if (plane.Raycast(ray, out planeEnter))
+                        {
+                            Debug.Log("Raycast used plane instead.");
+                            PlayBulletEffect(special, true, ray.GetPoint(planeEnter));
+                        }
+
+                        //PlayBulletEffect(special, false, Vector3.zero);
                     }
                     // ============================================================================= //
                 }
@@ -346,8 +356,8 @@ public class Weapon : MonoBehaviour
                     if (m_Inventory.Owner.Target != m_Inventory.Owner.PariahController.gameObject)
                         bullet?.SetTarget(m_Inventory.Owner.Target, (int)(m_BulletDamage * m_AIDamageModifier));
 
-                    if(m_FiringPosition) // Quick check since dual wield has no firing position currently.
-                        bullet?.Fire(m_FiringPosition.position, m_Inventory.Owner.Target.transform.position, transform.forward, m_Inventory.Owner.transform);
+                    if(m_Inventory.Owner.m_FiringPosition) // Quick check since dual wield has no firing position currently.
+                        bullet?.Fire(m_Inventory.Owner.m_FiringPosition.position, m_Inventory.Owner.Target.transform.position, transform.forward, m_Inventory.Owner.transform);
                 }
             }
             else
@@ -453,9 +463,9 @@ public class Weapon : MonoBehaviour
                         bullet?.SetTarget(m_Inventory.Owner.Target, (int)(m_BulletDamage * m_AIDamageModifier));
 
                     // Quick check since dual wield has no firing position currently.
-                    if (m_FiringPosition)
+                    if (m_Inventory.Owner.m_FiringPosition)
                     {
-                        bullet?.Fire(m_FiringPosition.position, m_Inventory.Owner.Target.transform.position, transform.forward, m_Inventory.Owner.transform);
+                        bullet?.Fire(m_Inventory.Owner.m_FiringPosition.position, m_Inventory.Owner.Target.transform.position, transform.forward, m_Inventory.Owner.transform);
                     }
                 }
             }
@@ -684,9 +694,22 @@ public class Weapon : MonoBehaviour
 
         if (Time.time >= nextTime && !GetReloadState(dual))//(time.time or time.deltatime)
         {
+            if (m_Animators.CheckWeaponInspect()) // If we are inspecting our weapon, the first time we shoot should cancel the animation and the second time should
+            {                                     // allow us to shoot.
+                if (!m_Animators.IsCancellingEquip) // Will prevent us from starting the coroutine when it's already started.
+                    StartCoroutine(m_Animators.CancelWeaponInspect(0.4f, m_AudioEquipEvent));
+
+                return false; // Not ready to fire until weapon inspect has been cancelled.
+            }
+
+
             if (m_SemiAuto) // If the gun is semi auto, we have one other check to do.
             {
                 // I've commented out this code so that the pistol can shoot as fast as the player can click.
+                // Okay, nevermind apparently we need this animation cap.
+                // Actually, nevermind that nevermind. I've added an any state transition to the firing for the pistol which
+                // allows us to spam the animation without getting any desync.
+
 
                 // To prevent people from being able to spam semi automatic guns really fast, I'm going to prevent them from firing unless the animation is complete.
                 //if (!m_Animators.m_GunAnimators[0].GetCurrentAnimatorStateInfo(0).IsName("Idle")) // Only semi automatic weapons in the game are not dual wielded so we don't have to check the whole list of gun animators.
@@ -695,13 +718,7 @@ public class Weapon : MonoBehaviour
                 //}
                
             }
-            if (m_Animators.CheckWeaponInspect()) // If we are inspecting our weapon, the first time we shoot should cancel the animation and the second time should
-            {                                     // allow us to shoot.
-                if(!m_Animators.IsCancellingEquip) // Will prevent us from starting the coroutine when it's already started.
-                    StartCoroutine(m_Animators.CancelWeaponInspect(0.4f));
-
-                return false; // Not ready to fire until weapon inspect has been cancelled.
-            }
+            
 
             // Defines the firing rate as rounds per minute (hard coded 60s)
             if(dual)
@@ -717,7 +734,7 @@ public class Weapon : MonoBehaviour
     /// <summary>Reloads the weapon over time.</summary>
     public IEnumerator Reload(bool special = false)
     {
-        if (!IsReloading())
+        if (!GetReloadState(special))
         {
             StartReloadAnimation(special);
             PlayReloadSound();
@@ -833,7 +850,22 @@ public class Weapon : MonoBehaviour
         {
             Vector3 gunOriginalPos = GetCurrentWeaponOriginalPos();
 
-            Vector3 bobStuff = WeaponBob();
+            Vector3 bobStuff = Vector3.zero;
+            if (m_Inventory.Owner.m_HostController.m_MovInfo.m_IsGrounded)
+                bobStuff = WeaponBob();
+            // Attempting to have minecraft hand like movement when falling. For now though, I'll leave it as I don't have much time left.
+
+            //else
+            //{
+            //    if (m_Inventory.Owner.m_HostController.Rigidbody.velocity.y < 0) // This means we are falling.
+            //    { 
+            //        //bobStuff = -m_Inventory.Owner.m_HostController.Rigidbody.velocity;
+            //        //bobStuff.x = Mathf.Clamp(bobStuff.x, -0.05f, 0.05f);
+            //        bobStuff.y = Mathf.Clamp(-m_Inventory.Owner.m_HostController.Rigidbody.velocity.y, -0.05f, 0.05f);
+            //        Debug.Log("We are falling.");
+            //    }
+            //}
+            
 
             Vector3 finalPosition = Vector3.zero;
             finalPosition.x = Mathf.Clamp(-x * 0.02f, -weaponConfig.m_WeaponSwayClampX, weaponConfig.m_WeaponSwayClampX) + bobStuff.x;
@@ -932,9 +964,22 @@ public class Weapon : MonoBehaviour
         }
 
         else
-        { 
+        {
+            // If we are not holding a dual wield and our weapon is the assault rifle, there
+            // is a chance for the rare Pariah reload to happen. For testing I'll make it so
+            // rifles only reload with Pariah's reload for now.
+            //if (m_TypeTag == WEAPONTYPE.RIFLE)                                        
+            //{
+            //    m_Animators.m_GunAnimators[0].SetTrigger("OnPariahReload");
+            //    m_Animators.m_ArmsAnimators[0].SetTrigger("OnPariahReload");                  // ============== NOTE ============== //
+            //    GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnPariahReload", true);         // This is commented out due to the animation
+            //}                                                                                 // not working currently.
+                                                                                                // ================================== //
+            //else // We are reloading the pistol or one of the dual wield rifles.
+            //{ 
             m_Animators.m_GunAnimators[0].SetTrigger("OnReload");
-            m_Animators.m_ArmsAnimators[0].SetTrigger("OnReload");
+                m_Animators.m_ArmsAnimators[0].SetTrigger("OnReload");
+            //}
         }
          
             
@@ -1079,23 +1124,31 @@ public class Weapon : MonoBehaviour
     private void PlayAnimations(bool special = false)
     {
         // Play effects.
-        if (special)
+
+        if (m_Inventory.Owner.Possessed) // If we're the ones in the agent.
         {
-            if (m_Particles.m_MuzzleFlashes.Count > 0)
+            if (special)
+            {
+                if (m_Particles.m_MuzzleFlashes.Count > 0)
                     m_Particles.m_MuzzleFlashes[1].Play();
-            if (m_Particles.m_BulletCasings.Count > 0)
+                if (m_Particles.m_BulletCasings.Count > 0)
                     m_Particles.m_BulletCasings[1].Play();
-            if (m_Animators.m_GunAnimators.Count > 0)
+                if (m_Animators.m_GunAnimators.Count > 0)
                     m_Animators.m_GunAnimators[1].SetTrigger("IsFiring");
-            if (m_Animators.m_ArmsAnimators.Count > 0)
+                if (m_Animators.m_ArmsAnimators.Count > 0)
                     m_Animators.m_ArmsAnimators[1].SetTrigger("IsFiring");
+            }
+            else
+            {
+                m_Particles.m_MuzzleFlashes[0].Play();
+                m_Particles.m_BulletCasings[0].Play();
+                m_Animators.m_GunAnimators[0].SetTrigger("IsFiring");
+                m_Animators.m_ArmsAnimators[0].SetTrigger("IsFiring");
+            }
         }
-        else
+        else // Otherwise, this is an AI agent.
         {
-            m_Particles.m_MuzzleFlashes[0].Play();
-            m_Particles.m_BulletCasings[0].Play();
-            m_Animators.m_GunAnimators[0].SetTrigger("IsFiring");
-            m_Animators.m_ArmsAnimators[0].SetTrigger("IsFiring");
+            m_Inventory.Owner.m_AIMuzzleFlash.Play(); // Play the AI's muzzle flash instead of the FPS one.
         }
 
         m_Inventory.Owner.PlayAnimation("Shoot", true);
@@ -1164,6 +1217,7 @@ public class Weapon : MonoBehaviour
     }
     public void ResetReload() { m_WeaponActions.m_IsReloading = false; }
     public bool IsReloading() { return m_WeaponActions.m_IsReloading; }
+    public bool IsReloadingLeft() { return m_WeaponActions.m_IsReloadingLeft; }
     public bool GetAimState() { return m_WeaponActions.m_IsAiming; }
     public void ResetAim() { m_WeaponActions.m_IsAiming = false; }
     public bool GetRecoilTestState() { return m_RecoilTesting.m_IsRecoilTesting; }
@@ -1212,7 +1266,8 @@ public class Weapon : MonoBehaviour
     public void StopSounds()
     {
         m_AudioEmptyClipEvent.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
-        m_AudioEquipEvent.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        if(m_AudioEquipEvent)
+            m_AudioEquipEvent.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
         m_AudioReloadEvent.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
         m_AudioFireEvent.StopSound(FMOD.Studio.STOP_MODE.IMMEDIATE);
     }
@@ -1313,7 +1368,23 @@ public class Weapon : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(targetPos, 0.25f);
-        Gizmos.DrawSphere(m_FiringPosition.position, 0.25f);
-        Gizmos.DrawLine(targetPos, m_FiringPosition.position);
+        Gizmos.DrawSphere(m_Inventory.Owner.m_FiringPosition.position, 0.25f);
+        Gizmos.DrawLine(targetPos, m_Inventory.Owner.m_FiringPosition.position);
+    }
+
+    public void AddDamageCameraShake()
+    {
+        WeaponConfiguration weaponConfig = GetCurrentWeaponConfig();
+        Vector3 cameraRot = m_Inventory.Owner.m_HostController.m_OnHitCameraShakeRotation;
+
+        CameraRecoil cameraRecoil = m_Controller.m_AccumulatedRecoil;
+
+        Vector3 camVisRecoil = Vector3.zero;
+        camVisRecoil.x = -cameraRot.x;
+        camVisRecoil.y = Random.Range(-cameraRot.y, -cameraRot.y);
+        camVisRecoil.z = Random.Range(-cameraRot.z, -cameraRot.z);
+
+        //cameraRecoil.accumulatedVisualRecoil += new Vector3(-weaponConfig.RecoilRotationAiming.x, Random.Range(-weaponConfig.RecoilRotationAiming.y, weaponConfig.RecoilRotationAiming.y), Random.Range(-weaponConfig.RecoilRotationAiming.z, weaponConfig.RecoilRotationAiming.z));
+        cameraRecoil.accumulatedVisualRecoil += camVisRecoil;
     }
 }

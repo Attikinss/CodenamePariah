@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="AudioFile" id="{7368dc2b-8637-42bb-9d3c-c59c76f01775}">
+		<property name="assetPath">
+			<value>Steam hiss 4.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>1.125</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{c506c6b6-b09d-408b-9b83-d4ca2175faed}</destination>
+		</relationship>
+	</object>
+</objects>

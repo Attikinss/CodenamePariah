@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class PauseMenu : MonoBehaviour
     [ReadOnly]
     [Tooltip("Current state of the game.")]
     public static bool m_GameIsPaused = false;
+
+    public static bool m_GameOver = false;
 
     [SerializeField]
     [Tooltip("Whether this gameobject is the pausemenu.")]
@@ -33,14 +36,21 @@ public class PauseMenu : MonoBehaviour
     [Tooltip("All the gameobjects that need to be turned on or off when opening or closing the options menu.")]
     public GameObject[] m_OptionsMenuUI;
 
+    public GameObject[] m_GameOverMenuUI;
+
     [Tooltip("All the gameobjects that need to be turned on or off when in the process of quitting the game.")]
     public GameObject[] m_QuitMenuUI;
+
+    public GameObject[] m_GameOverQuitMenuUI;
 
     [Tooltip("Gameobject that needs to be turned on or off when a dialogue box should appear.")]
     public GameObject m_DialogueBoxUI;
 
     [Tooltip("Animator for menu transitions.")]
     public Animator m_Transition;
+
+    [SerializeField]
+    private Image m_Panel;
 
     [SerializeField]
     [Tooltip("Time it takes for transition between scenes.")]
@@ -90,12 +100,24 @@ public class PauseMenu : MonoBehaviour
             }
             else if (m_IsQuitting)
             {
-                QuittingClose();
-                Pause();
+                if (!m_GameOver)
+                {
+                    QuittingClose();
+                    Pause();
+                }
+                else
+                {
+                    GameOverQuittingClose();
+                    GameOverMenu();
+                }
             }
             else if (!m_IsPauseMenu)
             {
                 QuitMenu();
+            }
+            else if (m_GameOver)
+            {
+
             }
             else if (m_GameIsPaused)
             {
@@ -106,6 +128,9 @@ public class PauseMenu : MonoBehaviour
                 Pause();
             }
         }
+
+        if (m_GameOver && !m_GameIsPaused)
+            GameOverMenu();
     }
 
     /// <summary>Resumes gameplay.</summary>
@@ -118,6 +143,10 @@ public class PauseMenu : MonoBehaviour
         //Time.timeScale = 1f;// time scale affects scene animations.
         m_GameIsPaused = false;
         Cursor.lockState = CursorLockMode.Locked;
+
+        // For some reason, when the scene reloads, the mouse is visible again even though we are locking it.
+        // To prevent this I've forcefully set the Cursor.visible value.
+        Cursor.visible = false;
     }
 
     /// <summary>Starts the game.</summary>
@@ -138,6 +167,7 @@ public class PauseMenu : MonoBehaviour
         GameManager.ResetCheckpoint();
     }
 
+    //dont know if this one should be an ienumerator in a start function and could possibly just be a normal function.
     IEnumerator StartLoadingLevel()
     {
         asyncOperation = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1);
@@ -204,12 +234,27 @@ public class PauseMenu : MonoBehaviour
         m_GameIsPaused = true;
         //disable a bunch of things requiring input - currently a bullet gets fired on first click inside pause menu.
         //can probably do "if(... && !m_GameIsPaused) in other scripts.
+
+        // For some reason, when the scene reloads, the mouse is visible again even though we are locking it.
+        // To prevent this I've forcefully set the Cursor.visible value.
+        Cursor.visible = true;
+    }
+
+    public void GameOverMenu()
+    {
+        //m_GameOver = false;
+        m_GameIsPaused = true;
+        Cursor.lockState = CursorLockMode.None;
+        for (int i = 0; i < m_GameOverMenuUI.Length; i++)
+        {
+            m_GameOverMenuUI[i].SetActive(true);
+        }
     }
 
     /// <summary>Opens the quit menu.</summary>
     public void QuitMenu()
     {
-        for (int i = 1; i < m_PauseMenuUI.Length - 2; i++)
+        for (int i = 1; i < m_PauseMenuUI.Length - 1; i++)
         {
             m_PauseMenuUI[i].SetActive(false);
         }
@@ -234,6 +279,11 @@ public class PauseMenu : MonoBehaviour
         {
             m_OptionsMenuUI[i].SetActive(false);
         }
+        if (m_Panel)
+        {
+            m_Panel.enabled = false;
+        }
+
         m_OptionsOpen = false;
         //m_SettingsToBeApplied = false;
     }
@@ -258,6 +308,58 @@ public class PauseMenu : MonoBehaviour
             m_QuitMenuUI[i].SetActive(false);
         }
         m_IsQuitting = false;
+    }
+
+    public void GameOverQuittingClose()
+    {
+        if (!m_IsPauseMenu)
+            for (int i = 1; i < m_GameOverMenuUI.Length; i++)
+            {
+                m_GameOverMenuUI[i].SetActive(true);
+            }
+
+        for (int i = 0; i < m_QuitMenuUI.Length; i++)
+        {
+            m_GameOverQuitMenuUI[i].SetActive(false);
+        }
+        m_IsQuitting = false;
+    }
+
+    public void ReloadSceneCheckpoint()
+    {
+        m_GameOver = false;
+        m_GameIsPaused = false;
+        StartCoroutine(ReloadLevel());
+    }
+
+    public void ReloadScene()
+    {
+        GameManager.ResetCheckpoint();
+        m_GameOver = false;
+        m_GameIsPaused = false;
+        StartCoroutine(ReloadLevel());
+    }
+
+    // ****** Highly temporary ******
+    private IEnumerator ReloadLevel()
+    {
+        GameManager.s_IsNotFirstLoad = true; // Telling the game manager that it's not the games first load.
+        yield return null;
+
+        //Need to test for whether async or non async is better.
+        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+        asyncOperation.allowSceneActivation = false;
+
+        while (!asyncOperation.isDone)
+        {
+            Debug.Log($"Progress: {asyncOperation.progress * 100}%");
+            if (asyncOperation.progress >= 0.9f)
+                asyncOperation.allowSceneActivation = true;
+
+            yield return null;
+        }
+
+
     }
 
     ///// <summary>Upon settings being changed, sets settings to be applied to true. NEED TO FIX.</summary>

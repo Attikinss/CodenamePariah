@@ -95,6 +95,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: ae5066511e21c724e8b2a490da507b6c, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 518066b8a33237143a080c1ecba6c7e2, type: 2}
     - target: {fileID: 919132149155446097, guid: ae5066511e21c724e8b2a490da507b6c, type: 3}
       propertyPath: m_Name
       value: Puzzle_001_Details_Bench

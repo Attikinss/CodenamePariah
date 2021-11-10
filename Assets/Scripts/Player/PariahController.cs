@@ -43,6 +43,14 @@ public class PariahController : InputController
     [SerializeField]
     private Vector2 m_LookInput;
 
+    [Header("Visual")]
+
+    [SerializeField]
+    private float m_CameraTiltSensitivity = 10.0f;
+
+    [SerializeField]
+    private float m_CameraTiltMax = 20.0f;
+
     [Header("Debug")]
 
     [ReadOnly]
@@ -55,15 +63,7 @@ public class PariahController : InputController
 
     [ReadOnly]
     [SerializeField]
-    private float m_AccumulatedMove;
-
-    [ReadOnly]
-    [SerializeField]
     private float m_CameraTilt = 0.0f;
-
-    [ReadOnly]
-    [SerializeField]
-    private float m_CameraFOV;
 
     [ReadOnly]
     [SerializeField]
@@ -119,7 +119,6 @@ public class PariahController : InputController
         var euler = transform.rotation.eulerAngles;
         m_Rotation = new Vector2(euler.y, euler.x);
         m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
-        m_CameraFOV = m_Camera.fieldOfView;
 
         StartCoroutine(DrainHealth(m_HealthDrainDelay));
     }
@@ -358,16 +357,19 @@ public class PariahController : InputController
 
     private void Look()
     {
-        m_Rotation += m_LookInput * m_PlayerPrefs.GameplayConfig.MouseSensitivity * Time.deltaTime;
-        m_Rotation.y = Mathf.Clamp(m_Rotation.y, -90.0f, 90.0f);
-        transform.rotation = Quaternion.Euler(-m_Rotation.y, m_Rotation.x, 0.0f);
+        if (!m_Possessing)
+        {
+            m_Rotation += m_LookInput * m_PlayerPrefs.GameplayConfig.MouseSensitivity * Time.deltaTime;
+            m_Rotation.y = Mathf.Clamp(m_Rotation.y, -90.0f, 90.0f);
+            transform.rotation = Quaternion.Euler(-m_Rotation.y, m_Rotation.x, 0.0f);
+        }
 
         CameraTilt();
     }
 
     private void CameraTilt()
     {
-        m_CameraTilt = Mathf.Clamp(m_LookInput.x * m_PlayerPrefs.GameplayConfig.MouseSensitivity / 2.0f, -30.0f, 30.0f);
+        m_CameraTilt = m_Possessing ? 0.0f : Mathf.Clamp(m_LookInput.x * m_CameraTiltSensitivity, -m_CameraTiltMax, m_CameraTiltMax);
         var targetRot = Quaternion.Euler(transform.localRotation.x, transform.localRotation.y, -m_CameraTilt);
         m_Camera.transform.localRotation = Quaternion.Lerp(m_Camera.transform.localRotation, targetRot, 2.5f * Time.deltaTime);
     }
@@ -375,34 +377,39 @@ public class PariahController : InputController
     private IEnumerator Possess(Agent target)
     {
         // Early out
-        if (target == null) yield return null;
-
-        m_Transitioning = true;
-
-        float currentTime = 0.0f;
-        Vector3 targetEyes = target.transform.position + Vector3.up * 0.75f;
-        GetComponent<Collider>().enabled = false;
-
-        // TODO: Use epsilon and replace distance check with non sqrt function
-        while (Vector3.Distance(transform.position, targetEyes) > 0.01f)
+        if (target != null)
         {
-            if (!PauseMenu.m_GameIsPaused)
+            m_Transitioning = true;
+            m_Possessing = true;
+
+            float currentTime = 0.0f;
+            Vector3 targetEyes = target.transform.position + Vector3.up * 0.75f;
+            GetComponent<Collider>().enabled = false;
+
+            // TODO: Use epsilon and replace distance check with non sqrt function
+            while (Vector3.Distance(transform.position, targetEyes) > 0.05f)
             {
-                transform.position = Vector3.Lerp(transform.position, targetEyes, Tween.EaseInOut5(currentTime / m_DashDuration));
+                if (!PauseMenu.m_GameIsPaused)
+                {
+                    transform.position = Vector3.Lerp(transform.position, targetEyes, Tween.EaseInOut5(currentTime / m_DashDuration));
 
-                float distToTarget = Vector3.Distance(transform.position, targetEyes);
-                if (distToTarget <= 1.0f)
-                    transform.rotation = Quaternion.Lerp(transform.rotation, target.transform.rotation, Tween.EaseOut3(distToTarget));
+                    float distToTarget = Vector3.Distance(transform.position, targetEyes);
+                    if (distToTarget <= 1.5f)
+                    {
+                        // Fade to black?
+                    }
 
-                currentTime += Time.deltaTime;
+                    currentTime += Time.deltaTime;
+                }
+
+                yield return null;
             }
 
-            yield return null;
+            target.Possess();
+            m_Possessing = false;
+            m_CurrentPossessed = target;
+            StartCoroutine(DelayExecuteFunc(1.5f, () => { m_Transitioning = false; }));
         }
-
-        target.Possess();
-        m_CurrentPossessed = target;
-        StartCoroutine(DelayExecuteFunc(1.5f, () => { m_Transitioning = false; }));
     }
 
     //TODO: Move all functions below into a more suitable location

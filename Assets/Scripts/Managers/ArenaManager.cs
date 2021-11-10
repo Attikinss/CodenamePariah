@@ -70,8 +70,8 @@ public class ArenaManager : MonoBehaviour
                 GameManager.s_Instance?.SendDoorData(true, m_ID); // Telling the GameManager that this door has been opened.
 
             // Transitioning to end battle music if specified.
-            //if(m_PlayEndMusic)
-                //GameManager.s_Instance.TransitionMusic()
+            if (m_PlayEndMusic)
+                GameManager.s_Instance.TransitionMusic("Music", 1);
         }
     }
 

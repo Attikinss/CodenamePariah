@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.VFX;
@@ -41,6 +42,7 @@ namespace WhiteWillow
         [HideInInspector]
         public HostController m_HostController;
 
+        public bool Alive { get; private set; } = true;
         public bool Possessed { get; private set; } = false;
         public bool PossessedPreviously { get; private set; }
         public bool EngagingTarget { get; private set; } = true;
@@ -69,6 +71,8 @@ namespace WhiteWillow
         [Tooltip("Muzzle flash for the AI.")]
         public VisualEffect m_AIMuzzleFlash;
 
+        private Vector3 m_CachedAgentVelocity = Vector3.zero;
+
         private void Awake()
 		{
             m_RuntimeTree = InputTree?.Clone(gameObject.name);
@@ -91,6 +95,7 @@ namespace WhiteWillow
         }
         private void Update()
         {
+
             if (Possessed)
             {
                 if (!PauseMenu.m_GameIsPaused)
@@ -103,17 +108,27 @@ namespace WhiteWillow
                 {
                     if (!m_NavAgent.isStopped)
                     {
-                        Stop();
+                        m_NavAgent.isStopped = true;
+                        m_CachedAgentVelocity = m_NavAgent.velocity;
                         m_NavAgent.velocity = Vector3.zero;
+                        m_Animator.speed = 0.0f;
                     }
 
                     return;
                 }
                 else
                 {
+                    m_Animator.speed = 1.0f;
+
                     if (m_NavAgent.isStopped)
-                        m_NavAgent.isStopped = true;
+                    {
+                        m_NavAgent.velocity = m_CachedAgentVelocity;
+                        m_NavAgent.isStopped = false;
+                    }
                 }
+
+                if (!Alive)
+                    return;
 
                 m_RuntimeTree?.Tick();
 
@@ -142,7 +157,7 @@ namespace WhiteWillow
             if (m_NavAgent.isStopped)
                 m_NavAgent.isStopped = false;
 
-            PlayAnimation("Run");
+            PlayAnimation("Run", true);
 
             if (Vector3.Distance(m_NavAgent.destination, Destination)
                 >= Mathf.Epsilon + m_NavAgent.stoppingDistance)
@@ -158,10 +173,12 @@ namespace WhiteWillow
             return true;
         }
 
-        public void Stop()
+        public void Stop(bool playIdleAnim = true)
         {
-            PlayAnimation("IdleCombat");
+            if (playIdleAnim)
+                PlayAnimation("IdleCombat", true, 0.1f);
 
+            m_NavAgent.velocity = Vector3.zero;
             m_NavAgent.ResetPath();
             m_NavAgent.isStopped = true;
         }
@@ -206,6 +223,9 @@ namespace WhiteWillow
 
         public void Kill()
         {
+            //if (!Alive)
+            //    return;
+
             m_HostController.GetCurrentWeapon().StopSounds(); // Stops sounds like reload from playing after the agent has been destroyed.
 
             if (Possessed)
@@ -215,8 +235,13 @@ namespace WhiteWillow
                 PariahController?.TakeDamage(m_HostController.GetOnDestroyDamage());
             }
 
-            // TODO: Use object pooling / queued destruction system
-            Destroy(gameObject);
+            Alive = false;
+            PlayAnimation("Death", true, 0.1f);
+            StartCoroutine(DelayExecuteFunc(3.5f, () =>
+            {
+                GetComponent<Collider>().enabled = false;
+                Destroy(gameObject);
+            }));
         }
 
         public void LookAt(Vector3 position)
@@ -466,6 +491,13 @@ namespace WhiteWillow
                 // lol this can't happen but I guess I should put an else here.
                 Debug.LogError("AttachUIReferences() could not find type of agent!");
             }
+        }
+
+        private IEnumerator DelayExecuteFunc(float delaySeconds, Action func)
+        {
+            yield return new WaitForSeconds(delaySeconds);
+
+            func();
         }
     }
 }

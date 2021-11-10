@@ -411,7 +411,7 @@ public class PariahController : InputController
             {
                 if (Physics.Raycast(m_Camera.transform.position, m_Camera.transform.forward, out RaycastHit hitInfo, m_DashDistance))
                 {
-                    if (hitInfo.transform.TryGetComponent(out Agent agent))
+                    if (hitInfo.transform.TryGetComponent(out Agent agent) && agent.Alive)
                     { 
                         StartCoroutine(Possess(agent));
                         PlayArmAnim("OnDash");

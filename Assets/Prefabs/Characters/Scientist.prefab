@@ -167,6 +167,7 @@ MonoBehaviour:
   m_MovInfo:
     MovementInput: {x: 0, y: 0}
     m_IsGrounded: 0
+    m_IsDashGrounded: 0
     m_CacheMovDirection: {x: 0, y: 0, z: 0}
     m_CurrentMoveSpeed: 0
     m_IsMoving: 0
@@ -204,6 +205,8 @@ MonoBehaviour:
     IsActive: 0
   m_Mesh: {fileID: 7094497905823826397}
   m_OnHitCameraShakeRotation: {x: 0.15, y: 0.15, z: 0.15}
+  m_OnDrainCameraShakeRotation: {x: 0.1, y: 0.1, z: 0.1}
+  m_DashGroundCheckDistance: 1.5
 --- !u!114 &4480668722508770147
 MonoBehaviour:
   m_ObjectHideFlags: 0

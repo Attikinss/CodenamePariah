@@ -63,7 +63,7 @@
 			<destination>{cace721f-4be9-4631-b20b-cd6cc3a45720}</destination>
 		</relationship>
 		<relationship name="output">
-			<destination>{d6c18f60-d1ff-4a1f-91cb-b5d3170cfc70}</destination>
+			<destination>{1f963707-4f32-4f8d-b82c-8c31c7fd2045}</destination>
 		</relationship>
 	</object>
 	<object class="EventAutomatableProperties" id="{39a0ac1a-edef-4696-9ae5-b325ee7edc50}" />
@@ -162,9 +162,6 @@
 		</property>
 	</object>
 	<object class="EventMixerGroup" id="{2a3814e3-0994-40ba-b36d-8df1b9a69a53}">
-		<property name="volume">
-			<value>-13</value>
-		</property>
 		<property name="name">
 			<value>Combat</value>
 		</property>
@@ -203,6 +200,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{c65766a4-a42c-4edf-9f7f-45d5cc3f0991}">
+		<property name="volume">
+			<value>-16</value>
+		</property>
 		<property name="name">
 			<value>Ending</value>
 		</property>

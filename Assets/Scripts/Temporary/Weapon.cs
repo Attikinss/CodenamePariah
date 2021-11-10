@@ -153,6 +153,12 @@ public class Weapon : MonoBehaviour
     }
 	private void Start()
 	{
+        // Hard-coded adjustment to assault rifle sound. This is temporary just while the FMOD Studio side of things hasn't been fixed.
+        if (m_TypeTag == WEAPONTYPE.RIFLE || m_TypeTag == WEAPONTYPE.DUAL)
+            m_AudioFireEvent.GetEventInstance().setVolume(0.5f); // 85% of FMOD Studio volume.
+        if (m_TypeTag == WEAPONTYPE.PISTOL)
+            m_AudioFireEvent.GetEventInstance().setVolume(0.75f);
+
         m_UIManager = UIManager.s_Instance;
 
         if(!m_InitialisedSkinnedMeshRenderers)

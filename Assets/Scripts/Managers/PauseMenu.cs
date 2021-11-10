@@ -61,13 +61,6 @@ public class PauseMenu : MonoBehaviour
     [SerializeField]
     private OptionsMenuButton m_GameplayButton;
 
-    private void Start()
-    {
-        Debug.Log("Loaded");
-        if (!m_IsPauseMenu)
-            StartCoroutine(StartLoadingLevel());
-    }
-
     private void Awake()
     {
        if (m_IsPauseMenu)
@@ -194,11 +187,15 @@ public class PauseMenu : MonoBehaviour
         //#if UNITY_EDITOR
         //        SceneManager.LoadScene("Test_Lauchlan_002");
         //#else
-        if (asyncOperation.progress >= 0.9f)
-        {
-            Debug.Log("Loading");
-            asyncOperation.allowSceneActivation = true;
-        }
+
+        //if (asyncOperation.progress >= 0.9f)
+        //{
+        //    Debug.Log("Loading");
+        //    asyncOperation.allowSceneActivation = true;
+        //}
+
+        SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1);
+
         //SceneManager.LoadScene("Level_001", LoadSceneMode.Single);
         //SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
         //#endif

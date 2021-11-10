@@ -393,4 +393,21 @@ public class GameManager : MonoBehaviour
         instance.setParameterByName(paramName, value);
     }
 
+    /// <summary>
+    /// Restarts the music track.
+    /// </summary>
+    public void RestartMusic()
+    {
+        FMOD.Studio.EventInstance instance = m_Music.m_AudioEvent.GetEventInstance();
+
+        float value = 0;
+        instance.getParameterByName("NumberOfEnemies", out value);
+        if (value == 1)
+        { 
+            TransitionMusic("NumberOfEnemies", 0);
+            m_Music.m_AudioEvent.StopSound(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            m_Music.m_AudioEvent.Trigger();
+        }
+    }
+
 }

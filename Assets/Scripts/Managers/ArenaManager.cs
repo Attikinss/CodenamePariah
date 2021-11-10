@@ -71,7 +71,7 @@ public class ArenaManager : MonoBehaviour
 
             // Transitioning to end battle music if specified.
             if (m_PlayEndMusic)
-                GameManager.s_Instance.TransitionMusic("Music", 1);
+                GameManager.s_Instance.TransitionMusic("NumberOfEnemies", 1);
         }
     }
 

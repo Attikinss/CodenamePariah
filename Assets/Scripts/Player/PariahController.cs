@@ -149,6 +149,9 @@ public class PariahController : InputController
 
         if (m_CurrentPossessed == null) // Only do this if we are not in a unit.
         {
+            // Adjusting FOV to the settings. Otherwise it only gets applied when we call the Enable for Pariah.
+            m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;
+
             RaycastHit lookHit;
             if (Physics.Raycast(m_Camera.transform.position, m_Camera.transform.forward, out lookHit, m_DashDistance))
             {
@@ -255,6 +258,10 @@ public class PariahController : InputController
     public override void Enable()
     {
 
+        GameManager.s_Instance.m_CurrentCamera = m_Camera;
+        m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;
+
+
         // Stop all hide arms coroutines after we leave a host.
         // We shouldn't need to do this since in the HostController Disable()
         // we stop the hide arms coroutine but I guess it's good to do it
@@ -301,6 +308,8 @@ public class PariahController : InputController
 
     public override void Disable()
     {
+        GameManager.s_Instance.m_CurrentCamera = null;
+
         GetComponent<PlayerInput>().enabled = false;
         m_Active = false;
         m_Camera.enabled = false;

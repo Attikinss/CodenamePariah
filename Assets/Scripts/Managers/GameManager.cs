@@ -71,6 +71,12 @@ public class GameManager : MonoBehaviour
     // after the scene reloads.
     public static int s_Power = 0;
 
+    public CustomAudioSource m_Music;
+
+    // Reference to the current camera, whether is be an agent's camera of Pariah's camera.
+    // This is used so we can adjust the FOV from the static OptionsMenu class.
+    [HideInInspector]
+    public Camera m_CurrentCamera;
 
     private void Awake()
 	{
@@ -90,6 +96,9 @@ public class GameManager : MonoBehaviour
 
         FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
         allBussess.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
+
+        if (!m_Music)
+            Debug.LogWarning("GameManager does not have a m_Music reference! Music will not work correctly!");
     }
 
     public void TogglePause(bool toggle)
@@ -375,5 +384,13 @@ public class GameManager : MonoBehaviour
         return newGuid;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public void TransitionMusic(string paramName, float value)
+    {
+        FMOD.Studio.EventInstance instance = m_Music.m_AudioEvent.GetEventInstance();
+        instance.setParameterByName(paramName, value);
+    }
 
 }

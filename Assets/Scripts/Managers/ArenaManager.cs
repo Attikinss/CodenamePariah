@@ -11,6 +11,9 @@ public class ArenaManager : MonoBehaviour
     [UniqueIdentifier]
     public string m_ID;
 
+    [Tooltip("If true, this will transition the music to the end music when activated.")]
+    public bool m_PlayEndMusic = false;
+
     [Tooltip("Agents in the room.")]
     public GameObject[] m_ArenaAgents;
 
@@ -65,6 +68,10 @@ public class ArenaManager : MonoBehaviour
             
             if(m_ShouldSaveData)
                 GameManager.s_Instance?.SendDoorData(true, m_ID); // Telling the GameManager that this door has been opened.
+
+            // Transitioning to end battle music if specified.
+            //if(m_PlayEndMusic)
+                //GameManager.s_Instance.TransitionMusic()
         }
     }
 

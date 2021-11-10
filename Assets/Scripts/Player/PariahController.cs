@@ -132,9 +132,6 @@ public class PariahController : InputController
         m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
 
         StartCoroutine(DrainHealth(m_HealthDrainDelay));
-
-        // Setting the power bar when we first load back into the game. Needed to update the UI if loading back at a checkpoint.
-        UIManager.s_Instance?.SetDeathIncarnateBar((float)GameManager.s_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
     }
 
 	private void Update()

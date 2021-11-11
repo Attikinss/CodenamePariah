@@ -59,12 +59,8 @@ public class PauseMenu : MonoBehaviour
 
     AsyncOperation asyncOperation;
 
-    private void Start()
-    {
-        Debug.Log("Loaded");
-        if (!m_IsPauseMenu)
-            StartCoroutine(StartLoadingLevel());
-    }
+    [SerializeField]
+    private OptionsMenuButton m_GameplayButton;
 
     private void Awake()
     {
@@ -206,11 +202,15 @@ public class PauseMenu : MonoBehaviour
         //#if UNITY_EDITOR
         //        SceneManager.LoadScene("Test_Lauchlan_002");
         //#else
-        if (asyncOperation.progress >= 0.9f)
-        {
-            Debug.Log("Loading");
-            asyncOperation.allowSceneActivation = true;
-        }
+
+        //if (asyncOperation.progress >= 0.9f)
+        //{
+        //    Debug.Log("Loading");
+        //    asyncOperation.allowSceneActivation = true;
+        //}
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1, LoadSceneMode.Single);
+
         //SceneManager.LoadScene("Level_001", LoadSceneMode.Single);
         //SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
         //#endif
@@ -230,6 +230,16 @@ public class PauseMenu : MonoBehaviour
         yield return new WaitForSeconds(m_TransitionTime);
 
         SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
+        //SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
+    }
+
+    IEnumerator LoadCredits()
+    {
+        m_Transition.SetTrigger("Start");
+
+        yield return new WaitForSeconds(m_TransitionTime);
+
+        SceneManager.LoadScene("Credits", LoadSceneMode.Single);
         //SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
     }
 
@@ -311,6 +321,7 @@ public class PauseMenu : MonoBehaviour
         }
 
         m_OptionsOpen = false;
+        m_GameplayButton.HighlightButton();
         //m_SettingsToBeApplied = false;
     }
     
@@ -428,6 +439,11 @@ public class PauseMenu : MonoBehaviour
     //    m_InsideDialogueBox = false;
     //    Debug.Log("Discarded changes.");
     //}
+
+    public void Credits()
+    {
+        StartCoroutine(LoadCredits());
+    }
 
     /// <summary>Exits the game to desktop.</summary>
     public void Exit()

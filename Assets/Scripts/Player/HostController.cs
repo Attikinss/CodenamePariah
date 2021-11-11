@@ -814,7 +814,7 @@ public class HostController : InputController
 
         m_MovInfo.m_CacheMovDirection += requiredChange * (m_MovInfo.m_IsGrounded ? m_GroundAcceleration : m_AirAcceleration);
 
-        Telemetry.TracePosition("Host-Movement", transform.position, 0.05f, 150);
+        //Telemetry.TracePosition("Host-Movement", transform.position, 0.05f, 150);
     }
 
     private Vector3 CalculateMoveDirection(float x, float z, float speedMultiplier)

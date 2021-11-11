@@ -65,7 +65,7 @@ Material:
     m_Ints: []
     m_Floats:
     - Cell_Density: 2
-    - Cell_Movement: 3
+    - Cell_Movement: 1.46
     - Cell_Mult: 8
     - FresnelMult: 1
     - FresnelPower: 2
@@ -120,7 +120,7 @@ Material:
     - testing: 2
     m_Colors:
     - Colour: {r: 0.060220998, g: 0.038121548, b: 0.1, a: 1}
-    - Movement_Direction: {r: 0.1, g: -0.7, b: 0, a: 0}
+    - Movement_Direction: {r: 0.1, g: -0.2, b: 0, a: 0}
     - UV_Tiling: {r: 5, g: 0.7, b: 0, a: 0}
     - _Color: {r: 0, g: 0, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}

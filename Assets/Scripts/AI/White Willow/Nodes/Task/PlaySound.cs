@@ -2,7 +2,7 @@
 
 namespace WhiteWillow.Nodes
 {
-    [Category("Tasks")]
+    [Category("Task")]
     public sealed class PlaySound : Task
     {
         [SerializeField]

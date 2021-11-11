@@ -6,6 +6,7 @@ using WhiteWillow;
 using UnityEngine.SceneManagement;
 //using FMOD;
 using FMODUnity;
+using System;
 using UnityEngine.VFX;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -43,6 +44,14 @@ public class PariahController : InputController
     [SerializeField]
     private Vector2 m_LookInput;
 
+    [Header("Visual")]
+
+    [SerializeField]
+    private float m_CameraTiltSensitivity = 10.0f;
+
+    [SerializeField]
+    private float m_CameraTiltMax = 20.0f;
+
     [Header("Debug")]
 
     [ReadOnly]
@@ -55,15 +64,14 @@ public class PariahController : InputController
 
     [ReadOnly]
     [SerializeField]
-    private Vector2 m_AccumulatedLook;
-
-    [ReadOnly]
-    [SerializeField]
     private float m_CameraTilt = 0.0f;
 
     [ReadOnly]
     [SerializeField]
     private bool m_Possessing = false;
+
+    private bool m_Transitioning = false;
+    public bool Transitioning { get => m_Transitioning; }
 
     [ReadOnly]
     [SerializeField]
@@ -270,6 +278,9 @@ public class PariahController : InputController
         m_Active = true;
         m_Camera.enabled = true;
 
+        m_Transitioning = true;
+        StartCoroutine(DelayExecuteFunc(1.5f, () => { m_Transitioning = false; }));
+
         ToggleArms(true);
 
         // The grace period is the time we have after leaving an agent before our life essence starts depleting.
@@ -394,7 +405,7 @@ public class PariahController : InputController
             {
                 if (Physics.Raycast(m_Camera.transform.position, m_Camera.transform.forward, out RaycastHit hitInfo, m_DashDistance))
                 {
-                    if (hitInfo.transform.TryGetComponent(out Agent agent))
+                    if (hitInfo.transform.TryGetComponent(out Agent agent) && agent.Alive)
                     { 
                         StartCoroutine(Possess(agent));
                         PlayArmAnim("OnDash");
@@ -403,6 +414,7 @@ public class PariahController : InputController
             }
         }
     }
+
     private void Move()
     {
         Vector3 moveDirection = (transform.right * m_MovementInput.x + transform.up * m_MovementInput.y + transform.forward * m_MovementInput.z)
@@ -418,50 +430,59 @@ public class PariahController : InputController
 
     private void Look()
     {
-        CameraTilt();
+        if (!m_Possessing)
+        {
+            m_Rotation += m_LookInput * m_PlayerPrefs.GameplayConfig.MouseSensitivity * Time.deltaTime;
+            m_Rotation.y = Mathf.Clamp(m_Rotation.y, -90.0f, 90.0f);
+            transform.rotation = Quaternion.Euler(-m_Rotation.y, m_Rotation.x, 0.0f);
+        }
 
-        m_Rotation += m_LookInput * m_PlayerPrefs.GameplayConfig.MouseSensitivity * Time.deltaTime;
-        m_Rotation.y = Mathf.Clamp(m_Rotation.y, -90.0f, 90.0f);
-        transform.rotation = Quaternion.Euler(-m_Rotation.y, m_Rotation.x, 0.0f);
+        CameraTilt();
     }
 
     private void CameraTilt()
     {
-        float half = m_LookInput.x / 2;
-        float mouseDelta = half + m_LookInput.x / 2.0f;
-
-        m_Camera.transform.localRotation = Quaternion.Euler(transform.localRotation.x, transform.localRotation.y, m_CameraTilt);
+        m_CameraTilt = m_Possessing ? 0.0f : Mathf.Clamp(m_LookInput.x * m_CameraTiltSensitivity, -m_CameraTiltMax, m_CameraTiltMax);
+        var targetRot = Quaternion.Euler(transform.localRotation.x, transform.localRotation.y, -m_CameraTilt);
+        m_Camera.transform.localRotation = Quaternion.Lerp(m_Camera.transform.localRotation, targetRot, 2.5f * Time.deltaTime);
     }
 
     private IEnumerator Possess(Agent target)
     {
         // Early out
-        if (target == null) yield return null;
-
-        float currentTime = 0.0f;
-        Vector3 targetEyes = target.transform.position + Vector3.up * 0.75f;
-        GetComponent<Collider>().enabled = false;
-
-        // TODO: Use epsilon and replace distance check with non sqrt function
-        while (Vector3.Distance(transform.position, targetEyes) > 0.01f)
+        if (target != null)
         {
-            if (!PauseMenu.m_GameIsPaused)
+            m_Transitioning = true;
+            m_Possessing = true;
+
+            float currentTime = 0.0f;
+            Vector3 targetEyes = target.transform.position + Vector3.up * 0.75f;
+            GetComponent<Collider>().enabled = false;
+
+            // TODO: Use epsilon and replace distance check with non sqrt function
+            while (Vector3.Distance(transform.position, targetEyes) > 0.05f)
             {
-                transform.position = Vector3.Lerp(transform.position, targetEyes, Tween.EaseInOut5(currentTime / m_DashDuration));
+                if (!PauseMenu.m_GameIsPaused)
+                {
+                    transform.position = Vector3.Lerp(transform.position, targetEyes, Tween.EaseInOut5(currentTime / m_DashDuration));
 
-                float distToTarget = Vector3.Distance(transform.position, targetEyes);
-                if (distToTarget <= 1.0f)
-                    transform.rotation = Quaternion.Lerp(transform.rotation, target.transform.rotation, Tween.EaseOut3(distToTarget));
+                    float distToTarget = Vector3.Distance(transform.position, targetEyes);
+                    if (distToTarget <= 1.5f)
+                    {
+                        // Fade to black?
+                    }
 
-                currentTime += Time.deltaTime;
+                    currentTime += Time.deltaTime;
+                }
+
+                yield return null;
             }
 
-            yield return null;
+            target.Possess();
+            m_Possessing = false;
+            m_CurrentPossessed = target;
+            StartCoroutine(DelayExecuteFunc(1.5f, () => { m_Transitioning = false; }));
         }
-
-        target.Possess();
-        m_CurrentPossessed = target;
-        m_Possessing = false;
     }
 
     //TODO: Move all functions below into a more suitable location
@@ -527,8 +548,6 @@ public class PariahController : InputController
                     m_IsPlayingExtremeLowHP = true;
                     GeneralSounds.s_Instance.PlayLowHealthPariahSound(transform);
                 }
-
-
 
                 if (m_Health <= 0)
                 {
@@ -839,4 +858,10 @@ public class PariahController : InputController
         m_SmokyArmParticle2.pause = !toggle;
     }
     
+    private IEnumerator DelayExecuteFunc(float delaySeconds, Action func)
+    {
+        yield return new WaitForSeconds(delaySeconds);
+
+        func();
+    }
 }

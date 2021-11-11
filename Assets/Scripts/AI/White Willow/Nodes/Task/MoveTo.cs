@@ -2,11 +2,13 @@ using UnityEngine;
 
 namespace WhiteWillow.Nodes
 {
-    [Category("Tasks")]
+    [Category("Task")]
     public sealed class MoveTo : Task
     {
         public override string IconPath { get; } = "Icons/MoveTo";
         public NodeMember<Vector3> Position;
+
+        private bool m_StopAgentOnExit = true;
 
         protected override void OnEnter()
         {
@@ -15,7 +17,10 @@ namespace WhiteWillow.Nodes
 
         protected override void OnExit()
         {
-            Owner.Agent.Stop();
+            if (m_StopAgentOnExit)
+                Owner.Agent.Stop();
+
+            m_StopAgentOnExit = true;
         }
 
         protected override NodeResult OnTick()
@@ -36,7 +41,8 @@ namespace WhiteWillow.Nodes
 
         public override NodeResult Abort()
         {
-            Owner.Agent.Stop();
+            Owner.Agent.Stop(false);
+            m_StopAgentOnExit = false;
 
             return base.Abort();
         }

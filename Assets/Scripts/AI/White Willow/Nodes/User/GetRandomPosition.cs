@@ -2,7 +2,7 @@
 using WhiteWillow;
 using WhiteWillow.Nodes;
 
-[Category("Tasks", "User")]
+[Category("Task", "User")]
 public class GetRandomPosition : Task
 {
     [Tooltip("The distance of the random position from the agent.")]

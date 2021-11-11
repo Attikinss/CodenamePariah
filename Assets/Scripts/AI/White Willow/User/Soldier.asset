@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8778995116742070401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8accdce1ed156214bb95375f12ef5291, type: 3}
+  m_Name: Wait
+  m_EditorClassIdentifier: 
+  Active: 0
+  Owner: {fileID: 11400000}
+  Parent: {fileID: 8670973244123280590}
+  State: 0
+  Title: Wait
+  GUID: b82a84eb-a046-4372-bc9b-b70a3f473bd2
+  Locked: 0
+  ExecutionOrder: 2
+  GraphDimensions:
+    serializedVersion: 2
+    x: 770
+    y: 595
+    width: 165
+    height: 81
+  Interruptable: 0
+  WaitType: 0
+  Duration: 1
+  m_ElapsedTime: 0
 --- !u!114 &-7378831324551104023
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22,11 +52,43 @@ MonoBehaviour:
   ExecutionOrder: 2
   GraphDimensions:
     serializedVersion: 2
-    x: 320
-    y: 468
+    x: 291
+    y: 467
     width: 247
     height: 82
   Child: {fileID: -1972453154264525992}
+  Target:
+    BlackboardValue: 1
+    Value: {fileID: 0}
+    Name: Target
+    Selection: 0
+--- !u!114 &-4511144329041060358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8254a5be985daea41b7c73a7a027997c, type: 3}
+  m_Name: AbortTargetInSight
+  m_EditorClassIdentifier: 
+  Active: 0
+  Owner: {fileID: 11400000}
+  Parent: {fileID: 1635078181476274910}
+  State: 0
+  Title: AbortTargetInSight
+  GUID: 27d1fe21-c82a-410c-94ad-fbebe4dc9a58
+  Locked: 0
+  ExecutionOrder: 2
+  GraphDimensions:
+    serializedVersion: 2
+    x: 647
+    y: 213
+    width: 247
+    height: 82
+  Child: {fileID: 5135776055136319456}
   Target:
     BlackboardValue: 1
     Value: {fileID: 0}
@@ -54,8 +116,8 @@ MonoBehaviour:
   ExecutionOrder: 1
   GraphDimensions:
     serializedVersion: 2
-    x: 155
-    y: 566
+    x: 126
+    y: 594
     width: 165
     height: 81
   Interruptable: 0
@@ -93,8 +155,8 @@ MonoBehaviour:
   ExecutionOrder: 2
   GraphDimensions:
     serializedVersion: 2
-    x: 361
-    y: 566
+    x: 333
+    y: 595
     width: 165
     height: 81
   Interruptable: 0
@@ -125,46 +187,14 @@ MonoBehaviour:
   ExecutionOrder: 2
   GraphDimensions:
     serializedVersion: 2
-    x: 237
-    y: 341
+    x: 224
+    y: 340
     width: 167
     height: 82
   RunningChild: {fileID: 0}
   Children:
   - {fileID: 5787509954937239651}
   - {fileID: -7378831324551104023}
---- !u!114 &-1014698060343594665
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 729f6e5e156465249afc2926c5a1fcc7, type: 3}
-  m_Name: Log
-  m_EditorClassIdentifier: 
-  Active: 0
-  Owner: {fileID: 11400000}
-  Parent: {fileID: 4792693269171629120}
-  State: 0
-  Title: Log
-  GUID: c8cbfa25-e588-403e-b941-45254ba54192
-  Locked: 0
-  ExecutionOrder: 1
-  GraphDimensions:
-    serializedVersion: 2
-    x: 630
-    y: 469
-    width: 165
-    height: 81
-  Interruptable: 0
-  Message:
-    BlackboardValue: 0
-    Value: Doing nothing.
-    Name: 
-    Selection: 0
 --- !u!114 &-526603628831890957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,8 +217,8 @@ MonoBehaviour:
   ExecutionOrder: 1
   GraphDimensions:
     serializedVersion: 2
-    x: 72
-    y: 215
+    x: 27
+    y: 213
     width: 165
     height: 82
   RunningChild: {fileID: 0}
@@ -217,16 +247,17 @@ MonoBehaviour:
   - {fileID: -2873006661844372805}
   - {fileID: 9119219595533620095}
   - {fileID: 7032234773326167870}
-  - {fileID: 125078122012639803}
-  - {fileID: 4792693269171629120}
-  - {fileID: -1014698060343594665}
-  - {fileID: 2304292368187985714}
   - {fileID: 1635078181476274910}
   - {fileID: 3610415081122974839}
   - {fileID: 5787509954937239651}
   - {fileID: -1972453154264525992}
   - {fileID: -7378831324551104023}
---- !u!114 &125078122012639803
+  - {fileID: 5135776055136319456}
+  - {fileID: 8670973244123280590}
+  - {fileID: -8778995116742070401}
+  - {fileID: -4511144329041060358}
+  - {fileID: 641689072048003680}
+--- !u!114 &641689072048003680
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -235,26 +266,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef68c884cda3a8a49b6fbba58b9c197c, type: 3}
-  m_Name: Idle
+  m_Script: {fileID: 11500000, guid: 567873f07fb3d8e41b05186f3211a63a, type: 3}
+  m_Name: GuardPosition
   m_EditorClassIdentifier: 
   Active: 0
   Owner: {fileID: 11400000}
-  Parent: {fileID: 1635078181476274910}
+  Parent: {fileID: 8670973244123280590}
   State: 0
-  Title: Idle
-  GUID: e62e1dfc-0058-42e2-a0f9-19eb7739ae97
+  Title: GuardPosition
+  GUID: c8f3564f-24c8-424e-9e4d-72151429e63f
   Locked: 0
-  ExecutionOrder: 2
+  ExecutionOrder: 1
   GraphDimensions:
     serializedVersion: 2
-    x: 712
-    y: 215
-    width: 165
-    height: 82
-  RunningChild: {fileID: 0}
-  Children:
-  - {fileID: 4792693269171629120}
+    x: 570
+    y: 595
+    width: 200
+    height: 81
+  Interruptable: 0
+  Origin: {x: 0, y: 0, z: 0}
+  TargetPosition: {x: 0, y: 0, z: 0}
+  Distance:
+    BlackboardValue: 0
+    Value: 0
+    Name: 
+    Selection: 0
 --- !u!114 &1635078181476274910
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -284,37 +320,7 @@ MonoBehaviour:
   RunningChild: {fileID: 0}
   Children:
   - {fileID: -526603628831890957}
-  - {fileID: 125078122012639803}
---- !u!114 &2304292368187985714
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8accdce1ed156214bb95375f12ef5291, type: 3}
-  m_Name: Wait
-  m_EditorClassIdentifier: 
-  Active: 0
-  Owner: {fileID: 11400000}
-  Parent: {fileID: 4792693269171629120}
-  State: 0
-  Title: Wait
-  GUID: e3c26fd8-a67a-4829-b480-cf846b8a3ebc
-  Locked: 0
-  ExecutionOrder: 2
-  GraphDimensions:
-    serializedVersion: 2
-    x: 796
-    y: 469
-    width: 165
-    height: 81
-  Interruptable: 0
-  WaitType: 0
-  Duration: 0.15
-  m_ElapsedTime: 0
+  - {fileID: -4511144329041060358}
 --- !u!114 &3610415081122974839
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -337,8 +343,8 @@ MonoBehaviour:
   ExecutionOrder: 1
   GraphDimensions:
     serializedVersion: 2
-    x: -237
-    y: 467
+    x: -274
+    y: 466
     width: 195
     height: 82
   Child: {fileID: 5969798697368172460}
@@ -355,36 +361,6 @@ MonoBehaviour:
   m_RaycastSteps: 3
   m_RaycastsPerStep: 7
   m_RaycastSpacing: 0.02
---- !u!114 &4792693269171629120
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 044444dddb989c94aa4a827c03c2c9cd, type: 3}
-  m_Name: Do nothing
-  m_EditorClassIdentifier: 
-  Active: 0
-  Owner: {fileID: 11400000}
-  Parent: {fileID: 125078122012639803}
-  State: 0
-  Title: Do nothing
-  GUID: a342a58d-89c3-4291-b427-3555ae07e360
-  Locked: 0
-  ExecutionOrder: 1
-  GraphDimensions:
-    serializedVersion: 2
-    x: 709
-    y: 341
-    width: 171
-    height: 82
-  RunningChild: {fileID: 0}
-  Children:
-  - {fileID: -1014698060343594665}
-  - {fileID: 2304292368187985714}
 --- !u!114 &4850965985751875924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -412,6 +388,35 @@ MonoBehaviour:
     width: 165
     height: 83
   Child: {fileID: 1635078181476274910}
+--- !u!114 &5135776055136319456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef68c884cda3a8a49b6fbba58b9c197c, type: 3}
+  m_Name: Idle
+  m_EditorClassIdentifier: 
+  Active: 0
+  Owner: {fileID: 11400000}
+  Parent: {fileID: -4511144329041060358}
+  State: 0
+  Title: Idle
+  GUID: 6c44f97c-f7b3-4876-8f9b-822ffc71a29a
+  Locked: 0
+  ExecutionOrder: 2
+  GraphDimensions:
+    serializedVersion: 2
+    x: 688
+    y: 340
+    width: 165
+    height: 82
+  RunningChild: {fileID: 0}
+  Children:
+  - {fileID: 8670973244123280590}
 --- !u!114 &5787509954937239651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -434,12 +439,12 @@ MonoBehaviour:
   ExecutionOrder: 1
   GraphDimensions:
     serializedVersion: 2
-    x: 155
-    y: 468
+    x: 126
+    y: 467
     width: 165
     height: 82
   Child: {fileID: -2873006661844372805}
-  m_CooldownTime: 1.5
+  m_CooldownTime: 0.5
   m_CachedTime: 0
 --- !u!114 &5969798697368172460
 MonoBehaviour:
@@ -463,8 +468,8 @@ MonoBehaviour:
   ExecutionOrder: 1
   GraphDimensions:
     serializedVersion: 2
-    x: -222
-    y: 566
+    x: -259
+    y: 565
     width: 165
     height: 81
   Interruptable: 0
@@ -502,7 +507,7 @@ MonoBehaviour:
   ExecutionOrder: 2
   GraphDimensions:
     serializedVersion: 2
-    x: -27
+    x: -63
     y: 467
     width: 165
     height: 81
@@ -510,6 +515,36 @@ MonoBehaviour:
   WaitType: 1
   Duration: 1
   m_ElapsedTime: 0
+--- !u!114 &8670973244123280590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 044444dddb989c94aa4a827c03c2c9cd, type: 3}
+  m_Name: Patrol
+  m_EditorClassIdentifier: 
+  Active: 0
+  Owner: {fileID: 11400000}
+  Parent: {fileID: 5135776055136319456}
+  State: 0
+  Title: Patrol
+  GUID: 06586a47-0b66-4107-9c1a-4ff5fca28125
+  Locked: 0
+  ExecutionOrder: 1
+  GraphDimensions:
+    serializedVersion: 2
+    x: 688
+    y: 467
+    width: 165
+    height: 82
+  RunningChild: {fileID: 0}
+  Children:
+  - {fileID: -8778995116742070401}
+  - {fileID: 641689072048003680}
 --- !u!114 &9119219595533620095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -532,8 +567,8 @@ MonoBehaviour:
   ExecutionOrder: 1
   GraphDimensions:
     serializedVersion: 2
-    x: -125
-    y: 341
+    x: -162
+    y: 340
     width: 198
     height: 82
   RunningChild: {fileID: 0}

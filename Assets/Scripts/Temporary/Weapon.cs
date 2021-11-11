@@ -153,6 +153,12 @@ public class Weapon : MonoBehaviour
     }
 	private void Start()
 	{
+        // Hard-coded adjustment to assault rifle sound. This is temporary just while the FMOD Studio side of things hasn't been fixed.
+        //if (m_TypeTag == WEAPONTYPE.RIFLE || m_TypeTag == WEAPONTYPE.DUAL)
+        //    m_AudioFireEvent.GetEventInstance().setVolume(0.4f); // 85% of FMOD Studio volume.
+        //if (m_TypeTag == WEAPONTYPE.PISTOL)
+        //    m_AudioFireEvent.GetEventInstance().setVolume(0.5f);
+
         m_UIManager = UIManager.s_Instance;
 
         if(!m_InitialisedSkinnedMeshRenderers)
@@ -308,13 +314,14 @@ public class Weapon : MonoBehaviour
                     AddVisualRecoil();
 
                     // ========================= TEMPORARY SHOOT COLLISION ========================= //
-
                     if (Physics.Raycast(ray, out RaycastHit hitInfo, 500))
                     {
                         if (hitInfo.transform.gameObject != null)
                         {
+                            // Only play the bullet shot effect if we are standing atleast a certain amount away from the collider.
+                            if(Vector3.Distance(m_Inventory.Owner.transform.position, hitInfo.point) > 2)
+                                PlayBulletEffect(special, true, hitInfo.point);
 
-                            PlayBulletEffect(special, true, hitInfo.point);
                             if (hitInfo.transform.TryGetComponent(out Inventory agentInventory))
                             {
                                 float damageMod = m_Inventory.Owner.Possessed ? 1.0f : m_AIDamageModifier;
@@ -336,7 +343,16 @@ public class Weapon : MonoBehaviour
                     else
                     {
                         // Shot did not hit gameobject.
-                        PlayBulletEffect(special, false, Vector3.zero);
+                        Plane plane = new Plane(-m_Camera.transform.forward, 1000); // This is creating a plane for us to aim the
+                                                                                    // bullet effect towards if we are in an open area without any colliders.
+                        float planeEnter;
+                        if (plane.Raycast(ray, out planeEnter))
+                        {
+                            Debug.Log("Raycast used plane instead.");
+                            PlayBulletEffect(special, true, ray.GetPoint(planeEnter));
+                        }
+
+                        //PlayBulletEffect(special, false, Vector3.zero);
                     }
                     // ============================================================================= //
                 }
@@ -724,8 +740,8 @@ public class Weapon : MonoBehaviour
     /// <summary>Reloads the weapon over time.</summary>
     public IEnumerator Reload(bool special = false)
     {
-        //if (!IsReloading())
-        //{
+        if (!GetReloadState(special))
+        {
             StartReloadAnimation(special);
             PlayReloadSound();
 
@@ -752,68 +768,71 @@ public class Weapon : MonoBehaviour
 
             // Get how many rounds are needed to top up
             //int ammoRequired = m_MagazineSize - m_RoundsInMagazine;
-            int ammoRequired;
-            int reservePool;
-            if (special)
+            if (m_Inventory.Owner.PossessedPreviously)
             {
-                ammoRequired = m_MagazineSize - m_RoundsInMagazineLeft;
-                //reservePool = m_ReserveAmmoLeft;
-                reservePool = m_ReserveAmmo;
-            }
-            else
-            { 
-                ammoRequired = m_MagazineSize - m_RoundsInMagazine;
-                reservePool = m_ReserveAmmo;
-            }
-
-        
-
-            // Check the size of the reserve pool
-            if (reservePool <= ammoRequired)
-            {
-                // Update UI to only show one mag
-                //m_UIManager.ModuloEqualsZero(m_RoundsInMagazine + m_ReserveAmmo);
-
-                // Move all remaining ammo into magazine
+                int ammoRequired;
+                int reservePool;
                 if (special)
                 {
-                    //m_RoundsInMagazineLeft += m_ReserveAmmoLeft;
-                    m_RoundsInMagazineLeft += m_ReserveAmmo;
-                    //m_ReserveAmmoLeft = 0;
-                    m_ReserveAmmo = 0;
-                }
-                else 
-                {
-                    m_RoundsInMagazine += m_ReserveAmmo;
-                    m_ReserveAmmo = 0;
-                }
-            }
-            else
-            {
-                if ((m_RoundsInMagazine + m_ReserveAmmo) % m_MagazineSize == 0)
-                {
-                    // Total ammo equals an amount that when divided by magazine size, has no remainder therefore get rid of a mag UI element
-                    //m_UIManager.ModuloEqualsZero(m_MagazineSize);
+                    ammoRequired = m_MagazineSize - m_RoundsInMagazineLeft;
+                    //reservePool = m_ReserveAmmoLeft;
+                    reservePool = m_ReserveAmmo;
                 }
                 else
                 {
-                    // Removes bullet sprites total from 1 - 2 mags depending on the ammo missing from current magazine and how much ammo was already missing in the last magazine
-                    //m_UIManager.RemoveAmmoFromLastAddToCurrent(m_MagazineSize);
+                    ammoRequired = m_MagazineSize - m_RoundsInMagazine;
+                    reservePool = m_ReserveAmmo;
                 }
 
-                // Move required amount from reserve to magazine
-                if (special)
+                // Check the size of the reserve pool
+                if (reservePool <= ammoRequired)
                 {
-                    m_RoundsInMagazineLeft += ammoRequired;
-                    //m_ReserveAmmoLeft -= ammoRequired;
-                    m_ReserveAmmo -= ammoRequired;
+                    // Update UI to only show one mag
+                    //m_UIManager.ModuloEqualsZero(m_RoundsInMagazine + m_ReserveAmmo);
+
+                    // Move all remaining ammo into magazine
+                    if (special)
+                    {
+                        //m_RoundsInMagazineLeft += m_ReserveAmmoLeft;
+                        m_RoundsInMagazineLeft += m_ReserveAmmo;
+                        //m_ReserveAmmoLeft = 0;
+                        m_ReserveAmmo = 0;
+                    }
+                    else
+                    {
+                        m_RoundsInMagazine += m_ReserveAmmo;
+                        m_ReserveAmmo = 0;
+                    }
                 }
                 else
-                { 
-                    m_RoundsInMagazine += ammoRequired;
-                    m_ReserveAmmo -= ammoRequired;
+                {
+                    if ((m_RoundsInMagazine + m_ReserveAmmo) % m_MagazineSize == 0)
+                    {
+                        // Total ammo equals an amount that when divided by magazine size, has no remainder therefore get rid of a mag UI element
+                        //m_UIManager.ModuloEqualsZero(m_MagazineSize);
+                    }
+                    else
+                    {
+                        // Removes bullet sprites total from 1 - 2 mags depending on the ammo missing from current magazine and how much ammo was already missing in the last magazine
+                        //m_UIManager.RemoveAmmoFromLastAddToCurrent(m_MagazineSize);
+                    }
+
+                    // Move required amount from reserve to magazine
+                    if (special)
+                    {
+                        m_RoundsInMagazineLeft += ammoRequired;
+                        //m_ReserveAmmoLeft -= ammoRequired;
+                        m_ReserveAmmo -= ammoRequired;
+                    }
+                    else
+                    {
+                        m_RoundsInMagazine += ammoRequired;
+                        m_ReserveAmmo -= ammoRequired;
+                    }
                 }
             }
+            else
+                m_RoundsInMagazine = m_MagazineSize;
 
             SetFireTime(special); // Added so that if the player is holding down fire while reloading, they will begin firing at t=0. Without this the fire time is what is what when they
                            // originally started firing.
@@ -824,7 +843,7 @@ public class Weapon : MonoBehaviour
                 m_WeaponActions.m_IsReloadingLeft = false;
             else
                 m_WeaponActions.m_IsReloading = false;
-        //}
+        }
     }
 
     private void UpdateSway(float x, float y)
@@ -837,7 +856,22 @@ public class Weapon : MonoBehaviour
         {
             Vector3 gunOriginalPos = GetCurrentWeaponOriginalPos();
 
-            Vector3 bobStuff = WeaponBob();
+            Vector3 bobStuff = Vector3.zero;
+            if (m_Inventory.Owner.m_HostController.m_MovInfo.m_IsGrounded)
+                bobStuff = WeaponBob();
+            // Attempting to have minecraft hand like movement when falling. For now though, I'll leave it as I don't have much time left.
+
+            //else
+            //{
+            //    if (m_Inventory.Owner.m_HostController.Rigidbody.velocity.y < 0) // This means we are falling.
+            //    { 
+            //        //bobStuff = -m_Inventory.Owner.m_HostController.Rigidbody.velocity;
+            //        //bobStuff.x = Mathf.Clamp(bobStuff.x, -0.05f, 0.05f);
+            //        bobStuff.y = Mathf.Clamp(-m_Inventory.Owner.m_HostController.Rigidbody.velocity.y, -0.05f, 0.05f);
+            //        Debug.Log("We are falling.");
+            //    }
+            //}
+            
 
             Vector3 finalPosition = Vector3.zero;
             finalPosition.x = Mathf.Clamp(-x * 0.02f, -weaponConfig.m_WeaponSwayClampX, weaponConfig.m_WeaponSwayClampX) + bobStuff.x;
@@ -850,12 +884,14 @@ public class Weapon : MonoBehaviour
             gunTransform.localRotation = Quaternion.Slerp(gunTransform.localRotation, zAxis * xAxis, weaponConfig.m_WeaponSwayRotateSpeed);
 
             float currentFOV = m_Camera.fieldOfView;
-            float desiredFOV = 60;
+            float desiredFOV = 0;
+            if (GameManager.s_Instance && GameManager.s_Instance.m_CurrentCamera) // Making sure GameManager has a ref to the current camera so we can use it.
+                desiredFOV = (Mathf.Atan(Mathf.Tan((float)(m_Inventory.Owner.m_HostController.GetPrefs().VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / GameManager.s_Instance.m_CurrentCamera.aspect) * 2) * Mathf.Rad2Deg;
 
             if (!m_DualWield)
             { 
                 float requiredChange = desiredFOV - currentFOV;
-                m_Camera.fieldOfView += requiredChange * 0.45f;
+                m_Camera.fieldOfView += requiredChange * /*0.45f*/ 24 * Time.deltaTime;
             }
 
         }
@@ -864,12 +900,14 @@ public class Weapon : MonoBehaviour
             // Had to put the sway code with the Aim() function since it was easier to just add the neccessary values to the calculations over there rather than try and split up the equations.
 
             float currentFOV = m_Camera.fieldOfView;
-            float desiredFOV = 40;
+            float desiredFOV = 0;
+            if(GameManager.s_Instance && GameManager.s_Instance.m_CurrentCamera) // Making sure GameManager has a ref to the current camera so we can use it.
+                desiredFOV = (Mathf.Atan(Mathf.Tan((float)(m_Inventory.Owner.m_HostController.GetPrefs().VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / GameManager.s_Instance.m_CurrentCamera.aspect) * 2) * Mathf.Rad2Deg - (Mathf.Atan(Mathf.Tan((float)(m_Config.m_FOVZoom * Mathf.Deg2Rad) * 0.5f) / GameManager.s_Instance.m_CurrentCamera.aspect) * 2) * Mathf.Rad2Deg;
 
             float requiredChange = desiredFOV - currentFOV;
 
             if(!GetReloadState() && !m_DualWield) // Wont zoom in if we are reloading or if we are using a dual wielded weapon.
-                m_Camera.fieldOfView += requiredChange * 0.45f * Time.deltaTime;
+                m_Camera.fieldOfView += requiredChange * /*0.45f*/ 24 * Time.deltaTime;
 
 
 
@@ -936,9 +974,22 @@ public class Weapon : MonoBehaviour
         }
 
         else
-        { 
+        {
+            // If we are not holding a dual wield and our weapon is the assault rifle, there
+            // is a chance for the rare Pariah reload to happen. For testing I'll make it so
+            // rifles only reload with Pariah's reload for now.
+            //if (m_TypeTag == WEAPONTYPE.RIFLE)                                        
+            //{
+            //    m_Animators.m_GunAnimators[0].SetTrigger("OnPariahReload");
+            //    m_Animators.m_ArmsAnimators[0].SetTrigger("OnPariahReload");                  // ============== NOTE ============== //
+            //    GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnPariahReload", true);         // This is commented out due to the animation
+            //}                                                                                 // not working currently.
+                                                                                                // ================================== //
+            //else // We are reloading the pistol or one of the dual wield rifles.
+            //{ 
             m_Animators.m_GunAnimators[0].SetTrigger("OnReload");
-            m_Animators.m_ArmsAnimators[0].SetTrigger("OnReload");
+                m_Animators.m_ArmsAnimators[0].SetTrigger("OnReload");
+            //}
         }
          
             
@@ -1176,6 +1227,7 @@ public class Weapon : MonoBehaviour
     }
     public void ResetReload() { m_WeaponActions.m_IsReloading = false; }
     public bool IsReloading() { return m_WeaponActions.m_IsReloading; }
+    public bool IsReloadingLeft() { return m_WeaponActions.m_IsReloadingLeft; }
     public bool GetAimState() { return m_WeaponActions.m_IsAiming; }
     public void ResetAim() { m_WeaponActions.m_IsAiming = false; }
     public bool GetRecoilTestState() { return m_RecoilTesting.m_IsRecoilTesting; }
@@ -1328,5 +1380,25 @@ public class Weapon : MonoBehaviour
         Gizmos.DrawSphere(targetPos, 0.25f);
         Gizmos.DrawSphere(m_Inventory.Owner.m_FiringPosition.position, 0.25f);
         Gizmos.DrawLine(targetPos, m_Inventory.Owner.m_FiringPosition.position);
+    }
+
+    /// <summary>
+    /// Don't know why I put this in the Weapon script. There's a better function, AddExtraCameraShake(Vector3) in
+    /// the HostController.
+    /// </summary>
+    public void AddDamageCameraShake()
+    {
+        WeaponConfiguration weaponConfig = GetCurrentWeaponConfig();
+        Vector3 cameraRot = m_Inventory.Owner.m_HostController.m_OnHitCameraShakeRotation;
+
+        CameraRecoil cameraRecoil = m_Controller.m_AccumulatedRecoil;
+
+        Vector3 camVisRecoil = Vector3.zero;
+        camVisRecoil.x = -cameraRot.x;
+        camVisRecoil.y = Random.Range(-cameraRot.y, -cameraRot.y);
+        camVisRecoil.z = Random.Range(-cameraRot.z, -cameraRot.z);
+
+        //cameraRecoil.accumulatedVisualRecoil += new Vector3(-weaponConfig.RecoilRotationAiming.x, Random.Range(-weaponConfig.RecoilRotationAiming.y, weaponConfig.RecoilRotationAiming.y), Random.Range(-weaponConfig.RecoilRotationAiming.z, weaponConfig.RecoilRotationAiming.z));
+        cameraRecoil.accumulatedVisualRecoil += camVisRecoil;
     }
 }

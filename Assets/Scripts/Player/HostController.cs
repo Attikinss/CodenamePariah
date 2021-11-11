@@ -72,6 +72,18 @@ public class HostController : InputController
     [Tooltip("Mesh of soldier or scientist to hide when entering unit.")]
     public GameObject m_Mesh;
 
+
+    // This was put together really quickly.
+    [Header("On Damage Camerashake")]
+    public Vector3 m_OnHitCameraShakeRotation;
+
+    [Header("On Drain Camerashake")]
+    public Vector3 m_OnDrainCameraShakeRotation;
+
+    [Header("Special Dash Grounded")]
+    public float m_DashGroundCheckDistance = 1.5f;
+
+    //private Coroutine m_HideArmsCoroutine; // A reference to the coroutine responsible for hiding Pariah's arms. // Moved to PariahController.cs.
 	private void Awake()
 	{
         m_AccumulatedRecoil = new CameraRecoil();
@@ -112,22 +124,24 @@ public class HostController : InputController
     }
 	private void Update()
     {
-        m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
+        //m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;//
         if (!PauseMenu.m_GameIsPaused && !CustomConsole.m_Activated)
         {
             if (!m_Active) return;
 
-        if (GetCurrentWeaponConfig()) // If we have a weapon. We may not have any weapons so thats why we check this.
-        { 
-            if (GetCurrentWeaponConfig().m_AlwaysADS) // The reason why I do this is so I don't have to check for the m_AlwaysADS bool everywhere. This way I can still just check for m_IsAiming in all functions.
-                GetCurrentWeapon().m_WeaponActions.m_IsAiming = true;
-            if (GetCurrentWeaponConfig().m_AlwaysFiring) // Doing same here for the reason above.
-                GetCurrentWeapon().m_WeaponActions.m_IsFiring = true;
-        }
+            if (GetCurrentWeaponConfig()) // If we have a weapon. We may not have any weapons so thats why we check this.
+            {
+                if (GetCurrentWeaponConfig().m_AlwaysADS) // The reason why I do this is so I don't have to check for the m_AlwaysADS bool everywhere. This way I can still just check for m_IsAiming in all functions.
+                    GetCurrentWeapon().m_WeaponActions.m_IsAiming = true;
+                if (GetCurrentWeaponConfig().m_AlwaysFiring) // Doing same here for the reason above.
+                    GetCurrentWeapon().m_WeaponActions.m_IsFiring = true;
+            }
 
-            m_MovInfo.m_IsGrounded = CheckGrounded();
-            if (m_MovInfo.m_IsGrounded && m_HasDashedInAir)
-            { 
+            m_MovInfo.m_IsGrounded = CheckGrounded(m_GroundCheckDistance);
+            m_MovInfo.m_IsDashGrounded = CheckGrounded(m_DashGroundCheckDistance);
+
+            if (m_MovInfo.m_IsDashGrounded && m_HasDashedInAir)
+            {
                 m_HasDashedInAir = false; // Reset dashing in the air.
                 // Clearing counted dash uses in the air.
                 m_DashesInAir = 0;
@@ -170,8 +184,22 @@ public class HostController : InputController
 
                         m_DrainAbility.drainCounter = 0.0f;
                         m_Inventory.TakeDamage(m_DrainAbility.damage, true);
+
+                        // Adding extra camera shake while draining.
+                        ExtraCameraShake(m_OnDrainCameraShakeRotation);
                     }
                 }
+            }
+
+
+        }
+        else
+        {
+            // To stop movement when paused.
+            if (PauseMenu.m_GameIsPaused)
+            {
+                m_MovInfo.m_CacheMovDirection = Vector3.zero;
+                Rigidbody.velocity = Vector3.zero;
             }
         }
     }
@@ -193,6 +221,8 @@ public class HostController : InputController
             Slide();
             Move(m_MovInfo.MovementInput);
         }
+        else
+            Rigidbody.useGravity = false; // Turn off gravity so we don't float down.
 	}
 
     
@@ -201,6 +231,23 @@ public class HostController : InputController
     /// </summary>
     public override void Enable()
     {
+
+        // Setting FOV.
+        m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;
+        GameManager.s_Instance.m_CurrentCamera = m_Camera;
+
+        // Currently there is a bug where the possession shader remains after the player has jumped into an agent.
+        // To try and prevent this I'm going to check if Pariah still has an agent selected and if they do, deselect
+        // them here.
+        PariahController pariah = GameManager.s_Instance?.m_Pariah;
+        if (pariah && pariah?.m_LookedAtAgent)
+        {
+            pariah.m_LookedAtAgent.DeselectAgent();
+            pariah.m_LookedAtAgent = null;
+        }
+
+
+
         GameManager.s_CurrentHost = this;
 
         Rigidbody.isKinematic = false;
@@ -228,9 +275,10 @@ public class HostController : InputController
         m_UIManager?.SetInventory(m_Inventory);
         m_UIManager?.UpdateAllUI(GetCurrentWeapon());
 
+        m_UIManager?.SetDeathIncarnateBar((float)GameManager.s_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
 
         // Hide mesh when entering.
-        if(m_Mesh)
+        if (m_Mesh)
             m_Mesh.SetActive(false);
 
         // Letting the game manager we're entering a unit.
@@ -245,11 +293,26 @@ public class HostController : InputController
     /// </summary>
     public override void Disable()
     {
+        GameManager.s_Instance.m_CurrentCamera = null;
+
+
         Rigidbody.isKinematic = true;
         GetComponent<PlayerInput>().enabled = false;
         m_Active = false;
         m_Camera.enabled = false;
         //HideHUD();
+
+
+        // ============= Resetting dash movement ============= //
+        // This is required as it fixes an issue that occurs
+        // when the user dashes with an agent, but then leaves
+        // before the dash has started/completed. The bug causes
+        // the player to go flying really fast in the direction
+        // of the dash the next time they enter that host.
+        m_MovInfo.m_DashDir = Vector3.zero;
+        // =================================================== //
+
+
 
         CustomDebugUI.s_Instance?.ClearController();
 
@@ -278,11 +341,26 @@ public class HostController : InputController
 
         pariah.ClearCurrentPossessed();
 
-        m_UIManager?.SetDeathIncarnateBar((float)pariah.m_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
-        if (pariah.m_Power >= m_DeathIncarnateAbility.requiredKills)
+        m_UIManager?.SetDeathIncarnateBar((float)GameManager.s_Power / GameManager.s_CurrentHost.m_DeathIncarnateAbility.requiredKills);
+        if (GameManager.s_Power >= m_DeathIncarnateAbility.requiredKills)
             m_UIManager?.ToggleReadyPrompt(false);
 
         GameManager.s_CurrentHost = null;
+
+        // There are some bugs that can occure due to the HostDrain animation hiding Pariah's arms when the button is cancelled.
+        // If the user hops out of an agent while draining the host, the arms will be hidden for Pariah in ghost form. To prevent this,
+        // in this Disable() function that gets called right before we hop out of the host, we will force unhide Pariah's arms so we
+        // can be sure they will appear for Pariah.
+        GameManager.s_Instance?.m_Pariah.ForceHideArms(false); // Unhides arms.
+
+        // // Also, we must ensure that any existing, already active coroutines are informed that we should stop hiding Pariah's arms.
+        // if(m_HideArmsCoroutine != null)           // Stopping the coroutine has been moved to the PariahController.cs.
+        //     StopCoroutine(m_HideArmsCoroutine);
+
+        GameManager.s_Instance?.m_Pariah.StopHideArmsCoroutine();
+        m_DrainAbility.isDraining = false; // Make sure they stop draining when we leave the agent.
+        GameManager.s_Instance?.m_Pariah.StopAnimation("IsDraining");
+
     }
 
     // ========================================================== Input Events ========================================================== //
@@ -315,11 +393,13 @@ public class HostController : InputController
 
                     m_MovInfo.m_CacheMovDirection = direction;
                     Rigidbody.velocity = direction;
+                    
                 }
                 else if (!m_MovInfo.m_IsGrounded && !m_MovInfo.m_HasDoubleJumped)
                 {
                     m_MovInfo.m_CacheMovDirection = direction;
                     Rigidbody.velocity = direction;
+                    
 
                     // Have to tick m_HasDoubleJumped to false;
                     m_MovInfo.m_HasDoubleJumped = true;
@@ -330,7 +410,7 @@ public class HostController : InputController
 
     public override void OnSlide(InputAction.CallbackContext value)
     {
-        if (value.performed && m_MovInfo.m_IsGrounded && m_MovInfo.m_IsMoving)
+        if (value.performed && m_MovInfo.m_IsGrounded && m_MovInfo.m_IsMoving && !m_Dashing && !m_DrainAbility.isDraining)
         {
             //Debug.Log("OnSlide called.");
             m_MovInfo.m_SlideDir = value.performed ? m_Orientation.forward : m_MovInfo.m_SlideDir;
@@ -347,8 +427,8 @@ public class HostController : InputController
 
     public override void OnPossess(InputAction.CallbackContext value)
     {
-        Debug.Log(value.performed);
-        if (value.performed && !PauseMenu.m_GameIsPaused && !CustomConsole.m_Activated)
+        //Debug.Log(value.performed);
+        if (value.performed && !PauseMenu.m_GameIsPaused && !CustomConsole.m_Activated && m_DeathIncarnateAbility.chargeRoutine == null)
         {
             if (TryGetComponent(out WhiteWillow.Agent agent))
                 agent.Release();
@@ -472,13 +552,22 @@ public class HostController : InputController
     public void OnAbility2(InputAction.CallbackContext value)
     {
         // Do ability 2 stuff.
-        if (value.performed)
+        if (value.performed && !m_Dashing && !m_MovInfo.m_IsSliding)
         {
             m_DrainAbility.isDraining = true;
+            GameManager.s_Instance?.m_Pariah.PlayArmAnim("IsDraining", false, m_DrainAbility.isDraining); // Will set animation to true/false depending
+                                                                                                          // on the state of m_DrainAbility.isDraining.
+
         }
         else if (value.canceled)
         {
-            m_DrainAbility.isDraining = false;
+            if (m_DrainAbility.isDraining) // We only want to cancel the drain if we are draining currently.
+            { 
+                GameManager.s_Instance?.m_Pariah.PlayArmAnim("IsDraining", true, false); // Will set animation to true/false depending
+                m_DrainAbility.isDraining = false;
+            }
+                                                                                                          // on the state of m_DrainAbility.isDraining.
+            //m_HideArmsCoroutine = StartCoroutine(GameManager.s_Instance?.m_Pariah.HideArms(1));
         }
     }
 
@@ -498,7 +587,7 @@ public class HostController : InputController
     {
         if (!PauseMenu.m_GameIsPaused)
         {
-            if (value.performed && !m_Dashing && m_CurrentDashCharges > 0 && !m_IsDelayedDashing)
+            if (value.performed && !m_Dashing && m_CurrentDashCharges > 0 && !m_IsDelayedDashing && !m_MovInfo.m_IsSliding && !m_DrainAbility.isDraining && !m_DeathIncarnateAbility.IsActive)
             {
                 // The code below has been incorporated into the DelayedDash() function.
 
@@ -533,6 +622,9 @@ public class HostController : InputController
                     //Debug.Log("====================================delay dashed====================================");
                     m_Dashing = true;
                     StartCoroutine(DelayedDash(m_DashDelay));
+
+                    m_MovInfo.m_HasJumped = true;
+
                     //}
                 }
 
@@ -570,12 +662,19 @@ public class HostController : InputController
         PariahController pariah = GameManager.s_Instance?.m_Pariah;
         if (!pariah) return;
 
-        if (value.performed && !m_DeathIncarnateAbility.deathIncarnateUsed && pariah.m_Power >= m_DeathIncarnateAbility.requiredKills)
+        if (value.performed && !m_DeathIncarnateAbility.deathIncarnateUsed && GameManager.s_Power >= m_DeathIncarnateAbility.requiredKills)
         {
-            GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnIncarnate", false);
+            
+            GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnIncarnate", false, false, true); // Forcing animation transition.
             m_DeathIncarnateAbility.chargeRoutine = StartCoroutine(Ability3Charge());
-            pariah.m_Power = 0; // Consume all power, reset back to 0.
+            GameManager.s_Power = 0; // Consume all power, reset back to 0.
             m_UIManager?.ToggleReadyPrompt(true);
+
+
+            // If we are draining, cancel it. This is to prevent draining the host while the animation has changed.
+            GameManager.s_Instance?.m_Pariah.PlayArmAnim("IsDraining", true, false); // Will set animation to true/false depending
+            m_DrainAbility.isDraining = false;
+
             //m_UIManager.ToggleBar(true);
         }
         else if (value.canceled)
@@ -646,31 +745,53 @@ public class HostController : InputController
         {
             Rigidbody.useGravity = true;
 
-            direction.y = Rigidbody.velocity.y;
+            if(!m_Dashing) // Important to only do this if we're not dashing. This is because it causes the dash to flick upwards.
+                direction.y = Rigidbody.velocity.y;
 
             // If we are dashing we want to set the downwards velocity to 0, so it feels like we have been given a push into the air.
-            if (m_Dashing)
-                direction.y = 0;
+            //if (m_Dashing)            // Removed this because dash is no longer position based.
+            //    direction.y = 0;
         }
         //else
         //{
         //    Rigidbody.useGravity = false;
         //}
-        if (m_MovInfo.m_GroundNormal != Vector3.zero && !m_MovInfo.m_IsGrounded && !m_MovInfo.m_HasJumped)
+
+
+        float velocityDownwards = Vector3.Dot(Rigidbody.velocity, Vector3.down); // Finding the amount of our velocity that is going downwards and projecting
+                                                                                 // it to our velocity. This allows us to apply the downwards force only if
+                                                                                 // we are freefalling or on a slop less than 0.75.
+        if (velocityDownwards <= 0.75f || m_Dashing)
         { 
-            Vector3 velocityTowardsSurface = Vector3.Dot(Rigidbody.velocity, m_MovInfo.m_GroundNormal) * m_MovInfo.m_GroundNormal;
-            direction -= velocityTowardsSurface;
+            if ((m_MovInfo.m_GroundNormal != Vector3.zero && !m_MovInfo.m_IsGrounded && !m_MovInfo.m_HasJumped))
+            { 
+                Vector3 velocityTowardsSurface = Vector3.Dot(Rigidbody.velocity, m_MovInfo.m_GroundNormal) * m_MovInfo.m_GroundNormal;
+                direction -= velocityTowardsSurface;
+                //Debug.Log("Pushing towards surface.");
+            }
         }
-        m_MovInfo.m_CacheMovDirection = direction;
+
+
+        
 
         // Ensure the slide will never make the player move vertically.
+        // It's important to set this because we set m_CacheMovDirection to direction. Setting it before
+        // will make slides stick to the ground and slopes/stairs.
         m_MovInfo.m_CacheSlideMove.y = 0;
+
+        m_MovInfo.m_CacheMovDirection = direction;
+
+
+        // This allows us to apply the dash direction if we are dashing and the normal movement direction
+        // if we aren't.
+        if(m_MovInfo.m_DashDir != Vector3.zero)
+            Rigidbody.velocity = m_MovInfo.m_DashDir;
+        else
+            Rigidbody.velocity = m_MovInfo.m_CacheMovDirection + m_MovInfo.m_CacheSlideMove;
 
 
         // Making sure angular velocity isn't a problem.
-        Rigidbody.velocity = m_MovInfo.m_CacheMovDirection + m_MovInfo.m_CacheSlideMove;
         //Rigidbody.angularVelocity = Vector3.zero;
-
 
         // ============================ MODIFIED FALLING ============================ //
         if (Rigidbody.velocity.y < 0)
@@ -690,6 +811,7 @@ public class HostController : InputController
         
 
         Vector3 requiredChange = desiredVel - currentVel;
+
         m_MovInfo.m_CacheMovDirection += requiredChange * (m_MovInfo.m_IsGrounded ? m_GroundAcceleration : m_AirAcceleration);
 
         //Telemetry.TracePosition("Host-Movement", transform.position, 0.05f, 150);
@@ -728,11 +850,11 @@ public class HostController : InputController
         return m_MovInfo.m_MoveDirection;
     }
 
-    private bool CheckGrounded()
+    private bool CheckGrounded(float checkDistance)
     {
         RaycastHit hit;
         Ray ray = new Ray(transform.position, Vector3.down);
-        if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckDistance))
+        if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, checkDistance))
         {
             //Debug.Log(hit.transform.name);
             //m_GroundNormal = hit.normal;          Moved to its own function.
@@ -757,9 +879,9 @@ public class HostController : InputController
     {
         RaycastHit hit;
         Ray ray = new Ray(transform.position, Vector3.down);
-        if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckDistance * 1.04f))
-        {
-            m_MovInfo.m_GroundNormal = hit.normal;
+        if (Physics.SphereCast(ray, m_GroundCheckRadius, out hit, m_GroundCheckDistance/* * 1.04f*/ * 2)) // This can be longer now as we added another check before we
+        {                                                                                                 // force the player downwards which is based on their current
+            m_MovInfo.m_GroundNormal = hit.normal;                                                        // y velocity (how steep a slope is or if they are falling.)
         }
         else
         {
@@ -950,7 +1072,9 @@ public class HostController : InputController
     }
 	IEnumerator Ability3Charge()
 	{
-		float time = 0.0f;
+        m_DeathIncarnateAbility.IsActive = true;
+
+        float time = 0.0f;
 
 		while (time < m_DeathIncarnateAbility.deathIncarnateRequiredHold)
 		{
@@ -984,6 +1108,7 @@ public class HostController : InputController
         // Play ability 3 particle effect.
         GameManager.s_Instance?.m_Pariah.m_IncarnateParticle.Play();
 
+        m_DeathIncarnateAbility.IsActive = false;
 		Ability3(m_DeathIncarnateAbility.deathIncarnateRadius, m_DeathIncarnateAbility.deathIncarnateDamage);
 	}
 	IEnumerator Ability3Draw()
@@ -1132,11 +1257,12 @@ public class HostController : InputController
     {
         m_IsDelayedDashing = true;
         // Play dash animation.
-        GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnDash");
-
-        float delayTime = 0.0f;
-        // Adding a start delay before actual dash is performed.
-        while (delayTime <= t)
+        GameManager.s_Instance?.m_Pariah.PlayArmAnim("OnDash", true, false, true);          // ======================== NOTE ======================== //
+                                                                                            // We must force this animation to play by setting the forceTransition
+                                                                                            // bool to true so that the animators transitions don't slow anything down.
+        float delayTime = 0.0f;                                                             // There was an issue before where the transition would take a few milliseconds
+        // Adding a start delay before actual dash is performed.                            // causing the dash to be cut short when dashing straight away after draining.
+        while (delayTime <= t)                                                              // ====================================================== //
         {
             delayTime += Time.deltaTime;
             yield return null;
@@ -1153,14 +1279,61 @@ public class HostController : InputController
         if (Physics.Raycast(m_Orientation.position, forwardDir, out RaycastHit hitInfo, m_DashDistance))
         {
             //StartCoroutine(Dash(hitInfo.point, -forwardDir * 0.5f, m_DashDuration));
-            StartCoroutine(Dash(hitInfo.point, -forwardDir * 0.5f, m_DashDuration, true));
+
+            // I'm using the forwardDir here in an unconventional way. For specifics check out the function.
+            // But in short, I'm using it to store the way we are facing currently and then the function sets
+            // our m_DashDir to it when the dash is performed.
+
+            StartCoroutine(Dash(forwardDir, -forwardDir * 0.5f, m_DashDuration, true, true));
         }
         else
         {
             //StartCoroutine(Dash(transform.position + forwardDir * m_DashDistance, Vector3.zero, m_DashDuration));
-            StartCoroutine(Dash(transform.position + forwardDir * m_DashDistance, Vector3.zero, m_DashDuration, true));
+            StartCoroutine(Dash(forwardDir, Vector3.zero, m_DashDuration, true, true));
         }
 
         
+    }
+
+    /// <summary>
+    /// Use to add extra camera shake to to the camera. Pass in the Vector3 that contains
+    /// the camera shake rotations.
+    /// </summary>
+    /// <param name="cameraShakeRotation">Rotation for the camera shake.</param>
+    public void ExtraCameraShake(Vector3 cameraShakeRotation)
+    {
+        CameraRecoil cameraRecoil = m_AccumulatedRecoil;
+
+        Vector3 camVisRecoil = Vector3.zero;
+        camVisRecoil.x = -cameraShakeRotation.x;
+        camVisRecoil.y = Random.Range(-cameraShakeRotation.y, -cameraShakeRotation.y);
+        camVisRecoil.z = Random.Range(-cameraShakeRotation.z, -cameraShakeRotation.z);
+
+        //cameraRecoil.accumulatedVisualRecoil += new Vector3(-weaponConfig.RecoilRotationAiming.x, Random.Range(-weaponConfig.RecoilRotationAiming.y, weaponConfig.RecoilRotationAiming.y), Random.Range(-weaponConfig.RecoilRotationAiming.z, weaponConfig.RecoilRotationAiming.z));
+        cameraRecoil.accumulatedVisualRecoil += camVisRecoil;
+    }
+
+    /// <summary>
+    /// Freeze all animations for the HostController. Things like the FPS weapons and arms.
+    /// </summary>
+    /// <param name="toggle">If true, all animators speeds will be set to 1, if false all speeds will be set to 0.</param>
+    public void ToggleAllAnimations(bool toggle)
+    {
+        Weapon currentWep = GetCurrentWeapon();
+
+        int toggleNum;
+        if (toggle)
+            toggleNum = 1;
+        else
+            toggleNum = 0;
+
+        for (int i = 0; i < currentWep.m_Animators.m_ArmsAnimators.Count; i++)
+        {
+            currentWep.m_Animators.m_ArmsAnimators[i].speed = toggleNum;
+        }
+        for (int i = 0; i < currentWep.m_Animators.m_GunAnimators.Count; i++)
+        {
+            currentWep.m_Animators.m_GunAnimators[i].speed = toggleNum;
+        }
     }
 }

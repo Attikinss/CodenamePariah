@@ -13,11 +13,15 @@ public class MovementInfo
 	[ReadOnly]
 	public bool m_IsGrounded;
 	[ReadOnly]
+	public bool m_IsDashGrounded; // The difference between this and regular grounded is that this grounds a bit earlier than when the player
+	[ReadOnly]					  // touches the floor. This is to give a bit of coyote time for landing with the dashes.
 	public Vector3 m_CacheMovDirection;
 	[ReadOnly]
 	public float m_CurrentMoveSpeed = 0;
 	[ReadOnly]
 	public bool m_IsMoving = false;
+	[ReadOnly]
+	public Vector3 m_DashDir;
 	
 	// Jump
 	[ReadOnly]

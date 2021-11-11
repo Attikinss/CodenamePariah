@@ -97,8 +97,19 @@ public class OptionsMenu : MonoBehaviour
 
     public TMP_Dropdown resolutionDropdown;
 
+    FMOD.Studio.Bus m_MasterBus;
+    FMOD.Studio.Bus m_MusicBus;
+    FMOD.Studio.Bus m_SFXBus;
+    FMOD.Studio.Bus m_DialogueBus;
+
     private void Awake()
     {
+
+        m_MasterBus = FMODUnity.RuntimeManager.GetBus("bus:/Master");
+        m_MusicBus = FMODUnity.RuntimeManager.GetBus("bus:/Master/Music");
+        m_SFXBus = FMODUnity.RuntimeManager.GetBus("bus:/Master/SFX");
+        m_DialogueBus = FMODUnity.RuntimeManager.GetBus("bus:/Master/Dialogue");
+
         //THIS IS PROBABLY VERY BAD
         m_MouseSensitivity = m_PlayerPrefs.GameplayConfig.MouseSensitivity;
         m_MouseSensitivitySlider.value = m_MouseSensitivity;
@@ -177,6 +188,8 @@ public class OptionsMenu : MonoBehaviour
             m_MasterVolumeInputField.text = m_MasterVolumeSlider.value.ToString();
         m_MasterVolume = (int)m_MasterVolumeSlider.value;
         m_PlayerPrefs.AudioConfig.MasterVolume = m_MasterVolume;
+
+        m_MasterBus.setVolume((float)m_MasterVolume / 100);
     }
     public void DialogueVolumeSliderValueChanged()
     {
@@ -184,6 +197,8 @@ public class OptionsMenu : MonoBehaviour
             m_DialogueVolumeInputField.text = m_DialogueVolumeSlider.value.ToString();
         m_DialogueVolume = (int)m_DialogueVolumeSlider.value;
         m_PlayerPrefs.AudioConfig.DialogueVolume = m_DialogueVolume;
+
+        m_DialogueBus.setVolume((float)m_DialogueVolume / 100);
     }
     public void SFXVolumeSliderValueChanged()
     {
@@ -191,6 +206,8 @@ public class OptionsMenu : MonoBehaviour
             m_SFXVolumeInputField.text = m_SFXVolumeSlider.value.ToString();
         m_SFXVolume = (int)m_SFXVolumeSlider.value;
         m_PlayerPrefs.AudioConfig.SFXVolume = m_SFXVolume;
+
+        m_SFXBus.setVolume((float)m_SFXVolume / 100);
     }
     public void MusicVolumeSliderValueChanged()
     {
@@ -198,6 +215,8 @@ public class OptionsMenu : MonoBehaviour
             m_MusicVolumeInputField.text = m_MusicVolumeSlider.value.ToString();
         m_MusicVolume = (int)m_MusicVolumeSlider.value;
         m_PlayerPrefs.AudioConfig.MusicVolume = m_MusicVolume;
+
+        m_MusicBus.setVolume((float)m_MusicVolume / 100);
     }
 
     public void FOVSliderValueChanged()
@@ -206,6 +225,10 @@ public class OptionsMenu : MonoBehaviour
             m_FOVInputField.text = m_FOVSlider.value.ToString();
         m_FieldOfView = (int)m_FOVSlider.value;
         m_PlayerPrefs.VideoConfig.FieldOfView = m_FieldOfView;
+
+        // Updates Pariah's FOV without relying on putting it in PariahController Update().
+        if (GameManager.s_Instance && GameManager.s_Instance.m_Pariah)
+            GameManager.s_Instance.m_Pariah.Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_FieldOfView * Mathf.Deg2Rad) * 0.5f) / GameManager.s_Instance.m_Pariah.Camera.aspect) * 2) * Mathf.Rad2Deg;
     }
 
     /// <summary>Gets called when the controller sensitivity has been changed.</summary>
@@ -246,6 +269,8 @@ public class OptionsMenu : MonoBehaviour
             m_MasterVolumeSlider.value = value;
         m_MasterVolume = value;
         m_PlayerPrefs.AudioConfig.MasterVolume = m_MasterVolume;
+
+        m_MasterBus.setVolume((float)m_MasterVolume / 100);
     }
 
     /// <summary>Gets called when a volume input field value has been changed.</summary>
@@ -268,6 +293,8 @@ public class OptionsMenu : MonoBehaviour
             m_DialogueVolumeSlider.value = value;
         m_DialogueVolume = value;
         m_PlayerPrefs.AudioConfig.DialogueVolume = m_DialogueVolume;
+
+        m_DialogueBus.setVolume((float)m_DialogueVolume / 100);
     }
 
     /// <summary>Gets called when a volume input field value has been changed.</summary>
@@ -290,6 +317,11 @@ public class OptionsMenu : MonoBehaviour
             m_SFXVolumeSlider.value = value;
         m_SFXVolume = value;
         m_PlayerPrefs.AudioConfig.SFXVolume = m_SFXVolume;
+
+        // Changing volume.
+        m_SFXBus.setVolume((float)m_SFXVolume / 100);
+        
+
     }
 
     /// <summary>Gets called when a volume input field value has been changed.</summary>
@@ -312,6 +344,8 @@ public class OptionsMenu : MonoBehaviour
             m_MusicVolumeSlider.value = value;
         m_MusicVolume = value;
         m_PlayerPrefs.AudioConfig.MusicVolume = m_MusicVolume;
+
+        m_MusicBus.setVolume((float)m_MusicVolume / 100);
     }
 
     public void FOVInputValueChanged()
@@ -333,6 +367,10 @@ public class OptionsMenu : MonoBehaviour
             m_FOVSlider.value = value;
         m_FieldOfView = value;
         m_PlayerPrefs.VideoConfig.FieldOfView = m_FieldOfView;
+
+        // Updates Pariah's FOV without relying on putting it in PariahController Update().
+        if (GameManager.s_Instance && GameManager.s_Instance.m_Pariah)
+            GameManager.s_Instance.m_Pariah.Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_FieldOfView * Mathf.Deg2Rad) * 0.5f) / GameManager.s_Instance.m_Pariah.Camera.aspect) * 2) * Mathf.Rad2Deg;
     }
 
     /// <summary>Gets called when the controller sensitivity input field value has been changed.</summary>

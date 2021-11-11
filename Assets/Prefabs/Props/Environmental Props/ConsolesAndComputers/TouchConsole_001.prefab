@@ -27,7 +27,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &4728728875508241951
 Transform:
@@ -103,6 +103,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: eadf7295a96329b40aa43f737abe3ae4, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: b283fb688e6a2124090866a3ccea7a67, type: 2}
     - target: {fileID: 919132149155446097, guid: eadf7295a96329b40aa43f737abe3ae4, type: 3}
       propertyPath: m_Name
       value: Arena_001_Detail_Small_ComputerPanel (5)

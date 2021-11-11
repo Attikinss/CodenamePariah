@@ -7,7 +7,7 @@ namespace WhiteWillow.Nodes
     ///<br>A node that iterates through its child nodes until one returns a success or running result.</br>
     ///<br>If it never receives a success or running result it will return a failure result to its parent.</br>
     ///</summary>
-    [Category("Composites")]
+    [Category("Composite")]
     public sealed class Selector : Composite
     {
         public override string IconPath { get; } = "Icons/Selector";

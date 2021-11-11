@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.VFX;
@@ -26,7 +27,7 @@ namespace WhiteWillow
         private NavMeshAgent m_NavAgent;
         public Query CurrentQuery;
         public EnvironmentQuerySystem.EQSNode CurrentNode { get; set; }
-        public Weapon m_Weapon;
+        public Weapon Weapon { get => m_HostController.m_Inventory.m_CurrentWeapon; }
         [Tooltip("The mesh that we apply the possession shader to.")]
         public GameObject m_Mesh;
         public Material m_PossessionMaterial;
@@ -41,7 +42,9 @@ namespace WhiteWillow
         [HideInInspector]
         public HostController m_HostController;
 
+        public bool Alive { get; private set; } = true;
         public bool Possessed { get; private set; } = false;
+        public bool PossessedPreviously { get; private set; }
         public bool EngagingTarget { get; private set; } = true;
         public Transform Orientation { get => m_HostController.m_Orientation; }
         public Vector3 Destination { get; private set; }
@@ -68,6 +71,8 @@ namespace WhiteWillow
         [Tooltip("Muzzle flash for the AI.")]
         public VisualEffect m_AIMuzzleFlash;
 
+        private Vector3 m_CachedAgentVelocity = Vector3.zero;
+
         private void Awake()
 		{
             m_RuntimeTree = InputTree?.Clone(gameObject.name);
@@ -90,6 +95,7 @@ namespace WhiteWillow
         }
         private void Update()
         {
+
             if (Possessed)
             {
                 if (!PauseMenu.m_GameIsPaused)
@@ -102,17 +108,27 @@ namespace WhiteWillow
                 {
                     if (!m_NavAgent.isStopped)
                     {
-                        Stop();
+                        m_NavAgent.isStopped = true;
+                        m_CachedAgentVelocity = m_NavAgent.velocity;
                         m_NavAgent.velocity = Vector3.zero;
+                        m_Animator.speed = 0.0f;
                     }
 
                     return;
                 }
                 else
                 {
+                    m_Animator.speed = 1.0f;
+
                     if (m_NavAgent.isStopped)
-                        m_NavAgent.isStopped = true;
+                    {
+                        m_NavAgent.velocity = m_CachedAgentVelocity;
+                        m_NavAgent.isStopped = false;
+                    }
                 }
+
+                if (!Alive)
+                    return;
 
                 m_RuntimeTree?.Tick();
 
@@ -141,7 +157,7 @@ namespace WhiteWillow
             if (m_NavAgent.isStopped)
                 m_NavAgent.isStopped = false;
 
-            PlayAnimation("Run");
+            PlayAnimation("Run", true);
 
             if (Vector3.Distance(m_NavAgent.destination, Destination)
                 >= Mathf.Epsilon + m_NavAgent.stoppingDistance)
@@ -157,10 +173,12 @@ namespace WhiteWillow
             return true;
         }
 
-        public void Stop()
+        public void Stop(bool playIdleAnim = true)
         {
-            PlayAnimation("IdleCombat");
+            if (playIdleAnim)
+                PlayAnimation("IdleCombat", true, 0.1f);
 
+            m_NavAgent.velocity = Vector3.zero;
             m_NavAgent.ResetPath();
             m_NavAgent.isStopped = true;
         }
@@ -179,6 +197,7 @@ namespace WhiteWillow
         public void Possess()
         {
             Possessed = true;
+            PossessedPreviously = true;
             m_NavAgent.ResetPath();
             m_NavAgent.enabled = false;
 
@@ -204,6 +223,9 @@ namespace WhiteWillow
 
         public void Kill()
         {
+            if (!Alive)
+                return;
+
             m_HostController.GetCurrentWeapon().StopSounds(); // Stops sounds like reload from playing after the agent has been destroyed.
 
             if (Possessed)
@@ -213,8 +235,13 @@ namespace WhiteWillow
                 PariahController?.TakeDamage(m_HostController.GetOnDestroyDamage());
             }
 
-            // TODO: Use object pooling / queued destruction system
-            Destroy(gameObject);
+            Alive = false;
+            PlayAnimation("Death", true, 0.1f);
+            StartCoroutine(DelayExecuteFunc(3.5f, () =>
+            {
+                GetComponent<Collider>().enabled = false;
+                Destroy(gameObject);
+            }));
         }
 
         public void LookAt(Vector3 position)
@@ -241,9 +268,13 @@ namespace WhiteWillow
             transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.deltaTime * m_NavAgent.angularSpeed * 0.1f);
         }
 
-        public void ShootAt(GameObject target, bool forceMiss = false)
+        public bool ShootAt(GameObject target, bool forceMiss = false)
         {
+            if (PariahController.Transitioning)
+                return false;
+
             m_HostController.GetCurrentWeapon()?.FireAt(target);
+            return true;
         }
 
         public void PlayAnimation(string name, bool forcePlay = false, float transitionSpeed = 0.25f)
@@ -427,6 +458,46 @@ namespace WhiteWillow
             Vector3 left = Quaternion.LookRotation(direction) * Quaternion.Euler(0, 180 - 35.0f, 0) * new Vector3(0, 0, 1);
             Gizmos.DrawRay(origin + direction * length, right * 0.25f);
             Gizmos.DrawRay(origin + direction * length, left * 0.25f);
+        }
+
+        /// <summary>
+        /// This function is used when we instantiate a new agent when the player spawns
+        /// at a checkpoint. The new UI system requires references to UI elements which
+        /// are normally set by hand, however, since we are instantiating the new agent,
+        /// we must set those references via script.
+        /// </summary>
+        public void AttachUIReferences()
+        {
+            Weapon weapon = m_HostController.GetCurrentWeapon();
+
+            if (m_HostController.m_type == EnemyTypes.SCIENTIST)
+            {
+                // We are dealing with a scientist.
+                weapon.m_CharIcon = UIManager.s_Instance?.m_ScientistCharIcon;
+                weapon.m_CharName = UIManager.s_Instance?.m_ScientistCharName;
+                weapon.m_WeaponIcon = UIManager.s_Instance?.m_PistolWeaponIcon;
+                weapon.m_WeaponAmmoText = UIManager.s_Instance?.m_PistolWeaponAmmoText;
+            }
+            else if (m_HostController.m_type == EnemyTypes.SOLDIER)
+            {
+                // We are dealing with a soldier.
+                weapon.m_CharIcon = UIManager.s_Instance?.m_SoldierCharIcon;
+                weapon.m_CharName = UIManager.s_Instance?.m_SoldierCharName;
+                weapon.m_WeaponIcon = UIManager.s_Instance?.m_RifleWeaponIcon;
+                weapon.m_WeaponAmmoText = UIManager.s_Instance?.m_RifleWeaponAmmoText;
+            }
+            else
+            {
+                // lol this can't happen but I guess I should put an else here.
+                Debug.LogError("AttachUIReferences() could not find type of agent!");
+            }
+        }
+
+        private IEnumerator DelayExecuteFunc(float delaySeconds, Action func)
+        {
+            yield return new WaitForSeconds(delaySeconds);
+
+            func();
         }
     }
 }

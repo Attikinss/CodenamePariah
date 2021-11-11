@@ -14,7 +14,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1846739821246590039
 Transform:
@@ -95,6 +95,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: a6537894632e6654f872362dd9860053, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8bee265f2cf4b7e43bb5365052af5375, type: 2}
     - target: {fileID: 919132149155446097, guid: a6537894632e6654f872362dd9860053, type: 3}
       propertyPath: m_Name
       value: Encounter_001_Elevator

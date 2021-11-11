@@ -7,7 +7,7 @@ namespace WhiteWillow.Nodes
     ///<br>A node that iterates through its child nodes one after another</br>
     ///<br>until one returns a failure or all nodes are successful.</br>
     ///</summary>
-    [Category("Composites")]
+    [Category("Composite")]
     public sealed class Sequence : Composite
     {
         public override string IconPath { get; } = "Icons/Sequence";

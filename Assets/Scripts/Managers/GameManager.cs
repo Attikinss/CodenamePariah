@@ -67,6 +67,17 @@ public class GameManager : MonoBehaviour
     public static Vector3 s_CheckPointPos;
     public static GameObject s_CheckpointAgentPrefab; // It's important that this is the prefab because we will be instantiating it.
 
+    // Storing the power for the incarnate ability here as a static variable so that it remains
+    // after the scene reloads.
+    public static int s_Power = 0;
+
+    public CustomAudioSource m_Music;
+
+    // Reference to the current camera, whether is be an agent's camera of Pariah's camera.
+    // This is used so we can adjust the FOV from the static OptionsMenu class.
+    [HideInInspector]
+    public Camera m_CurrentCamera;
+
     private void Awake()
 	{
         m_Monobehaviour = this;
@@ -85,6 +96,9 @@ public class GameManager : MonoBehaviour
 
         FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
         allBussess.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
+
+        if (!m_Music)
+            Debug.LogWarning("GameManager does not have a m_Music reference! Music will not work correctly!");
     }
 
     public void TogglePause(bool toggle)
@@ -251,7 +265,7 @@ public class GameManager : MonoBehaviour
         //WStartCoroutine(controller.RunWeaponInspect(5));
     }
 
-    public static void AddToggable(int arenaID, GameObject openObj, GameObject closeObj, bool isOpen)
+    public static void AddToggable(string arenaID, GameObject openObj, GameObject closeObj, bool isOpen)
     {
         // To prevent the same monobehaviour ArenaManager's from sending the GameManager their doors on the following reloads of the game, we check
         // the ID of the requested created door with the doors we already have. If they match, it means we already know about that door and don't need it.
@@ -290,7 +304,7 @@ public class GameManager : MonoBehaviour
     /// Gets a door with a matching arena ID.
     /// </summary>
     /// <param name="arenaID"></param>
-    public static ToggableObject GetDoor(int arenaID)
+    public static ToggableObject GetDoor(string arenaID)
     {
         for (int i = 0; i < s_AllToggables.Count; i++)
         {
@@ -338,9 +352,12 @@ public class GameManager : MonoBehaviour
             NavMeshAgent navAgent = newAgent.GetComponent<NavMeshAgent>();
             navAgent.enabled = false;
             newAgent.transform.position = s_CheckPointPos;
-            newAgent.name = "Test Agent";
+            newAgent.name = "Spawned_Agent";
             navAgent.enabled = true;
-            
+
+            // We have to set up its new UI elements via the UIManager.
+            newAgent.GetComponent<WhiteWillow.Agent>().AttachUIReferences();
+
 
             m_Pariah.ForceInstantPossess(newAgent.GetComponent<WhiteWillow.Agent>());
         }
@@ -355,7 +372,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Sends updated door information to the GameManager so it has memory of the state of the door when it reloads at a checkpoint.
     /// </summary>
-    public void SendDoorData(bool isOpen, int doorID)
+    public void SendDoorData(bool isOpen, string doorID)
     {
         ToggableObject ourDoor = GameManager.GetDoor(doorID);
         ourDoor.m_IsOpen = isOpen;
@@ -367,5 +384,35 @@ public class GameManager : MonoBehaviour
         return newGuid;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public void TransitionMusic(string paramName, float value)
+    {
+        FMOD.Studio.EventInstance instance = m_Music.m_AudioEvent.GetEventInstance();
+        instance.setParameterByName(paramName, value);
+
+        // Have to reduce volume because the transitioned piece currently is just way to loud.
+        //instance.setVolume(0.3f);
+    }
+
+    /// <summary>
+    /// Restarts the music track.
+    /// </summary>
+    public void RestartMusic()
+    {
+        FMOD.Studio.EventInstance instance = m_Music.m_AudioEvent.GetEventInstance();
+        
+
+        float value = 0;
+        instance.getParameterByName("NumberOfEnemies", out value);
+        if (value == 1)
+        { 
+            TransitionMusic("NumberOfEnemies", 0);
+            m_Music.m_AudioEvent.StopSound(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            m_Music.m_AudioEvent.Trigger();
+            //instance.setVolume(m_Music.m_VolumeScale);
+        }
+    }
 
 }

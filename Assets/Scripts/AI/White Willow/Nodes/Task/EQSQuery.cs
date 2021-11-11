@@ -6,7 +6,7 @@ using WhiteWillow.Nodes;
 public enum DistanceCheck { ClosestTarget, FurthestSelf, FurthestTarget, None }
 public enum AngleCheck { Ahead, Behind, ToTarget, FromTarget, None }
 
-[Category("Tasks", "User")]
+[Category("Task")]
 public class EQSQuery : Task
 {
     public NodeMember<GameObject> Target;
@@ -91,9 +91,6 @@ public class EQSQuery : Task
                                     if (targetFacingAngle < -Angle || targetFacingAngle > Angle)
                                         continue;
                                 }
-
-                                if (Owner.Agent.gameObject.name.Contains("Soldier"))
-                                    Debug.Log("Is Soldier");
 
                                 if (Owner.Agent.DestinationAttainable(node.Position))
                                 {

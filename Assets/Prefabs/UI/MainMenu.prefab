@@ -15374,15 +15374,18 @@ MonoBehaviour:
   - {fileID: 5784749309494941147}
   - {fileID: 1973459817}
   - {fileID: 314036729}
+  m_GameOverMenuUI: []
   m_QuitMenuUI:
   - {fileID: 5784749310957081073}
   - {fileID: 5784749311174967666}
   - {fileID: 5784749310612542426}
   - {fileID: 5784749310587595605}
+  m_GameOverQuitMenuUI: []
   m_DialogueBoxUI: {fileID: 5784749310371827920}
   m_Transition: {fileID: 5784749310233106530}
   m_Panel: {fileID: 5784749309549206112}
   m_TransitionTime: 1
+  m_GameplayButton: {fileID: 2101989380}
 --- !u!95 &5784749310233106530
 Animator:
   serializedVersion: 3
@@ -23577,7 +23580,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5784749311034428017}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5784749310233106520}
+        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+        m_MethodName: Credits
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!95 &164299247
 Animator:
   serializedVersion: 3

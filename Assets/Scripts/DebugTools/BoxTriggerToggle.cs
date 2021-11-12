@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using WhiteWillow;
-
 public class BoxTriggerToggle : MonoBehaviour
 {
     /// <summary>
@@ -60,6 +59,12 @@ public class BoxTriggerToggle : MonoBehaviour
 
     void Awake()
     {
+        if (m_ID == "")
+        {
+            Debug.LogError("ID Missing for trigger! Please click on the trigger so the inspector can create a GUID for it.");
+        }
+
+
         if (m_Enter)
             OnEnter = Trigger;
 

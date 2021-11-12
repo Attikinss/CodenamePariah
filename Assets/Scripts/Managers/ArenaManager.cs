@@ -35,7 +35,7 @@ public class ArenaManager : MonoBehaviour
 	{
         if (m_ID == "")
         {
-            Debug.LogError("ID Missing for trigger! Please click on the trigger so the inspector can create a GUID for it.");
+            Debug.LogError("ID Missing for trigger! Please click on the trigger so the inspector can create a GUID for it: " + gameObject.name);
         }
 
         if (m_ShouldSaveData)

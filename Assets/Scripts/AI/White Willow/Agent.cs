@@ -237,9 +237,9 @@ namespace WhiteWillow
 
             Alive = false;
             PlayAnimation("Death", true, 0.1f);
+            GetComponent<Collider>().enabled = false;
             StartCoroutine(DelayExecuteFunc(3.5f, () =>
             {
-                GetComponent<Collider>().enabled = false;
                 Destroy(gameObject);
             }));
         }

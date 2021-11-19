@@ -225,6 +225,9 @@ public class PauseMenu : MonoBehaviour
     /// <returns></returns>
     IEnumerator LoadMainMenu()
     {
+        GameManager.s_Power = 0;
+        m_GameOver = false;
+        m_GameIsPaused = false;
         m_Transition.SetTrigger("Start");
 
         yield return new WaitForSeconds(m_TransitionTime);

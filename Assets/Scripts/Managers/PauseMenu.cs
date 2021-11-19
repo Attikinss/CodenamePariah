@@ -169,8 +169,15 @@ public class PauseMenu : MonoBehaviour
         //}
         //Time.timeScale = 1f;//
         m_GameIsPaused = false;//
+
+        FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
+        // Stops any continuing sounds from last play session.
+        allBussess.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        // Unpause audio.
+        allBussess.setPaused(false);
+
         //StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex + 1));
-        
+
         StartCoroutine(LoadLevel());
 
 

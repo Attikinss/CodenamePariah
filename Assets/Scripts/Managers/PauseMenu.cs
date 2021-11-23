@@ -59,12 +59,8 @@ public class PauseMenu : MonoBehaviour
 
     AsyncOperation asyncOperation;
 
-    private void Start()
-    {
-        Debug.Log("Loaded");
-        if (!m_IsPauseMenu)
-            StartCoroutine(StartLoadingLevel());
-    }
+    [SerializeField]
+    private OptionsMenuButton m_GameplayButton;
 
     private void Awake()
     {
@@ -152,6 +148,12 @@ public class PauseMenu : MonoBehaviour
         // Resuming all sounds.
         FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
         allBussess.setPaused(false);
+
+        // Resuming all players animations.
+        if(GameManager.s_CurrentHost)
+            GameManager.s_CurrentHost.ToggleAllAnimations(true);
+        if(GameManager.s_Instance && GameManager.s_Instance.m_Pariah)
+            GameManager.s_Instance.m_Pariah.ToggleAllAnimations(true);
     }
 
     /// <summary>Starts the game.</summary>
@@ -200,11 +202,15 @@ public class PauseMenu : MonoBehaviour
         //#if UNITY_EDITOR
         //        SceneManager.LoadScene("Test_Lauchlan_002");
         //#else
-        if (asyncOperation.progress >= 0.9f)
-        {
-            Debug.Log("Loading");
-            asyncOperation.allowSceneActivation = true;
-        }
+
+        //if (asyncOperation.progress >= 0.9f)
+        //{
+        //    Debug.Log("Loading");
+        //    asyncOperation.allowSceneActivation = true;
+        //}
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1, LoadSceneMode.Single);
+
         //SceneManager.LoadScene("Level_001", LoadSceneMode.Single);
         //SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
         //#endif
@@ -224,6 +230,16 @@ public class PauseMenu : MonoBehaviour
         yield return new WaitForSeconds(m_TransitionTime);
 
         SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
+        //SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
+    }
+
+    IEnumerator LoadCredits()
+    {
+        m_Transition.SetTrigger("Start");
+
+        yield return new WaitForSeconds(m_TransitionTime);
+
+        SceneManager.LoadScene("Credits", LoadSceneMode.Single);
         //SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
     }
 
@@ -248,6 +264,12 @@ public class PauseMenu : MonoBehaviour
         // Pauses all game sounds.
         FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
         allBussess.setPaused(true);
+
+        // Freezing player animations on pause.
+        if(GameManager.s_CurrentHost)
+            GameManager.s_CurrentHost.ToggleAllAnimations(false);
+        if(GameManager.s_Instance && GameManager.s_Instance.m_Pariah)
+            GameManager.s_Instance.m_Pariah.ToggleAllAnimations(false);
     }
 
     public void GameOverMenu()
@@ -299,6 +321,7 @@ public class PauseMenu : MonoBehaviour
         }
 
         m_OptionsOpen = false;
+        m_GameplayButton.HighlightButton();
         //m_SettingsToBeApplied = false;
     }
     
@@ -339,15 +362,16 @@ public class PauseMenu : MonoBehaviour
         m_IsQuitting = false;
     }
 
-    public void ReloadSceneCheckpoint()
-    {
-        m_GameOver = false;
-        m_GameIsPaused = false;
-        StartCoroutine(ReloadLevel());
+    public void ReloadSceneCheckpoint()                                         // ============================ NOTE ============================ //
+    {                                                                           // I have found ReloadSceneCheckpoint() and ReloadScene() are getting
+        m_GameOver = false;                                                     // called the other way around. Reloading the level calls
+        m_GameIsPaused = false;                                                 // ReloadSceneCheckpoint() and reloading to the last checkpoint
+        StartCoroutine(ReloadLevel());                                          // calls ReloadScene().
     }
 
     public void ReloadScene()
     {
+        GameManager.s_Power = 0;
         GameManager.ResetCheckpoint();
         m_GameOver = false;
         m_GameIsPaused = false;
@@ -368,12 +392,15 @@ public class PauseMenu : MonoBehaviour
         {
             Debug.Log($"Progress: {asyncOperation.progress * 100}%");
             if (asyncOperation.progress >= 0.9f)
+            { 
                 asyncOperation.allowSceneActivation = true;
+                // Unpausing all music.
+                FMOD.Studio.Bus allBussess = RuntimeManager.GetBus("bus:/");
+                allBussess.setPaused(false);
+            }
 
             yield return null;
         }
-
-
     }
 
     ///// <summary>Upon settings being changed, sets settings to be applied to true. NEED TO FIX.</summary>
@@ -412,6 +439,11 @@ public class PauseMenu : MonoBehaviour
     //    m_InsideDialogueBox = false;
     //    Debug.Log("Discarded changes.");
     //}
+
+    public void Credits()
+    {
+        StartCoroutine(LoadCredits());
+    }
 
     /// <summary>Exits the game to desktop.</summary>
     public void Exit()

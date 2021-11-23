@@ -22833,6 +22833,7 @@ MonoBehaviour:
   m_Transition: {fileID: 8481638729836502810}
   m_Panel: {fileID: 0}
   m_TransitionTime: 1
+  m_GameplayButton: {fileID: 374500586}
 --- !u!95 &8481638729836502810
 Animator:
   serializedVersion: 3

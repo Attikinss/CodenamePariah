@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class ArenaManager : MonoBehaviour
 {
     [Tooltip("This determines whether or not the toggable object will be remembered between checkpoint loads.")]
@@ -34,6 +33,11 @@ public class ArenaManager : MonoBehaviour
 
 	private void Awake()
 	{
+        if (m_ID == "")
+        {
+            Debug.LogError("ID Missing for trigger! Please click on the trigger so the inspector can create a GUID for it: " + gameObject.name);
+        }
+
         if (m_ShouldSaveData)
         { 
             // On awake, we're gonna upload the doors to the GameManager so it has a reference to their state.
@@ -70,8 +74,8 @@ public class ArenaManager : MonoBehaviour
                 GameManager.s_Instance?.SendDoorData(true, m_ID); // Telling the GameManager that this door has been opened.
 
             // Transitioning to end battle music if specified.
-            //if(m_PlayEndMusic)
-                //GameManager.s_Instance.TransitionMusic()
+            if (m_PlayEndMusic)
+                GameManager.s_Instance.TransitionMusic("NumberOfEnemies", 1);
         }
     }
 

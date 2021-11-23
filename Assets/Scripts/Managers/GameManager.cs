@@ -265,7 +265,7 @@ public class GameManager : MonoBehaviour
         //WStartCoroutine(controller.RunWeaponInspect(5));
     }
 
-    public static void AddToggable(string arenaID, GameObject openObj, GameObject closeObj, bool isOpen)
+    public static void AddToggable(string arenaID, GameObject openObj, GameObject closeObj, bool isOpen, bool IsBoxTriggerToggle = false)
     {
         // To prevent the same monobehaviour ArenaManager's from sending the GameManager their doors on the following reloads of the game, we check
         // the ID of the requested created door with the doors we already have. If they match, it means we already know about that door and don't need it.
@@ -283,8 +283,7 @@ public class GameManager : MonoBehaviour
         }
 
         // Otherwise, this means that it's the first time we're receiving these doors (The first time the scene is loaded.)
-
-        ToggableObject newToggable = new ToggableObject(arenaID, openObj, closeObj, isOpen);
+        ToggableObject newToggable = new ToggableObject(arenaID, openObj, closeObj, isOpen, IsBoxTriggerToggle);
 
         s_AllToggables.Add(newToggable);
     }
@@ -296,7 +295,8 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < s_AllToggables.Count; i++)
         {
-            s_AllToggables[i].Toggle(s_AllToggables[i].m_IsOpen);
+            if (s_AllToggables[i].m_HasBeenTriggered) 
+                s_AllToggables[i].Toggle(s_AllToggables[i].m_IsOpen);
         }
     }
 
@@ -367,6 +367,9 @@ public class GameManager : MonoBehaviour
     {
         s_HighestCheckPointLevel = 0;
         s_CheckPointPos = Vector3.zero;
+
+        // Wiping all the toggable objects.
+        GameManager.s_AllToggables.Clear();
     }
 
     /// <summary>
@@ -376,6 +379,9 @@ public class GameManager : MonoBehaviour
     {
         ToggableObject ourDoor = GameManager.GetDoor(doorID);
         ourDoor.m_IsOpen = isOpen;
+
+        // Actually maybe it will work.
+        ourDoor.m_HasBeenTriggered = true; // Tells us that it has been triggered atleast once. wont work not static...
     }
 
     public static Guid GetGUID()
@@ -391,6 +397,28 @@ public class GameManager : MonoBehaviour
     {
         FMOD.Studio.EventInstance instance = m_Music.m_AudioEvent.GetEventInstance();
         instance.setParameterByName(paramName, value);
+
+        // Have to reduce volume because the transitioned piece currently is just way to loud.
+        //instance.setVolume(0.3f);
+    }
+
+    /// <summary>
+    /// Restarts the music track.
+    /// </summary>
+    public void RestartMusic()
+    {
+        FMOD.Studio.EventInstance instance = m_Music.m_AudioEvent.GetEventInstance();
+        
+
+        float value = 0;
+        instance.getParameterByName("NumberOfEnemies", out value);
+        if (value == 1)
+        { 
+            TransitionMusic("NumberOfEnemies", 0);
+            m_Music.m_AudioEvent.StopSound(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            m_Music.m_AudioEvent.Trigger();
+            //instance.setVolume(m_Music.m_VolumeScale);
+        }
     }
 
 }

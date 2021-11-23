@@ -225,6 +225,10 @@ public class OptionsMenu : MonoBehaviour
             m_FOVInputField.text = m_FOVSlider.value.ToString();
         m_FieldOfView = (int)m_FOVSlider.value;
         m_PlayerPrefs.VideoConfig.FieldOfView = m_FieldOfView;
+
+        // Updates Pariah's FOV without relying on putting it in PariahController Update().
+        if (GameManager.s_Instance && GameManager.s_Instance.m_Pariah)
+            GameManager.s_Instance.m_Pariah.Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_FieldOfView * Mathf.Deg2Rad) * 0.5f) / GameManager.s_Instance.m_Pariah.Camera.aspect) * 2) * Mathf.Rad2Deg;
     }
 
     /// <summary>Gets called when the controller sensitivity has been changed.</summary>
@@ -363,6 +367,10 @@ public class OptionsMenu : MonoBehaviour
             m_FOVSlider.value = value;
         m_FieldOfView = value;
         m_PlayerPrefs.VideoConfig.FieldOfView = m_FieldOfView;
+
+        // Updates Pariah's FOV without relying on putting it in PariahController Update().
+        if (GameManager.s_Instance && GameManager.s_Instance.m_Pariah)
+            GameManager.s_Instance.m_Pariah.Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_FieldOfView * Mathf.Deg2Rad) * 0.5f) / GameManager.s_Instance.m_Pariah.Camera.aspect) * 2) * Mathf.Rad2Deg;
     }
 
     /// <summary>Gets called when the controller sensitivity input field value has been changed.</summary>

@@ -149,9 +149,6 @@ public class PariahController : InputController
 
         if (m_CurrentPossessed == null) // Only do this if we are not in a unit.
         {
-            // Adjusting FOV to the settings. Otherwise it only gets applied when we call the Enable for Pariah.
-            m_Camera.fieldOfView = (Mathf.Atan(Mathf.Tan((float)(m_PlayerPrefs.VideoConfig.FieldOfView * Mathf.Deg2Rad) * 0.5f) / m_Camera.aspect) * 2) * Mathf.Rad2Deg;
-
             RaycastHit lookHit;
             if (Physics.Raycast(m_Camera.transform.position, m_Camera.transform.forward, out lookHit, m_DashDistance))
             {
@@ -301,9 +298,6 @@ public class PariahController : InputController
 
             m_GracePeriodCoroutine = StartCoroutine(StartGracePeriod(m_GracePeriod));
         }
-
-        
-
     }
 
     public override void Disable()
@@ -431,7 +425,7 @@ public class PariahController : InputController
         if (/*!m_Dashing && */!m_Possessing) // Commented out m_Dashing here to allow Pariah to move while dashing.
             m_Rigidbody.velocity = m_MoveVelocity;
 
-        Telemetry.TracePosition("Pariah-Movement", transform.position, 0.05f, 150);
+        //Telemetry.TracePosition("Pariah-Movement", transform.position, 0.05f, 150);
     }
 
     private void Look()
@@ -846,6 +840,30 @@ public class PariahController : InputController
         m_IsGracePeriodCoroutineActive = false;
     }
 
+    /// <summary>
+    /// Toggles Pariah's arms animations.
+    /// </summary>
+    /// <param name="toggle">If true, Pariah's animator speed will be set to 1, if false it will be set to 0.</param>
+    public void ToggleAllAnimations(bool toggle)
+    {
+        int toggleNum;
+        if (toggle)
+            toggleNum = 1;
+        else
+            toggleNum = 0;
+
+        m_ArmsAnimator.speed = toggleNum;
+
+        m_SmokyArmParticle1.pause = !toggle;
+        m_SmokyArmParticle2.pause = !toggle;
+    }
+    
+    private IEnumerator DelayExecuteFunc(float delaySeconds, Action func)
+    {
+        yield return new WaitForSeconds(delaySeconds);
+
+        func();
+    }
     private IEnumerator DelayExecuteFunc(float delaySeconds, Action func)
     {
         yield return new WaitForSeconds(delaySeconds);

@@ -57,7 +57,7 @@ Material:
     m_Ints: []
     m_Floats:
     - Fresnel_Power: 0.64
-    - Fresnel_Strength: 2
+    - Fresnel_Strength: 6.34
     - Speed: 0.84
     - Washover_Centre_Fade: 2.92
     - Washover_Centre_Removal: 3.2

@@ -57,6 +57,8 @@ public class BoxTriggerToggle : MonoBehaviour
     private TriggerState OnStay;
     private TriggerState OnExit;
 
+    public GameObject ToggleObject { get => m_ToggleObject; }
+
     void Awake()
     {
         if (m_ID == "")

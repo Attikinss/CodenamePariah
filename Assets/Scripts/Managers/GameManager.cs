@@ -78,6 +78,9 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public Camera m_CurrentCamera;
 
+    [SerializeField]
+    private Camera m_OcculsionCullCam;
+
     private void Awake()
 	{
         m_Monobehaviour = this;
@@ -99,6 +102,21 @@ public class GameManager : MonoBehaviour
 
         if (!m_Music)
             Debug.LogWarning("GameManager does not have a m_Music reference! Music will not work correctly!");
+
+        var togglableObject = FindObjectsOfType<BoxTriggerToggle>();
+        var objectsToTurnOff = new List<GameObject>();
+
+        foreach (var obj in togglableObject)
+        {
+            if (!obj.ToggleObject.activeSelf)
+            {
+                obj.ToggleObject.SetActive(true);
+                objectsToTurnOff.Add(obj.ToggleObject);
+            }
+        }
+
+        foreach (var obj in objectsToTurnOff)
+            obj.SetActive(false);
     }
 
     public void TogglePause(bool toggle)
@@ -177,6 +195,12 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         UpdateBloodSprays();
+
+        if (m_OcculsionCullCam && m_CurrentCamera)
+        {
+            m_OcculsionCullCam.transform.position = m_CurrentCamera.transform.position;
+            m_OcculsionCullCam.transform.rotation = m_CurrentCamera.transform.rotation;
+        }
     }
 
     public void PlaceDecal(Transform obj, Vector3 hitPoint, Vector3 normal)

@@ -864,10 +864,4 @@ public class PariahController : InputController
 
         func();
     }
-    private IEnumerator DelayExecuteFunc(float delaySeconds, Action func)
-    {
-        yield return new WaitForSeconds(delaySeconds);
-
-        func();
-    }
 }

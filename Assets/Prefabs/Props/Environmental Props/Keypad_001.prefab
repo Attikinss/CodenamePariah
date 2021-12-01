@@ -82,6 +82,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: e002fc07e1b71e947b6d29f766208197, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: e002fc07e1b71e947b6d29f766208197, type: 3}
       propertyPath: m_Name
       value: Arena_001_SecurityKeypad

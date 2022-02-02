@@ -1,0 +1,117 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4053990371415123288
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 455820737528436310}
+  m_Layer: 0
+  m_Name: Vent_GrateCover_001
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &455820737528436310
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4053990371415123288}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 7788518771159196895}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1736743023282071405
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7448303018880515685}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.10231336, y: 1.0015377, z: 1.0015376}
+  m_Center: {x: 0.020793874, y: -0.011930332, z: -0.00012555718}
+--- !u!1001 &7754312300015289140
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 455820737528436310}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 1ba65dcb26401ef4e8c59813d3d7522a, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1ba65dcb26401ef4e8c59813d3d7522a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1ba65dcb26401ef4e8c59813d3d7522a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1ba65dcb26401ef4e8c59813d3d7522a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1ba65dcb26401ef4e8c59813d3d7522a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9873613
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1ba65dcb26401ef4e8c59813d3d7522a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1ba65dcb26401ef4e8c59813d3d7522a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1ba65dcb26401ef4e8c59813d3d7522a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.15848543
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1ba65dcb26401ef4e8c59813d3d7522a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1ba65dcb26401ef4e8c59813d3d7522a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 1ba65dcb26401ef4e8c59813d3d7522a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -18.238
+      objectReference: {fileID: 0}
+    - target: {fileID: -5754084199372789682, guid: 1ba65dcb26401ef4e8c59813d3d7522a, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -8115742179464228591, guid: 39da5a73b047ca445b93da9d790fe140, type: 3}
+    - target: {fileID: 919132149155446097, guid: 1ba65dcb26401ef4e8c59813d3d7522a, type: 3}
+      propertyPath: m_Name
+      value: Arena_001_Vent_GrateCover
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1ba65dcb26401ef4e8c59813d3d7522a, type: 3}
+--- !u!1 &7448303018880515685 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1ba65dcb26401ef4e8c59813d3d7522a, type: 3}
+  m_PrefabInstance: {fileID: 7754312300015289140}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7788518771159196895 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1ba65dcb26401ef4e8c59813d3d7522a, type: 3}
+  m_PrefabInstance: {fileID: 7754312300015289140}
+  m_PrefabAsset: {fileID: 0}
